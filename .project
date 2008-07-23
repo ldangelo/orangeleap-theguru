@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>Clementine</name>
+	<comment></comment>
+	<projects>
+	</projects>
+	<buildSpec>
+		<buildCommand>
+			<name>org.eclipse.jdt.core.javabuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+	</buildSpec>
+	<natures>
+		<nature>org.eclipse.jdt.core.javanature</nature>
+	</natures>
+	<linkedResources>
+		<link>
+			<name>classes-jar</name>
+			<type>2</type>
+			<location>/Users/ldangelo/Development/clementine/build/stage/classes-jar</location>
+		</link>
+		<link>
+			<name>clementine-build.xml</name>
+			<type>1</type>
+			<location>/Users/ldangelo/Development/clementine/build/clementine-build.xml</location>
+		</link>
+	</linkedResources>
+</projectDescription>

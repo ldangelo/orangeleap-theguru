@@ -1,0 +1,16 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite thread-count="5" skipfailedinvocationCounts="false" verbose="1" name="Failed suite [Clementine]" junit="false" annotations="JDK">
+  <test name="com.mpower.test.ReportSourceTest(failed)" junit="false" annotations="JDK">
+    <classes>
+      <class name="com.mpower.test.ReportSourceTest">
+        <methods>
+          <include name="springTestContextBeforeTestMethod"/>
+          <include name="springTestContextAfterTestMethod"/>
+          <include name="listReportSource"/>
+          <include name="springTestContextPrepareTestInstance"/>
+          <include name="setup"/>
+        </methods>
+      </class>
+    </classes>
+  </test>
+</suite>

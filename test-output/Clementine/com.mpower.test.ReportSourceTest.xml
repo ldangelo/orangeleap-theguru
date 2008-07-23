@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.mpower.test.ReportSourceTest" failures="1" tests="2" time="1.594" errors="0">
+  <properties/>
+  <testcase name="listReportSource" time="0.118" classname="com.mpower.test.ReportSourceTest">
+    <failure type="java.lang.IllegalArgumentException" message="Unknown entity: com.mpower.domain.ReportSource">
+      <![CDATA[java.lang.IllegalArgumentException: Unknown entity: com.mpower.domain.ReportSource
+	at org.hibernate.ejb.AbstractEntityManagerImpl.persist(AbstractEntityManagerImpl.java:215)
+	at org.springframework.orm.jpa.ExtendedEntityManagerCreator$ExtendedEntityManagerInvocationHandler.invoke(ExtendedEntityManagerCreator.java:357)
+	at $Proxy13.persist(Unknown Source)
+	at com.mpower.test.ReportSourceTest.listReportSource(ReportSourceTest.java:36)
+	at org.springframework.test.context.testng.AbstractTestNGSpringContextTests.run(AbstractTestNGSpringContextTests.java:140)
+... Removed 32 stack frames]]>
+    </failure>
+  </testcase>
+  <testcase name="emptyTest" time="0.0040" classname="com.mpower.test.ReportSourceTest"/>
+</testsuite>

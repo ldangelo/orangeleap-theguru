@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+
+<!--
+  - DispatcherServlet application context for the Spring web MVC
+  - implementation of Tangarine's web tier.
+  -->
+<beans>
+
+    <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+        <property name="basename" value="messages"/>
+    </bean>
+
+	<!-- ========================= VIEW DEFINITIONS ========================= -->
+
+	<bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
+		<property name="prefix" value="/WEB-INF/jsp/"/>
+		<property name="suffix" value=".jsp"/>
+	</bean>
+
+
+	<!-- ========================= DEFINITIONS OF PUBLIC CONTROLLERS ========================= -->
+
+	<bean id="defaultHandlerMapping" class="org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping"/>
+
+   
+    <bean name="/ReportWizard.htm" class="com.mpower.controller.ReportSourceFormController">
+        <property name="commandName" value="reportsource"/>
+        <property name="commandClass" value="com.mpower.domain.ReportWizard"/>
+        <property name="reportSourceService" ref="reportSourceService"/>         
+   		<property name="pages">
+		<list>
+			<value>ReportSource</value>
+			<value>ReportSubSource</value>
+			<value>ReportFormat</value>
+			<value>ReportColumns</value>
+			<value>ReportSummaryFields</value>
+			<value>ReportColumnsOrder</value>
+			<value>ReportCriteria</value>
+		</list>
+		</property>
+    </bean>
+
+	<!-- Configures the Tiles layout system -->
+	<bean id="tilesConfigurer"
+		class="org.springframework.web.servlet.view.tiles2.TilesConfigurer">
+		<property name="definitions">
+			<list>
+				<value>/WEB-INF/mpower-tiles.xml</value>
+			</list>
+		</property>
+	</bean>
+
+
+</beans>
