@@ -29,18 +29,28 @@
         <property name="commandName" value="reportsource"/>
         <property name="commandClass" value="com.mpower.domain.ReportWizard"/>
         <property name="reportSourceService" ref="reportSourceService"/>         
-   		<property name="pages">
-		<list>
-			<value>ReportSource</value>
-			<value>ReportSubSource</value>
-			<value>ReportFormat</value>
-			<value>ReportColumns</value>
-			<value>ReportSummaryFields</value>
-			<value>ReportColumnsOrder</value>
-			<value>ReportCriteria</value>
-		</list>
-		</property>
+	<property name="formView" value="ReportSource"/>
+	<property name="successView" value="redirect:ReportSubSource.htm"/>
     </bean>
+
+    <bean name="/ReportSubSource.htm" class="com.mpower.controller.ReportSubSourceFormController">
+        <property name="commandName" value="reportsource"/>
+        <property name="commandClass" value="com.mpower.domain.ReportWizard"/>
+        <property name="reportSourceService" ref="reportSourceService"/>         
+	<property name="formView" value="ReportSubSource"/>
+	<property name="successView" value="ReportFormat"/>
+    </bean>
+
+
+    <bean name="/ReportFormat.htm" class="com.mpower.controller.ReportFormatFormController">
+        <property name="commandName" value="reportsource"/>
+        <property name="commandClass" value="com.mpower.domain.ReportWizard"/>
+        <property name="reportSourceService" ref="reportSourceService"/>         
+	<property name="formView" value="ReportFormat"/>
+	<property name="successView" value="ReportFormat"/>
+    </bean>
+
+    
 
 	<!-- Configures the Tiles layout system -->
 	<bean id="tilesConfigurer"
