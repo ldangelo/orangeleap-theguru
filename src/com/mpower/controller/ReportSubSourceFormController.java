@@ -21,7 +21,7 @@ import org.springframework.validation.BindException;
 import com.mpower.service.*;
 import com.mpower.domain.ReportWizard;
 
-public class ReportSourceFormController extends SimpleFormController {
+public class ReportSubSourceFormController extends SimpleFormController {
 	   /** Logger for this class and subclasses */
     protected final Log logger = LogFactory.getLog(getClass());
 
@@ -32,10 +32,12 @@ public class ReportSourceFormController extends SimpleFormController {
     }
     
     @Override
-    protected Object formBackingObject(HttpServletRequest request) throws ServletException {
+    protected Object formBackingObject(HttpServletRequest request) throws Exception {
         logger.info("**** in formBackingObject");
-        ReportWizard wiz = new ReportWizard();
+        ReportWizard wiz = (ReportWizard) super.formBackingObject(request);
         
+        if (wiz == null)
+          logger.error("*** null ReportWizard in formBackingObject");
 
         
         wiz.setDataSources(reportSourceService.readSources());
@@ -48,15 +50,8 @@ public class ReportSourceFormController extends SimpleFormController {
   @Override
   public ModelAndView onSubmit(Object command, BindException errors) throws ServletException {
     logger.info("**** in onSubmit()");
-    Map<String,Object> params = new HashMap<String,Object>();
-    ReportWizard wiz = (ReportWizard) command;
-    
-    params.put("ReportDataSourceId",wiz.getSrcId());
-    ReportDataSource          rds = reportSourceService.find(wiz.getSrcId());
 
-    List<ReportDataSubSource> subsources = rds.getSubSources();
     ModelAndView mav = new ModelAndView(getSuccessView(), errors.getModel());
-    mav.addObject("reportDataSubSources",subsources);
 
     return mav;
   }
