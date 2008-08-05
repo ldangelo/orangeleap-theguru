@@ -1,17 +1,10 @@
 package com.mpower.dao;
 
 import java.util.List;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.validator.GenericValidator;
 import org.springframework.stereotype.Repository;
 import com.mpower.domain.ReportWizard;
 

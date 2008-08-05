@@ -13,14 +13,14 @@
 <table>
 <Tr><td>
 <SELECT size="10" style="width:275px;">
-		<OPTION>First Name</OPTION>
-		<OPTION>Last Name</OPTION>>
-		<OPTION>Middle Name</OPTION>>
-		<OPTION>Address 1</OPTION>>
-		<OPTION>Address 2</OPTION>>
-		<OPTION>City</OPTION>>
-		<OPTION>State</OPTION>>
-		</SELECT></td>
+<c:forEach var="rds" items="${reportsource.reportDataSource.subSources}">
+<c:forEach var="fgroup" items="${rds.fieldGroups}">
+<c:forEach var="field" items="${fgroup.fields}">
+<input type=checkbox name="${fgroup.name}" value="${field.id}" checked="${field.isDefault}">${field.displayName}</td>
+</c:forEach>
+</c:forEach>
+</c:forEach>
+</SELECT></td>
 <td>
 	<div class="text">Top</div>
 	<div class="text"><input type="button" title="Top" alt="Top" /></div>

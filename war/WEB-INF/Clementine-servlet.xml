@@ -24,33 +24,38 @@
 
 	<bean id="defaultHandlerMapping" class="org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping"/>
 
-   
-    <bean name="/ReportWizard.htm" class="com.mpower.controller.ReportSourceFormController">
-        <property name="commandName" value="reportsource"/>
-        <property name="commandClass" value="com.mpower.domain.ReportWizard"/>
-        <property name="reportSourceService" ref="reportSourceService"/>         
-	<property name="formView" value="ReportSource"/>
-	<property name="successView" value="redirect:ReportSubSource.htm"/>
-    </bean>
-
-    <bean name="/ReportSubSource.htm" class="com.mpower.controller.ReportSubSourceFormController">
-        <property name="commandName" value="reportsource"/>
-        <property name="commandClass" value="com.mpower.domain.ReportWizard"/>
-        <property name="reportSourceService" ref="reportSourceService"/>         
-	<property name="formView" value="ReportSubSource"/>
-	<property name="successView" value="ReportFormat"/>
-    </bean>
-
-
-    <bean name="/ReportFormat.htm" class="com.mpower.controller.ReportFormatFormController">
-        <property name="commandName" value="reportsource"/>
-        <property name="commandClass" value="com.mpower.domain.ReportWizard"/>
-        <property name="reportSourceService" ref="reportSourceService"/>         
-	<property name="formView" value="ReportFormat"/>
-	<property name="successView" value="ReportFormat"/>
-    </bean>
-
+	<bean id="dynamicReport" class="com.mpower.view.DynamicReportView">
+	    	<property name="jdbcDataSource" ref="dataSource"/>
+	</bean>
     
+    <bean id="htmlReport" class="org.springframework.web.servlet.view.jasperreports.JasperReportsHtmlView">
+    	<property name="url" value="/WEB-INF/reports/classic.jrxml"/>
+    	<property name="jdbcDataSource" ref="dataSource"/>
+    </bean>
+    
+    <bean name="/dynamicReport.htm" class="com.mpower.controller.DynamicReportController">
+		<property name="dynamicView" ref="dynamicReport"/>
+    </bean>
+    
+    <bean name="/simpleReport.htm" class="com.mpower.controller.SimpleReportController">
+		<property name="htmlView" ref="htmlReport"/>
+    </bean>
+
+    <bean name="/ReportWizard.htm" class="com.mpower.controller.ReportWizardFormController">
+        <property name="commandName" value="reportsource"/>
+        <property name="commandClass" value="com.mpower.domain.ReportWizard"/>
+        <property name="reportSourceService" ref="reportSourceService"/>  
+        <property name="dynamicView" ref="dynamicReport"/>       
+	<property name="pages">
+		<list>
+			<value>ReportSource</value>
+			<value>ReportSubSource</value>
+			<value>ReportFormat</value>
+			<value>ReportColumns</value>
+
+		</list>
+	</property>
+    </bean>
 
 	<!-- Configures the Tiles layout system -->
 	<bean id="tilesConfigurer"

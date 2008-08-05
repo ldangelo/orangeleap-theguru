@@ -1,50 +1,55 @@
 package com.mpower.domain;
 
-import java.lang.Boolean;
-import java.util.Set;
-import java.util.List;
-import java.util.Date;
+import java.util.SortedSet;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 
-import com.mpower.domain.ReportField;
+import org.hibernate.annotations.Sort;
+import org.hibernate.annotations.SortType;
 
 @Entity
-public class ReportFieldGroup implements java.io.Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+public class ReportFieldGroup implements java.io.Serializable,
+		Comparable<ReportFieldGroup> {
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private long id;
 
-  private String Name;
-  
-  @OneToMany(cascade = CascadeType.ALL)
-  private List<ReportField> fields;
-  
-  public void setName(String n) 
-  {
-	  Name = n;
-  }
-  
-  public String getName()
-  {
-	  return Name;
-  }
-  
-  public void setFields(List<ReportField> f)
-  {
-	  fields = f;
-  }
+	private String Name;
 
-  public List<ReportField> getFields()
-  {
-	  return fields;
-  }
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@Sort(type = SortType.NATURAL)
+	private SortedSet<ReportField> fields;
+
+	public void setName(String n) {
+		Name = n;
+	}
+
+	public String getName() {
+		return Name;
+	}
+
+	public void setFields(SortedSet<ReportField> f) {
+		fields = f;
+	}
+
+	public SortedSet<ReportField> getFields() {
+
+		return fields;
+	}
+
+	@Override
+	public int compareTo(ReportFieldGroup o) {
+		if (this.id > o.id)
+			return 1;
+		if (this.id < o.id)
+			return -1;
+
+		return 0;
+	}
 }

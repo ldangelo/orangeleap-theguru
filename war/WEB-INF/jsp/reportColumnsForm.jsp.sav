@@ -4,17 +4,7 @@
 		<h1>
 			Report Wizard
 		</h1>
-${reportsource}
-<br>
-${reportsource.dataSource}
-<br>
-${reportsource.dataSubSource}
-<br>
-${reportsource.dataSubSource.fieldGroups}
-<br>
-${reportsource.srcId}
-<br>
-${reportsource.subSourceId}
+
 <c:forEach var="rds" items="${reportsource.reportDataSource.subSources}">
 <c:forEach var="fgroup" items="${rds.fieldGroups}">
 <h2>${fgroup.name}</h2>

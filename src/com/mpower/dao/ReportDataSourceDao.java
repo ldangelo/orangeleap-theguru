@@ -1,17 +1,17 @@
 package com.mpower.dao;
 
-import java.util.List;
+import java.util.SortedSet;
 
 import com.mpower.domain.ReportDataSource;
 
 public interface ReportDataSourceDao {
-    public ReportDataSource findById(long Id);
-    
-    public List<ReportDataSource> getAll();
+	public ReportDataSource findById(long Id);
 
-    public void save(ReportDataSource datasource);
+	public SortedSet<ReportDataSource> getAll();
 
-    public ReportDataSource update(ReportDataSource datasource);
+	public void save(ReportDataSource datasource);
 
-    public void delete(ReportDataSource datasource);
+	public ReportDataSource update(ReportDataSource datasource);
+
+	public void delete(ReportDataSource datasource);
 }

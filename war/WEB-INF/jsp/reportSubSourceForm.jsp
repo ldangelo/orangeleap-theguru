@@ -1,7 +1,6 @@
 <%@ include file="/WEB-INF/jsp/include.jsp" %>
 <mp:page pageName='reportSubSource'/>
 
-*${reportDataSubSources}*
 
 <form:form name="myform" method="post" commandName="reportsource">
    <form:select path="subSourceId" multiple="false">

@@ -1,18 +1,15 @@
 package com.mpower.dao;
 
 import java.util.List;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.validator.GenericValidator;
 import org.springframework.stereotype.Repository;
+
 import com.mpower.domain.ReportDataSource;
 
 @Repository("reportDataSourceDao")
@@ -40,9 +37,14 @@ public class JPAReportDataSourceDao implements ReportDataSourceDao {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<ReportDataSource> getAll() {
-		Query q = em.createQuery("SELECT reportdatasource from com.mpower.domain.ReportDataSource reportdatasource");
-		return q.getResultList();
+	public SortedSet<ReportDataSource> getAll() {
+		Query q = em
+				.createQuery("SELECT reportdatasource from com.mpower.domain.ReportDataSource reportdatasource");
+		List<ReportDataSource> lrds = q.getResultList();
+		TreeSet<ReportDataSource> ssrds = new TreeSet<ReportDataSource>();
+
+		ssrds.addAll(lrds);
+		return ssrds;
 
 	}
 
