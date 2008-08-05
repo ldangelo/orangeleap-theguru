@@ -25,7 +25,7 @@ test<form:form method="post" commandName="reportsource">
 <br>
 
 <input type="submit" value="Cancel" name="_target2">
-<input type="submit" value="Run" name="_finish">
+<input type="submit" value="Next" name="_target4">
 
 
 </form:form>
