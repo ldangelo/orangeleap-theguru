@@ -5,15 +5,24 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 @Entity
 public class ReportField implements java.io.Serializable,
 		Comparable<ReportField> {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2871208732277362753L;
+
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 
-	// private ReportFieldGroup group;
+
 	private String displayName;
 	private String columnName;
 
@@ -24,8 +33,22 @@ public class ReportField implements java.io.Serializable,
 	private Boolean isSummarized;
 	private Boolean selected;
 
+	@ManyToOne
+	@JoinColumn(name="GroupId")
+	private ReportFieldGroup reportFieldGroup;
 	public ReportField() {
 
+	}
+
+	public ReportField(ReportField f) {
+		displayName = f.displayName;
+		columnName  = f.columnName;
+		type        = f.type;
+		isDefault   = f.isDefault;
+		canBeSummarized = f.canBeSummarized;
+		isSummarized = f.isSummarized;
+		selected    = f.selected;
+		reportFieldGroup = new ReportFieldGroup(f.reportFieldGroup);
 	}
 
 	public Boolean getSelected() {
@@ -88,7 +111,6 @@ public class ReportField implements java.io.Serializable,
 		return canBeSummarized;
 	}
 
-	@Override
 	public int compareTo(ReportField o) {
 		if (this.id > o.id)
 			return 1;
@@ -96,6 +118,14 @@ public class ReportField implements java.io.Serializable,
 			return -1;
 
 		return 0;
+	}
+
+	public ReportFieldGroup getReportFieldGroup() {
+		return reportFieldGroup;
+	}
+
+	public void setReportFieldGroup(ReportFieldGroup reportFieldGroup) {
+		this.reportFieldGroup = reportFieldGroup;
 	}
 
 }

@@ -1,89 +1,272 @@
 <testng-results>
   <reporter-output>
   </reporter-output>
-  <suite name="Clementine">
+  <suite name="Clementine Test Suite">
     <groups>
     </groups>
-    <test name="com.mpower.test.ReportSourceTest">
+    <test name="clementine-tests">
+      <class name="com.mpower.test.ReportFieldTest">
+        <test-method status="PASS" signature="listReportField()" name="listReportField" duration-ms="7" started-at="2008-08-07T15:03:56Z" depends-on-methods="com.mpower.test.ReportFieldTest.createReportField" finished-at="2008-08-07T15:03:56Z">
+        </test-method>
+        <test-method status="PASS" signature="createReportField(com.mpower.domain.ReportDataSource, com.mpower.domain.ReportDataSubSource, com.mpower.domain.ReportFieldGroup, com.mpower.domain.ReportField)" name="createReportField" duration-ms="12" started-at="2008-08-07T15:03:56Z" finished-at="2008-08-07T15:03:56Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[com.mpower.domain.ReportDataSource@30848636]]>
+              </value>
+            </param>
+            <param index="1">
+              <value>
+                <![CDATA[com.mpower.domain.ReportDataSubSource@4c875c1c]]>
+              </value>
+            </param>
+            <param index="2">
+              <value>
+                <![CDATA[com.mpower.domain.ReportFieldGroup@4ab05984]]>
+              </value>
+            </param>
+            <param index="3">
+              <value>
+                <![CDATA[com.mpower.domain.ReportField@7fc50f6a]]>
+              </value>
+            </param>
+          </params>
+        </test-method>
+        <test-method status="PASS" signature="springTestContextBeforeTestMethod(java.lang.reflect.Method)" name="springTestContextBeforeTestMethod" is-config="true" duration-ms="0" started-at="2008-08-07T15:03:56Z" finished-at="2008-08-07T15:03:56Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.mpower.test.ReportFieldTest.createReportField(com.mpower.domain.ReportDataSource,com.mpower.domain.ReportDataSubSource,com.mpower.domain.ReportFieldGroup,com.mpower.domain.ReportField)]]>
+              </value>
+            </param>
+          </params>
+        </test-method>
+        <test-method status="PASS" signature="springTestContextAfterTestMethod(java.lang.reflect.Method)" name="springTestContextAfterTestMethod" is-config="true" duration-ms="0" started-at="2008-08-07T15:03:56Z" finished-at="2008-08-07T15:03:56Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[void com.mpower.test.ReportFieldTest.findReportField()]]>
+              </value>
+            </param>
+          </params>
+        </test-method>
+        <test-method status="PASS" signature="springTestContextBeforeTestMethod(java.lang.reflect.Method)" name="springTestContextBeforeTestMethod" is-config="true" duration-ms="0" started-at="2008-08-07T15:03:56Z" finished-at="2008-08-07T15:03:56Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[void com.mpower.test.ReportFieldTest.findReportField()]]>
+              </value>
+            </param>
+          </params>
+        </test-method>
+        <test-method status="PASS" signature="springTestContextAfterTestMethod(java.lang.reflect.Method)" name="springTestContextAfterTestMethod" is-config="true" duration-ms="1" started-at="2008-08-07T15:03:56Z" finished-at="2008-08-07T15:03:56Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.mpower.test.ReportFieldTest.createReportField(com.mpower.domain.ReportDataSource,com.mpower.domain.ReportDataSubSource,com.mpower.domain.ReportFieldGroup,com.mpower.domain.ReportField)]]>
+              </value>
+            </param>
+          </params>
+        </test-method>
+        <test-method status="PASS" signature="findReportField()" name="findReportField" duration-ms="15" started-at="2008-08-07T15:03:56Z" depends-on-methods="com.mpower.test.ReportFieldTest.createReportField" finished-at="2008-08-07T15:03:56Z">
+        </test-method>
+        <test-method status="PASS" signature="springTestContextAfterTestMethod(java.lang.reflect.Method)" name="springTestContextAfterTestMethod" is-config="true" duration-ms="1" started-at="2008-08-07T15:03:56Z" finished-at="2008-08-07T15:03:56Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.mpower.test.ReportFieldTest.listReportField()]]>
+              </value>
+            </param>
+          </params>
+        </test-method>
+        <test-method status="PASS" signature="setup()" name="setup" is-config="true" duration-ms="0" started-at="2008-08-07T15:03:56Z" finished-at="2008-08-07T15:03:56Z">
+        </test-method>
+        <test-method status="PASS" signature="springTestContextPrepareTestInstance()" name="springTestContextPrepareTestInstance" is-config="true" duration-ms="7" started-at="2008-08-07T15:03:56Z" finished-at="2008-08-07T15:03:56Z">
+        </test-method>
+        <test-method status="PASS" signature="springTestContextBeforeTestMethod(java.lang.reflect.Method)" name="springTestContextBeforeTestMethod" is-config="true" duration-ms="0" started-at="2008-08-07T15:03:56Z" finished-at="2008-08-07T15:03:56Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.mpower.test.ReportFieldTest.listReportField()]]>
+              </value>
+            </param>
+          </params>
+        </test-method>
+      </class>
+      <class name="com.mpower.test.ReportFieldGroupTest">
+        <test-method status="PASS" signature="springTestContextPrepareTestInstance()" name="springTestContextPrepareTestInstance" is-config="true" duration-ms="2689" started-at="2008-08-07T15:03:53Z" finished-at="2008-08-07T15:03:56Z">
+        </test-method>
+        <test-method status="PASS" signature="springTestContextBeforeTestMethod(java.lang.reflect.Method)" name="springTestContextBeforeTestMethod" is-config="true" duration-ms="0" started-at="2008-08-07T15:03:56Z" finished-at="2008-08-07T15:03:56Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.mpower.test.ReportFieldGroupTest.listReportFieldGroup()]]>
+              </value>
+            </param>
+          </params>
+        </test-method>
+        <test-method status="PASS" signature="springTestContextAfterTestMethod(java.lang.reflect.Method)" name="springTestContextAfterTestMethod" is-config="true" duration-ms="0" started-at="2008-08-07T15:03:56Z" finished-at="2008-08-07T15:03:56Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.mpower.test.ReportFieldGroupTest.listReportFieldGroup()]]>
+              </value>
+            </param>
+          </params>
+        </test-method>
+        <test-method status="PASS" signature="springTestContextAfterTestMethod(java.lang.reflect.Method)" name="springTestContextAfterTestMethod" is-config="true" duration-ms="0" started-at="2008-08-07T15:03:56Z" finished-at="2008-08-07T15:03:56Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[void com.mpower.test.ReportFieldGroupTest.findReportFieldGroup()]]>
+              </value>
+            </param>
+          </params>
+        </test-method>
+        <test-method status="PASS" signature="springTestContextBeforeTestMethod(java.lang.reflect.Method)" name="springTestContextBeforeTestMethod" is-config="true" duration-ms="0" started-at="2008-08-07T15:03:56Z" finished-at="2008-08-07T15:03:56Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[void com.mpower.test.ReportFieldGroupTest.findReportFieldGroup()]]>
+              </value>
+            </param>
+          </params>
+        </test-method>
+        <test-method status="PASS" signature="createReportFieldGroup(com.mpower.domain.ReportDataSource, com.mpower.domain.ReportDataSubSource, com.mpower.domain.ReportFieldGroup)" name="createReportFieldGroup" duration-ms="98" started-at="2008-08-07T15:03:56Z" finished-at="2008-08-07T15:03:56Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[com.mpower.domain.ReportDataSource@48a198b8]]>
+              </value>
+            </param>
+            <param index="1">
+              <value>
+                <![CDATA[com.mpower.domain.ReportDataSubSource@69317d48]]>
+              </value>
+            </param>
+            <param index="2">
+              <value>
+                <![CDATA[com.mpower.domain.ReportFieldGroup@301837ec]]>
+              </value>
+            </param>
+          </params>
+        </test-method>
+        <test-method status="PASS" signature="springTestContextBeforeTestMethod(java.lang.reflect.Method)" name="springTestContextBeforeTestMethod" is-config="true" duration-ms="0" started-at="2008-08-07T15:03:56Z" finished-at="2008-08-07T15:03:56Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.mpower.test.ReportFieldGroupTest.createReportFieldGroup(com.mpower.domain.ReportDataSource,com.mpower.domain.ReportDataSubSource,com.mpower.domain.ReportFieldGroup)]]>
+              </value>
+            </param>
+          </params>
+        </test-method>
+        <test-method status="PASS" signature="findReportFieldGroup()" name="findReportFieldGroup" duration-ms="6" started-at="2008-08-07T15:03:56Z" depends-on-methods="com.mpower.test.ReportFieldGroupTest.createReportFieldGroup" finished-at="2008-08-07T15:03:56Z">
+        </test-method>
+        <test-method status="PASS" signature="setup()" name="setup" is-config="true" duration-ms="0" started-at="2008-08-07T15:03:56Z" finished-at="2008-08-07T15:03:56Z">
+        </test-method>
+        <test-method status="PASS" signature="springTestContextAfterTestMethod(java.lang.reflect.Method)" name="springTestContextAfterTestMethod" is-config="true" duration-ms="1" started-at="2008-08-07T15:03:56Z" finished-at="2008-08-07T15:03:56Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.mpower.test.ReportFieldGroupTest.createReportFieldGroup(com.mpower.domain.ReportDataSource,com.mpower.domain.ReportDataSubSource,com.mpower.domain.ReportFieldGroup)]]>
+              </value>
+            </param>
+          </params>
+        </test-method>
+        <test-method status="PASS" signature="listReportFieldGroup()" name="listReportFieldGroup" duration-ms="219" started-at="2008-08-07T15:03:56Z" depends-on-methods="com.mpower.test.ReportFieldGroupTest.createReportFieldGroup" finished-at="2008-08-07T15:03:56Z">
+        </test-method>
+      </class>
+      <class name="com.mpower.test.ReportSubSourceTest">
+        <test-method status="PASS" signature="createReportSubSources(com.mpower.domain.ReportDataSource, com.mpower.domain.ReportDataSubSource)" name="createReportSubSources" duration-ms="3" started-at="2008-08-07T15:03:56Z" finished-at="2008-08-07T15:03:56Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[com.mpower.domain.ReportDataSource@78891447]]>
+              </value>
+            </param>
+            <param index="1">
+              <value>
+                <![CDATA[com.mpower.domain.ReportDataSubSource@6f927f23]]>
+              </value>
+            </param>
+          </params>
+        </test-method>
+        <test-method status="PASS" signature="springTestContextBeforeTestMethod(java.lang.reflect.Method)" name="springTestContextBeforeTestMethod" is-config="true" duration-ms="0" started-at="2008-08-07T15:03:56Z" finished-at="2008-08-07T15:03:56Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.mpower.test.ReportSubSourceTest.createReportSubSources(com.mpower.domain.ReportDataSource,com.mpower.domain.ReportDataSubSource)]]>
+              </value>
+            </param>
+          </params>
+        </test-method>
+        <test-method status="PASS" signature="springTestContextAfterTestMethod(java.lang.reflect.Method)" name="springTestContextAfterTestMethod" is-config="true" duration-ms="0" started-at="2008-08-07T15:03:56Z" finished-at="2008-08-07T15:03:56Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.mpower.test.ReportSubSourceTest.createReportSubSources(com.mpower.domain.ReportDataSource,com.mpower.domain.ReportDataSubSource)]]>
+              </value>
+            </param>
+          </params>
+        </test-method>
+        <test-method status="PASS" signature="listReportSubSource()" name="listReportSubSource" duration-ms="8" started-at="2008-08-07T15:03:56Z" depends-on-methods="com.mpower.test.ReportSubSourceTest.createReportSubSources" finished-at="2008-08-07T15:03:56Z">
+        </test-method>
+        <test-method status="PASS" signature="findReportSubSource()" name="findReportSubSource" duration-ms="4" started-at="2008-08-07T15:03:56Z" depends-on-methods="com.mpower.test.ReportSubSourceTest.createReportSubSources" finished-at="2008-08-07T15:03:56Z">
+        </test-method>
+        <test-method status="PASS" signature="springTestContextBeforeTestMethod(java.lang.reflect.Method)" name="springTestContextBeforeTestMethod" is-config="true" duration-ms="1" started-at="2008-08-07T15:03:56Z" finished-at="2008-08-07T15:03:56Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.mpower.test.ReportSubSourceTest.listReportSubSource()]]>
+              </value>
+            </param>
+          </params>
+        </test-method>
+        <test-method status="PASS" signature="springTestContextPrepareTestInstance()" name="springTestContextPrepareTestInstance" is-config="true" duration-ms="7" started-at="2008-08-07T15:03:56Z" finished-at="2008-08-07T15:03:56Z">
+        </test-method>
+        <test-method status="PASS" signature="springTestContextAfterTestMethod(java.lang.reflect.Method)" name="springTestContextAfterTestMethod" is-config="true" duration-ms="0" started-at="2008-08-07T15:03:56Z" finished-at="2008-08-07T15:03:56Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.mpower.test.ReportSubSourceTest.listReportSubSource()]]>
+              </value>
+            </param>
+          </params>
+        </test-method>
+        <test-method status="PASS" signature="setup()" name="setup" is-config="true" duration-ms="0" started-at="2008-08-07T15:03:56Z" finished-at="2008-08-07T15:03:56Z">
+        </test-method>
+        <test-method status="PASS" signature="springTestContextAfterTestMethod(java.lang.reflect.Method)" name="springTestContextAfterTestMethod" is-config="true" duration-ms="0" started-at="2008-08-07T15:03:56Z" finished-at="2008-08-07T15:03:56Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[void com.mpower.test.ReportSubSourceTest.findReportSubSource()]]>
+              </value>
+            </param>
+          </params>
+        </test-method>
+        <test-method status="PASS" signature="springTestContextBeforeTestMethod(java.lang.reflect.Method)" name="springTestContextBeforeTestMethod" is-config="true" duration-ms="0" started-at="2008-08-07T15:03:56Z" finished-at="2008-08-07T15:03:56Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[void com.mpower.test.ReportSubSourceTest.findReportSubSource()]]>
+              </value>
+            </param>
+          </params>
+        </test-method>
+      </class>
       <class name="com.mpower.test.ReportSourceTest">
-        <test-method status="PASS" signature="springTestContextBeforeTestMethod(java.lang.reflect.Method)" name="springTestContextBeforeTestMethod" is-config="true" duration-ms="0" started-at="2008-07-16T15:38:37Z" finished-at="2008-07-16T15:38:37Z">
+        <test-method status="PASS" signature="springTestContextAfterTestMethod(java.lang.reflect.Method)" name="springTestContextAfterTestMethod" is-config="true" duration-ms="0" started-at="2008-08-07T15:03:56Z" finished-at="2008-08-07T15:03:56Z">
           <params>
             <param index="0">
               <value>
-                <![CDATA[public void com.mpower.test.ReportSourceTest.listReportSource(com.mpower.domain.ReportSource)]]>
+                <![CDATA[public void com.mpower.test.ReportSourceTest.createReportSources(com.mpower.domain.ReportDataSource)]]>
               </value>
             </param>
           </params>
         </test-method>
-        <test-method status="FAIL" signature="listReportSource(com.mpower.domain.ReportSource)" name="listReportSource" duration-ms="118" started-at="2008-07-16T15:38:37Z" finished-at="2008-07-16T15:38:37Z">
-          <params>
-            <param index="0">
-              <value>
-                <![CDATA[com.mpower.domain.ReportSource@6a566f08]]>
-              </value>
-            </param>
-          </params>
-          <exception class="java.lang.IllegalArgumentException">
-            <message>
-              <![CDATA[Unknown entity: com.mpower.domain.ReportSource]]>
-            </message>
-            <full-stacktrace>
-              <![CDATA[java.lang.IllegalArgumentException: Unknown entity: com.mpower.domain.ReportSource
-	at org.hibernate.ejb.AbstractEntityManagerImpl.persist(AbstractEntityManagerImpl.java:215)
-	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
-	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
-	at java.lang.reflect.Method.invoke(Method.java:597)
-	at org.springframework.orm.jpa.ExtendedEntityManagerCreator$ExtendedEntityManagerInvocationHandler.invoke(ExtendedEntityManagerCreator.java:357)
-	at $Proxy13.persist(Unknown Source)
-	at com.mpower.test.ReportSourceTest.listReportSource(ReportSourceTest.java:36)
-	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
-	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
-	at java.lang.reflect.Method.invoke(Method.java:597)
-	at org.testng.internal.MethodHelper.invokeMethod(MethodHelper.java:580)
-	at org.testng.internal.MethodHelper$1.runTestMethod(MethodHelper.java:698)
-	at org.springframework.test.context.testng.AbstractTestNGSpringContextTests.run(AbstractTestNGSpringContextTests.java:140)
-	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
-	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
-	at java.lang.reflect.Method.invoke(Method.java:597)
-	at org.testng.internal.MethodHelper.invokeHookable(MethodHelper.java:706)
-	at org.testng.internal.Invoker.invokeMethod(Invoker.java:468)
-	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:617)
-	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:885)
-	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:126)
-	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:110)
-	at org.testng.TestRunner.runWorkers(TestRunner.java:712)
-	at org.testng.TestRunner.privateRun(TestRunner.java:582)
-	at org.testng.TestRunner.run(TestRunner.java:477)
-	at org.testng.SuiteRunner.runTest(SuiteRunner.java:324)
-	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:319)
-	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:292)
-	at org.testng.SuiteRunner.run(SuiteRunner.java:198)
-	at org.testng.TestNG.createAndRunSuiteRunners(TestNG.java:823)
-	at org.testng.TestNG.runSuitesLocally(TestNG.java:790)
-	at org.testng.TestNG.run(TestNG.java:708)
-	at org.testng.remote.RemoteTestNG.run(RemoteTestNG.java:73)
-	at org.testng.remote.RemoteTestNG.main(RemoteTestNG.java:124)
-]]>
-            </full-stacktrace>
-          </exception>
+        <test-method status="PASS" signature="emptyTest()" name="emptyTest" duration-ms="2" started-at="2008-08-07T15:03:56Z" finished-at="2008-08-07T15:03:56Z">
         </test-method>
-        <test-method status="PASS" signature="springTestContextPrepareTestInstance()" name="springTestContextPrepareTestInstance" is-config="true" duration-ms="1442" started-at="2008-07-16T15:38:35Z" finished-at="2008-07-16T15:38:37Z">
-        </test-method>
-        <test-method status="PASS" signature="setup()" name="setup" is-config="true" duration-ms="0" started-at="2008-07-16T15:38:37Z" finished-at="2008-07-16T15:38:37Z">
-        </test-method>
-        <test-method status="PASS" signature="springTestContextAfterTestMethod(java.lang.reflect.Method)" name="springTestContextAfterTestMethod" is-config="true" duration-ms="0" started-at="2008-07-16T15:38:37Z" finished-at="2008-07-16T15:38:37Z">
-          <params>
-            <param index="0">
-              <value>
-                <![CDATA[public void com.mpower.test.ReportSourceTest.listReportSource(com.mpower.domain.ReportSource)]]>
-              </value>
-            </param>
-          </params>
-        </test-method>
-        <test-method status="PASS" signature="springTestContextBeforeTestMethod(java.lang.reflect.Method)" name="springTestContextBeforeTestMethod" is-config="true" duration-ms="0" started-at="2008-07-16T15:38:37Z" finished-at="2008-07-16T15:38:37Z">
+        <test-method status="PASS" signature="springTestContextAfterTestMethod(java.lang.reflect.Method)" name="springTestContextAfterTestMethod" is-config="true" duration-ms="0" started-at="2008-08-07T15:03:56Z" finished-at="2008-08-07T15:03:56Z">
           <params>
             <param index="0">
               <value>
@@ -92,13 +275,73 @@
             </param>
           </params>
         </test-method>
-        <test-method status="PASS" signature="emptyTest()" name="emptyTest" duration-ms="4" started-at="2008-07-16T15:38:37Z" finished-at="2008-07-16T15:38:37Z">
+        <test-method status="PASS" signature="springTestContextBeforeTestMethod(java.lang.reflect.Method)" name="springTestContextBeforeTestMethod" is-config="true" duration-ms="0" started-at="2008-08-07T15:03:56Z" finished-at="2008-08-07T15:03:56Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.mpower.test.ReportSourceTest.createReportSources(com.mpower.domain.ReportDataSource)]]>
+              </value>
+            </param>
+          </params>
         </test-method>
-        <test-method status="PASS" signature="springTestContextAfterTestMethod(java.lang.reflect.Method)" name="springTestContextAfterTestMethod" is-config="true" duration-ms="0" started-at="2008-07-16T15:38:37Z" finished-at="2008-07-16T15:38:37Z">
+        <test-method status="PASS" signature="springTestContextBeforeTestMethod(java.lang.reflect.Method)" name="springTestContextBeforeTestMethod" is-config="true" duration-ms="0" started-at="2008-08-07T15:03:56Z" finished-at="2008-08-07T15:03:56Z">
           <params>
             <param index="0">
               <value>
                 <![CDATA[public void com.mpower.test.ReportSourceTest.emptyTest()]]>
+              </value>
+            </param>
+          </params>
+        </test-method>
+        <test-method status="PASS" signature="springTestContextPrepareTestInstance()" name="springTestContextPrepareTestInstance" is-config="true" duration-ms="7" started-at="2008-08-07T15:03:56Z" finished-at="2008-08-07T15:03:56Z">
+        </test-method>
+        <test-method status="PASS" signature="springTestContextBeforeTestMethod(java.lang.reflect.Method)" name="springTestContextBeforeTestMethod" is-config="true" duration-ms="0" started-at="2008-08-07T15:03:56Z" finished-at="2008-08-07T15:03:56Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.mpower.test.ReportSourceTest.listReportSource()]]>
+              </value>
+            </param>
+          </params>
+        </test-method>
+        <test-method status="PASS" signature="springTestContextAfterTestMethod(java.lang.reflect.Method)" name="springTestContextAfterTestMethod" is-config="true" duration-ms="0" started-at="2008-08-07T15:03:56Z" finished-at="2008-08-07T15:03:56Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[void com.mpower.test.ReportSourceTest.findReportSource()]]>
+              </value>
+            </param>
+          </params>
+        </test-method>
+        <test-method status="PASS" signature="springTestContextBeforeTestMethod(java.lang.reflect.Method)" name="springTestContextBeforeTestMethod" is-config="true" duration-ms="0" started-at="2008-08-07T15:03:56Z" finished-at="2008-08-07T15:03:56Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[void com.mpower.test.ReportSourceTest.findReportSource()]]>
+              </value>
+            </param>
+          </params>
+        </test-method>
+        <test-method status="PASS" signature="springTestContextAfterTestMethod(java.lang.reflect.Method)" name="springTestContextAfterTestMethod" is-config="true" duration-ms="0" started-at="2008-08-07T15:03:56Z" finished-at="2008-08-07T15:03:56Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.mpower.test.ReportSourceTest.listReportSource()]]>
+              </value>
+            </param>
+          </params>
+        </test-method>
+        <test-method status="PASS" signature="findReportSource()" name="findReportSource" duration-ms="6" started-at="2008-08-07T15:03:56Z" depends-on-methods="com.mpower.test.ReportSourceTest.createReportSources" finished-at="2008-08-07T15:03:56Z">
+        </test-method>
+        <test-method status="PASS" signature="setup()" name="setup" is-config="true" duration-ms="1" started-at="2008-08-07T15:03:56Z" finished-at="2008-08-07T15:03:56Z">
+        </test-method>
+        <test-method status="PASS" signature="listReportSource()" name="listReportSource" duration-ms="12" started-at="2008-08-07T15:03:56Z" depends-on-methods="com.mpower.test.ReportSourceTest.createReportSources" finished-at="2008-08-07T15:03:56Z">
+        </test-method>
+        <test-method status="PASS" signature="createReportSources(com.mpower.domain.ReportDataSource)" name="createReportSources" duration-ms="3" started-at="2008-08-07T15:03:56Z" finished-at="2008-08-07T15:03:56Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[com.mpower.domain.ReportDataSource@952942b]]>
               </value>
             </param>
           </params>

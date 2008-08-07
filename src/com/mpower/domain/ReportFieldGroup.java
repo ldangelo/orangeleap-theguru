@@ -1,6 +1,7 @@
 package com.mpower.domain;
 
-import java.util.SortedSet;
+import java.util.List;
+import java.util.Map;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -8,6 +9,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.Sort;
@@ -20,11 +23,28 @@ public class ReportFieldGroup implements java.io.Serializable,
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 
+	@ManyToOne
+	@JoinColumn(name="REPORTSUBSOURCE_ID")
+	private ReportDataSubSource reportDataSubSource;
+	public ReportFieldGroup(ReportFieldGroup group) {
+		reportDataSubSource = new ReportDataSubSource(reportDataSubSource);
+	}
+
+	public ReportFieldGroup() {
+
+	}
+
+	public ReportDataSubSource getReportDataSubSource() {
+		return reportDataSubSource;
+	}
+
+	public void setReportDataSubSource(ReportDataSubSource reportDataSubSource) {
+		this.reportDataSubSource = reportDataSubSource;
+	}
+
+
 	private String Name;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@Sort(type = SortType.NATURAL)
-	private SortedSet<ReportField> fields;
 
 	public void setName(String n) {
 		Name = n;
@@ -34,16 +54,7 @@ public class ReportFieldGroup implements java.io.Serializable,
 		return Name;
 	}
 
-	public void setFields(SortedSet<ReportField> f) {
-		fields = f;
-	}
 
-	public SortedSet<ReportField> getFields() {
-
-		return fields;
-	}
-
-	@Override
 	public int compareTo(ReportFieldGroup o) {
 		if (this.id > o.id)
 			return 1;

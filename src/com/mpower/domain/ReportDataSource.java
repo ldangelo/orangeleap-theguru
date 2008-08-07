@@ -1,6 +1,7 @@
 package com.mpower.domain;
 
-import java.util.SortedSet;
+import java.util.List;
+import java.util.Map;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -32,11 +33,16 @@ public class ReportDataSource implements java.io.Serializable,
 
 	private String Name;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@Sort(type = SortType.NATURAL)
-	private SortedSet<com.mpower.domain.ReportDataSubSource> subSource;
 	@Transient
 	protected final Log logger = LogFactory.getLog(getClass());
+
+	public ReportDataSource(ReportDataSource reportDataSource) {
+		Name = reportDataSource.Name;
+	}
+
+	public ReportDataSource() {
+
+	}
 
 	public Long getId() {
 		return id;
@@ -53,16 +59,6 @@ public class ReportDataSource implements java.io.Serializable,
 
 	public void setName(String displayName) {
 		Name = displayName;
-	}
-
-	public void setSubSources(SortedSet<ReportDataSubSource> ss) {
-		subSource = ss;
-	}
-
-	public SortedSet<ReportDataSubSource> getSubSources() {
-		logger.info("**** getSubSources");
-
-		return subSource;
 	}
 
 	@Override

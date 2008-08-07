@@ -1,6 +1,7 @@
 package com.mpower.service;
 
-import java.util.SortedSet;
+import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -15,7 +16,7 @@ public class ReportSourceImpl implements ReportSourceService {
 	private ReportDataSourceDao reportSourceDAO;
 
 	@Override
-	public SortedSet<ReportDataSource> readSources() {
+	public List<ReportDataSource> readSources() {
 		return reportSourceDAO.getAll();
 	}
 

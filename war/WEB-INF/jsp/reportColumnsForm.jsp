@@ -1,6 +1,6 @@
 <%@ include file="/WEB-INF/jsp/include.jsp" %>
 
-test<form:form method="post" commandName="reportsource">
+<form:form method="post" commandName="fieldGroups">
 		<h1>
 			Report Wizard
 		</h1>
@@ -9,9 +9,7 @@ test<form:form method="post" commandName="reportsource">
 <h2>${fgroup.name}</h2>
 <table width="100%">
 <tr>
-<c:forEach var="f" items="${fgroup.fields}">
-<input type="checkbox" name="$f.columnName" value="true" <c:if test="${f.isDefault}">checked</c:if>">${f.displayName}
-</c:forEach>
+<form:checkboxes path="$fgroup.fields" items="$fgroup.fields" element="isDefault" itemLabel="displayName"/>
 </tr></table>
 <BR></c:forEach>
 

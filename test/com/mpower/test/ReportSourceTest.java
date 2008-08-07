@@ -1,6 +1,7 @@
 package com.mpower.test;
 
-import java.util.SortedSet;
+import java.awt.List;
+import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -10,6 +11,7 @@ import org.testng.annotations.Test;
 
 import com.mpower.domain.ReportDataSource;
 import com.mpower.service.ReportSourceService;
+import com.mpower.test.BaseTest;
 import com.mpower.test.dataprovider.ReportSourceDataProvider;
 
 public class ReportSourceTest extends BaseTest {
@@ -20,8 +22,7 @@ public class ReportSourceTest extends BaseTest {
 	public void setup() {
 		emf = (EntityManagerFactory) applicationContext
 				.getBean("entityManagerFactory");
-		// personService = (PersonService)
-		// applicationContext.getBean("personService");
+		
 		reportSourceService = (ReportSourceService) applicationContext
 				.getBean("reportSourceService");
 
@@ -32,15 +33,15 @@ public class ReportSourceTest extends BaseTest {
 		reportSourceService.save(rs);
 	}
 
-	@Test
+	@Test(dependsOnMethods = "createReportSources")
 	public void listReportSource() {
 		EntityManager em = emf.createEntityManager();
 
-		SortedSet<ReportDataSource> lrs = reportSourceService.readSources();
-		assert lrs.size() == 1;
+		java.util.List<ReportDataSource> lrs = reportSourceService.readSources();
+		assert lrs.size() >= 1;
 	}
 
-	@Test
+	@Test(dependsOnMethods = "createReportSources")
 	void findReportSource() {
 		ReportDataSource rds = reportSourceService.find(1L);
 

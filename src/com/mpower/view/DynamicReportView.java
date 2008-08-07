@@ -25,12 +25,13 @@ import ar.com.fdvs.dj.core.layout.ClassicLayoutManager;
 import ar.com.fdvs.dj.domain.DynamicReport;
 import ar.com.fdvs.dj.domain.builders.FastReportBuilder;
 
-import com.mpower.domain.ReportWizard;
+
+//import com.mpower.service.ReportWizardService;
 
 public class DynamicReportView extends AbstractView {
 	private DataSource jdbcDataSource;
 	private static final int OUTPUT_BYTE_ARRAY_INITIAL_SIZE = 4096;
-	private ReportWizard reportWizard;
+//	private ReportWizardService reportWizard;
 
 	public DataSource getJdbcDataSource() {
 		return jdbcDataSource;
@@ -104,11 +105,5 @@ public class DynamicReportView extends AbstractView {
 		return exporter;
 	}
 
-	public void setReportWizard(ReportWizard reportWizard) {
-		this.reportWizard = reportWizard;
-	}
 
-	public ReportWizard getReportWizard() {
-		return reportWizard;
-	}
 }

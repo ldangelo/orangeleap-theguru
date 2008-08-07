@@ -5,6 +5,8 @@
       <class name="com.mpower.test.ReportSourceTest">
         <methods>
           <include name="springTestContextBeforeTestMethod"/>
+          <include name="createReportSources"/>
+          <include name="findReportSource"/>
           <include name="springTestContextAfterTestMethod"/>
           <include name="listReportSource"/>
           <include name="springTestContextPrepareTestInstance"/>

@@ -1,8 +1,11 @@
 package com.mpower.controller;
 
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
-import java.util.SortedSet;
+
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -19,8 +22,11 @@ import org.springframework.web.servlet.mvc.AbstractWizardFormController;
 
 import com.mpower.domain.ReportDataSource;
 import com.mpower.domain.ReportDataSubSource;
-import com.mpower.domain.ReportWizard;
+import com.mpower.domain.ReportField;
+import com.mpower.domain.ReportFieldGroup;
 import com.mpower.service.ReportSourceService;
+//import com.mpower.service.ReportWizardService;
+import com.mpower.service.SessionService;
 import com.mpower.view.DynamicReportView;
 
 public class ReportWizardFormController extends AbstractWizardFormController {
@@ -29,10 +35,11 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 
 	private DynamicReportView dynamicView;
 	private ReportSourceService reportSourceService;
-	private final ReportWizard wiz;
-
+//	private ReportWizardService reportWizardService;
+	private SessionService      sessionService;
+	
 	public ReportWizardFormController() {
-		wiz = new ReportWizard();
+		
 	}
 
 	public DynamicReportView getDynamicView() {
@@ -59,10 +66,10 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 	@Override
 	protected Map referenceData(HttpServletRequest request, Object command,
 			Errors errors, int page) throws Exception {
-		ReportWizard wiz = (ReportWizard) command;
+		//ReportWizard wiz = (ReportWizard) command;
 		Map refData = new HashMap();
 
-		//
+/*		//
 		// Report Source
 		if (page == 0) {
 			wiz.setDataSource(reportSourceService.find(wiz.getSrcId()));
@@ -80,11 +87,10 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		// Report Format
 		if (page == 2 && request.getParameter("_target2") != null) {
 			ReportDataSource rds = wiz.getReportDataSource();
-			SortedSet<ReportDataSubSource> rdss = rds.getSubSources();
-			ReportDataSubSource[] rdsa = rdss
-					.toArray(new ReportDataSubSource[rdss.size()]);
+			List<ReportDataSubSource> rdss = rds.getSubSources();
+			wiz.setDataSubSources(rdss);
+			wiz.setDataSubSource(rdss.get((int) wiz.getSubSourceId()));
 
-			wiz.setDataSubSource(rdsa[(int) wiz.getSubSourceId() - 1]);
 		}
 
 		//
@@ -93,20 +99,36 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 			ReportDataSubSource rdss = wiz.getDataSubSource();
 
 			refData.put("fieldGroups", rdss.getFieldGroups());
+
+			List<ReportField> fields = new LinkedList<ReportField>();
+
+			List<ReportFieldGroup> group = rdss.getFieldGroups();
+			// Iterate across the field groups in the
+
+			Iterator itGroup = group.iterator();
+			while (itGroup.hasNext()) {
+				ReportFieldGroup rfg = (ReportFieldGroup) itGroup.next();
+				fields.addAll(rfg.getFields());
+
+			}
+			wiz.setFields(fields);
+			refData.put("fields", fields);
+
 		}
 
 		return refData;
-	}
+*/ return null;	}
 
 	@Override
 	protected Object formBackingObject(HttpServletRequest request)
 			throws ServletException {
 		logger.info("**** in formBackingObject");
 
-		wiz.setDataSources(reportSourceService.readSources());
+/*		wiz.setDataSources(reportSourceService.readSources());
 
 		logger.info("Count " + wiz.getDataSources().size());
-		return wiz;
+		return wiz;*/
+		return null;
 	}
 
 	@Override
@@ -114,17 +136,17 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 			Errors errors, int page) throws Exception {
 		logger.info("**** in onSubmit()");
 		Map<String, Object> params = new HashMap<String, Object>();
-		ReportWizard wiz = (ReportWizard) command;
+/*		ReportWizard wiz = (ReportWizard) command;
 
 		params.put("ReportDataSourceId", wiz.getSrcId());
 		ReportDataSource rds = reportSourceService.find(wiz.getSrcId());
 
 		switch (page) {
 		case 0:
-			SortedSet<ReportDataSubSource> subsources = rds.getSubSources();
+			List<ReportDataSubSource> subsources = rds.getSubSources();
 			break;
 		}
-
+*/
 	}
 
 	@Override
@@ -140,10 +162,9 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		map.put(JRHtmlExporterParameter.IS_OUTPUT_IMAGES_TO_DIR, Boolean.TRUE);
 		String realPath = request.getRealPath("images/report/");
 		map.put(JRHtmlExporterParameter.IMAGES_DIR_NAME, realPath);
-		map.put(JRHtmlExporterParameter.IMAGES_URI,
-				"/clementine/images/report/");
+		map.put(JRHtmlExporterParameter.IMAGES_URI,"/clementine/images/report/");
 
-		dynamicView.setReportWizard(wiz);
+//		dynamicView.setReportWizard(wiz);
 		return new ModelAndView(dynamicView, map);
 	}
 
@@ -151,5 +172,4 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 	private String getSuccessView() {
 		return getPages()[getPages().length - 1];
 	}
-
 }

@@ -52,6 +52,7 @@
 			<value>ReportSubSource</value>
 			<value>ReportFormat</value>
 			<value>ReportColumns</value>
+			<value>ReportColumnsOrder</value>
 
 		</list>
 	</property>
