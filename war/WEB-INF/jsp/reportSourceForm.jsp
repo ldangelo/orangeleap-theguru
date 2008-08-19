@@ -1,8 +1,5 @@
 <%@ include file="/WEB-INF/jsp/include.jsp" %>
 
-
-
-
 <form:form name="myform" method="post" commandName="reportsource">
 
 <form:select path="srcId" multiple="false">

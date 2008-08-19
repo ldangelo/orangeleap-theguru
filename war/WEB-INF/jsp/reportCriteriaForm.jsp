@@ -13,8 +13,8 @@
 <br>
 <br>
 </div>
-<input type="submit" value="Back" name="_target5">
-<input type="submit" value="Run" name="_finish">
+<jsp:include page="snippets/navbuttons.jsp"/>
+
 </form:form>
 
 

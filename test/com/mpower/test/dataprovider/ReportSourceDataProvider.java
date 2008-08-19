@@ -1,5 +1,6 @@
 package com.mpower.test.dataprovider;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.testng.annotations.DataProvider;
@@ -14,36 +15,47 @@ public class ReportSourceDataProvider {
 	@SuppressWarnings("unchecked")
 	@DataProvider(name = "setupCreateReportSource")
 	public static Object[][] setupCreateReportSource() {
-		ReportDataSource rs = new ReportDataSource();
-		ReportDataSubSource rss = new ReportDataSubSource();
-
+		ReportDataSource               rs   = new ReportDataSource();
+		ReportDataSubSource            rss  = new ReportDataSubSource();
+		ArrayList<ReportDataSubSource> lrss = new ArrayList<ReportDataSubSource>();
+		
 		rs.setName("People");
 		rss.setDisplayName("People");
 		rss.setViewName("vPeople");
-
+		
+		rss.setReportDataSource(rs);
+		lrss.add(rss);
+		
+		rs.setSubSource(lrss);
 		ReportFieldGroup rfg = new ReportFieldGroup();
 
 		rfg.setName("Name");
-		HashMap<Long, ReportField> fields = new HashMap<Long, ReportField>();
+
 
 		ReportField rf1 = new ReportField();
 
 		rf1.setDisplayName("First Name");
 		rf1.setColumnName("First_Name");
 		rf1.setFieldType(ReportFieldType.STRING);
-		rf1.setIsDefault(true);
+		rf1.setSelected(true);
 		rf1.setCanBeSummarized(false);
-		rf1.setReportFieldGroup(rfg);
+		ArrayList<ReportFieldGroup> lrfg = new ArrayList<ReportFieldGroup>();
+		lrfg.add(rfg);
+//		rf1.setReportFieldGroup(new ArrayList<ReportFieldGroup>());
 		
 		ReportField rf2 = new ReportField();
 		rf2.setDisplayName("Last Name");
 		rf2.setColumnName("Last_Name");
 		rf2.setFieldType(ReportFieldType.STRING);
-		rf2.setIsDefault(true);
+		rf2.setSelected(true);
 		rf2.setCanBeSummarized(false);
-		rf2.setReportFieldGroup(rfg);
+//		rf2.setReportFieldGroup(lrfg);
+		ArrayList<ReportField> fields = new ArrayList<ReportField>();
+		fields.add(rf1);
+		fields.add(rf2);
+		rfg.setFields(fields);
 		
-		rfg.setReportDataSubSource(rss);
+		rfg.setReportDataSubSource(lrss);
 		rss.setReportDataSource(rs);
 
 		return new Object[][] { new Object[] { rs } };
@@ -62,26 +74,34 @@ public class ReportSourceDataProvider {
 		ReportFieldGroup rfg = new ReportFieldGroup();
 
 		rfg.setName("Name");
-		HashMap<Long, ReportField> fields = new HashMap<Long, ReportField>();
 
 		ReportField rf1 = new ReportField();
 
 		rf1.setDisplayName("First Name");
 		rf1.setColumnName("First_Name");
 		rf1.setFieldType(ReportFieldType.STRING);
-		rf1.setIsDefault(true);
+		rf1.setSelected(true);
 		rf1.setCanBeSummarized(false);
-		rf1.setReportFieldGroup(rfg);
+		ArrayList<ReportFieldGroup> lrfg = new ArrayList<ReportFieldGroup>();
+		lrfg.add(rfg);
+//		rf1.setReportFieldGroup(lrfg);
 		
 		ReportField rf2 = new ReportField();
 		rf2.setDisplayName("Last Name");
 		rf2.setColumnName("Last_Name");
 		rf2.setFieldType(ReportFieldType.STRING);
-		rf2.setIsDefault(true);
+		rf2.setSelected(true);
 		rf2.setCanBeSummarized(false);
-		rf2.setReportFieldGroup(rfg);
+//		rf2.setReportFieldGroup(lrfg);
+		ArrayList<ReportDataSubSource> lrss = new ArrayList<ReportDataSubSource>();
+		lrss.add(rss);
 		
-		rfg.setReportDataSubSource(rss);
+		ArrayList<ReportField> fields = new ArrayList<ReportField>();
+		fields.add(rf1);
+		fields.add(rf2);
+		rfg.setFields(fields);
+	
+		rfg.setReportDataSubSource(lrss);
 		rss.setReportDataSource(rs);
 
 		return new Object[][] { new Object[] { rs, rss } };
@@ -99,28 +119,39 @@ public class ReportSourceDataProvider {
 		ReportFieldGroup rfg = new ReportFieldGroup();
 
 		rfg.setName("Name");
-		HashMap<Long, ReportField> fields = new HashMap<Long, ReportField>();
 
 		ReportField rf1 = new ReportField();
 
 		rf1.setDisplayName("First Name");
 		rf1.setColumnName("First_Name");
 		rf1.setFieldType(ReportFieldType.STRING);
-		rf1.setIsDefault(true);
+		rf1.setSelected(true);
 		rf1.setCanBeSummarized(false);
-		rf1.setReportFieldGroup(rfg);
+		ArrayList<ReportFieldGroup> lrfg = new ArrayList<ReportFieldGroup>();
+		lrfg.add(rfg);
+		rf1.setReportFieldGroup(lrfg);
 		
 		ReportField rf2 = new ReportField();
 		rf2.setDisplayName("Last Name");
 		rf2.setColumnName("Last_Name");
 		rf2.setFieldType(ReportFieldType.STRING);
-		rf2.setIsDefault(true);
+		rf2.setSelected(true);
 		rf2.setCanBeSummarized(false);
-		rf2.setReportFieldGroup(rfg);
-		
-		rfg.setReportDataSubSource(rss);
+		rf2.setReportFieldGroup(lrfg);
+
+		ArrayList<ReportDataSubSource> lrss = new ArrayList<ReportDataSubSource>();
+		lrss.add(rss);
+
+		ArrayList<ReportField> fields = new ArrayList<ReportField>();
+		fields.add(rf1);
+		fields.add(rf2);
+		rfg.setFields(fields);
+	
+		rfg.setReportDataSubSource(lrss);
 		rss.setReportDataSource(rs);
 
+		rs.setSubSource(lrss);
+		
 		return new Object[][] { new Object[] { rs, rss, rfg } };
 	}
 	
@@ -136,26 +167,36 @@ public class ReportSourceDataProvider {
 		ReportFieldGroup rfg = new ReportFieldGroup();
 
 		rfg.setName("Name");
-		HashMap<Long, ReportField> fields = new HashMap<Long, ReportField>();
 
 		ReportField rf1 = new ReportField();
 
 		rf1.setDisplayName("First Name");
 		rf1.setColumnName("First_Name");
 		rf1.setFieldType(ReportFieldType.STRING);
-		rf1.setIsDefault(true);
+		rf1.setSelected(true);
 		rf1.setCanBeSummarized(false);
-		rf1.setReportFieldGroup(rfg);
+		ArrayList<ReportFieldGroup> lrfg = new ArrayList<ReportFieldGroup>();
+		lrfg.add(rfg);
+
+		rf1.setReportFieldGroup(lrfg);
 		
 		ReportField rf2 = new ReportField();
 		rf2.setDisplayName("Last Name");
 		rf2.setColumnName("Last_Name");
 		rf2.setFieldType(ReportFieldType.STRING);
-		rf2.setIsDefault(true);
+		rf2.setSelected(true);
 		rf2.setCanBeSummarized(false);
-		rf2.setReportFieldGroup(rfg);
-		
-		rfg.setReportDataSubSource(rss);
+		rf2.setReportFieldGroup(lrfg);
+
+		ArrayList<ReportDataSubSource> lrss = new ArrayList<ReportDataSubSource>();
+		lrss.add(rss);
+
+		ArrayList<ReportField> fields = new ArrayList<ReportField>();
+		fields.add(rf1);
+		fields.add(rf2);
+		rfg.setFields(fields);
+	
+		rfg.setReportDataSubSource(lrss);
 		rss.setReportDataSource(rs);
 
 		return new Object[][] { new Object[] { rs, rss, rfg, rf1 } };

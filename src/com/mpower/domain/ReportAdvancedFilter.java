@@ -9,13 +9,18 @@ import javax.persistence.Id;
 
 @Entity
 public class ReportAdvancedFilter implements java.io.Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
-
-
-    String field;
-    FilterOperator operator;
-    String value;
-
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  private long id;
+  
+  
+  String field;
+  FilterOperator operator;
+  String value;
+  
+  public ReportAdvancedFilter() {
+    field = "";
+    value = "";
+    operator = FilterOperator.NONE;
+  }
 }

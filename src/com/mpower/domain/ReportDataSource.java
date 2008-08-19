@@ -15,6 +15,7 @@ import javax.persistence.Transient;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.annotations.IndexColumn;
 import org.hibernate.annotations.Sort;
 import org.hibernate.annotations.SortType;
 
@@ -32,6 +33,18 @@ public class ReportDataSource implements java.io.Serializable,
 	private long id;
 
 	private String Name;
+
+	@OneToMany(mappedBy="reportDataSource",cascade=CascadeType.ALL)
+	@IndexColumn(name="REPORTSUBSOURCE_ID")
+	private List<ReportDataSubSource> subSource;
+	
+	public List<ReportDataSubSource> getSubSource() {
+		return subSource;
+	}
+
+	public void setSubSource(List<ReportDataSubSource> subSource) {
+		this.subSource = subSource;
+	}
 
 	@Transient
 	protected final Log logger = LogFactory.getLog(getClass());
@@ -61,7 +74,7 @@ public class ReportDataSource implements java.io.Serializable,
 		Name = displayName;
 	}
 
-	@Override
+
 	public int compareTo(ReportDataSource o) {
 		if (this.id > o.getId())
 			return 1;

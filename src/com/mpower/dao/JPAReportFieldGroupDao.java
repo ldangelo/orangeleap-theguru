@@ -18,23 +18,23 @@ public class JPAReportFieldGroupDao implements ReportFieldGroupDao {
 	@PersistenceContext
 	private EntityManager em;
 	
-	@Override
+	
 	public ReportFieldGroup copy(ReportFieldGroup group) {
 		return new ReportFieldGroup(group);
 	}
 
-	@Override
+	
 	public void delete(ReportFieldGroup group) {
 		em.remove(group);
 
 	}
 
-	@Override
+	
 	public ReportFieldGroup findById(long Id) {
 		return em.find(ReportFieldGroup.class,Id);
 	}
 
-	@Override
+	
 	public List<ReportFieldGroup> getAll() {
 		Query q = em
 		.createQuery("SELECT reportdatafieldgroup from com.mpower.domain.ReportFieldGroup reportdatafieldgroup");
@@ -42,21 +42,25 @@ public class JPAReportFieldGroupDao implements ReportFieldGroupDao {
 		return lrdfg;
 }
 
-	@Override
+	
 	public List<ReportFieldGroup> getAllByReportDataSubSourceId(Long id) {
-		Query q = em.createQuery("SELECT reportdatafieldgroup from com.mpower.domain.ReportFieldGroup reportdatafieldgroup");
-		return q.getResultList();
+		Query q = em.createQuery("select reportFieldGroup from ReportFieldGroup reportFieldGroup left join reportFieldGroup.reportDataSubSource as reportSubSource where reportSubSource.id = ?");
+
+		q.setParameter(1, id);
+		List<ReportFieldGroup> lrfg = q.getResultList();
+		
+		return lrfg;
 	}
 
-	@Override
+	
 	public void save(ReportFieldGroup group) {
 		em.persist(group);
 
 	}
 
-	@Override
+	
 	public ReportFieldGroup update(ReportFieldGroup group) {
-		em.persist(group);
+		em.merge(group);
 		return null;
 	}
 

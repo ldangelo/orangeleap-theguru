@@ -20,7 +20,7 @@ public class JPAReportDataSourceDao implements ReportDataSourceDao {
 	private EntityManager em;
 
 	public void save(ReportDataSource datasource) {
-		em.persist(datasource);
+		em.merge(datasource);
 
 	}
 

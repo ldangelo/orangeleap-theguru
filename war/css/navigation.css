@@ -49,7 +49,7 @@
 }
 #navmain ul li {
 	list-style: none;
-	float: left;
+	float: right;
 	/*margin-right: 3px;*/
 }
 #navmain ul li a {

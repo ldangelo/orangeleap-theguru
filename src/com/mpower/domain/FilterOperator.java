@@ -1,4 +1,4 @@
 package com.mpower.domain;
 
-public enum FilterOperator {EQUAL, NOTEQ, LT, GT, LTEQ, GTEQ, CONTAINS, STARTSWITH, INCLUDES, EXCLUDES };
+public enum FilterOperator {NONE,EQUAL, NOTEQ, LT, GT, LTEQ, GTEQ, CONTAINS, STARTSWITH, INCLUDES, EXCLUDES };
     

@@ -19,44 +19,46 @@ public class JPAReportFieldDao implements ReportFieldDao {
 	@PersistenceContext
 	private EntityManager em;
 	
-	@Override
+
 	public ReportField copy(ReportField f) {
 		return new ReportField(f);
 	}
 
-	@Override
+	
 	public void delete(ReportField f) {
 		em.remove(f);
 
 	}
 
-	@Override
+	
 	public ReportField findById(long Id) {
 		return em.find(ReportField.class,Id);
 	}
 
-	@Override
+	
 	public List<ReportField> getAll() {
 		Query q = em
 		.createQuery("SELECT reportdatafield from com.mpower.domain.ReportField reportdatafield");
 		return  q.getResultList();
 }
 
-	@Override
+	
 	public List<ReportField> getAllByGroupId(Long id) {
-		Query q = em.createQuery("SELECT reportdatafield from com.mpower.domain.ReportField reportdatafield");
+		Query q = em.createQuery("select reportfield from ReportField reportField left join reportField.reportFieldGroup as fieldGroup where fieldGroup.id = ?");
+
+		q.setParameter(1, id);
 		return q.getResultList();
 	}
 
-	@Override
+	
 	public void save(ReportField f) {
 		em.persist(f);
 
 	}
 
-	@Override
+	
 	public ReportField update(ReportField f) {
-		em.persist(f);
+		em.merge(f);
 		return null;
 	}
 

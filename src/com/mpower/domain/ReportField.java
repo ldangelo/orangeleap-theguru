@@ -1,13 +1,21 @@
 package com.mpower.domain;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+
+import org.hibernate.annotations.IndexColumn;
 
 @Entity
 public class ReportField implements java.io.Serializable,
@@ -20,6 +28,7 @@ public class ReportField implements java.io.Serializable,
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "REPORTFIELD_ID")
 	private long id;
 
 
@@ -28,14 +37,51 @@ public class ReportField implements java.io.Serializable,
 
 	@Enumerated
 	private ReportFieldType type;
-	private Boolean isDefault;
 	private Boolean canBeSummarized;
 	private Boolean isSummarized;
 	private Boolean selected;
+	private Boolean isDefault;
+	private Boolean sum;
+	private Boolean average;
+	private Boolean largestValue;
+	private Boolean smallestValue;
+	
+	public Boolean getSum() {
+		return sum;
+	}
 
-	@ManyToOne
-	@JoinColumn(name="GroupId")
-	private ReportFieldGroup reportFieldGroup;
+	public void setSum(Boolean sum) {
+		this.sum = sum;
+	}
+
+	public Boolean getAverage() {
+		return average;
+	}
+
+	public void setAverage(Boolean average) {
+		this.average = average;
+	}
+
+	public Boolean getLargestValue() {
+		return largestValue;
+	}
+
+	public void setLargestValue(Boolean largestValue) {
+		this.largestValue = largestValue;
+	}
+
+	public Boolean getSmallestValue() {
+		return smallestValue;
+	}
+
+	public void setSmallestValue(Boolean smallestValue) {
+		this.smallestValue = smallestValue;
+	}
+
+	@ManyToMany(cascade=CascadeType.ALL)
+	@IndexColumn(name="REPORTFIELDGROUP_ID")
+	private List<ReportFieldGroup> reportFieldGroup;
+
 	public ReportField() {
 
 	}
@@ -44,73 +90,11 @@ public class ReportField implements java.io.Serializable,
 		displayName = f.displayName;
 		columnName  = f.columnName;
 		type        = f.type;
-		isDefault   = f.isDefault;
 		canBeSummarized = f.canBeSummarized;
 		isSummarized = f.isSummarized;
 		selected    = f.selected;
-		reportFieldGroup = new ReportFieldGroup(f.reportFieldGroup);
+//		reportFieldGroup = new ArrayList<ReportFieldGroup>(f.reportFieldGroup);
 	}
-
-	public Boolean getSelected() {
-		return selected;
-	}
-
-	public void setSelected(Boolean selected) {
-		this.selected = selected;
-	}
-
-	public long getId() {
-		return id;
-	}
-
-	public Boolean getIsSummarized() {
-		return isSummarized;
-	}
-
-	public void setIsSummarized(Boolean isSummarized) {
-		this.isSummarized = isSummarized;
-	}
-
-	public void setDisplayName(String name) {
-		displayName = name;
-	}
-
-	public String getDisplayName() {
-		return displayName;
-	}
-
-	public void setColumnName(String cName) {
-		columnName = cName;
-	}
-
-	public String getColumnName() {
-		return columnName;
-	}
-
-	public void setFieldType(ReportFieldType t) {
-		type = t;
-	}
-
-	public ReportFieldType getFieldType() {
-		return type;
-	}
-
-	public void setIsDefault(Boolean d) {
-		isDefault = d;
-	}
-
-	public Boolean getIsDefault() {
-		return isDefault;
-	}
-
-	public void setCanBeSummarized(Boolean cbs) {
-		canBeSummarized = cbs;
-	}
-
-	public Boolean getCanBeSummarized() {
-		return canBeSummarized;
-	}
-
 	public int compareTo(ReportField o) {
 		if (this.id > o.id)
 			return 1;
@@ -120,11 +104,75 @@ public class ReportField implements java.io.Serializable,
 		return 0;
 	}
 
-	public ReportFieldGroup getReportFieldGroup() {
+	public Boolean getCanBeSummarized() {
+		return canBeSummarized;
+	}
+
+	public String getColumnName() {
+		return columnName;
+	}
+
+	public String getDisplayName() {
+		return displayName;
+	}
+
+	public ReportFieldType getFieldType() {
+		return type;
+	}
+
+	public long getId() {
+		return id;
+	}
+
+	public Boolean getIsDefault() {
+		return isDefault;
+	}
+
+	public Boolean getIsSummarized() {
+		return isSummarized;
+	}
+
+
+	public Boolean getSelected() {
+		return selected;
+	}
+
+	public void setCanBeSummarized(Boolean cbs) {
+		canBeSummarized = cbs;
+	}
+
+	public void setColumnName(String cName) {
+		columnName = cName;
+	}
+
+	public void setDisplayName(String name) {
+		displayName = name;
+	}
+
+
+
+	public void setFieldType(ReportFieldType t) {
+		type = t;
+	}
+
+	public void setIsDefault(Boolean isDefault) {
+		this.isDefault = isDefault;
+	}
+
+	public void setIsSummarized(Boolean isSummarized) {
+		this.isSummarized = isSummarized;
+	}
+
+
+	public void setSelected(Boolean selected) {
+		this.selected = selected;
+	}
+
+	public List<ReportFieldGroup> getReportFieldGroup() {
 		return reportFieldGroup;
 	}
 
-	public void setReportFieldGroup(ReportFieldGroup reportFieldGroup) {
+	public void setReportFieldGroup(List<ReportFieldGroup> reportFieldGroup) {
 		this.reportFieldGroup = reportFieldGroup;
 	}
 

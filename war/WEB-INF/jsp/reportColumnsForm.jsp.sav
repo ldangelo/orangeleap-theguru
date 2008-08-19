@@ -5,13 +5,13 @@
 			Report Wizard
 		</h1>
 
-<c:forEach var="rds" items="${reportsource.reportDataSource.subSources}">
-<c:forEach var="fgroup" items="${rds.fieldGroups}">
+<c:forEach var="rds" items="${reportsource.reportDataSource.subSources}" varStatus="groupCount">
+<c:forEach var="fgroup" items="${rds.fieldGroups}"  varStatus="fieldCount">
 <h2>${fgroup.name}</h2>
 <table width="100%">
 <tr>
 <c:forEach var="field" items="${fgroup.fields}">
-<td><input type=checkbox name="${fgroup.name}" value="${field.id}" checked="${field.isDefault}">${field.displayName}</td>
+<td><input type=checkbox name="fieldGroups[${groupCount}].fields[${fieldCount}.selected" value="${field.id}" checked="${field.isDefault}">${field.displayName}</td>
 </c:forEach>
 </tr></table>
 </c:forEach>

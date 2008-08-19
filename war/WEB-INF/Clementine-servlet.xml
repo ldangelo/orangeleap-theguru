@@ -45,6 +45,11 @@
         <property name="commandName" value="reportsource"/>
         <property name="commandClass" value="com.mpower.domain.ReportWizard"/>
         <property name="reportSourceService" ref="reportSourceService"/>  
+        <property name="reportSubSourceService" ref="reportSubSourceService"/>
+        <property name="reportFieldGroupService" ref="reportFieldGroupService"/>
+        <property name="reportFieldService" ref="reportFieldService"/>
+
+        
         <property name="dynamicView" ref="dynamicReport"/>       
 	<property name="pages">
 		<list>
@@ -52,8 +57,9 @@
 			<value>ReportSubSource</value>
 			<value>ReportFormat</value>
 			<value>ReportColumns</value>
+			<value>ReportSummaryFields</value>
 			<value>ReportColumnsOrder</value>
-
+			<value>ReportFilter</value>
 		</list>
 	</property>
     </bean>

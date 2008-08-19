@@ -5,6 +5,8 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletOutputStream;
@@ -20,6 +22,9 @@ import net.sf.jasperreports.engine.export.JRHtmlExporterParameter;
 import org.springframework.ui.jasperreports.JasperReportsUtils;
 import org.springframework.web.servlet.view.AbstractView;
 
+import com.mpower.domain.ReportField;
+import com.mpower.domain.ReportWizard;
+
 import ar.com.fdvs.dj.core.DynamicJasperHelper;
 import ar.com.fdvs.dj.core.layout.ClassicLayoutManager;
 import ar.com.fdvs.dj.domain.DynamicReport;
@@ -31,7 +36,16 @@ import ar.com.fdvs.dj.domain.builders.FastReportBuilder;
 public class DynamicReportView extends AbstractView {
 	private DataSource jdbcDataSource;
 	private static final int OUTPUT_BYTE_ARRAY_INITIAL_SIZE = 4096;
-//	private ReportWizardService reportWizard;
+	private ReportWizard wiz;
+
+
+	public ReportWizard getReportWizard() {
+		return wiz;
+	}
+
+	public void setReportWizard(ReportWizard wiz) {
+		this.wiz = wiz;
+	}
 
 	public DataSource getJdbcDataSource() {
 		return jdbcDataSource;
@@ -53,10 +67,17 @@ public class DynamicReportView extends AbstractView {
 		//
 		// Render the jasper report
 		FastReportBuilder drb = new FastReportBuilder();
-		DynamicReport dr = drb.addColumn("First Name", "FIRST_NAME",
-				String.class.getName(), 20).addColumn("Last Name", "LAST_NAME",
-				String.class.getName(), 20).addTitle("Dynamic Report")
-				.addSubtitle("Testing dynamic report creation")
+		List<ReportField> fields = wiz.getFields();
+		Iterator it = fields.iterator();
+		
+		while(it.hasNext()) {
+			ReportField f = (ReportField) it.next();
+			
+			if (f.getSelected())
+				drb.addColumn(f.getDisplayName(),f.getColumnName(),String.class.getName(),20);
+		}
+		DynamicReport dr = drb.addTitle("")
+				.addSubtitle("")
 				.addUseFullPageWidth(true).build();
 
 		@SuppressWarnings("unused")
@@ -65,7 +86,7 @@ public class DynamicReportView extends AbstractView {
 		Statement statement = connection.createStatement();
 		ResultSet resultset = null;
 
-		String query = "SELECT *,FIRST_NAME,LAST_NAME FROM PERSON";
+		String query = "SELECT * FROM " + wiz.getDataSubSource().getViewName() + ";";
 		resultset = statement.executeQuery(query);
 
 		JasperPrint jp = DynamicJasperHelper.generateJasperPrint(dr,

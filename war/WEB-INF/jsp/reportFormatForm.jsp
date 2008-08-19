@@ -43,13 +43,7 @@
 </TR>
 </TABLE>
 </div>
-<input type="button" value="Run Report" value="run">
-<input type="button" value="Export Details" value="export">
-<input type="button" value="Save As" value="save">
-<input type="submit" value="Back" name="_target1">
-<input type="submit" value="Next" name="_target3">
-
-
+<jsp:include page="snippets/navbuttons.jsp"/>
 </form:form>
 
 

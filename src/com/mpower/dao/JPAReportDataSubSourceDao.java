@@ -16,24 +16,25 @@ public class JPAReportDataSubSourceDao implements ReportDataSubSourceDao {
 	@PersistenceContext
 	private EntityManager em;
 	
-	@Override
+
 	public ReportDataSubSource copy(ReportDataSubSource datasubsource) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
+
 	public void delete(ReportDataSubSource datasubsource) {
 		em.remove(datasubsource);
 
 	}
 
-	@Override
+
 	public ReportDataSubSource findById(long Id) {
 		return em.find(ReportDataSubSource.class, Id);
 	}
 
-	@Override
+	@SuppressWarnings("unchecked")
+
 	public List<ReportDataSubSource> getAll() {
 		Query q = em
 		.createQuery("SELECT reportdatasubsource from com.mpower.domain.ReportDataSubSource reportdatasubsource");
@@ -42,29 +43,24 @@ public class JPAReportDataSubSourceDao implements ReportDataSubSourceDao {
 		return lrds;
 	}
 
-	@Override
+	@SuppressWarnings("unchecked")
+
 	public List<ReportDataSubSource> getAllByReportSourceId(Long id) {
 		Query q = em
-		.createQuery("SELECT reportdatasubsource from com.mpower.domain.ReportDataSubSource reportdatasubsource ");
+		.createQuery("select reportSubSource from ReportDataSubSource reportSubSource left join reportSubSource.reportDataSource as reportSource where reportSource.id = ?");
+		q.setParameter(1, id);
 		List<ReportDataSubSource> lrds = q.getResultList();
-		List<ReportDataSubSource> ssrds = new LinkedList<ReportDataSubSource>();
-
-		Iterator it = lrds.iterator();
-		while (it.hasNext()) {
-			ReportDataSubSource rds = (ReportDataSubSource) it.next();
-			ssrds.add( rds);
-		}
-		return ssrds;
+		
+		return lrds;
 	}
 
-	@Override
+
 	public void save(ReportDataSubSource datasubsource) {
-		em.persist(datasubsource);
+		em.merge(datasubsource);
 	}
 
-	@Override
 	public ReportDataSubSource update(ReportDataSubSource datasubsource) {
-		em.persist(datasubsource);
+		em.merge(datasubsource);
 		return null;
 	}
 

@@ -22,22 +22,26 @@
 	<div class="navLeftCap"></div>
 	<div class="container">
 		<ul class="primaryNav">
-<!-- 			<li>
-				<a href="personSearch.htm" class="${primaryNav=='People'?'active':''}">People</a>
-			</li>
-			<li>
-				<a href="giftSearch.htm" class="${primaryNav=='Gifts'?'active':''}">Gifts</a>
-			</li>
-			<li>
-				<a href="#">Administration</a>
-			</li>
-			<li>
-				<a href="#">Analysis</a>
-			</li>
-		</ul>
--->
+		<li>
+		  <c:if test="${page > 2}">
+		  Jump to Step		    
+		    <select>
+		      <option <c:if test="${page}=2}> selected="selected"</c:if>>Report Format</option>
+		      <option>Select Columns</option>
+		      <option>Summary Information</option>
+		      <option>Order Columns</option>
+		      <option>Filter Report</option>
+		      <option>Run Report</option>
+		    </select>
+		  </c:if>
+			      
+		</li>
+
 		<div class="clearBoth"></div>
 		<ul class="secondaryNav">
+		<li>
+		Step ${page} of ${maxpages}
+		</li>
 <!--  			<li>
 				<a href="personSearch.htm" class="${secondaryNav=='Search'?'active':''}">Search</a>
 			</li>

@@ -1,5 +1,5 @@
 <%@ include file="/WEB-INF/jsp/include.jsp" %>
-<mp:page pageName='reportSubSource'/>
+
 
 
 <form:form name="myform" method="post" commandName="reportsource">

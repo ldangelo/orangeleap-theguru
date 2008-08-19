@@ -16,10 +16,21 @@
 <TH>Columns</TH><TH>        </TH><TH>Sum</TH><TH>Average</TH><TH>Largest Value</TH><TH>Smallest Value</TH>
 </TR>
 <TR>
-<TD>Record Count</TD><TD>        </TD><TD><input type="checkbox" /></TD><TD><input type="checkbox" /></TD><TD><input type="checkbox" /></TD><TD><input type="checkbox" /></TD>
+<TD>Record Count</TD><TD>        </TD><TD><input type="checkbox" /></TD><TD></TD><TD></TD><TD></TD>
 
 </TR>
+<c:forEach var="fgroup" items="${fieldGroups}" varStatus="outer">
+
+
+<c:forEach var="f" items="${fgroup.fields}" varStatus="inner">
+<c:if test="${f.canBeSummarized}">
 <TR>
+<TD>${f.displayName}</TD><TD></TD><TD><input type=checkbox name="fieldGroups[${outer.count-1}].fields[${inner.count-1}].sum"/></TD><TD><input type=checkbox name="fieldGroups[${outer.count-1}].fields[${inner.count-1}].average"/></TD><TD><input type=checkbox name="fieldGroups[${outer.count-1}].fields[${inner.count-1}].largestValue"/></TD><TD><input type=checkbox name="fieldGroups[${outer.count-1}].fields[${inner.count-1}].smallestValue"/></TD>
+</TR>
+</c:if>
+</c:forEach>
+</c:forEach>
+
 <TR>
 </TR>
 </Table>
@@ -28,8 +39,7 @@
 <br>
 <br>
 </div>
-<input type="submit" value="Back" name="_target3">
-<input type="submit" value="Next" name="_target5">
+<jsp:include page="snippets/navbuttons.jsp"/>
 </form:form>
 
 

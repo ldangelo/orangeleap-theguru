@@ -11,12 +11,15 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 import javax.persistence.JoinColumn;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.annotations.IndexColumn;
 import org.hibernate.annotations.Sort;
 import org.hibernate.annotations.SortType;
 import com.mpower.domain.ReportFormatType;
@@ -39,10 +42,22 @@ public class ReportDataSubSource implements java.io.Serializable,
 	private String displayName;
 	private String viewName;
 	
-	@ManyToOne
-	@JoinColumn(name="REPORTSOURCE_ID")
+	@ManyToOne( cascade=CascadeType.ALL)
+	@IndexColumn(name="REPORTSOURCE_ID")
 	private ReportDataSource reportDataSource;
 	
+//	@ManyToMany(mappedBy="reportDataSubSource",cascade=CascadeType.ALL)
+//	@IndexColumn(name="REPORTFIELDGROUP_ID")
+//	private List<ReportFieldGroup> fieldGroups;
+	
+//	public List<ReportFieldGroup> getFieldGroups() {
+//		return fieldGroups;
+//	}
+//
+//	public void setFieldGroups(List<ReportFieldGroup> fieldGroups) {
+//		this.fieldGroups = fieldGroups;
+//	}
+
 	@Enumerated
 	private ReportFormatType reportType;
 	// private ReportStandardFilter standardFilter;

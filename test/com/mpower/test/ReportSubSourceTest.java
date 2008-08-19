@@ -49,5 +49,16 @@ public class ReportSubSourceTest extends BaseTest {
 
 		assert rds != null;
 	}
+	
+	@Test(dependsOnMethods = "createReportSubSources")
+	void findReportSubSourceBySourceId()
+	{
+		java.util.List<ReportDataSubSource> lrdss = reportSubSourceService.readSubSourcesByReportSourceId(1L);
+	
+		assert lrdss != null;
+		
+		ReportDataSubSource rdss = lrdss.get(0);
+		assert rdss != null;
+	}
 
 }

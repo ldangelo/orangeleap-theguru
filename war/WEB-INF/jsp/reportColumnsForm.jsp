@@ -1,15 +1,20 @@
 <%@ include file="/WEB-INF/jsp/include.jsp" %>
 
-<form:form method="post" commandName="fieldGroups">
+<form method="post">
 		<h1>
 			Report Wizard
 		</h1>
 
-<c:forEach var="fgroup" items="${fieldGroups}">
+<c:forEach var="fgroup" items="${fieldGroups}" varStatus="outer">
 <h2>${fgroup.name}</h2>
 <table width="100%">
 <tr>
-<form:checkboxes path="$fgroup.fields" items="$fgroup.fields" element="isDefault" itemLabel="displayName"/>
+
+<c:forEach var="f" items="${fgroup.fields}" varStatus="inner">
+<c:if test="${f != null}">
+      <input type=checkbox name="fieldGroups[${outer.count-1}].fields[${inner.count-1}].selected" <c:if test="${f.isDefault}">checked="checked"</c:if> />${f.displayName}
+</c:if>
+</c:forEach>
 </tr></table>
 <BR></c:forEach>
 
@@ -22,10 +27,7 @@
 <br>
 <br>
 
-<input type="submit" value="Cancel" name="_target2">
-<input type="submit" value="Next" name="_target4">
-
-
-</form:form>
+<jsp:include page="snippets/navbuttons.jsp"/>
+</form>
 
 
