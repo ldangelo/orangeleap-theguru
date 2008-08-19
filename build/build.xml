@@ -60,6 +60,20 @@
 		<antcall target="4. Start Tomcat - Debug Mode"/>
 	</target>
 
+	<target name="9. Load Data">
+	     <sql driver="${mysql.db.driver}"
+	          url="${mysql.db.url}"
+	          userid="${mysql.db.user}"
+	          password="${mysql.db.pw}"
+	          encoding="UTF-8"
+	          classpath="${mysql.db.classpath}">
+	     	<transaction src="${basedir}/db/prod/domain/clearTable.sql"/>
+
+	     	<!-- Add development data -->
+	     	<transaction src="${basedir}/db/prod/domain/reports.sql"/>
+	     </sql>
+	</target>
+
 	<target name="app.synch" description="Synchs the XMHTML, JSP, JS, CSS, and Images of the project with a running application.">
 		<ant antfile="${internal.build.file}" target="app.synch" />
 	</target>
