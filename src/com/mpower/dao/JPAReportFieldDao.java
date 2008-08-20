@@ -44,8 +44,8 @@ public class JPAReportFieldDao implements ReportFieldDao {
 
 	
 	public List<ReportField> getAllByGroupId(Long id) {
-		Query q = em.createQuery("select reportfield from ReportField reportField left join reportField.reportFieldGroup as fieldGroup where fieldGroup.id = ?");
-
+		//Query q = em.createQuery("select reportField from ReportField reportField join reportField.reportFieldGroup as rfg where rfg.id = ?");
+		Query q = em.createQuery("select reportField from ReportField reportField where id in reportField.reportFieldGroup = ?");
 		q.setParameter(1, id);
 		return q.getResultList();
 	}

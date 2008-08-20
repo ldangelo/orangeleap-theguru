@@ -14,10 +14,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 import org.hibernate.annotations.IndexColumn;
 
 @Entity
+@Table(name = "REPORTFIELD")
 public class ReportField implements java.io.Serializable,
 		Comparable<ReportField> {
 	/**
@@ -25,27 +27,45 @@ public class ReportField implements java.io.Serializable,
 	 */
 	private static final long serialVersionUID = -2871208732277362753L;
 
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "REPORTFIELD_ID")
 	private long id;
 
-
+	@Column(name = "DISPLAY_NAME")
 	private String displayName;
+
+	@Column(name = "COLUMN_NAME")
 	private String columnName;
 
 	@Enumerated
+	@Column(name = "FIELD_TYPE")
 	private ReportFieldType type;
+
+	@Column(name = "CAN_BE_SUMMARIZED")
 	private Boolean canBeSummarized;
+
+	@Column(name = "IS_SUMMARIZED")
 	private Boolean isSummarized;
+
+	@Column(name = "IS_SELECTED")
 	private Boolean selected;
+
+	@Column(name = "IS_DEFAULT")
 	private Boolean isDefault;
+
+	@Column(name = "SUM")
 	private Boolean sum;
+
+	@Column(name = "AVERAGE")
 	private Boolean average;
+
+	@Column(name = "LARGEST_VALUE")
 	private Boolean largestValue;
+
+	@Column(name = "SMALLEST_VALUE")
 	private Boolean smallestValue;
-	
+
 	public Boolean getSum() {
 		return sum;
 	}
@@ -78,8 +98,8 @@ public class ReportField implements java.io.Serializable,
 		this.smallestValue = smallestValue;
 	}
 
-	@ManyToMany(cascade=CascadeType.ALL)
-	@IndexColumn(name="REPORTFIELDGROUP_ID")
+	@ManyToMany(cascade = CascadeType.ALL)
+	@IndexColumn(name = "REPORTFIELDGROUP_ID")
 	private List<ReportFieldGroup> reportFieldGroup;
 
 	public ReportField() {
@@ -88,13 +108,15 @@ public class ReportField implements java.io.Serializable,
 
 	public ReportField(ReportField f) {
 		displayName = f.displayName;
-		columnName  = f.columnName;
-		type        = f.type;
+		columnName = f.columnName;
+		type = f.type;
 		canBeSummarized = f.canBeSummarized;
 		isSummarized = f.isSummarized;
-		selected    = f.selected;
-//		reportFieldGroup = new ArrayList<ReportFieldGroup>(f.reportFieldGroup);
+		selected = f.selected;
+		// reportFieldGroup = new
+		// ArrayList<ReportFieldGroup>(f.reportFieldGroup);
 	}
+
 	public int compareTo(ReportField o) {
 		if (this.id > o.id)
 			return 1;
@@ -132,7 +154,6 @@ public class ReportField implements java.io.Serializable,
 		return isSummarized;
 	}
 
-
 	public Boolean getSelected() {
 		return selected;
 	}
@@ -149,8 +170,6 @@ public class ReportField implements java.io.Serializable,
 		displayName = name;
 	}
 
-
-
 	public void setFieldType(ReportFieldType t) {
 		type = t;
 	}
@@ -162,7 +181,6 @@ public class ReportField implements java.io.Serializable,
 	public void setIsSummarized(Boolean isSummarized) {
 		this.isSummarized = isSummarized;
 	}
-
 
 	public void setSelected(Boolean selected) {
 		this.selected = selected;

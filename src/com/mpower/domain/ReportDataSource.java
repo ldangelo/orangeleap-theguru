@@ -11,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.apache.commons.logging.Log;
@@ -20,6 +21,7 @@ import org.hibernate.annotations.Sort;
 import org.hibernate.annotations.SortType;
 
 @Entity
+@Table(name = "REPORTDATASOURCE")
 public class ReportDataSource implements java.io.Serializable,
 		Comparable<ReportDataSource> {
 	/**
@@ -32,6 +34,7 @@ public class ReportDataSource implements java.io.Serializable,
 	@Column(name = "REPORTSOURCE_ID")
 	private long id;
 
+	@Column(name = "REPORT_NAME")
 	private String Name;
 
 	@OneToMany(mappedBy="reportDataSource",cascade=CascadeType.ALL)

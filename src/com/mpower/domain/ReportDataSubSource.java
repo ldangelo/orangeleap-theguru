@@ -14,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.persistence.JoinColumn;
 
@@ -25,6 +26,7 @@ import org.hibernate.annotations.SortType;
 import com.mpower.domain.ReportFormatType;
 
 @Entity
+@Table(name = "REPORTDATASUBSOURCE")
 public class ReportDataSubSource implements java.io.Serializable,
 		Comparable<ReportDataSubSource> {
 	/**
@@ -39,26 +41,18 @@ public class ReportDataSubSource implements java.io.Serializable,
 	@Column(name = "REPORTSUBSOURCE_ID")
 	private long id;
 
+	@Column(name = "DISPLAY_NAME")
 	private String displayName;
+	
+	@Column(name = "VIEW_NAME")
 	private String viewName;
 	
 	@ManyToOne( cascade=CascadeType.ALL)
 	@IndexColumn(name="REPORTSOURCE_ID")
 	private ReportDataSource reportDataSource;
 	
-//	@ManyToMany(mappedBy="reportDataSubSource",cascade=CascadeType.ALL)
-//	@IndexColumn(name="REPORTFIELDGROUP_ID")
-//	private List<ReportFieldGroup> fieldGroups;
-	
-//	public List<ReportFieldGroup> getFieldGroups() {
-//		return fieldGroups;
-//	}
-//
-//	public void setFieldGroups(List<ReportFieldGroup> fieldGroups) {
-//		this.fieldGroups = fieldGroups;
-//	}
-
 	@Enumerated
+	@Column(name = "REPORT_FORMAT_TYPE")
 	private ReportFormatType reportType;
 	// private ReportStandardFilter standardFilter;
 	// private ReportAdvancedFilter advancedFilter;

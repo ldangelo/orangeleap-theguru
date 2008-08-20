@@ -23,6 +23,7 @@ import org.hibernate.annotations.Sort;
 import org.hibernate.annotations.SortType;
 
 @Entity
+
 @Table(name = "REPORTFIELDGROUP")
 public class ReportFieldGroup implements java.io.Serializable,
 		Comparable<ReportFieldGroup> {
@@ -33,10 +34,12 @@ public class ReportFieldGroup implements java.io.Serializable,
 
 	@ManyToMany(cascade=CascadeType.ALL)
 	@IndexColumn(name="REPORTSUBSOURCE_ID")
+	@Column(name = "REPORTFIELDGROUP_REPORTSUBSOURCE_ID")
 	private List<ReportDataSubSource> reportDataSubSource;
 	
 	@ManyToMany(mappedBy="reportFieldGroup",cascade=CascadeType.ALL)
 	@IndexColumn(name="REPORTFIELD_ID")
+	@Column(name = " REPORTFIELDGROUP_REPORTFIELD_ID")
 	private List<ReportField>   fields;
 	
 

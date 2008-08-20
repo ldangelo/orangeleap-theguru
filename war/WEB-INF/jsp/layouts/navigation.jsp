@@ -26,7 +26,7 @@
 		  <c:if test="${page > 2}">
 		  Jump to Step		    
 		    <select>
-		      <option <c:if test="${page}=2}> selected="selected"</c:if>>Report Format</option>
+		      <option>Report Format</option>
 		      <option>Select Columns</option>
 		      <option>Summary Information</option>
 		      <option>Order Columns</option>

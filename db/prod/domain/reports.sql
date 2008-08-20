@@ -1,10 +1,10 @@
-insert into ReportDataSource values(1,'People');
-insert into ReportDataSource values(2,'Gifts');
+insert into REPORTDATASOURCE values(1,'People');
+insert into REPORTDATASOURCE values(2,'Gifts');
 
-Insert into ReportDataSubSource values(1,'People',0,'PERSON',1);
-insert into ReportDataSubSource values(2,'People & Addresses',0,'vpeopleaddress',1);
-insert into ReportDataSubSource values(3,'People & Gifts',0,'vpeoplegift',1);
-insert into ReportDataSubSource values(4,'Gifts',0,'GIFT',2);
+Insert into REPORTDATASUBSOURCE values(1,'People',0,'PERSON',1);
+insert into REPORTDATASUBSOURCE values(2,'People & Addresses',0,'vpeopleaddress',1);
+insert into REPORTDATASUBSOURCE values(3,'People & Gifts',0,'vpeoplegift',1);
+insert into REPORTDATASUBSOURCE values(4,'Gifts',0,'GIFT',2);
 
 insert into REPORTFIELDGROUP values(1,'People General');
 insert into REPORTFIELDGROUP values(2,'People Address');
