@@ -11,16 +11,6 @@
 			</arguments>
 		</buildCommand>
 		<buildCommand>
-			<name>org.eclipse.ui.externaltools.ExternalToolBuilder</name>
-			<triggers>auto,full,incremental,</triggers>
-			<arguments>
-				<dictionary>
-					<key>LaunchConfigHandle</key>
-					<value>&lt;project&gt;/.externalToolBuilders/app.sync.launch</value>
-				</dictionary>
-			</arguments>
-		</buildCommand>
-		<buildCommand>
 			<name>org.springframework.ide.eclipse.core.springbuilder</name>
 			<arguments>
 			</arguments>
@@ -34,12 +24,12 @@
 		<link>
 			<name>classes-jar</name>
 			<type>2</type>
-			<location>/Users/ldangelo/Development/clementine/build/stage/classes-jar</location>
+			<locationURI>clementine/build/stage/classes-jar</locationURI>
 		</link>
 		<link>
 			<name>clementine-build.xml</name>
 			<type>1</type>
-			<location>/Users/ldangelo/Development/clementine/build/clementine-build.xml</location>
+			<locationURI>clementine/build/clementine-build.xml</locationURI>
 		</link>
 	</linkedResources>
 </projectDescription>
