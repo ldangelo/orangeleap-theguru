@@ -17,7 +17,7 @@
 <form:radiobutton path="reportType" value="tabular" title="Tabular Report" />Tabular Report
 </TD>
 <TD>
-<form:radiobutton path="reportType" value="summary" title="Summary Report" />Summar Report
+<form:radiobutton path="reportType" value="summary" title="Summary Report" />Summary Report
 </TD>
 <TD>
 <form:radiobutton path="reportType" value="matrix" title="Matrix Report" />Matrix Report
