@@ -9,6 +9,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,8 +23,10 @@ import net.sf.jasperreports.engine.export.JRHtmlExporterParameter;
 import org.springframework.ui.jasperreports.JasperReportsUtils;
 import org.springframework.web.servlet.view.AbstractView;
 
+import com.mpower.domain.ReportAdvancedFilter;
 import com.mpower.domain.ReportField;
 import com.mpower.domain.ReportWizard;
+import com.mpower.service.ReportFieldService;
 
 import ar.com.fdvs.dj.core.DynamicJasperHelper;
 import ar.com.fdvs.dj.core.layout.ClassicLayoutManager;
@@ -37,26 +40,37 @@ public class DynamicReportView extends AbstractView {
 	private DataSource jdbcDataSource;
 	private static final int OUTPUT_BYTE_ARRAY_INITIAL_SIZE = 4096;
 	private ReportWizard wiz;
+	
 
+	private ReportFieldService reportFieldService;
 
-	public ReportWizard getReportWizard() {
-		return wiz;
+	public DynamicReportView() {
+		// TODO Auto-generated constructor stub
 	}
 
-	public void setReportWizard(ReportWizard wiz) {
-		this.wiz = wiz;
+	private JRExporter createExporter(HttpServletRequest request) {
+		JRHtmlExporter exporter = new JRHtmlExporter();
+
+		exporter.setParameter(JRHtmlExporterParameter.IS_OUTPUT_IMAGES_TO_DIR,
+				Boolean.TRUE);
+		String realPath = request.getRealPath("images/report/");
+		exporter
+				.setParameter(JRHtmlExporterParameter.IMAGES_DIR_NAME, realPath);
+		exporter.setParameter(JRHtmlExporterParameter.IMAGES_URI,
+				"/clementine/images/report/");
+		return exporter;
 	}
 
 	public DataSource getJdbcDataSource() {
 		return jdbcDataSource;
 	}
 
-	public void setJdbcDataSource(DataSource jdbcDataSource) {
-		this.jdbcDataSource = jdbcDataSource;
+	public ReportFieldService getReportFieldService() {
+		return reportFieldService;
 	}
 
-	public DynamicReportView() {
-		// TODO Auto-generated constructor stub
+	public ReportWizard getReportWizard() {
+		return wiz;
 	}
 
 	@SuppressWarnings( { "deprecation", "unchecked" })
@@ -86,7 +100,51 @@ public class DynamicReportView extends AbstractView {
 		Statement statement = connection.createStatement();
 		ResultSet resultset = null;
 
-		String query = "SELECT * FROM " + wiz.getDataSubSource().getViewName() + ";";
+		String query = "SELECT * FROM " + wiz.getDataSubSource().getViewName();
+		
+		if (wiz.getRowCount() != -1)
+			query += " LIMIT 0," + wiz.getRowCount().toString(); 
+
+		//
+		// Add any 'filters'
+		List<ReportAdvancedFilter> filters = wiz.getAdvancedFilters();
+		Iterator itFilter = filters.iterator();
+
+		
+		Boolean bWhere = false;
+		while (itFilter.hasNext()) {
+			ReportAdvancedFilter filter = (ReportAdvancedFilter) itFilter.next();
+			ReportField rf = reportFieldService.find(filter.getFieldId());
+
+			if (filter.getValue() == "") break; // this is an empty filter
+			
+			if (!bWhere) {
+				bWhere = true;
+				query += " WHERE ";
+			}
+
+			
+			query += " " + rf.getColumnName();
+			switch (filter.getOperator()) {
+			case 1:
+				query += " = ";
+				break;
+			case 2:
+				query += " != ";
+				break;
+			case 3:
+				query += " > ";
+				break;
+			case 4:
+				query += " < ";
+			}
+			
+			query += " '" + filter.getValue() + "'";
+		}
+
+
+		query += ";";
+		
 		resultset = statement.executeQuery(query);
 
 		JasperPrint jp = DynamicJasperHelper.generateJasperPrint(dr,
@@ -113,17 +171,16 @@ public class DynamicReportView extends AbstractView {
 
 	}
 
-	private JRExporter createExporter(HttpServletRequest request) {
-		JRHtmlExporter exporter = new JRHtmlExporter();
+	public void setJdbcDataSource(DataSource jdbcDataSource) {
+		this.jdbcDataSource = jdbcDataSource;
+	}
 
-		exporter.setParameter(JRHtmlExporterParameter.IS_OUTPUT_IMAGES_TO_DIR,
-				Boolean.TRUE);
-		String realPath = request.getRealPath("images/report/");
-		exporter
-				.setParameter(JRHtmlExporterParameter.IMAGES_DIR_NAME, realPath);
-		exporter.setParameter(JRHtmlExporterParameter.IMAGES_URI,
-				"/clementine/images/report/");
-		return exporter;
+	public void setReportFieldService(ReportFieldService reportFieldService) {
+		this.reportFieldService = reportFieldService;
+	}
+
+	public void setReportWizard(ReportWizard wiz) {
+		this.wiz = wiz;
 	}
 
 

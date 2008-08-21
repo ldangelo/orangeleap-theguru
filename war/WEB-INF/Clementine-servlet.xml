@@ -26,6 +26,7 @@
 
 	<bean id="dynamicReport" class="com.mpower.view.DynamicReportView">
 	    	<property name="jdbcDataSource" ref="dataSource"/>
+	    	<property name="reportFieldService" ref="reportFieldService"/>
 	</bean>
     
     <bean id="htmlReport" class="org.springframework.web.servlet.view.jasperreports.JasperReportsHtmlView">

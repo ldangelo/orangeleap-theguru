@@ -1,58 +1,63 @@
 <%@ include file="/WEB-INF/jsp/include.jsp"%>
 
 
-<form:form method="post" commandName="rreportFormat">
-	<h1>Report Wizard</h1>
+<form method="post">
+<h1>Report Wizard</h1>
 
-	<h2>Enter filter Information</h2>
-	<div class="columns">
-	<h3>Filter Information</h3>
-	<Table>
+<h2>Enter filter Information</h2>
+<div class="columns">
+<h3>Filter Information</h3>
+<Table>
 
 
-		<TR>
-			<TD><SELECT>
-				<c:forEach var="fgroup" items="${fieldGroups}" varStatus="outer">
-					<c:forEach var="f" items="${fgroup.fields}" varStatus="inner">
-						<c:if test="${f != null }">
-							<option label="${f.displayName}"
-								value="fieldGroups[${outer.count-1}].fields[${inner.count-1}]">${f.displayName}</option>
-						</c:if>
-					</c:forEach>
+	<TR>
+		<TD><SELECT id="advancedFilters[0].fieldId"
+			name="advancedFilters[0].fieldId">
+			<c:forEach var="fgroup" items="${fieldGroups}" varStatus="outer">
+				<c:forEach var="f" items="${fgroup.fields}" varStatus="inner">
+					<c:if test="${f != null }">
+						<option label="${f.displayName}" value="${f.id}">${f.displayName}</option>
+					</c:if>
 				</c:forEach>
-			</SELECT></TD>
-			<TD><SELECT>
-				<option>equals</option>
-				<option>not equal</option>
-				<option>less then</option>
-				<option>greater then</option>
-			</SELECT></TD>
-			<TD><input type="text" value="" maxlength="100" title="Value 0">
-			AND</TD>
-		</TR>
-		<TR></TR>
-		<TR></TR>
-		<TD>Limit the number of rows displayed in this report.</TD>
-		</TR>
-		<TR>
-			<TD><SELECT>
-				<option>All</option>
-				<option>10</option>
-				<option>25</option>
-				<option>Custom</option>
-			</SELECT></TD>
-		</TR>
-		<TR></TR>
-		<TR>
-			<TD><input type="checkbox" value="no" name="details" />Hide
-			report details</TD>
-	</Table>
-	<br>
+			</c:forEach>
+		</SELECT></TD>
 
-	<br>
-	<br>
-	</div>
-	<jsp:include page="snippets/navbuttons.jsp" />
-</form:form>
+		<TD><SELECT id="advancedFilters[0].operator"
+			name="advancedFilters[0].operator">
+			<option value="1">equals</option>
+			<option value="2">not equal</option>
+			<option value="3">less then</option>
+			<option value="4">greater then</option>
+		</SELECT></TD>
+
+		<TD><input type="text" name="advancedFilters[0].value" value=""
+			maxlength="100" title="Value 0"> AND</TD>
+	</TR>
+
+	<TR></TR>
+	<TR></TR>
+	<TD>Limit the number of rows displayed in this report.</TD>
+	</TR>
+	<TR>
+		<TD><SELECT id="rowCount" name="rowCount">
+			<option value="-1">All</option>
+			<option value="10">10</option>
+			<option value="25">25</option>
+			<option value="50">50</option>
+			<option value="100">100</option>
+			<option>Custom</option>
+		</SELECT></TD>
+	</TR>
+	<TR></TR>
+	<TR>
+		<TD><input type="checkbox" value="no" name="details" />Hide
+		report details</TD>
+</Table>
+<br>
+
+<br>
+<br>
+</div>
+<jsp:include page="snippets/navbuttons.jsp" /></form>
 
 
