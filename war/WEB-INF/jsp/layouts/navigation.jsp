@@ -36,34 +36,10 @@
 		  </c:if>
 			      
 		</li>
-
-		<div class="clearBoth"></div>
-		<ul class="secondaryNav">
-		<li>
 		Step ${page} of ${maxpages}
 		</li>
-<!--  			<li>
-				<a href="personSearch.htm" class="${secondaryNav=='Search'?'active':''}">Search</a>
-			</li>
-			<li>
-				<a href="person.htm" class="${secondaryNav=='Edit'?'active':''}">Edit</a>
-			</li>
-			<li>
-				<a href="#">Codes</a>
-			</li>
-			<li>
-				<a href="#">Correspond</a>
-			</li>
-			<li>
-				<a href="#">Distribution Lists</a>
-			</li>
-			<li>
-				<a href="#">Query Builder</a>
-			</li>
-		</ul>
--->		
+	
 		<div class="clearBoth"></div>
 	</div>
 	<div class="navRightCap"></div>
-
 </div>
