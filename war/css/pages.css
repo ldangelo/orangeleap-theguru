@@ -150,14 +150,13 @@ form input.file {
 	font-weight:bold;
 	margin:0;
 	padding:0 0 6px 0;
-	/*color:#555;*/
-	color:#e52;
+	color:#FF6600;
 	border-bottom:1px solid #555;
 }
 .mainForm h2 {
 	font-size:20px;
 	margin:8px 0 0 0;
-	color:#525f95;
+	color:#333333;
 }
 .mainForm h3 {
 	font-size:14px;
