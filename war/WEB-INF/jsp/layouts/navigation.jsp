@@ -20,8 +20,9 @@
 
 <div id="navmain">
 	<div class="navLeftCap"></div>
-	<div class="container">
-		<ul class="primaryNav">
+
+<div class="container">
+	<ul class="primaryNav">
 		<li>
 		  <c:if test="${page > 2}">
 		  Jump to Step		    
@@ -34,11 +35,46 @@
 		      <option>Run Report</option>
 		    </select>
 		  </c:if>
-			      
-		</li>
-		Step ${page} of ${maxpages}
-		</li>
-	
+</li>
+
+<c:choose>
+<c:when test="${page == 0}">
+	 Step ${page} of ${maxpages}: Select the report type
+</c:when>
+
+<c:when test="${page == 1}">
+	 Step ${page} of ${maxpages}: Select the report sub-type
+</c:when>
+
+<c:when test="${page == 2}">
+	 Step ${page} of ${maxpages}: Select the report format
+</c:when>
+
+<c:when test="${page == 3}">
+	 Step ${page} of ${maxpages}: Select the report columns
+</c:when>
+
+<c:when test="${page == 4}">
+	 Step ${page} of ${maxpages}: Select the information to summarize
+</c:when>
+
+<c:when test="${page == 5}">
+	 Step ${page} of ${maxpages}: Order the report columns
+</c:when>
+
+
+<c:when test="${page == 6}">
+	 Step ${page} of ${maxpages}: Select the report criteria
+</c:when>
+
+
+
+
+
+</c:choose>
+
+
+</ul>	
 		<div class="clearBoth"></div>
 	</div>
 	<div class="navRightCap"></div>
