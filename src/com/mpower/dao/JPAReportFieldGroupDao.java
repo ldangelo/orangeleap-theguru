@@ -54,6 +54,10 @@ public class JPAReportFieldGroupDao implements ReportFieldGroupDao {
 
 	
 	public void save(ReportFieldGroup group) {
+		if (group.getId() != null && em.find(ReportFieldGroup.class, group) != null) {
+			em.merge(group);
+			return;
+		}
 		em.persist(group);
 
 	}

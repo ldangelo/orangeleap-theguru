@@ -41,7 +41,7 @@ public class ReportSourceDataProvider {
 		rf1.setCanBeSummarized(false);
 		ArrayList<ReportFieldGroup> lrfg = new ArrayList<ReportFieldGroup>();
 		lrfg.add(rfg);
-//		rf1.setReportFieldGroup(new ArrayList<ReportFieldGroup>());
+		rf1.setReportFieldGroup(new ArrayList<ReportFieldGroup>());
 		
 		ReportField rf2 = new ReportField();
 		rf2.setDisplayName("Last Name");
@@ -49,7 +49,7 @@ public class ReportSourceDataProvider {
 		rf2.setFieldType(ReportFieldType.STRING);
 		rf2.setSelected(true);
 		rf2.setCanBeSummarized(false);
-//		rf2.setReportFieldGroup(lrfg);
+		rf2.setReportFieldGroup(lrfg);
 		ArrayList<ReportField> fields = new ArrayList<ReportField>();
 		fields.add(rf1);
 		fields.add(rf2);
@@ -84,7 +84,7 @@ public class ReportSourceDataProvider {
 		rf1.setCanBeSummarized(false);
 		ArrayList<ReportFieldGroup> lrfg = new ArrayList<ReportFieldGroup>();
 		lrfg.add(rfg);
-//		rf1.setReportFieldGroup(lrfg);
+		rf1.setReportFieldGroup(lrfg);
 		
 		ReportField rf2 = new ReportField();
 		rf2.setDisplayName("Last Name");
@@ -92,7 +92,7 @@ public class ReportSourceDataProvider {
 		rf2.setFieldType(ReportFieldType.STRING);
 		rf2.setSelected(true);
 		rf2.setCanBeSummarized(false);
-//		rf2.setReportFieldGroup(lrfg);
+		rf2.setReportFieldGroup(lrfg);
 		ArrayList<ReportDataSubSource> lrss = new ArrayList<ReportDataSubSource>();
 		lrss.add(rss);
 		

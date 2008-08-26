@@ -30,7 +30,7 @@ public class ReportField implements java.io.Serializable,
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "REPORTFIELD_ID")
-	private long id;
+	private Long id;
 
 	@Column(name = "DISPLAY_NAME")
 	private String displayName;
@@ -54,8 +54,8 @@ public class ReportField implements java.io.Serializable,
 	@Column(name = "IS_DEFAULT")
 	private Boolean isDefault;
 
-	@Column(name = "SUM")
-	private Boolean sum;
+	@Column(name = "PERFORMSUMMARY")
+	private Boolean performSummary;
 
 	@Column(name = "AVERAGE")
 	private Boolean average;
@@ -66,12 +66,12 @@ public class ReportField implements java.io.Serializable,
 	@Column(name = "SMALLEST_VALUE")
 	private Boolean smallestValue;
 
-	public Boolean getSum() {
-		return sum;
+	public Boolean getPerformSummary() {
+		return performSummary;
 	}
 
 	public void setSum(Boolean sum) {
-		this.sum = sum;
+		this.performSummary = performSummary;
 	}
 
 	public Boolean getAverage() {
@@ -103,10 +103,12 @@ public class ReportField implements java.io.Serializable,
 	private List<ReportFieldGroup> reportFieldGroup;
 
 	public ReportField() {
+		id = null;
 
 	}
 
 	public ReportField(ReportField f) {
+		id = null;
 		displayName = f.displayName;
 		columnName = f.columnName;
 		type = f.type;
@@ -142,7 +144,7 @@ public class ReportField implements java.io.Serializable,
 		return type;
 	}
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 

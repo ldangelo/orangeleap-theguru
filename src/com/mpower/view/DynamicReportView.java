@@ -26,6 +26,7 @@ import org.springframework.web.servlet.view.AbstractView;
 import com.mpower.domain.ReportAdvancedFilter;
 import com.mpower.domain.ReportField;
 import com.mpower.domain.ReportWizard;
+import com.mpower.domain.ReportFieldType;
 import com.mpower.service.ReportFieldService;
 
 import ar.com.fdvs.dj.core.DynamicJasperHelper;
@@ -121,6 +122,8 @@ public class DynamicReportView extends AbstractView {
 			if (!bWhere) {
 				bWhere = true;
 				query += " WHERE ";
+			} else {
+				query += " AND ";
 			}
 
 			
@@ -133,13 +136,17 @@ public class DynamicReportView extends AbstractView {
 				query += " != ";
 				break;
 			case 3:
-				query += " > ";
+				query += " < ";
 				break;
 			case 4:
-				query += " < ";
+				query += " >";
 			}
 			
-			query += " '" + filter.getValue() + "'";
+			if (rf.getFieldType() == ReportFieldType.STRING || rf.getFieldType() == ReportFieldType.DATE) {
+				query += " '" + filter.getValue() + "'";
+			} else {
+				query += " " + filter.getValue() + " ";
+			}
 		}
 
 

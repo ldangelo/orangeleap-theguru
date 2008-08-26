@@ -1,3 +1,3 @@
 package com.mpower.domain;
 
-public enum ReportFieldType { STRING, INTEGER, DOUBLE, DATE, MONEY };
+public enum ReportFieldType { NONE, STRING, INTEGER, DOUBLE, DATE, MONEY, BOOLEAN };

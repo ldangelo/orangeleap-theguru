@@ -30,7 +30,7 @@ public class ReportFieldGroup implements java.io.Serializable,
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "REPORTFIELDGROUP_ID")
-	private long id;
+	private Long id;
 
 	@ManyToMany(cascade=CascadeType.ALL)
 	@IndexColumn(name="REPORTSUBSOURCE_ID")
@@ -56,7 +56,7 @@ public class ReportFieldGroup implements java.io.Serializable,
 	}
 
 	public ReportFieldGroup() {
-
+		id = null;
 	}
 
 	public List<ReportDataSubSource> getReportDataSubSource() {
@@ -89,11 +89,11 @@ public class ReportFieldGroup implements java.io.Serializable,
 		return 0;
 	}
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 }

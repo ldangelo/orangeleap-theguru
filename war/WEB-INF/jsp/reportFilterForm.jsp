@@ -9,30 +9,33 @@
 <h3>Filter Information</h3>
 <Table>
 
-
-	<TR>
-		<TD><SELECT id="advancedFilters[0].fieldId"
-			name="advancedFilters[0].fieldId">
-			<c:forEach var="fgroup" items="${fieldGroups}" varStatus="outer">
-				<c:forEach var="f" items="${fgroup.fields}" varStatus="inner">
-					<c:if test="${f != null }">
-						<option label="${f.displayName}" value="${f.id}">${f.displayName}</option>
-					</c:if>
+	<Table id="report_filters" class="tablesorter">
+		<TR rowIndex="0">
+			<TD><SELECT id="advancedFilters[0].fieldId"
+				name="advancedFilters[0].fieldId">
+				<c:forEach var="fgroup" items="${fieldGroups}" varStatus="outer">
+					<c:forEach var="f" items="${fgroup.fields}" varStatus="inner">
+						<c:if test="${f != null }">
+							<option label="${f.displayName}" value="${f.id}">${f.displayName}</option>
+						</c:if>
+					</c:forEach>
 				</c:forEach>
-			</c:forEach>
-		</SELECT></TD>
+			</SELECT></TD>
 
-		<TD><SELECT id="advancedFilters[0].operator"
-			name="advancedFilters[0].operator">
-			<option value="1">equals</option>
-			<option value="2">not equal</option>
-			<option value="3">less then</option>
-			<option value="4">greater then</option>
-		</SELECT></TD>
+			<TD><SELECT id="advancedFilters[0].operator"
+				name="advancedFilters[0].operator">
+				<option value="1">equals</option>
+				<option value="2">not equal</option>
+				<option value="3">less then</option>
+				<option value="4">greater then</option>
+			</SELECT></TD>
 
-		<TD><input type="text" name="advancedFilters[0].value" value=""
-			maxlength="100" title="Value 0"> AND</TD>
-	</TR>
+			<TD><input type="text" name="advancedFilters[0].value" value=""
+				maxlength="100" title="Value 0"></TD>
+			<TD><img class="deleteButton" src="images/icons/deleteRow.png"
+				style="cursor: pointer; display: none;" /></TD>
+		</TR>
+	</Table>
 
 	<TR></TR>
 	<TR></TR>

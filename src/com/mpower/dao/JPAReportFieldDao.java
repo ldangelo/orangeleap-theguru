@@ -52,6 +52,10 @@ public class JPAReportFieldDao implements ReportFieldDao {
 
 	
 	public void save(ReportField f) {
+		if (f.getId() != null && em.find(ReportField.class, f) != null) {
+			em.merge(f);
+			return;
+		}
 		em.persist(f);
 
 	}
