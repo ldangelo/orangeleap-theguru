@@ -86,8 +86,10 @@ insert into REPORTFIELD_REPORTFIELDGROUP values(21,2,16,21);
 insert into REPORTFIELD_REPORTFIELDGROUP values(22,2,17,22); 
 -- Postal Code in People Address
 insert into REPORTFIELD_REPORTFIELDGROUP values(23,2,18,23); 
+-- State in People Address
+insert into REPORTFIELD_REPORTFIELDGROUP values(24,2,19,24); 
 -- Transaction date into gift general
-insert into REPORTFIELD_REPORTFIELDGROUP values(25,4,19,25); 
+insert into REPORTFIELD_REPORTFIELDGROUP values(25,4,20,25); 
 -- Gift Amount into gift general
-insert into REPORTFIELD_REPORTFIELDGROUP values(26,4,19,26); 
+insert into REPORTFIELD_REPORTFIELDGROUP values(26,4,21,26); 
 
