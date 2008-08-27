@@ -1,9 +1,11 @@
 <%@ include file="/WEB-INF/jsp/include.jsp" %>
 
-<input type="submit" value="Run Report" name="_finish">
-<input type="button" value="Export Details" value="export">
-<input type="button" value="Save As" value="save">
-<input type="submit" value="Back" name="_target${page-1}">
+
+<input type="image" src="images/run_report_off.gif" value="Run Report" ALT="Finish" name="_finish">
+<input type="image" src="images/export_details_off.gif" value="Export Details" ALT="Export">
+<input type="image" src="images/save_as_off.gif" value="Save As" ALT="Save">
+<input type="image" src="images/back_off.gif" value="Back" ALT="Back" name="_target${page-1}">
 <c:if test="${page < maxpages}">
-<input type="submit" value="Next" name="_target${page+1}">
+<input type="image" src="images/next_off.gif"  value="Next" ALT="Next" name="_target${page+1}">
 </c:if>
+
