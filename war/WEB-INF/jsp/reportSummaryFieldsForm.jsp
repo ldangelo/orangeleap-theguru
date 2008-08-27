@@ -25,7 +25,7 @@
 <c:forEach var="f" items="${fgroup.fields}" varStatus="inner">
 <c:if test="${f.canBeSummarized}">
 <TR>
-<TD>${f.displayName}</TD><TD></TD><TD><input type=checkbox name="fieldGroups[${outer.count-1}].fields[${inner.count-1}].sum"/></TD><TD><input type=checkbox name="fieldGroups[${outer.count-1}].fields[${inner.count-1}].average"/></TD><TD><input type=checkbox name="fieldGroups[${outer.count-1}].fields[${inner.count-1}].largestValue"/></TD><TD><input type=checkbox name="fieldGroups[${outer.count-1}].fields[${inner.count-1}].smallestValue"/></TD>
+<TD>${f.displayName}</TD><TD></TD><TD><input type=checkbox name="fieldGroups[${outer.count-1}].fields[${inner.count-1}].performSummary"/></TD><TD><input type=checkbox name="fieldGroups[${outer.count-1}].fields[${inner.count-1}].average"/></TD><TD><input type=checkbox name="fieldGroups[${outer.count-1}].fields[${inner.count-1}].largestValue"/></TD><TD><input type=checkbox name="fieldGroups[${outer.count-1}].fields[${inner.count-1}].smallestValue"/></TD>
 </TR>
 </c:if>
 </c:forEach>
