@@ -70,7 +70,7 @@ public class ReportField implements java.io.Serializable,
 		return performSummary;
 	}
 
-	public void setSum(Boolean sum) {
+	public void setPerformSummary(Boolean performSummary) {
 		this.performSummary = performSummary;
 	}
 
