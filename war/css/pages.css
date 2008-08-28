@@ -1,10 +1,19 @@
 
 .buttonposition {
-	text-align: center;
-	width: 900px;
+	text-align: right;
+	width: 760px;
 	margin: 0 auto;
 	background-color:#fff;
 	}
+
+.addbuttonposition {
+	text-align: left;
+	width: 760px;
+	margin: 0 auto;
+	background-color:#fff;
+	}
+
+
 
 
 .bodyContent {
