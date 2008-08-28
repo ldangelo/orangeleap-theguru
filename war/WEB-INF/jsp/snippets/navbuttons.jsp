@@ -1,8 +1,6 @@
 <%@ include file="/WEB-INF/jsp/include.jsp" %>
 
-
 <div class="addbuttonposition">
-
 <table>
 <tr>
 <td align="Left" width=360>
@@ -13,14 +11,9 @@
 </c:if>
 </td>
 
-
- 
 <td align="Right" width=360>
 <c:if test="${page == 0}">
 <input type="image" src="images/cancel_off.gif" value="Cancel" name="_cancel" ALT="Cancel" onmouseover="this.src = 'images/cancel_on.gif';" onmouseout="this.src = 'images/cancel_off.gif';">
-
-
-
 </c:if>
 
 <c:if test="${page > 0}">
