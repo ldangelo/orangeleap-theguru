@@ -9,7 +9,5 @@
 
 
 
-<div class="buttonposition">
 <jsp:include page="snippets/navbuttons.jsp" />
-</div>
 </form:form>
