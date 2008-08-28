@@ -7,8 +7,9 @@
    <form:options items="${reportDataSubSources}" itemLabel="displayName" itemValue="id"/>
 </form:select>
 
-<input type="submit" value="Back" name="_target0">
-<input type="submit" value="Next" name="_target2">
 
+
+<div class="buttonposition">
+<jsp:include page="snippets/navbuttons.jsp" />
+</div>
 </form:form>
-
