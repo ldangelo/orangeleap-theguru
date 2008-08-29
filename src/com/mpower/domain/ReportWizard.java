@@ -4,30 +4,78 @@ import java.util.List;
 import java.util.SortedSet;
 import java.util.ArrayList;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
 import org.apache.commons.collections.FactoryUtils;
 import org.apache.commons.collections.list.LazyList;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.annotations.IndexColumn;
 
-public class ReportWizard {
+@Entity
+@Table(name = "REPORTWIZARD")
+public class ReportWizard implements java.io.Serializable {
 
+	@Transient
 	protected final Log logger = LogFactory.getLog(getClass());
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "REPORTWIZARD_ID")
+	private Long id;
+	
+	@Column(name = "REPORT_NAME")
 	private String reportName;
+	@Column(name = "REPORT_COMMENT")
+	private String reportComment;
+	
+	@Column(name="ROW_COUNT")
 	private Integer rowCount;
+
+	@Column(name="REPORTDATASOURCE_ID")
 	private long srcId;
 
+	@Column(name = "REPORTSUBSOURCE_ID")
 	private long subSourceId;
 
+	@Transient
 	private ReportDataSource src;
+
+	@Transient
 	private ReportDataSubSource subsource;
+
+	@Transient
 	private List<ReportDataSource> sources;
+
+	@Transient
 	private List<ReportDataSubSource> subsources;
+
+	@ManyToMany()
+	@IndexColumn(name="REPORTFIELD_ID")
 	private List<ReportField> fields;
+
+	@ManyToMany()
+	@IndexColumn(name="REPORTFIELDGROUP_ID")
+	@Column(name = "FIELDGROUPS")
 	private List<ReportFieldGroup> fieldGroups;
+
+	@OneToMany(cascade = CascadeType.ALL)
+	@IndexColumn(name="REPORTADVANCEDFILTER_ID")
 	private List<ReportAdvancedFilter> advancedFilters;
+
+	@Column(name = "REPORT_TYPE")
 	private String reportType;
-	
+
 	public ReportWizard() {
 		reportType = "tabular";
 		srcId = 0;
@@ -39,16 +87,15 @@ public class ReportWizard {
 		//advancedFilters = LazyList.decorate(new ArrayList<ReportAdvancedFilter>(),FactoryUtils.instantiateFactory(ReportAdvancedFilter.class, new Class[]{ReportAdvancedFilter.class},new Object[]{}));
 		advancedFilters = LazyList.decorate(new ArrayList<ReportAdvancedFilter>(),FactoryUtils.instantiateFactory(ReportAdvancedFilter.class));
 	}
-	
 	public List<ReportAdvancedFilter> getAdvancedFilters() {
 		return advancedFilters;
 	}
-
+	
 	public ReportDataSource getDataSource() {
 		logger.info("**** in getSrc()");
 		return src;
 	}
-
+	
 	public List<ReportDataSource> getDataSources() {
 		return sources;
 	}
@@ -68,6 +115,10 @@ public class ReportWizard {
 
 	public List<ReportField> getFields() {
 		return fields;
+	}
+
+	public String getReportComment() {
+		return reportComment;
 	}
 
 	public ReportDataSource getReportDataSource() {
@@ -123,6 +174,10 @@ public class ReportWizard {
 
 	public void setFields(List<ReportField> fields) {
 		this.fields = fields;
+	}
+
+	public void setReportComment(String reportComment) {
+		this.reportComment = reportComment;
 	}
 
 	public void setReportDataSource(ReportDataSource src) {
