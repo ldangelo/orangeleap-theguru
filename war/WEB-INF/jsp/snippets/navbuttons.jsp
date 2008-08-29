@@ -6,8 +6,8 @@
 <td align="Left" width=360>
 <c:if test="${page > 1}">
 <input type="image" src="images/run_report_off.gif" value="Run Report" ALT="Finish" name="_finish" onmouseover="this.src = 'images/run_report_on.gif';" onmouseout="this.src = 'images/run_report_off.gif';">
-<input type="image" src="images/export_details_off.gif" value="Export Details" ALT="Export" onmouseover="this.src = 'images/export_details_on.gif';" onmouseout="this.src = 'images/export_details_off.gif';">
-<input type="image" src="images/save_as_off.gif" value="Save As" ALT="Save" onmouseover="this.src = 'images/save_as_on.gif';" onmouseout="this.src = 'images/save_as_off.gif';">
+<input type="image" src="images/export_details_off.gif" value="Export Details" name="_target10" ALT="Export" onmouseover="this.src = 'images/export_details_on.gif';" onmouseout="this.src = 'images/export_details_off.gif';">
+<input type="image" src="images/save_as_off.gif" value="Save As" name="_target7" ALT="Save" onmouseover="this.src = 'images/save_as_on.gif';" onmouseout="this.src = 'images/save_as_off.gif';">
 </c:if>
 </td>
 
