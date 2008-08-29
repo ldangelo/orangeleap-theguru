@@ -49,7 +49,7 @@
         <property name="reportSubSourceService" ref="reportSubSourceService"/>
         <property name="reportFieldGroupService" ref="reportFieldGroupService"/>
         <property name="reportFieldService" ref="reportFieldService"/>
-
+		<property name="reportWizardService" ref="reportWizardService"/>
         
         <property name="dynamicView" ref="dynamicReport"/>       
 	<property name="pages">
@@ -61,6 +61,10 @@
 			<value>ReportSummaryFields</value>
 			<value>ReportColumnsOrder</value>
 			<value>ReportFilter</value>
+			<value>ReportSaveAs</value>
+			<value>ReportRedirect</value>
+			<value>ReportRedirect</value>			
+			<value>ReportRedirect</value>						
 		</list>
 	</property>
     </bean>
