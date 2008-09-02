@@ -19,14 +19,10 @@
 	</select>
 </td>
 <td>
-	<div class="text">Top</div>
-	<div class="text"><input type="button" title="Top" alt="Top" onclick="moveTop(document.getElementById('fieldOrder'));updateList(document.getElementById('fieldOrder'), document.getElementById('fieldOrderList'));" /></div>
-	<div class "text">Up</div>
-	<div class="text"><input type="button"  title="Up" alt="Up" onclick="moveUp(document.getElementById('fieldOrder'));updateList(document.getElementById('fieldOrder'), document.getElementById('fieldOrderList'));" /></div>
-	<div class="text"><input type="button"  title="Down" alt="Down" onclick="moveDown(document.getElementById('fieldOrder'));updateList(document.getElementById('fieldOrder'), document.getElementById('fieldOrderList'));" /></div>
-	<div class "text">Down</div>
-	<div class="text"><input type="button"  title="Bottom" alt="Bottom" onclick="moveBottom(document.getElementById('fieldOrder'));updateList(document.getElementById('fieldOrder'), document.getElementById('fieldOrderList'));" /></div>
-	<div class "text">Bottom</div>
+	<div class="text"><a href="javascript:moveTop(document.getElementById('fieldOrder'));updateList(document.getElementById('fieldOrder'), document.getElementById('fieldOrderList'));"><img src="images/top.gif" alt="Top" class="doubleArrowUp" title="Top"/></a>
+	<div class="text"><a href="javascript:moveUp(document.getElementById('fieldOrder'));updateList(document.getElementById('fieldOrder'), document.getElementById('fieldOrderList'));"><img src="images/up.gif" alt="Top" class="arrowUp" title="Up"/></a>
+	<div class="text"><a href="javascript:moveDown(document.getElementById('fieldOrder'));updateList(document.getElementById('fieldOrder'), document.getElementById('fieldOrderList'));"><img src="images/down.gif" alt="Top" class="arrowDown" title="Down"/></a>
+	<div class="text"><a href="javascript:moveBottom(document.getElementById('fieldOrder'));updateList(document.getElementById('fieldOrder'), document.getElementById('fieldOrderList'));"><img src="images/bottom.gif" alt="Top" class="doubleArrowDown" title="Bottom"/></a>
 </td></Tr>
 </table>
 <input type="hidden" id="fieldOrderList" name="reportColumnOrder" value="" readonly="readonly" style="border: none;"></dd>
