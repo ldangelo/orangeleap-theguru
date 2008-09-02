@@ -12,7 +12,7 @@
 <div class="columns">
 <table>
 <Tr><td>
-	<select name="fieldOrder" size="10">
+	<select id="fieldOrder" name="fieldOrder" size="10">
 		<c:forEach var="f" items="${fields}" varStatus="inner">
 			<option id=${f.id}>${f.displayName}</option>
 		</c:forEach>
