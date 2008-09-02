@@ -82,7 +82,7 @@ public class DynamicReportView extends AbstractView {
 		//
 		// Render the jasper report
 		FastReportBuilder drb = new FastReportBuilder();
-		List<ReportField> fields = wiz.getFields();
+		List<ReportField> fields = wiz.getSelectedReportFieldsInOrder();
 		Iterator it = fields.iterator();
 		
 		while(it.hasNext()) {

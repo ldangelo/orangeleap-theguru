@@ -1,8 +1,11 @@
 package com.mpower.domain;
 
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.ArrayList;
+import java.util.StringTokenizer;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -75,6 +78,7 @@ public class ReportWizard implements java.io.Serializable {
 
 	@Column(name = "REPORT_TYPE")
 	private String reportType;
+	private String reportColumnOrder;
 
 	public ReportWizard() {
 		reportType = "tabular";
@@ -87,6 +91,7 @@ public class ReportWizard implements java.io.Serializable {
 		//advancedFilters = LazyList.decorate(new ArrayList<ReportAdvancedFilter>(),FactoryUtils.instantiateFactory(ReportAdvancedFilter.class, new Class[]{ReportAdvancedFilter.class},new Object[]{}));
 		advancedFilters = LazyList.decorate(new ArrayList<ReportAdvancedFilter>(),FactoryUtils.instantiateFactory(ReportAdvancedFilter.class));
 	}
+
 	public List<ReportAdvancedFilter> getAdvancedFilters() {
 		return advancedFilters;
 	}
@@ -146,6 +151,24 @@ public class ReportWizard implements java.io.Serializable {
 		return subSourceId;
 	}
 
+	public String getReportColumnOrder() {
+		if (reportColumnOrder == null)
+			reportColumnOrder = "";
+		if (reportColumnOrder.length() == 0) {			
+			Iterator<ReportField> it = fields.iterator();			
+			while(it.hasNext()) {
+				ReportField f = (ReportField) it.next();
+				
+				if (f.getSelected()) {
+					if (reportColumnOrder.length() > 0)
+						reportColumnOrder += ",";
+					reportColumnOrder += f.getId();
+				}					
+			}			
+		}
+		return reportColumnOrder;
+	}
+
 	public void setAdvancedFilters(List<ReportAdvancedFilter> advancedFilters) {
 		this.advancedFilters = advancedFilters;
 	}
@@ -203,5 +226,27 @@ public class ReportWizard implements java.io.Serializable {
 
 	public void setSubSourceId(long srcId) {
 		this.subSourceId = srcId;
+	}
+
+	public void setReportColumnOrder(String order) {
+		this.reportColumnOrder = order;
+	}
+
+	public List<ReportField> getSelectedReportFieldsInOrder() {
+		List<ReportField> fieldList = new LinkedList<ReportField>();
+		StringTokenizer stringTokenizer = new StringTokenizer(getReportColumnOrder(), ",");
+		while (stringTokenizer.hasMoreTokens()) {
+			int fieldId = Integer.parseInt(stringTokenizer.nextToken());
+			Iterator iteratorFields = fields.iterator();
+			while(iteratorFields.hasNext()) {
+				ReportField reportField = (ReportField) iteratorFields.next();				
+				if (reportField.getId() == fieldId) {
+					if (reportField.getSelected())
+						fieldList.add(reportField);
+					break;
+				}
+			}
+		}
+		return fieldList;
 	}
 }

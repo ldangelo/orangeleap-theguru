@@ -219,7 +219,6 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 			}
 			wiz.setFields(fields);
 			refData.put("fields", fields);
-
 		}
 		
 		if(page==4) {
@@ -229,7 +228,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		
 		if(page==5) {
 			refData.put("fieldGroups", wiz.getFieldGroups());
-			
+			refData.put("fields", wiz.getSelectedReportFieldsInOrder());			
 		}
 		
 		if(page==6) {
