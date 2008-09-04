@@ -78,13 +78,15 @@ public class ReportWizard implements java.io.Serializable {
 
 	@Column(name = "REPORT_TYPE")
 	private String reportType;
+	private Boolean recordCount;
 	private String reportColumnOrder;
-
+	
 	public ReportWizard() {
 		reportType = "tabular";
 		srcId = 0;
 		subSourceId = 0;
 		rowCount = -1;
+		recordCount = false;
 
 		//
 		// create an advanced filter list decorated as a LazyList
@@ -122,10 +124,14 @@ public class ReportWizard implements java.io.Serializable {
 		return fields;
 	}
 
+	public Boolean getRecordCount() {
+		return recordCount;
+	}
+
 	public String getReportComment() {
 		return reportComment;
 	}
-
+	
 	public ReportDataSource getReportDataSource() {
 		return src;
 	}
@@ -199,10 +205,14 @@ public class ReportWizard implements java.io.Serializable {
 		this.fields = fields;
 	}
 
+	public void setRecordCount(Boolean count) {
+		recordCount = count;
+	}
+
 	public void setReportComment(String reportComment) {
 		this.reportComment = reportComment;
 	}
-
+		
 	public void setReportDataSource(ReportDataSource src) {
 		this.src = src;
 	}
