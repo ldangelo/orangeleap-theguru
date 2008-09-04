@@ -143,3 +143,29 @@ function updateList(list, textBox) {
 		}
 	}
 }
+
+function checkBoxValidate(cb) {
+	for (j = 0; j < 4; j++) {
+		if (eval("document.myform.ckbox[" + j + "].checked") == true) {
+			document.myform.ckbox[j].checked = false;
+			if (j == cb) {
+				document.myform.ckbox[j].checked = true;
+			}
+		}
+	}
+}
+
+function SingleSelect(regex,current) {
+	checked = current.checked;
+	re = new RegExp(regex);
+	for(i = 0; i < document.forms[0].elements.length; i++) {
+		elm = document.forms[0].elements[i];
+		if (elm.type == 'checkbox') {
+			if (re.test(elm.name)) {
+				elm.checked = false;
+			}
+		}
+	}
+	if (checked)
+		current.checked = true;
+}
