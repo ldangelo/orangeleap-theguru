@@ -29,19 +29,17 @@
 	    	<property name="reportFieldService" ref="reportFieldService"/>
 	</bean>
     
-    <bean id="htmlReport" class="org.springframework.web.servlet.view.jasperreports.JasperReportsHtmlView">
-    	<property name="url" value="/WEB-INF/reports/classic.jrxml"/>
-    	<property name="jdbcDataSource" ref="dataSource"/>
-    </bean>
-    
+
     <bean name="/dynamicReport.htm" class="com.mpower.controller.DynamicReportController">
 		<property name="dynamicView" ref="dynamicReport"/>
     </bean>
     
-    <bean name="/simpleReport.htm" class="com.mpower.controller.SimpleReportController">
-		<property name="htmlView" ref="htmlReport"/>
-    </bean>
-
+	<bean name="/ReportManager.htm" class="com.mpower.controller.ReportManagerFormController">
+		<property name="commandName"  value="reportmanager"/>
+		<property name="commandClass" value="com.mpower.domain.ReportManager"/>
+		<property name="reportWizardService" ref="reportWizardService"/>
+	</bean>
+	
     <bean name="/ReportWizard.htm" class="com.mpower.controller.ReportWizardFormController">
         <property name="commandName" value="reportsource"/>
         <property name="commandClass" value="com.mpower.domain.ReportWizard"/>
@@ -50,7 +48,10 @@
         <property name="reportFieldGroupService" ref="reportFieldGroupService"/>
         <property name="reportFieldService" ref="reportFieldService"/>
 		<property name="reportWizardService" ref="reportWizardService"/>
-        
+		<property name="reportUnitDataSourceURI" value="/datasources/ReportWizardJdbcDS"/>
+		<property name="reportServicesURI" value="http://127.0.0.1:8080/jasperserver/services/repository"/>		
+		<property name="reportUserName" value="jasperadmin"/>
+		<property name="reportPassword" value="jasperadmin"/>        
         <property name="dynamicView" ref="dynamicReport"/>       
 	<property name="pages">
 		<list>
