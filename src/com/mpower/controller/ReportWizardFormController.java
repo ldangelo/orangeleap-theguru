@@ -1,5 +1,6 @@
 package com.mpower.controller;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -8,23 +9,39 @@ import java.util.Map;
 
 
 import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JRExporter;
+import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.export.JRHtmlExporterParameter;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.ui.jasperreports.JasperReportsUtils;
 import org.springframework.util.Assert;
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractWizardFormController;
 
+import ar.com.fdvs.dj.core.DJConstants;
+import ar.com.fdvs.dj.core.DynamicJasperHelper;
+import ar.com.fdvs.dj.core.layout.ClassicLayoutManager;
+import ar.com.fdvs.dj.domain.DynamicReport;
+import ar.com.fdvs.dj.domain.builders.ColumnBuilderException;
+import ar.com.fdvs.dj.domain.builders.FastReportBuilder;
+
+import com.jaspersoft.jasperserver.api.metadata.xml.domain.impl.ResourceDescriptor;
+import com.jaspersoft.jasperserver.irplugin.JServer;
+import com.mpower.domain.ReportAdvancedFilter;
 import com.mpower.domain.ReportDataSource;
 import com.mpower.domain.ReportDataSubSource;
 import com.mpower.domain.ReportField;
 import com.mpower.domain.ReportFieldGroup;
+import com.mpower.domain.ReportFieldType;
 import com.mpower.domain.ReportWizard;
 import com.mpower.service.ReportFieldGroupService;
 import com.mpower.service.ReportFieldService;
@@ -52,10 +69,24 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 
 	private SessionService          sessionService;
 
+	private String reportServicesURI;
+	private String reportUnitDataSourceURI;
+	private String reportUserName;
+	private String reportPassword;
+	
+    private JServer server = null;
 	public ReportWizardFormController() {
-		
-	}
+   	}
 
+	private void startServer()
+	{
+		if (server == null) {
+			server = new JServer();
+	        server.setUsername(reportUserName);
+	        server.setPassword(reportPassword);
+	        server.setUrl(reportServicesURI);
+		}
+	}
 	@Override
 	protected Object formBackingObject(HttpServletRequest request)
 			throws ServletException {
@@ -107,6 +138,120 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 
 		return super.handleRequest(request, response);
 	}
+
+	protected void saveReport(ReportWizard wiz) throws Exception {
+		//
+		// First we must generate a jrxml file
+		//
+		// Render the jasper report
+		FastReportBuilder drb = new FastReportBuilder();
+		List<ReportField> fields = wiz.getFields();
+		Iterator it = fields.iterator();
+		
+		while(it.hasNext()) {
+			ReportField f = (ReportField) it.next();
+			
+			if (f.getSelected())
+				drb.addColumn(f.getDisplayName(),f.getColumnName(),String.class.getName(),20);
+		}
+
+		@SuppressWarnings("unused")
+		Map params = new HashMap();
+
+
+		String query = "SELECT * FROM " + wiz.getDataSubSource().getViewName();
+		
+		if (wiz.getRowCount() != -1)
+			query += " LIMIT 0," + wiz.getRowCount().toString(); 
+
+		//
+		// Add any 'filters'
+		List<ReportAdvancedFilter> filters = wiz.getAdvancedFilters();
+		Iterator itFilter = filters.iterator();
+
+		
+		Boolean bWhere = false;
+		while (itFilter.hasNext()) {
+			ReportAdvancedFilter filter = (ReportAdvancedFilter) itFilter.next();
+			ReportField rf = reportFieldService.find(filter.getFieldId());
+
+			if (filter.getValue() == "") break; // this is an empty filter
+			
+			if (!bWhere) {
+				bWhere = true;
+				query += " WHERE ";
+			} else {
+				query += " AND ";
+			}
+
+			
+			query += " " + rf.getColumnName();
+			switch (filter.getOperator()) {
+			case 1:
+				query += " = ";
+				break;
+			case 2:
+				query += " != ";
+				break;
+			case 3:
+				query += " < ";
+				break;
+			case 4:
+				query += " >";
+			}
+			
+			if (rf.getFieldType() == ReportFieldType.STRING || rf.getFieldType() == ReportFieldType.DATE) {
+				query += " '" + filter.getValue() + "'";
+			} else {
+				query += " " + filter.getValue() + " ";
+			}
+		}
+
+
+		query += ";";
+		
+
+		DynamicReport dr = drb.addTitle("")
+		.addSubtitle("")
+		.addUseFullPageWidth(true)
+		.setQuery(query,DJConstants.QUERY_LANGUAGE_SQL).build();
+		
+		
+		File tempFile = File.createTempFile("wiz", ".jrxml");
+		DynamicJasperHelper.generateJRXML(dr,new ClassicLayoutManager(), params, null, tempFile.getPath());
+
+		
+		//
+		// now we need to save the report to the jasperserver
+		ResourceDescriptor rd = new ResourceDescriptor();
+		ResourceDescriptor tmpDataSourceDescriptor = new ResourceDescriptor();
+		tmpDataSourceDescriptor.setWsType(ResourceDescriptor.TYPE_DATASOURCE);
+		tmpDataSourceDescriptor.setReferenceUri(reportUnitDataSourceURI );
+		tmpDataSourceDescriptor.setIsReference(true);
+		rd.getChildren().add(tmpDataSourceDescriptor);
+
+		ResourceDescriptor jrxmlDescriptor = new ResourceDescriptor();
+		jrxmlDescriptor.setWsType(ResourceDescriptor.TYPE_JRXML);
+		jrxmlDescriptor.setName(wiz.getReportName());
+		jrxmlDescriptor.setLabel(wiz.getReportComment()); 
+		jrxmlDescriptor.setDescription(wiz.getReportComment()); 
+		jrxmlDescriptor.setIsNew(true);
+		jrxmlDescriptor.setHasData(true);
+		jrxmlDescriptor.setMainReport(true);
+		
+		rd.setWsType(ResourceDescriptor.TYPE_REPORTUNIT);
+		rd.setParentFolder("/Reports/Clementine");
+		rd.setIsNew(true);
+		rd.setUriString(rd.getParentFolder() + "/" + wiz.getReportName());
+		rd.setName(wiz.getReportName());
+		rd.setLabel(wiz.getReportComment()); 
+		rd.setDescription(wiz.getReportComment()); 
+		rd.getChildren().add(jrxmlDescriptor);
+		
+		startServer();
+		
+		server.getWSClient().addOrModifyResource(rd, tempFile);
+	}
 	
 	@Override
 	protected void postProcessPage(HttpServletRequest request, Object command,
@@ -120,8 +265,9 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 
 		if (request.getParameter("_target10") != null) {
 			//
-			// We are saving a report so save the wiz to the database and continue
-			reportWizardService.save(wiz);
+			// We are saving this report to jasperserver
+			saveReport(wiz);
+
 		}
 
 	}
@@ -276,5 +422,37 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 
 		return showPage(request, errors, getInitialPage(request, errors
 				.getTarget()));
+	}
+
+	public String getReportUnitDataSourceURI() {
+		return reportUnitDataSourceURI;
+	}
+
+	public void setReportUnitDataSourceURI(String reportUnitDataSourceURI) {
+		this.reportUnitDataSourceURI = reportUnitDataSourceURI;
+	}
+
+	public String getReportUserName() {
+		return reportUserName;
+	}
+
+	public void setReportUserName(String reportUserName) {
+		this.reportUserName = reportUserName;
+	}
+
+	public String getReportPassword() {
+		return reportPassword;
+	}
+
+	public void setReportPassword(String reportPassword) {
+		this.reportPassword = reportPassword;
+	}
+
+	public String getReportServicesURI() {
+		return reportServicesURI;
+	}
+
+	public void setReportServicesURI(String reportServicesURI) {
+		this.reportServicesURI = reportServicesURI;
 	}
 }
