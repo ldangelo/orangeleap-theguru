@@ -1,6 +1,6 @@
 <%@ include file="/WEB-INF/jsp/include.jsp" %>
  <%
-        String redirectURL = "/clementine/ReportWizard.htm";
+        String redirectURL = "/jasperserver";
         response.sendRedirect(redirectURL);
     %>
 
