@@ -12,6 +12,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.sql.DataSource;
 
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRExporter;
@@ -50,6 +51,7 @@ import com.mpower.service.ReportSubSourceService;
 import com.mpower.service.ReportWizardService;
 //import com.mpower.service.ReportWizardService;
 import com.mpower.service.SessionService;
+import com.mpower.util.ReportGenerator;
 import com.mpower.view.DynamicReportView;
 
 public class ReportWizardFormController extends AbstractWizardFormController {
@@ -75,6 +77,10 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 	private String reportPassword;
 	
     private JServer server = null;
+
+	private DataSource jdbcDataSource;
+	
+	
 	public ReportWizardFormController() {
    	}
 
@@ -143,79 +149,9 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		//
 		// First we must generate a jrxml file
 		//
-		// Render the jasper report
-		FastReportBuilder drb = new FastReportBuilder();
-		List<ReportField> fields = wiz.getFields();
-		Iterator it = fields.iterator();
-		
-		while(it.hasNext()) {
-			ReportField f = (ReportField) it.next();
-			
-			if (f.getSelected())
-				drb.addColumn(f.getDisplayName(),f.getColumnName(),String.class.getName(),20);
-		}
-
-		@SuppressWarnings("unused")
-		Map params = new HashMap();
-
-
-		String query = "SELECT * FROM " + wiz.getDataSubSource().getViewName();
-		
-		if (wiz.getRowCount() != -1)
-			query += " LIMIT 0," + wiz.getRowCount().toString(); 
-
-		//
-		// Add any 'filters'
-		List<ReportAdvancedFilter> filters = wiz.getAdvancedFilters();
-		Iterator itFilter = filters.iterator();
-
-		
-		Boolean bWhere = false;
-		while (itFilter.hasNext()) {
-			ReportAdvancedFilter filter = (ReportAdvancedFilter) itFilter.next();
-			ReportField rf = reportFieldService.find(filter.getFieldId());
-
-			if (filter.getValue() == "") break; // this is an empty filter
-			
-			if (!bWhere) {
-				bWhere = true;
-				query += " WHERE ";
-			} else {
-				query += " AND ";
-			}
-
-			
-			query += " " + rf.getColumnName();
-			switch (filter.getOperator()) {
-			case 1:
-				query += " = ";
-				break;
-			case 2:
-				query += " != ";
-				break;
-			case 3:
-				query += " < ";
-				break;
-			case 4:
-				query += " >";
-			}
-			
-			if (rf.getFieldType() == ReportFieldType.STRING || rf.getFieldType() == ReportFieldType.DATE) {
-				query += " '" + filter.getValue() + "'";
-			} else {
-				query += " " + filter.getValue() + " ";
-			}
-		}
-
-
-		query += ";";
-		
-
-		DynamicReport dr = drb.addTitle("")
-		.addSubtitle("")
-		.addUseFullPageWidth(true)
-		.setQuery(query,DJConstants.QUERY_LANGUAGE_SQL).build();
-		
+		HashMap params = new HashMap();
+		ReportGenerator rg = new ReportGenerator();
+		DynamicReport dr = rg.Generate(wiz, jdbcDataSource, reportFieldService);
 		
 		File tempFile = File.createTempFile("wiz", ".jrxml");
 		DynamicJasperHelper.generateJRXML(dr,new ClassicLayoutManager(), params, null, tempFile.getPath());
