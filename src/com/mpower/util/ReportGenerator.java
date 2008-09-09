@@ -1,6 +1,7 @@
 package com.mpower.util;
 
 import java.awt.Color;
+import java.io.File;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -12,6 +13,10 @@ import java.util.Map;
 
 import javax.activation.DataSource;
 
+import net.sf.jasperreports.engine.JasperPrint;
+
+import com.jaspersoft.jasperserver.api.metadata.xml.domain.impl.ResourceDescriptor;
+import com.jaspersoft.jasperserver.irplugin.JServer;
 import com.mpower.domain.ReportAdvancedFilter;
 import com.mpower.domain.ReportField;
 import com.mpower.domain.ReportFieldType;
@@ -41,57 +46,71 @@ public class ReportGenerator {
 	private Style titleStyle;
 	private Style importeStyle;
 	private Style oddRowStyle;
+	private String reportServicesURI;
+	private String reportUserName;
+	private String reportPassword;
 	
-	private void initStyles() {
-		//Set up the styles used in the report
-		detailStyle = new Style("detail");
-		detailStyle.setFont(Font.ARIAL_MEDIUM);
-		detailStyle.setHorizontalAlign(HorizontalAlign.LEFT);
-		detailStyle.setStretchWithOverflow(true);
-		
-		headerStyle = new Style("header");
-  		headerStyle.setFont(Font.ARIAL_MEDIUM_BOLD);
-  		headerStyle.setBorderBottom(Border.PEN_1_POINT);
-  		headerStyle.setBackgroundColor(Color.LIGHT_GRAY);
-  		headerStyle.setTextColor(Color.white);
-  		headerStyle.setHorizontalAlign(HorizontalAlign.LEFT);
-  		headerStyle.setVerticalAlign(VerticalAlign.MIDDLE);
-  		headerStyle.setTransparency(Transparency.OPAQUE);
-  
-  		headerVariables = new Style("headerVariables");
-  		headerVariables.setFont(Font.ARIAL_MEDIUM_BOLD);
-  		headerVariables.setBorderBottom(Border.THIN);
-  		headerVariables.setHorizontalAlign(HorizontalAlign.LEFT);
-  		headerVariables.setVerticalAlign(VerticalAlign.MIDDLE);
-  
-  		titleStyle = new Style("titleStyle");
-  		titleStyle.setFont(new Font(18, Font._FONT_VERDANA, true));
-  		
-  		importeStyle = new Style();
-  		importeStyle.setHorizontalAlign(HorizontalAlign.RIGHT);
-  		
-  		oddRowStyle = new Style();
-  		oddRowStyle.setBorder(Border.NO_BORDER);
-  		oddRowStyle.setBackgroundColor(Color.lightGray);
-  		oddRowStyle.setTransparency(Transparency.OPAQUE);
+    private JServer server = null;
+	private String reportUnitDataSourceURI;
+	
+	private void startServer()
+	{
+		if (server == null) {
+			server = new JServer();
+	        server.setUsername(reportUserName);
+	        server.setPassword(reportPassword);
+	        server.setUrl(reportServicesURI);
+		}
 	}
 
-	public DynamicReport Generate(ReportWizard wiz,javax.sql.DataSource jdbcDataSource, ReportFieldService reportFieldService) throws ColumnBuilderException {
+	private void initStyles() {
+		detailStyle = new Style("detail");
+		
+		headerStyle = new Style("header");
+
+  		headerVariables = new Style("headerVariables");
+  
+  		titleStyle = new Style("titleStyle");
+  		
+  		importeStyle = new Style();
+  		
+  		oddRowStyle = new Style();
+	}
+
+	private File getTemplateFile() throws Exception
+	{
+		startServer();
+		
+		//
+		// get the report template file from the server
+		File templateFile = File.createTempFile("template", ".jrxml");
+		ResourceDescriptor templateRD = new ResourceDescriptor();
+//		templateRD.setWsType(ResourceDescriptor.TYPE_JRXML);
+//		templateRD.setParentFolder("/templates");
+		templateRD.setUriString("/templates/mpower_template_files/mpower_template_jrxml");
+		ResourceDescriptor rd = server.getWSClient().get(templateRD, templateFile);
+
+		return templateFile;
+	}
+
+	public DynamicReport Generate(ReportWizard wiz,javax.sql.DataSource jdbcDataSource, ReportFieldService reportFieldService) throws Exception {
+		File templateFile = getTemplateFile();
+		
 		initStyles();
 
+		
 		FastReportBuilder drb = new FastReportBuilder();
   		Integer margin = new Integer(20);
-  		drb
+  		drb.setTemplateFile(templateFile.getAbsolutePath())
   			.setTitleStyle(titleStyle)
   			.setTitle(wiz.getDataSubSource().getDisplayName() + " Custom Report")					//defines the title of the report
-  			.setSubtitle("This report was generated at " + new Date().toString())
  			.setDetailHeight(new Integer(15))
  			.setLeftMargin(margin).setRightMargin(margin).setTopMargin(margin).setBottomMargin(margin)
   			.setPrintBackgroundOnOddRows(true)
   			.setGrandTotalLegendStyle(headerVariables)
   			.setOddRowBackgroundStyle(oddRowStyle)
-  			.addFirstPageImageBanner(System.getProperty("user.dir") +"/war/images/mpowerlogo.gif", new Integer(225), new Integer(75), ImageBanner.ALIGN_RIGHT);
-  		
+;//   			.addFirstPageImageBanner("images/mpowerlogo.gif", new Integer(225), new Integer(75), ImageBanner.ALIGN_RIGHT);
+  
   		List<ReportField> fields = wiz.getSelectedReportFieldsInOrder();
 		Iterator it = fields.iterator();
 		
@@ -155,16 +174,10 @@ public class ReportGenerator {
 	
 		drb.setIgnorePagination(true);
 		drb.setUseFullPageWidth(true);
-		drb.addAutoText("Confidential Information - Do Not Distribute", AutoText.POSITION_FOOTER, AutoText.ALIGMENT_CENTER);
 
 
 		@SuppressWarnings("unused")
 		Map params = new HashMap();
-//		Connection connection = jdbcDataSource.getConnection();
-//		Statement statement = connection.createStatement();
-//		ResultSet resultset = null;
-		
-		//Build query to get dataset
 		String query = "SELECT * FROM " + wiz.getDataSubSource().getViewName();
 		
 		if (wiz.getRowCount() != -1)
@@ -204,6 +217,9 @@ public class ReportGenerator {
 			} else {
 				query += " " + filter.getValue() + " ";
 			}
+
+			drb.addParameter(rf.getColumnName(), filter.getValue());
+
 		}
 
 
@@ -213,5 +229,98 @@ public class ReportGenerator {
 		DynamicReport dr = drb.build();
 
 		return dr;
+	}
+
+    private ResourceDescriptor putReportUnit(ResourceDescriptor rd,String name, String label, String desc, File report) throws Exception 
+    {
+		File resourceFile = null;
+
+		ResourceDescriptor tmpDataSourceDescriptor = new ResourceDescriptor();
+		tmpDataSourceDescriptor.setWsType(ResourceDescriptor.TYPE_DATASOURCE);
+		tmpDataSourceDescriptor.setReferenceUri(reportUnitDataSourceURI);
+		tmpDataSourceDescriptor.setIsReference(true);
+		rd.getChildren().add(tmpDataSourceDescriptor);
+
+		ResourceDescriptor jrxmlDescriptor = new ResourceDescriptor();
+		jrxmlDescriptor.setWsType(ResourceDescriptor.TYPE_JRXML);
+		jrxmlDescriptor.setName(name);
+		jrxmlDescriptor.setLabel(label); 
+		jrxmlDescriptor.setDescription(desc); 
+		jrxmlDescriptor.setIsNew(true);
+		jrxmlDescriptor.setHasData(true);
+		jrxmlDescriptor.setMainReport(true);
+		rd.getChildren().add(jrxmlDescriptor);
+		
+		return server.getWSClient().addOrModifyResource(rd, report);
+		
+    }   
+
+
+    public ResourceDescriptor put(String type, String name, String label, String desc, String parentFolder,File report) throws Exception 
+    {
+		ResourceDescriptor rd = new ResourceDescriptor();
+		rd.setName(name);
+		rd.setLabel(label);
+		rd.setDescription(desc);
+		rd.setParentFolder(parentFolder);
+		rd.setUriString(rd.getParentFolder() + "/" + rd.getName());
+		rd.setWsType(type);
+		rd.setIsNew(true);
+		
+		if (type.equalsIgnoreCase(ResourceDescriptor.TYPE_FOLDER)) {
+			return server.getWSClient().addOrModifyResource(rd, null);
+		}
+		else if (type.equalsIgnoreCase(ResourceDescriptor.TYPE_REPORTUNIT)) {
+			return putReportUnit(rd,name,label,desc,report);
+		}
+		
+		//shouldn't reach here
+		return null;
+
+	}
+     
+	public JasperPrint runReport(String reportUnit, java.util.Map parameters) throws Exception
+	{
+		ResourceDescriptor rd = new ResourceDescriptor();
+		rd.setWsType(ResourceDescriptor.TYPE_REPORTUNIT);
+
+		return server.getWSClient().runReport(rd, parameters);
+	}
+	
+	public void addOrModifyResource(ResourceDescriptor rd, File tempFile) throws Exception {
+		server.getWSClient().addOrModifyResource(rd, tempFile);
+		
+	}
+
+	public String getReportServicesURI() {
+		return reportServicesURI;
+	}
+
+	public void setReportServicesURI(String reportServicesURI) {
+		this.reportServicesURI = reportServicesURI;
+	}
+
+	public String getReportUserName() {
+		return reportUserName;
+	}
+
+	public void setReportUserName(String reportUserName) {
+		this.reportUserName = reportUserName;
+	}
+
+	public String getReportPassword() {
+		return reportPassword;
+	}
+
+	public void setReportPassword(String reportPassword) {
+		this.reportPassword = reportPassword;
+	}
+
+	public String getReportUnitDataSourceURI() {
+		return reportUnitDataSourceURI;
+	}
+
+	public void setReportUnitDataSourceURI(String reportUnitDataSourceURI) {
+		this.reportUnitDataSourceURI = reportUnitDataSourceURI;
 	}
 }

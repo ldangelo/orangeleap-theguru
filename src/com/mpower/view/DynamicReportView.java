@@ -2,6 +2,7 @@ package com.mpower.view;
 
 import java.awt.Color;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -25,6 +26,7 @@ import net.sf.jasperreports.engine.export.JRHtmlExporterParameter;
 import org.springframework.ui.jasperreports.JasperReportsUtils;
 import org.springframework.web.servlet.view.AbstractView;
 
+import com.jaspersoft.jasperserver.api.metadata.xml.domain.impl.ResourceDescriptor;
 import com.mpower.domain.ReportAdvancedFilter;
 import com.mpower.domain.ReportField;
 import com.mpower.domain.ReportWizard;
@@ -56,7 +58,8 @@ public class DynamicReportView extends AbstractView {
 	private DataSource jdbcDataSource;
 	private static final int OUTPUT_BYTE_ARRAY_INITIAL_SIZE = 4096;
 	private ReportWizard wiz;
-
+	ReportGenerator reportGenerator;
+	
 	
 
 	private ReportFieldService reportFieldService;
@@ -100,10 +103,11 @@ public class DynamicReportView extends AbstractView {
 		//
 		@SuppressWarnings("unused")
 		Map params = new HashMap();
-
-		ReportGenerator rg = new ReportGenerator();
 		
-		DynamicReport dr = rg.Generate(wiz, jdbcDataSource, reportFieldService);
+
+
+
+		DynamicReport dr = reportGenerator.Generate(wiz, jdbcDataSource, reportFieldService);
 		String query = dr.getQuery().getText();
 		
 		//
@@ -111,28 +115,39 @@ public class DynamicReportView extends AbstractView {
 		Connection connection = jdbcDataSource.getConnection();
 		Statement statement = connection.createStatement();
 		
-		ResultSet resultset = statement.executeQuery(query);
-		JasperPrint jp = DynamicJasperHelper.generateJasperPrint(dr,
-				new ClassicLayoutManager(),  resultset);
+		File tempFile = File.createTempFile("wiz", ".jrxml");
+		DynamicJasperHelper.generateJRXML(dr,new ClassicLayoutManager(), params, null, tempFile.getPath());
 
-		JRExporter exporter = createExporter(request);
+		//
+		// save the report to the server
+		reportGenerator.put(ResourceDescriptor.TYPE_REPORTUNIT, tempFile.getName(), tempFile.getName(), tempFile.getName(), "/Reports/Clementine/Temp", tempFile);
+
+		//
+		// redirect the user to the report on the jasper server
+		
+//		JasperPrint jp = reportGenerator.runReport("/Reports/Clementine/Temp/" + tempFile.getName(), new HashMap());
+//		JasperPrint jp = DynamicJasperHelper.generateJasperPrint(dr,
+//new ClassicLayoutManager(),  resultset);
+		tempFile.delete();
+		
+//		JRExporter exporter = createExporter(request);
 
 		// Apply the content type as specified - we don't need an encoding here.
-		response.setContentType(getContentType());
+//		response.setContentType(getContentType());
 
 		// Render report into local OutputStream.
 		// IE workaround: write into byte array first.
-		ByteArrayOutputStream baos = new ByteArrayOutputStream(
-				OUTPUT_BYTE_ARRAY_INITIAL_SIZE);
-		JasperReportsUtils.render(exporter, jp, baos);
+//		ByteArrayOutputStream baos = new ByteArrayOutputStream(
+//				OUTPUT_BYTE_ARRAY_INITIAL_SIZE);
+//		JasperReportsUtils.render(exporter, jp, baos);
 
 		// Write content length (determined via byte array).
-		response.setContentLength(baos.size());
+//		response.setContentLength(baos.size());
 
 		// Flush byte array to servlet output stream.
-		ServletOutputStream out = response.getOutputStream();
-		baos.writeTo(out);
-		out.flush();
+//		ServletOutputStream out = response.getOutputStream();
+//		baos.writeTo(out);
+//		out.flush();
 
 	}
 	
@@ -150,6 +165,14 @@ public class DynamicReportView extends AbstractView {
 
 	public void setReportWizard(ReportWizard wiz) {
 		this.wiz = wiz;
+	}
+
+	public ReportGenerator getReportGenerator() {
+		return reportGenerator;
+	}
+
+	public void setReportGenerator(ReportGenerator reportGenerator) {
+		this.reportGenerator = reportGenerator;
 	}
 
 

@@ -17,18 +17,18 @@ public class ReportWizardServiceImpl implements ReportWizardService {
 	@Resource(name = "reportWizardDao")
 	private ReportWizardDao reportWizardDAO;
 
-	@Override
+
 	public ReportWizard Find(Long id) {
 		return reportWizardDAO.find(id);
 	}
 
-	@Override
+
 	public List<ReportWizard> getAll() {
 
 		return reportWizardDAO.getAll();
 	}
 
-	@Override
+
     @Transactional(propagation = Propagation.SUPPORTS)
 	public void save(ReportWizard wiz) {
 		reportWizardDAO.save(wiz);

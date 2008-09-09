@@ -17,19 +17,19 @@ public class ReportFieldServiceImpl implements ReportFieldService {
 	@Resource(name = "reportFieldDao")
 	private ReportFieldDao reportFieldDAO;
 
-	@Override
+
 	public ReportField find(Long Id) {
 		
 		return reportFieldDAO.findById(Id);
 	}
 
-	@Override
+
 	public List<ReportField> readFieldByGroupId(Long l) {
 		// TODO Auto-generated method stub
 		return reportFieldDAO.getAllByGroupId(l);
 	}
 
-	@Override
+
 	public void save(ReportField f) {
 		reportFieldDAO.save(f);
 

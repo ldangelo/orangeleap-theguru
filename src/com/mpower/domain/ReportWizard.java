@@ -80,6 +80,7 @@ public class ReportWizard implements java.io.Serializable {
 	private String reportType;
 	private Boolean recordCount;
 	private String reportColumnOrder;
+	private String reportPath;
 	
 	public ReportWizard() {
 		reportType = "tabular";
@@ -258,5 +259,13 @@ public class ReportWizard implements java.io.Serializable {
 			}
 		}
 		return fieldList;
+	}
+
+	public String getReportPath() {
+		return reportPath;
+	}
+
+	public void setReportPath(String reportPath) {
+		this.reportPath = reportPath;
 	}
 }

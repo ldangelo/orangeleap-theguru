@@ -27,8 +27,15 @@
 	<bean id="dynamicReport" class="com.mpower.view.DynamicReportView">
 	    	<property name="jdbcDataSource" ref="dataSource"/>
 	    	<property name="reportFieldService" ref="reportFieldService"/>
+	    	<property name="reportGenerator" ref="reportGenerator"/>
 	</bean>
     
+	<bean id="reportGenerator" class="com.mpower.util.ReportGenerator">
+		<property name="reportServicesURI" value="http://127.0.0.1:8080/jasperserver/services/repository"/>		
+		<property name="reportUserName" value="jasperadmin"/>
+		<property name="reportPassword" value="jasperadmin"/>        
+		<property name="reportUnitDataSourceURI" value="/datasources/ReportWizardJdbcDS"/>		
+	</bean>
 
     <bean name="/dynamicReport.htm" class="com.mpower.controller.DynamicReportController">
 		<property name="dynamicView" ref="dynamicReport"/>
@@ -49,10 +56,9 @@
         <property name="reportFieldService" ref="reportFieldService"/>
 		<property name="reportWizardService" ref="reportWizardService"/>
 		<property name="reportUnitDataSourceURI" value="/datasources/ReportWizardJdbcDS"/>
-		<property name="reportServicesURI" value="http://127.0.0.1:8080/jasperserver/services/repository"/>		
-		<property name="reportUserName" value="jasperadmin"/>
-		<property name="reportPassword" value="jasperadmin"/>        
-        <property name="dynamicView" ref="dynamicReport"/>       
+        <property name="dynamicView" ref="dynamicReport"/>
+        <property name="reportGenerator" ref="reportGenerator"/>
+    	<property name="jdbcDataSource" ref="dataSource"/>               
 	<property name="pages">
 		<list>
 			<value>ReportSource</value>
@@ -65,7 +71,8 @@
 			<value>ReportSaveAs</value>
 			<value>ReportRedirect</value>
 			<value>ReportRedirect</value>			
-			<value>ReportRedirect</value>						
+			<value>ReportRedirect</value>	
+			<value>RunReport</value>					
 		</list>
 	</property>
     </bean>

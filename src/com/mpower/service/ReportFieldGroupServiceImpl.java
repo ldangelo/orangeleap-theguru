@@ -15,19 +15,19 @@ public class ReportFieldGroupServiceImpl implements ReportFieldGroupService {
 	@Resource(name = "reportFieldGroupDao")
 	private ReportFieldGroupDao reportFieldGroupDAO;
 
-	@Override
+
 	public ReportFieldGroup find(Long Id) {
 		
 		return reportFieldGroupDAO.findById(Id);
 	}
 
-	@Override
+
 	public List<ReportFieldGroup> readFieldGroupBySubSourceId(Long l) {
 		// TODO Auto-generated method stub
 		return reportFieldGroupDAO.getAllByReportDataSubSourceId(l);
 	}
 
-	@Override
+
 	public void save(ReportFieldGroup group) {
 		reportFieldGroupDAO.save(group);
 

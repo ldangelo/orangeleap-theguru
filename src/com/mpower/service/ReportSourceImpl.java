@@ -15,17 +15,17 @@ public class ReportSourceImpl implements ReportSourceService {
 	@Resource(name = "reportDataSourceDao")
 	private ReportDataSourceDao reportSourceDAO;
 
-	@Override
+
 	public List<ReportDataSource> readSources() {
 		return reportSourceDAO.getAll();
 	}
 
-	@Override
+
 	public void save(ReportDataSource datasource) {
 		reportSourceDAO.save(datasource);
 	}
 
-	@Override
+
 	public ReportDataSource find(Long Id) {
 		return reportSourceDAO.findById(Id);
 	}

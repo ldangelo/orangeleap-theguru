@@ -20,19 +20,19 @@ public class JPAReportWizardDao implements ReportWizardDao {
 	@PersistenceContext
 	private EntityManager em;
 	
-	@Override
+
 	public ReportWizard find(Long id) {
 		return em.find(ReportWizard.class,id);
 	}
 
-	@Override
+
 	public List<ReportWizard> getAll() {
 		Query q = em
 		.createQuery("SELECT reportwizard from com.mpower.domain.ReportWizard reportwizard");
 		return  q.getResultList();
 	}
 
-	@Override
+
 	public void save(ReportWizard wiz) {
 /*		Iterator<ReportFieldGroup> it = wiz.getFieldGroups().iterator();
 		while (it.hasNext()) {
