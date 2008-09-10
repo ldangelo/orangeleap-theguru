@@ -21,15 +21,5 @@
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
 	<linkedResources>
-		<link>
-			<name>classes-jar</name>
-			<type>2</type>
-			<locationURI>clementine/build/stage/classes-jar</locationURI>
-		</link>
-		<link>
-			<name>clementine-build.xml</name>
-			<type>1</type>
-			<locationURI>clementine/build/clementine-build.xml</locationURI>
-		</link>
 	</linkedResources>
 </projectDescription>
