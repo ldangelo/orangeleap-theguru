@@ -76,6 +76,10 @@ public class ReportWizard implements java.io.Serializable {
 	@IndexColumn(name="REPORTADVANCEDFILTER_ID")
 	private List<ReportAdvancedFilter> advancedFilters;
 
+	@OneToMany(cascade = CascadeType.ALL)
+	@IndexColumn(name="REPORTGROUPBYFIELD_ID")
+	private List<ReportGroupByField> reportGroupByFields;
+	
 	@Column(name = "REPORT_TYPE")
 	private String reportType;
 	private Boolean recordCount;
@@ -93,10 +97,15 @@ public class ReportWizard implements java.io.Serializable {
 		// create an advanced filter list decorated as a LazyList
 		//advancedFilters = LazyList.decorate(new ArrayList<ReportAdvancedFilter>(),FactoryUtils.instantiateFactory(ReportAdvancedFilter.class, new Class[]{ReportAdvancedFilter.class},new Object[]{}));
 		advancedFilters = LazyList.decorate(new ArrayList<ReportAdvancedFilter>(),FactoryUtils.instantiateFactory(ReportAdvancedFilter.class));
+		reportGroupByFields = LazyList.decorate(new ArrayList<ReportGroupByField>(),FactoryUtils.instantiateFactory(ReportGroupByField.class));
 	}
 
 	public List<ReportAdvancedFilter> getAdvancedFilters() {
 		return advancedFilters;
+	}
+
+	public List<ReportGroupByField> getGroupByFields() {
+		return reportGroupByFields;
 	}
 	
 	public ReportDataSource getDataSource() {
@@ -180,6 +189,10 @@ public class ReportWizard implements java.io.Serializable {
 		this.advancedFilters = advancedFilters;
 	}
 
+	public void setReportGroupByFields(List<ReportGroupByField> reportGroupByFields) {
+		this.reportGroupByFields = reportGroupByFields;
+	}
+	
 	public void setDataSource(ReportDataSource src) {
 		logger.info("**** in setSrc()");
 		this.src = src;
