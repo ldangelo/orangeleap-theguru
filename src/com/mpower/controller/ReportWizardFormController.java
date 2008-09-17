@@ -139,7 +139,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 
 		Assert.notNull(request, "Request must not be null");
 
-		if (request.getParameter("_target10") != null) {
+		if (request.getParameter("_target11") != null) {
 			//
 			// We are saving this report to jasperserver
 			saveReport(wiz);
