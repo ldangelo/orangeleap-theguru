@@ -64,6 +64,7 @@
 			<value>ReportSource</value>
 			<value>ReportSubSource</value>
 			<value>ReportFormat</value>
+			<value>ReportGroupByFields</value>
 			<value>ReportColumns</value>
 			<value>ReportSummaryFields</value>
 			<value>ReportColumnsOrder</value>

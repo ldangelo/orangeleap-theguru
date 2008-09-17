@@ -104,7 +104,7 @@ public class ReportWizard implements java.io.Serializable {
 		return advancedFilters;
 	}
 
-	public List<ReportGroupByField> getGroupByFields() {
+	public List<ReportGroupByField> getReportGroupByFields() {
 		return reportGroupByFields;
 	}
 	

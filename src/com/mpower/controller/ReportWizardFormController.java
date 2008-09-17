@@ -215,8 +215,31 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		}
 
 		//
-		// Report Columns
+		// Report Group By Fields
 		if (page == 3 && request.getParameter("_target3") != null) {
+			ReportDataSubSource rdss = reportSubSourceService.find(wiz.getSubSourceId());
+			List<ReportFieldGroup>    lrfg = reportFieldGroupService.readFieldGroupBySubSourceId(rdss.getId());
+			
+			wiz.setFieldGroups(lrfg);
+			refData.put("fieldGroups", lrfg);
+
+			List<ReportField> fields = new LinkedList<ReportField>();
+
+			
+			// Iterate across the field groups in the
+
+			Iterator itGroup = lrfg.iterator();
+			while (itGroup.hasNext()) {
+				ReportFieldGroup rfg = (ReportFieldGroup) itGroup.next();
+				fields.addAll(reportFieldService.readFieldByGroupId(rfg.getId()));
+			}
+			wiz.setFields(fields);
+			refData.put("fields", fields);		
+		}
+		
+		//
+		// Report Columns
+		if (page == 4 && request.getParameter("_target4") != null) {
 			ReportDataSubSource rdss = reportSubSourceService.find(wiz.getSubSourceId());
 			List<ReportFieldGroup>    lrfg = reportFieldGroupService.readFieldGroupBySubSourceId(rdss.getId());
 			
@@ -237,23 +260,23 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 			refData.put("fields", fields);
 		}
 		
-		if(page==4) {
+		if(page==5) {
 		
 			refData.put("fieldGroups", wiz.getFieldGroups());
 		}
 		
-		if(page==5) {
+		if(page==6) {
 			refData.put("fieldGroups", wiz.getFieldGroups());
 			refData.put("fields", wiz.getSelectedReportFieldsInOrder());			
 		}
 		
-		if(page==6) {
+		if(page==7) {
 			refData.put("fieldGroups", wiz.getFieldGroups());
 			
 		}
 		
 		// running the report
-		if (page==11) { 
+		if (page==12) { 
 			@SuppressWarnings("unused")
 			Map params = new HashMap();
 			

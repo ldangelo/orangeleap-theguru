@@ -1,14 +1,15 @@
 $(document).ready(function()
    {
-
-
-	
 	rowCloner("#report_filters tr:last");
 	
 	$("#report_filters td .deleteButton").click(function(){
 		deleteRow($(this).parent().parent());
 	});
-
+	
+	$("#report_groupbyfields td .deleteButton").click(function(){
+		deleteRow($(this).parent().parent());
+	});
+	
    }
 );
 
@@ -24,6 +25,25 @@ function rowCloner(selector) {
 		rowCloner(selector);
 	});
 }
+
+function groupByFieldRowCloner(regex) {
+	var addRow = true;
+	re = new RegExp(regex);
+	for(i = 0; i < document.forms[0].elements.length; i++) {
+		elm = document.forms[0].elements[i];
+		if (elm.type == 'select-one') {
+			if (re.test(elm.name)) {
+				if (elm.value == -1) {
+					addRow = false;
+					break;
+				}
+			}
+		}
+	}
+    if (addRow)
+    	addNewRow();
+}
+
 function callServer(name) {
     Hello.greet(name, callback);
 }
