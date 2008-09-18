@@ -27,6 +27,7 @@ import ar.com.fdvs.dj.core.DynamicJasperHelper;
 import ar.com.fdvs.dj.core.layout.ClassicLayoutManager;
 import ar.com.fdvs.dj.domain.DynamicReport;
 import com.jaspersoft.jasperserver.api.metadata.xml.domain.impl.ResourceDescriptor;
+import com.mpower.domain.ReportAdvancedFilter;
 import com.mpower.domain.ReportDataSource;
 import com.mpower.domain.ReportDataSubSource;
 import com.mpower.domain.ReportField;
@@ -136,7 +137,6 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		Map<String, Object> params = new HashMap<String, Object>();
 		ReportWizard wiz = (ReportWizard) command;
 
-
 		Assert.notNull(request, "Request must not be null");
 
 		if (request.getParameter("_target11") != null) {
@@ -148,6 +148,22 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 
 	}
 
+	@Override
+	protected int getTargetPage(HttpServletRequest request,
+            Object command,
+            Errors errors,
+            int currentPage) {
+		ReportWizard reportWizard = (ReportWizard)command;
+		int targetPage = super.getTargetPage(request, command, errors, currentPage);
+		if (targetPage == 3 && reportWizard.getReportType().compareTo("summary") != 0) {
+			if (currentPage == 4)
+				targetPage = 2;
+			else
+				targetPage = 4;
+		}
+		return targetPage;			
+	}
+	
 	@Override
 	protected ModelAndView processFinish(HttpServletRequest request,
 			HttpServletResponse arg1, Object arg2, BindException arg3)
@@ -178,7 +194,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		}
 		//
 		// SubSources
-		if (page == 1 && request.getParameter("_target1") != null) {
+		if (page == 1) {
 			ReportDataSource rds = reportSourceService.find(wiz.getSrcId());
 			List<ReportDataSubSource> rdss = reportSubSourceService.readSubSourcesByReportSourceId(rds.getId());
 			wiz.setDataSource(rds);
@@ -188,7 +204,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 
 		//
 		// Report Format
-		if (page == 2 && request.getParameter("_target2") != null) {
+		if (page == 2) {
 			ReportDataSource rds = wiz.getReportDataSource();
 			List<ReportDataSubSource> lrdss = reportSubSourceService.readSubSourcesByReportSourceId(rds.getId());
 			ReportDataSubSource       rdss = reportSubSourceService.find( wiz.getSubSourceId());
@@ -216,7 +232,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 
 		//
 		// Report Group By Fields
-		if (page == 3 && request.getParameter("_target3") != null) {
+		if (page == 3) {
 			ReportDataSubSource rdss = reportSubSourceService.find(wiz.getSubSourceId());
 			List<ReportFieldGroup>    lrfg = reportFieldGroupService.readFieldGroupBySubSourceId(rdss.getId());
 			
@@ -234,12 +250,12 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 				fields.addAll(reportFieldService.readFieldByGroupId(rfg.getId()));
 			}
 			wiz.setFields(fields);
-			refData.put("fields", fields);		
+			refData.put("fields", fields);
 		}
 		
 		//
 		// Report Columns
-		if (page == 4 && request.getParameter("_target4") != null) {
+		if (page == 4) {
 			ReportDataSubSource rdss = reportSubSourceService.find(wiz.getSubSourceId());
 			List<ReportFieldGroup>    lrfg = reportFieldGroupService.readFieldGroupBySubSourceId(rdss.getId());
 			
