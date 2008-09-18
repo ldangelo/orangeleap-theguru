@@ -8,6 +8,7 @@ import java.sql.Statement;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -20,6 +21,7 @@ import com.jaspersoft.jasperserver.irplugin.JServer;
 import com.mpower.domain.ReportAdvancedFilter;
 import com.mpower.domain.ReportField;
 import com.mpower.domain.ReportFieldType;
+import com.mpower.domain.ReportGroupByField;
 import com.mpower.domain.ReportWizard;
 import com.mpower.service.ReportFieldService;
 
@@ -32,12 +34,16 @@ import ar.com.fdvs.dj.domain.Style;
 import ar.com.fdvs.dj.domain.builders.ColumnBuilder;
 import ar.com.fdvs.dj.domain.builders.ColumnBuilderException;
 import ar.com.fdvs.dj.domain.builders.FastReportBuilder;
+import ar.com.fdvs.dj.domain.builders.GroupBuilder;
 import ar.com.fdvs.dj.domain.constants.Border;
 import ar.com.fdvs.dj.domain.constants.Font;
+import ar.com.fdvs.dj.domain.constants.GroupLayout;
 import ar.com.fdvs.dj.domain.constants.HorizontalAlign;
 import ar.com.fdvs.dj.domain.constants.Transparency;
 import ar.com.fdvs.dj.domain.constants.VerticalAlign;
+import ar.com.fdvs.dj.domain.entities.ColumnsGroup;
 import ar.com.fdvs.dj.domain.entities.columns.AbstractColumn;
+import ar.com.fdvs.dj.domain.entities.columns.PropertyColumn;
 
 public class ReportGenerator {
 	private Style detailStyle;
@@ -93,6 +99,7 @@ public class ReportGenerator {
 		return templateFile;
 	}
 
+	@SuppressWarnings("null")
 	public DynamicReport Generate(ReportWizard wiz,javax.sql.DataSource jdbcDataSource, ReportFieldService reportFieldService) throws Exception {
 		File templateFile = getTemplateFile();
 		
@@ -108,64 +115,42 @@ public class ReportGenerator {
  			.setLeftMargin(margin).setRightMargin(margin).setTopMargin(margin).setBottomMargin(margin)
   			.setPrintBackgroundOnOddRows(true)
   			.setGrandTotalLegendStyle(headerVariables)
-  			.setOddRowBackgroundStyle(oddRowStyle)
-;//   			.addFirstPageImageBanner("images/mpowerlogo.gif", new Integer(225), new Integer(75), ImageBanner.ALIGN_RIGHT);
-  
-  		List<ReportField> fields = wiz.getSelectedReportFieldsInOrder();
-		Iterator it = fields.iterator();
-		
-		//columnCount used to display record count 
-		Integer columnCount = new Integer(0);
+  			.setOddRowBackgroundStyle(oddRowStyle);
+	
 		//temp fix for summary record count -- basically if you pick record count it will
 		//not display any of the other summary info until alt solution is put in place
 		Boolean globalFooterVariableDefined = false;
+		//columnCount used to display record count 
+		Integer columnCount = new Integer(0);
 		 
-		while(it.hasNext()) {
-			ReportField f = (ReportField) it.next();
+		//Add Group by columns
+  		//List<ReportField> groupBy = wiz.getSelectedReportFieldsInOrder();
+		//Iterator itGroupBy = groupBy.iterator();
+		List<ReportGroupByField> groupByFields = wiz.getReportGroupByFields();
+		Iterator itGroupByFields = groupByFields.iterator();
+
+		while(itGroupByFields.hasNext()) {
+			ReportGroupByField group = (ReportGroupByField) itGroupByFields.next();
+			ReportField f = reportFieldService.find(group.getFieldId());
 			
-			if (f.getSelected()) {
-				String valueClassName = null;
-				String pattern = null;
+			if( f != null){
+				if (f.getId() != -1 && wiz.IsFieldGroupByField(f.getId())) {
+					columnCount += 1;
+					drb = AddColumnsAndOrGroups(f, globalFooterVariableDefined, drb, wiz);	
+				}
+			}
+		}
+		
+		//Add all remaining columns
+  		List<ReportField> fields = wiz.getSelectedReportFieldsInOrder();
+		Iterator itFields = fields.iterator();
+		
+		while(itFields.hasNext()) {
+			ReportField f = (ReportField) itFields.next();
+			
+			if (f.getSelected() && !wiz.IsFieldGroupByField(f.getId())) {
 				columnCount += 1;
-				
-				switch (f.getFieldType()) {
-	            case NONE:   	valueClassName = String.class.getName(); pattern ="";	 		break;
-	            case STRING:   	valueClassName = String.class.getName(); pattern ="";			break;
-	            case INTEGER:   valueClassName = Long.class.getName(); 	 pattern ="";	 		break;
-	            case DOUBLE:   	valueClassName = String.class.getName(); pattern ="";	 		break;
-	            case DATE:   	valueClassName = Date.class.getName();   pattern ="MM/dd/yyyy";	break;
-	            case MONEY:   	valueClassName = Float.class.getName();  pattern ="$ 0.00";		break;
-	            case BOOLEAN:   valueClassName = Boolean.class.getName();pattern ="";	
-				}
-				AbstractColumn column = ColumnBuilder.getInstance()
-				 				.setColumnProperty(f.getColumnName(), valueClassName )
-				 				.setTitle(f.getDisplayName())
-				 				.setStyle(detailStyle)
-				 				.setPattern(pattern)
-				 				.setHeaderStyle(headerStyle)
-				 				.build();
-				column.setName(f.getColumnName());
-				
-				//Add Summary/Grand Total footers **Can Add Only one Global Footer Variable per Column**
-				if (f.getPerformSummary()){
-					drb.addGlobalFooterVariable(column, ColumnsGroupVariableOperation.SUM,headerVariables).setGrandTotalLegend("Total");
-					globalFooterVariableDefined = true;
-				}
-				if (f.getAverage()){
-					drb.addGlobalFooterVariable(column, ColumnsGroupVariableOperation.AVERAGE,headerVariables).setGrandTotalLegend("Average");
-					globalFooterVariableDefined = true;
-				}
-				if (f.getSmallestValue()){
-					drb.addGlobalFooterVariable(column, ColumnsGroupVariableOperation.LOWEST,headerVariables).setGrandTotalLegend("Min");
-					globalFooterVariableDefined = true;
-				}
-				if (f.getLargestValue()){
-					drb.addGlobalFooterVariable(column, ColumnsGroupVariableOperation.HIGHEST,headerVariables).setGrandTotalLegend("Max");
-					globalFooterVariableDefined = true;
-				}
-				drb.addColumn(column);
-				column.getInitialExpression(ColumnsGroupVariableOperation.COUNT);	
-				
+				drb = AddColumnsAndOrGroups(f, globalFooterVariableDefined, drb, wiz);	
 			}
 		}
 		//Temp Fix - Record Count will not be displayed if any other summary fields were selected
@@ -221,7 +206,32 @@ public class ReportGenerator {
 			drb.addParameter(rf.getColumnName(), filter.getValue());
 
 		}
-
+		
+		//
+		//Add the order by clause for grouping
+		List<ReportGroupByField> rptGroupByFields = wiz.getReportGroupByFields();
+		Iterator itRptGroupByFields = rptGroupByFields.iterator();
+		
+		if (itRptGroupByFields != null){
+			query += " ORDER BY ";
+			//Add 1st order by column
+			ReportGroupByField groupByField = (ReportGroupByField) itRptGroupByFields.next();
+			if (groupByField.getFieldId() != -1){
+				ReportField rg = reportFieldService.find(groupByField.getFieldId());
+				query += rg.getColumnName();
+				query += " " + groupByField.getSortOrder() +" ";	
+			}
+			//Add any additional order by columns
+			while (itRptGroupByFields.hasNext()){
+				groupByField = (ReportGroupByField) itRptGroupByFields.next();
+				if (groupByField.getFieldId() != -1){
+					ReportField rg = reportFieldService.find(groupByField.getFieldId());
+					query += " ," + rg.getColumnName();
+					query += " " + groupByField.getSortOrder() +" ";	
+				}
+				
+			}
+		}
 
 		query += ";";
 
@@ -231,7 +241,65 @@ public class ReportGenerator {
 		return dr;
 	}
 
-    private ResourceDescriptor putReportUnit(ResourceDescriptor rd,String name, String label, String desc, File report) throws Exception 
+    private FastReportBuilder AddColumnsAndOrGroups(ReportField f, Boolean globalFooterVariableDefined,  FastReportBuilder drb, ReportWizard wiz) throws ColumnBuilderException {
+    	String valueClassName = null;
+		String pattern = null;
+		
+		
+		switch (f.getFieldType()) {
+        case NONE:   	valueClassName = String.class.getName(); pattern ="";	 		break;
+        case STRING:   	valueClassName = String.class.getName(); pattern ="";			break;
+        case INTEGER:   valueClassName = Long.class.getName(); 	 pattern ="";	 		break;
+        case DOUBLE:   	valueClassName = String.class.getName(); pattern ="";	 		break;
+        case DATE:   	valueClassName = Date.class.getName();   pattern ="MM/dd/yyyy";	break;
+        case MONEY:   	valueClassName = Float.class.getName();  pattern ="$ 0.00";		break;
+        case BOOLEAN:   valueClassName = Boolean.class.getName();pattern ="";	
+		}
+		AbstractColumn column = ColumnBuilder.getInstance()
+		 				.setColumnProperty(f.getColumnName(), valueClassName )
+		 				.setTitle(f.getDisplayName())
+		 				.setStyle(detailStyle)
+		 				.setPattern(pattern)
+		 				.setHeaderStyle(headerStyle)
+		 				.build();
+		column.setName(f.getColumnName());
+
+		//Add Summary/Grand Total footers **Can Add Only one Global Footer Variable per Column**
+		if (f.getPerformSummary()){
+			drb.addGlobalFooterVariable(column, ColumnsGroupVariableOperation.SUM,headerVariables).setGrandTotalLegend("Total");
+			globalFooterVariableDefined = true;
+		}
+		if (f.getAverage()){
+			drb.addGlobalFooterVariable(column, ColumnsGroupVariableOperation.AVERAGE,headerVariables).setGrandTotalLegend("Average");
+			globalFooterVariableDefined = true;
+		}
+		if (f.getSmallestValue()){
+			drb.addGlobalFooterVariable(column, ColumnsGroupVariableOperation.LOWEST,headerVariables).setGrandTotalLegend("Min");
+			globalFooterVariableDefined = true;
+		}
+		if (f.getLargestValue()){
+			drb.addGlobalFooterVariable(column, ColumnsGroupVariableOperation.HIGHEST,headerVariables).setGrandTotalLegend("Max");
+			globalFooterVariableDefined = true;
+		}
+		drb.addColumn(column);
+		//column.getInitialExpression(ColumnsGroupVariableOperation.COUNT);
+
+		if (wiz.IsFieldGroupByField(f.getId()) && f.getId() != -1){
+			GroupBuilder groupBuilder = new GroupBuilder();
+			ColumnsGroup group = groupBuilder.setCriteriaColumn((PropertyColumn) column)
+									//TODO: figure out how to get the other layouts working --
+									//getting a Null pointer exception in the JRPenUtil.getPenFromLinePen 
+									//when using other layouts.
+									.setGroupLayout(GroupLayout.DEFAULT)
+									.build();
+			drb.addGroup(group); 
+		}
+		
+		
+		return drb;
+	}
+
+	private ResourceDescriptor putReportUnit(ResourceDescriptor rd,String name, String label, String desc, File report) throws Exception 
     {
 		File resourceFile = null;
 
