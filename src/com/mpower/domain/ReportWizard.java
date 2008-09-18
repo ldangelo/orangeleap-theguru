@@ -271,9 +271,27 @@ public class ReportWizard implements java.io.Serializable {
 				}
 			}
 		}
+		
+		// if no fields are selected, use the default fields
+		if (fieldList.size() == 0){ 
+			fieldList = getDefaultReportFields();
+		}
 		return fieldList;
 	}
 
+	public List<ReportField> getDefaultReportFields() {
+		List<ReportField> fieldList = new LinkedList<ReportField>();
+		Iterator iteratorFields = fields.iterator();
+		while(iteratorFields.hasNext()) {
+			ReportField reportField = (ReportField) iteratorFields.next();				
+			if (reportField.getIsDefault()) {
+					reportField.setSelected(true);
+					fieldList.add(reportField);
+			}
+		}
+		return fieldList;
+	}
+	
 	public Boolean IsFieldGroupByField(long fieldId) {
 		Boolean result = false;
 		if (reportGroupByFields != null)
