@@ -276,12 +276,15 @@ public class ReportWizard implements java.io.Serializable {
 
 	public Boolean IsFieldGroupByField(long fieldId) {
 		Boolean result = false;
-		Iterator iteratorReportGroupByFields = reportGroupByFields.iterator();
-		while(iteratorReportGroupByFields.hasNext()) {
-			ReportGroupByField  reportGroupByField = (ReportGroupByField) iteratorReportGroupByFields.next();				
-			if (reportGroupByField.fieldId == fieldId) {
-				result = true;
-				break;
+		if (reportGroupByFields != null)
+		{
+			Iterator iteratorReportGroupByFields = reportGroupByFields.iterator();
+			while(iteratorReportGroupByFields.hasNext()) {
+				ReportGroupByField  reportGroupByField = (ReportGroupByField) iteratorReportGroupByFields.next();				
+				if (reportGroupByField.fieldId == fieldId) {
+					result = true;
+					break;
+				}
 			}
 		}
 		return result;

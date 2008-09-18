@@ -138,20 +138,24 @@ public class ReportGenerator {
 		//columnCount used to display record count 
 		Integer columnCount = new Integer(0);
 		 
-		//Add Group by columns
-  		//List<ReportField> groupBy = wiz.getSelectedReportFieldsInOrder();
-		//Iterator itGroupBy = groupBy.iterator();
-		List<ReportGroupByField> groupByFields = wiz.getReportGroupByFields();
-		Iterator itGroupByFields = groupByFields.iterator();
-
-		while(itGroupByFields.hasNext()) {
-			ReportGroupByField group = (ReportGroupByField) itGroupByFields.next();
-			ReportField f = reportFieldService.find(group.getFieldId());
-			
-			if( f != null){
-				if (f.getId() != -1 && wiz.IsFieldGroupByField(f.getId())) {
-					columnCount += 1;
-					drb = AddColumnsAndOrGroups(f, globalFooterVariableDefined, drb, wiz);	
+		if (wiz.getReportType().compareTo("summary") == 0) {
+			//Add Group by columns
+	  		//List<ReportField> groupBy = wiz.getSelectedReportFieldsInOrder();
+			//Iterator itGroupBy = groupBy.iterator();
+			List<ReportGroupByField> groupByFields = wiz.getReportGroupByFields();
+			Iterator itGroupByFields = groupByFields.iterator();
+	
+			while(itGroupByFields.hasNext()) {
+				ReportGroupByField group = (ReportGroupByField) itGroupByFields.next();
+				if (group != null) {
+					ReportField f = reportFieldService.find(group.getFieldId());
+					
+					if( f != null){
+						if (f.getId() != -1 && wiz.IsFieldGroupByField(f.getId())) {
+							columnCount += 1;
+							drb = AddColumnsAndOrGroups(f, globalFooterVariableDefined, drb, wiz);	
+						}
+					}
 				}
 			}
 		}
@@ -235,29 +239,34 @@ public class ReportGenerator {
 			params.put(rf.getColumnName(), filter.getValue());
 		}
 		
-		//
-		//Add the order by clause for grouping
-		List<ReportGroupByField> rptGroupByFields = wiz.getReportGroupByFields();
-		Iterator itRptGroupByFields = rptGroupByFields.iterator();
-		
-		if (itRptGroupByFields != null){
-			query += " ORDER BY ";
-			//Add 1st order by column
-			ReportGroupByField groupByField = (ReportGroupByField) itRptGroupByFields.next();
-			if (groupByField.getFieldId() != -1){
-				ReportField rg = reportFieldService.find(groupByField.getFieldId());
-				query += rg.getColumnName();
-				query += " " + groupByField.getSortOrder() +" ";	
-			}
-			//Add any additional order by columns
-			while (itRptGroupByFields.hasNext()){
-				groupByField = (ReportGroupByField) itRptGroupByFields.next();
-				if (groupByField.getFieldId() != -1){
-					ReportField rg = reportFieldService.find(groupByField.getFieldId());
-					query += " ," + rg.getColumnName();
-					query += " " + groupByField.getSortOrder() +" ";	
+		if (wiz.getReportType().compareTo("summary") == 0) {
+			//
+			//Add the order by clause for grouping
+			List<ReportGroupByField> rptGroupByFields = wiz.getReportGroupByFields();
+			Iterator itRptGroupByFields = rptGroupByFields.iterator();
+			
+			if (itRptGroupByFields != null){
+				query += " ORDER BY ";
+				//Add 1st order by column
+				ReportGroupByField groupByField = (ReportGroupByField) itRptGroupByFields.next();
+				if (groupByField != null) {
+					if (groupByField.getFieldId() != -1){
+						ReportField rg = reportFieldService.find(groupByField.getFieldId());
+						query += rg.getColumnName();
+						query += " " + groupByField.getSortOrder() +" ";	
+					}
 				}
-				
+				//Add any additional order by columns
+				while (itRptGroupByFields.hasNext()){
+					groupByField = (ReportGroupByField) itRptGroupByFields.next();
+					if (groupByField != null) {						
+						if (groupByField.getFieldId() != -1){
+							ReportField rg = reportFieldService.find(groupByField.getFieldId());
+							query += " ," + rg.getColumnName();
+							query += " " + groupByField.getSortOrder() +" ";	
+						}
+					}
+				}
 			}
 		}
 
@@ -289,7 +298,7 @@ public class ReportGenerator {
 		AbstractColumn column = ColumnBuilder.getInstance()
 		 				.setColumnProperty(f.getColumnName(), valueClassName )
 		 				.setTitle(f.getDisplayName())
-		 				.setStyle(detailStyle)
+		 				//.setStyle(detailStyle)
 		 				.setPattern(pattern)
 		 				.setHeaderStyle(headerStyle)
 		 				.build();
