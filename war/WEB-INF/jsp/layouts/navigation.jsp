@@ -39,32 +39,32 @@
 
 <c:choose>
 <c:when test="${page == 0}">
-	 Step ${page} of ${maxpages}: Select report type
+	 Step ${page+1} of ${maxpages+1}: Select report type
 </c:when>
 
 <c:when test="${page == 1}">
-	 Step ${page} of ${maxpages}: Select report sub-type
+	 Step ${page+1} of ${maxpages+1}: Select report sub-type
 </c:when>
 
 <c:when test="${page == 2}">
-	 Step ${page} of ${maxpages}: Select report format
+	 Step ${page+1} of ${maxpages+1}: Select report format
 </c:when>
 
 <c:when test="${page == 3}">
-	 Step ${page} of ${maxpages}: Select report columns
+	 Step ${page+1} of ${maxpages+1}: Select report columns
 </c:when>
 
 <c:when test="${page == 4}">
-	 Step ${page} of ${maxpages}: Select information to summarize
+	 Step ${page+1} of ${maxpages+1}: Select information to summarize
 </c:when>
 
 <c:when test="${page == 5}">
-	 Step ${page} of ${maxpages}: Order report columns
+	 Step ${page+1} of ${maxpages+1}: Order report columns
 </c:when>
 
 
 <c:when test="${page == 6}">
-	 Step ${page} of ${maxpages}: Select report criteria
+	 Step ${page+1} of ${maxpages+1}: Select report criteria
 </c:when>
 
 
