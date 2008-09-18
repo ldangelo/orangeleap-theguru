@@ -57,13 +57,11 @@ function addNewRow() {
 	var i = newRow.attr("rowindex");
 	var j = parseInt(i) + 1;
 	newRow.attr("rowindex",j);
-	console.log(j);
 	var findExp = new RegExp("\\["+i+"\\]","gi");
 
 	newRow.find("input").each(function(){
 		var field = $(this);
 		var nameString = field.attr('name').replace(findExp, "["+j+"]");
-		console.log(nameString);
 		field.attr('name',nameString);
 		field.val("");
 	});
@@ -71,7 +69,6 @@ function addNewRow() {
 	newRow.find("select").each(function(){
 		var field = $(this);
 		var nameString = field.attr('name').replace(findExp, "["+j+"]");
-		console.log(nameString);
 		field.attr('name',nameString);
 	});
 
