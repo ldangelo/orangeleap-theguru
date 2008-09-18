@@ -120,7 +120,7 @@ public class DynamicReportView extends AbstractView {
 
 		//
 		// save the report to the server
-		reportGenerator.put(ResourceDescriptor.TYPE_REPORTUNIT, tempFile.getName(), tempFile.getName(), tempFile.getName(), "/Reports/Clementine/Temp", tempFile);
+		reportGenerator.put(ResourceDescriptor.TYPE_REPORTUNIT, tempFile.getName(), tempFile.getName(), tempFile.getName(), "/Reports/Clementine/Temp", tempFile,reportGenerator.getParams());
 
 		//
 		// redirect the user to the report on the jasper server

@@ -294,7 +294,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		// running the report
 		if (page==12) { 
 			@SuppressWarnings("unused")
-			Map params = new HashMap();
+
 			
 
 
@@ -308,14 +308,16 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 			Statement statement = connection.createStatement();
 			
 			File tempFile = File.createTempFile("wiz", ".jrxml");
-			DynamicJasperHelper.generateJRXML(dr,new ClassicLayoutManager(), params, null, tempFile.getPath());
+			DynamicJasperHelper.generateJRXML(dr,new ClassicLayoutManager(), reportGenerator.getParams(), null, tempFile.getPath());
 
 			//
 			// save the report to the server
-			reportGenerator.put(ResourceDescriptor.TYPE_REPORTUNIT, tempFile.getName(), tempFile.getName(), tempFile.getName(), "/Reports/Clementine/Temp", tempFile);
+			reportGenerator.put(ResourceDescriptor.TYPE_REPORTUNIT, tempFile.getName(), tempFile.getName(), tempFile.getName(), "/Reports/Clementine/Temp", tempFile,reportGenerator.getParams());
 
 			wiz.setReportPath("/Reports/Clementine/Temp/" + tempFile.getName());
 			refData.put("reportPath", wiz.getReportPath());
+
+      tempFile.delete();
 		}
 
 		return refData;
@@ -326,43 +328,43 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		//
 		// First we must generate a jrxml file
 		//
-		HashMap params = new HashMap();
 
 		DynamicReport dr = reportGenerator.Generate(wiz, jdbcDataSource, reportFieldService);
 		
 		File tempFile = File.createTempFile("wiz", ".jrxml");
-		DynamicJasperHelper.generateJRXML(dr,new ClassicLayoutManager(), params, null, tempFile.getPath());
-//		String jrxml = JRXmlWriter.writeReport(dr, "UTF-8"); 
+		DynamicJasperHelper.generateJRXML(dr,new ClassicLayoutManager(), reportGenerator.getParams(), null, tempFile.getPath());
+
+		reportGenerator.put(ResourceDescriptor.TYPE_REPORTUNIT,wiz.getReportName(),wiz.getReportComment(),wiz.getReportComment(),"/Reports/Clementine",tempFile,reportGenerator.getParams());
 
 		
 		//
 		// now we need to save the report to the jasperserver
-		ResourceDescriptor rd = new ResourceDescriptor();
-		ResourceDescriptor tmpDataSourceDescriptor = new ResourceDescriptor();
-		tmpDataSourceDescriptor.setWsType(ResourceDescriptor.TYPE_DATASOURCE);
-		tmpDataSourceDescriptor.setReferenceUri(reportUnitDataSourceURI );
-		tmpDataSourceDescriptor.setIsReference(true);
-		rd.getChildren().add(tmpDataSourceDescriptor);
+		//		ResourceDescriptor rd = new ResourceDescriptor();
+		//		ResourceDescriptor tmpDataSourceDescriptor = new ResourceDescriptor();
+		//		tmpDataSourceDescriptor.setWsType(ResourceDescriptor.TYPE_DATASOURCE);
+		//		tmpDataSourceDescriptor.setReferenceUri(reportUnitDataSourceURI );
+		//		tmpDataSourceDescriptor.setIsReference(true);
+		//		rd.getChildren().add(tmpDataSourceDescriptor);
 
-		ResourceDescriptor jrxmlDescriptor = new ResourceDescriptor();
-		jrxmlDescriptor.setWsType(ResourceDescriptor.TYPE_JRXML);
-		jrxmlDescriptor.setName(wiz.getReportName());
-		jrxmlDescriptor.setLabel(wiz.getReportComment()); 
-		jrxmlDescriptor.setDescription(wiz.getReportComment()); 
-		jrxmlDescriptor.setIsNew(true);
-		jrxmlDescriptor.setHasData(true);
-		jrxmlDescriptor.setMainReport(true);
+		//		ResourceDescriptor jrxmlDescriptor = new ResourceDescriptor();
+		//		jrxmlDescriptor.setWsType(ResourceDescriptor.TYPE_JRXML);
+		//		jrxmlDescriptor.setName(wiz.getReportName());
+		//		jrxmlDescriptor.setLabel(wiz.getReportComment()); 
+		//		jrxmlDescriptor.setDescription(wiz.getReportComment()); 
+		//		jrxmlDescriptor.setIsNew(true);
+		//		jrxmlDescriptor.setHasData(true);
+		//		jrxmlDescriptor.setMainReport(true);
 		
-		rd.setWsType(ResourceDescriptor.TYPE_REPORTUNIT);
-		rd.setParentFolder("/Reports/Clementine");
-		rd.setIsNew(true);
-		rd.setUriString(rd.getParentFolder() + "/" + wiz.getReportName());
-		rd.setName(wiz.getReportName());
-		rd.setLabel(wiz.getReportComment()); 
-		rd.setDescription(wiz.getReportComment()); 
-		rd.getChildren().add(jrxmlDescriptor);
+		//		rd.setWsType(ResourceDescriptor.TYPE_REPORTUNIT);
+		//		rd.setParentFolder("/Reports/Clementine");
+		//		rd.setIsNew(true);
+		//		rd.setUriString(rd.getParentFolder() + "/" + wiz.getReportName());
+		//		rd.setName(wiz.getReportName());
+		//		rd.setLabel(wiz.getReportComment()); 
+		//		rd.setDescription(wiz.getReportComment()); 
+		//		rd.getChildren().add(jrxmlDescriptor);
 		
-		reportGenerator.addOrModifyResource(rd,tempFile);
+		//		reportGenerator.addOrModifyResource(rd,tempFile);
 		
 //		server.getWSClient().addOrModifyResource(rd, tempFile);
 

@@ -11,8 +11,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
-import javax.activation.DataSource;
+import java.util.Map.Entry;
 
 import net.sf.jasperreports.engine.JasperPrint;
 
@@ -45,7 +44,12 @@ import ar.com.fdvs.dj.domain.entities.ColumnsGroup;
 import ar.com.fdvs.dj.domain.entities.columns.AbstractColumn;
 import ar.com.fdvs.dj.domain.entities.columns.PropertyColumn;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 public class ReportGenerator {
+	protected final Log logger = LogFactory.getLog(getClass());
+
 	private Style detailStyle;
 	private Style headerStyle;
 	private Style headerVariables;
@@ -55,65 +59,76 @@ public class ReportGenerator {
 	private String reportServicesURI;
 	private String reportUserName;
 	private String reportPassword;
-	
-    private JServer server = null;
+
+	private JServer server = null;
 	private String reportUnitDataSourceURI;
-	
-	private void startServer()
-	{
+	private Map params = new HashMap();
+	private Map inputControls = new HashMap();
+
+	public Map getInputControls() {
+		return inputControls;
+	}
+
+	public Map getParams() {
+		return params;
+	}
+
+	private void startServer() {
 		if (server == null) {
 			server = new JServer();
-	        server.setUsername(reportUserName);
-	        server.setPassword(reportPassword);
-	        server.setUrl(reportServicesURI);
+			server.setUsername(reportUserName);
+			server.setPassword(reportPassword);
+			server.setUrl(reportServicesURI);
 		}
 	}
 
 	private void initStyles() {
 		detailStyle = new Style("detail");
-		
+
 		headerStyle = new Style("header");
 
-  		headerVariables = new Style("headerVariables");
-  
-  		titleStyle = new Style("titleStyle");
-  		
-  		importeStyle = new Style();
-  		
-  		oddRowStyle = new Style();
+		headerVariables = new Style("headerVariables");
+
+		titleStyle = new Style("titleStyle");
+
+		importeStyle = new Style();
+
+		oddRowStyle = new Style();
 	}
 
-	private File getTemplateFile() throws Exception
-	{
+	private File getTemplateFile() throws Exception {
 		startServer();
-		
+
 		//
 		// get the report template file from the server
 		File templateFile = File.createTempFile("template", ".jrxml");
 		ResourceDescriptor templateRD = new ResourceDescriptor();
-//		templateRD.setWsType(ResourceDescriptor.TYPE_JRXML);
-//		templateRD.setParentFolder("/templates");
-		templateRD.setUriString("/templates/mpower_template_files/mpower_template_jrxml");
-		ResourceDescriptor rd = server.getWSClient().get(templateRD, templateFile);
+		// templateRD.setWsType(ResourceDescriptor.TYPE_JRXML);
+		// templateRD.setParentFolder("/templates");
+		templateRD
+				.setUriString("/templates/mpower_template_files/mpower_template_jrxml");
+		ResourceDescriptor rd = server.getWSClient().get(templateRD,
+				templateFile);
 
 		return templateFile;
 	}
 
-	@SuppressWarnings("null")
-	public DynamicReport Generate(ReportWizard wiz,javax.sql.DataSource jdbcDataSource, ReportFieldService reportFieldService) throws Exception {
+	public DynamicReport Generate(ReportWizard wiz,
+			javax.sql.DataSource jdbcDataSource,
+			ReportFieldService reportFieldService) throws Exception {
 		File templateFile = getTemplateFile();
-		
+
 		initStyles();
 
 		
 		FastReportBuilder drb = new FastReportBuilder();
   		Integer margin = new Integer(20);
-  		drb.setTemplateFile(templateFile.getAbsolutePath())
+  		drb
   			.setTitleStyle(titleStyle)
   			.setTitle(wiz.getDataSubSource().getDisplayName() + " Custom Report")					//defines the title of the report
  			.setDetailHeight(new Integer(15))
  			.setLeftMargin(margin).setRightMargin(margin).setTopMargin(margin).setBottomMargin(margin)
-  			.setPrintBackgroundOnOddRows(true)
+//  			.setPrintBackgroundOnOddRows(true)
   			.setGrandTotalLegendStyle(headerVariables)
   			.setOddRowBackgroundStyle(oddRowStyle);
 	
@@ -162,11 +177,10 @@ public class ReportGenerator {
 
 
 		@SuppressWarnings("unused")
-		Map params = new HashMap();
 		String query = "SELECT * FROM " + wiz.getDataSubSource().getViewName();
 		
 		if (wiz.getRowCount() != -1)
-			query += " LIMIT 0," + wiz.getRowCount().toString(); 
+			query += " LIMIT 0," + wiz.getRowCount().toString();
 
 		//
 		// Add any 'filters'
@@ -176,7 +190,8 @@ public class ReportGenerator {
 		
 		Boolean bWhere = false;
 		while (itFilter.hasNext()) {
-			ReportAdvancedFilter filter = (ReportAdvancedFilter) itFilter.next();
+			ReportAdvancedFilter filter = (ReportAdvancedFilter) itFilter
+					.next();
 			ReportField rf = reportFieldService.find(filter.getFieldId());
 
 			if (filter.getValue() == "") break; // this is an empty filter
@@ -203,8 +218,21 @@ public class ReportGenerator {
 				query += " " + filter.getValue() + " ";
 			}
 
-			drb.addParameter(rf.getColumnName(), filter.getValue());
+			// if (rf.getFieldType() == ReportFieldType.STRING ||
+			// rf.getFieldType() == ReportFieldType.DATE) {
+			// query += " '" + filter.getValue() + "'";
+			// } else {
+			// query += " " + filter.getValue() + " ";
+			// }
+			query += " $P{" + rf.getColumnName() + "} ";
 
+			// drb.addParameter(rf.getColumnName(), "java.lang.String");
+			InputControlParameters ic = new InputControlParameters();
+			ic.setLabel(rf.getDisplayName());
+			ic.setType(rf.getFieldType());
+			ic.setFilter(filter.getOperator());
+			inputControls.put(rf.getColumnName(), ic);
+			params.put(rf.getColumnName(), filter.getValue());
 		}
 		
 		//
@@ -235,7 +263,10 @@ public class ReportGenerator {
 
 		query += ";";
 
-		drb.setQuery(query,DJConstants.QUERY_LANGUAGE_SQL);
+		logger.info(query);
+
+		drb.setQuery(query, DJConstants.QUERY_LANGUAGE_SQL);
+		drb.setTemplateFile(templateFile.getAbsolutePath());
 		DynamicReport dr = drb.build();
 
 		return dr;
@@ -299,7 +330,7 @@ public class ReportGenerator {
 		return drb;
 	}
 
-	private ResourceDescriptor putReportUnit(ResourceDescriptor rd,String name, String label, String desc, File report) throws Exception 
+	private ResourceDescriptor putReportUnit(ResourceDescriptor rd,String name, String label, String desc, File report, Map params2) throws Exception 
     {
 		File resourceFile = null;
 
@@ -312,20 +343,84 @@ public class ReportGenerator {
 		ResourceDescriptor jrxmlDescriptor = new ResourceDescriptor();
 		jrxmlDescriptor.setWsType(ResourceDescriptor.TYPE_JRXML);
 		jrxmlDescriptor.setName(name);
-		jrxmlDescriptor.setLabel(label); 
-		jrxmlDescriptor.setDescription(desc); 
+		jrxmlDescriptor.setLabel(label);
+		jrxmlDescriptor.setDescription(desc);
 		jrxmlDescriptor.setIsNew(true);
 		jrxmlDescriptor.setHasData(true);
 		jrxmlDescriptor.setMainReport(true);
+
 		rd.getChildren().add(jrxmlDescriptor);
-		
-		return server.getWSClient().addOrModifyResource(rd, report);
-		
-    }   
+		rd.setResourceProperty(
+				ResourceDescriptor.PROP_RU_ALWAYS_PROPMT_CONTROLS, true);
+		ResourceDescriptor reportDescriptor = server.getWSClient()
+				.addOrModifyResource(rd, report);
 
+		//
+		// if there are parameters for this report then add the input controls
+		Iterator it = inputControls.entrySet().iterator();
+		while (it.hasNext()) {
+			Map.Entry entrySet = (Entry) it.next();
+			String key = (String) entrySet.getKey();
+			InputControlParameters ic = (InputControlParameters) entrySet
+					.getValue();
 
-    public ResourceDescriptor put(String type, String name, String label, String desc, String parentFolder,File report) throws Exception 
-    {
+			//
+			// add an input control for every key
+			ResourceDescriptor jrxmlControl = new ResourceDescriptor();
+
+			jrxmlControl.setWsType(ResourceDescriptor.TYPE_INPUT_CONTROL);
+			// jrxmlControl.setDataType(ResourceDescriptor.DT_TYPE_TEXT);
+
+			jrxmlControl
+					.setControlType(ResourceDescriptor.IC_TYPE_SINGLE_VALUE);
+			jrxmlControl.setName(key);
+
+			jrxmlControl.setLabel(ic.getLabel());
+			jrxmlControl.setDescription(ic.getLabel());
+
+			jrxmlControl.setVersion(2);
+			jrxmlControl.setHasData(false);
+			jrxmlControl.setMandatory(false);
+			jrxmlControl.setIsNew(true);
+			jrxmlControl.setIsReference(false);
+			jrxmlControl.setStrictMax(false);
+			jrxmlControl.setStrictMin(false);
+			jrxmlControl.setReadOnly(false);
+			jrxmlControl.setMainReport(false);
+			jrxmlControl.setParentFolder(rd.getUriString() + "_files");
+			// jrxmlControl.setReferenceUri(rd.getUriString() + "_files/" +
+			// key);
+			jrxmlControl.setUriString(rd.getUriString() + "_files/" + key);
+			jrxmlControl
+					.setResourceType("com.jaspersoft.jasperserver.api.metadata.common.domain.InputControl");
+			ResourceDescriptor dataTypeDescriptor = new ResourceDescriptor();
+			// dataTypeDescriptor.setWsType(ResourceDescriptor.TYPE_DATA_TYPE);
+			// dataTypeDescriptor.setDataType(ResourceDescriptor.DT_TYPE_TEXT);
+			// dataTypeDescriptor.setName("String");
+			// dataTypeDescriptor.setLabel("String");
+			dataTypeDescriptor.setWsType(ResourceDescriptor.TYPE_REFERENCE);
+			dataTypeDescriptor.setIsReference(true);
+
+			if (ic.getType() == ReportFieldType.STRING)
+				dataTypeDescriptor.setReferenceUri("/datatypes/String");
+			else if (ic.getType() == ReportFieldType.DATE)
+				dataTypeDescriptor.setReferenceUri("/datatypes/Date");
+			else
+				dataTypeDescriptor.setReferenceUri("/datatypes/Number");
+
+			jrxmlControl.getChildren().add(dataTypeDescriptor);
+
+			// server.getWSClient().addOrModifyResource(jrxmlControl, null);
+			server.getWSClient().modifyReportUnitResource(rd.getUriString(),
+					jrxmlControl, null);
+
+		}
+		return reportDescriptor;
+	}
+
+	public ResourceDescriptor put(String type, String name, String label,
+			String desc, String parentFolder, File report, Map params)
+			throws Exception {
 		ResourceDescriptor rd = new ResourceDescriptor();
 		rd.setName(name);
 		rd.setLabel(label);
@@ -334,30 +429,30 @@ public class ReportGenerator {
 		rd.setUriString(rd.getParentFolder() + "/" + rd.getName());
 		rd.setWsType(type);
 		rd.setIsNew(true);
-		
+
 		if (type.equalsIgnoreCase(ResourceDescriptor.TYPE_FOLDER)) {
 			return server.getWSClient().addOrModifyResource(rd, null);
+		} else if (type.equalsIgnoreCase(ResourceDescriptor.TYPE_REPORTUNIT)) {
+			return putReportUnit(rd, name, label, desc, report, params);
 		}
-		else if (type.equalsIgnoreCase(ResourceDescriptor.TYPE_REPORTUNIT)) {
-			return putReportUnit(rd,name,label,desc,report);
-		}
-		
-		//shouldn't reach here
+
+		// shouldn't reach here
 		return null;
 
 	}
-     
-	public JasperPrint runReport(String reportUnit, java.util.Map parameters) throws Exception
-	{
+
+	public JasperPrint runReport(String reportUnit, java.util.Map parameters)
+			throws Exception {
 		ResourceDescriptor rd = new ResourceDescriptor();
 		rd.setWsType(ResourceDescriptor.TYPE_REPORTUNIT);
 
 		return server.getWSClient().runReport(rd, parameters);
 	}
-	
-	public void addOrModifyResource(ResourceDescriptor rd, File tempFile) throws Exception {
+
+	public void addOrModifyResource(ResourceDescriptor rd, File tempFile)
+			throws Exception {
 		server.getWSClient().addOrModifyResource(rd, tempFile);
-		
+
 	}
 
 	public String getReportServicesURI() {
