@@ -51,24 +51,28 @@
 </c:when>
 
 <c:when test="${page == 3}">
-	 Step ${page+1} of ${maxpages+1}: Select report columns
+	 Step ${page+1} of ${maxpages+1}: Select fields to group by
 </c:when>
 
 <c:when test="${page == 4}">
-	 Step ${page+1} of ${maxpages+1}: Select information to summarize
+	 Step ${page+1} of ${maxpages+1}: Select report columns
 </c:when>
 
 <c:when test="${page == 5}">
+	 Step ${page+1} of ${maxpages+1}: Select information to summarize
+</c:when>
+
+<c:when test="${page == 6}">
 	 Step ${page+1} of ${maxpages+1}: Order report columns
 </c:when>
 
-
-<c:when test="${page == 6}">
+<c:when test="${page == 7}">
 	 Step ${page+1} of ${maxpages+1}: Select report criteria
 </c:when>
 
-
-
+<c:when test="${page == 8}">
+	 Step ${page+1} of ${maxpages+1}: Save report
+</c:when>
 
 
 </c:choose>
