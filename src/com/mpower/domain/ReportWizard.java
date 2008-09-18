@@ -298,8 +298,8 @@ public class ReportWizard implements java.io.Serializable {
 		{
 			Iterator iteratorReportGroupByFields = reportGroupByFields.iterator();
 			while(iteratorReportGroupByFields.hasNext()) {
-				ReportGroupByField  reportGroupByField = (ReportGroupByField) iteratorReportGroupByFields.next();				
-				if (reportGroupByField.fieldId == fieldId) {
+				ReportGroupByField  reportGroupByField = (ReportGroupByField) iteratorReportGroupByFields.next();
+				if (reportGroupByField != null && reportGroupByField.fieldId == fieldId) {
 					result = true;
 					break;
 				}

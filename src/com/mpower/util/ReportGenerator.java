@@ -246,24 +246,20 @@ public class ReportGenerator {
 			Iterator itRptGroupByFields = rptGroupByFields.iterator();
 			
 			if (itRptGroupByFields != null){
-				query += " ORDER BY ";
-				//Add 1st order by column
-				ReportGroupByField groupByField = (ReportGroupByField) itRptGroupByFields.next();
-				if (groupByField != null) {
-					if (groupByField.getFieldId() != -1){
-						ReportField rg = reportFieldService.find(groupByField.getFieldId());
-						query += rg.getColumnName();
-						query += " " + groupByField.getSortOrder() +" ";	
-					}
-				}
-				//Add any additional order by columns
+				boolean addComma = false;
 				while (itRptGroupByFields.hasNext()){
-					groupByField = (ReportGroupByField) itRptGroupByFields.next();
+					ReportGroupByField groupByField = (ReportGroupByField) itRptGroupByFields.next();
 					if (groupByField != null) {						
 						if (groupByField.getFieldId() != -1){
+							if (!addComma) {
+								query += " ORDER BY";
+								addComma = true;
+							}
+							else
+								query += ","; 
 							ReportField rg = reportFieldService.find(groupByField.getFieldId());
-							query += " ," + rg.getColumnName();
-							query += " " + groupByField.getSortOrder() +" ";	
+							query += " " + rg.getColumnName();
+							query += " " + groupByField.getSortOrder();	
 						}
 					}
 				}

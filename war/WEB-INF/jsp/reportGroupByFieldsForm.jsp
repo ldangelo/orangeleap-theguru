@@ -31,8 +31,8 @@
 
 			<TD><SELECT id="reportGroupByFields[0].sortOrder"
 				name="reportGroupByFields[0].sortOrder">
-				<option value="Asc">Ascending</option>
-				<option value="Desc">Descending</option>
+				<option value="ASC">Ascending</option>
+				<option value="DESC">Descending</option>
 			</SELECT></TD>
 
 <!--  			<TD><SELECT id="reportGroupByFields[0].groupDateByOption"
