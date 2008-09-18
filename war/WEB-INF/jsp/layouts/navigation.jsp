@@ -24,7 +24,7 @@
 <div class="container">
 	<ul class="primaryNav">
 		<li>
-		  <c:if test="${page > 2}">
+<!-- 		  <c:if test="${page > 2}">
 		  Jump to Step		    
 		    <select>
 		      <option>Report Format</option>
@@ -34,7 +34,7 @@
 		      <option>Filter Report</option>
 		      <option>Run Report</option>
 		    </select>
-		  </c:if>
+		  </c:if>-->
 </li>
 
 <c:choose>
