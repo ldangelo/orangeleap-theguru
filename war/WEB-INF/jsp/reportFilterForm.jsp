@@ -26,8 +26,8 @@
 				name="advancedFilters[0].operator">
 				<option value="1">equals</option>
 				<option value="2">not equal</option>
-				<option value="3">less then</option>
-				<option value="4">greater then</option>
+				<option value="3">less than</option>
+				<option value="4">greater than</option>
 			</SELECT></TD>
 
 			<TD><input type="text" name="advancedFilters[0].value" value=""
