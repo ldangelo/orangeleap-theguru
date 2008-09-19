@@ -19,7 +19,7 @@
 <td align="Left" width=360>
 <input type="image" src="images/run_report_off.gif" value="Run Report" ALT="Run Report" name="_target12" onmouseover="this.src = 'images/run_report_on.gif';" onmouseout="this.src = 'images/run_report_off.gif';">
 <input type="image" src="images/cancel_off.gif" value="Cancel" name="_target9" ALT="Cancel" onmouseover="this.src = 'images/cancel_on.gif';" onmouseout="this.src = 'images/cancel_off.gif';">
-<input type="image" src="images/save_off.gif" value="Save" name="_target11" ALT="Save" onmouseover="this.src = 'images/save_on.gif';" onmouseout="this.src = 'images/save_off.gif';">
+<input type="image" src="images/save_off.gif" value="Save" name="_target12" ALT="Save" onmouseover="this.src = 'images/save_on.gif';" onmouseout="this.src = 'images/save_off.gif';">
 </td>
 </table>
 </div>
