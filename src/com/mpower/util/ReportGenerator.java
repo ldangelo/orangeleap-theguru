@@ -120,12 +120,15 @@ public class ReportGenerator {
 
 		initStyles();
 
+		String reportTitle = wiz.getDataSubSource().getDisplayName() + " Custom Report";
+		if (wiz.getReportName() != null && wiz.getReportName().length() > 0)
+			reportTitle = wiz.getReportName();
 		
 		FastReportBuilder drb = new FastReportBuilder();
   		Integer margin = new Integer(20);
   		drb
   			.setTitleStyle(titleStyle)
-  			.setTitle(wiz.getDataSubSource().getDisplayName() + " Custom Report")					//defines the title of the report
+  			.setTitle(reportTitle)					//defines the title of the report
  			.setDetailHeight(new Integer(15))
  			.setLeftMargin(margin).setRightMargin(margin).setTopMargin(margin).setBottomMargin(margin)
 //  			.setPrintBackgroundOnOddRows(true)
