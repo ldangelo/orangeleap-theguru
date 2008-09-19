@@ -72,7 +72,7 @@
 			<value>ReportSaveAs</value>
 			<value>ReportRedirect</value>
 			<value>ReportRedirect</value>			
-			<value>ReportRedirect</value>	
+			<value>RunSavedReport</value>	
 			<value>RunReport</value>					
 		</list>
 	</property>

@@ -290,6 +290,12 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 			refData.put("fieldGroups", wiz.getFieldGroups());
 			
 		}
+
+		// run a saved report
+		if (page==11) { 
+			wiz.setReportPath("/Reports/Clementine/" + wiz.getReportName().replace(" ", "_"));
+			refData.put("reportPath", wiz.getReportPath());
+		}
 		
 		// running the report
 		if (page==12) { 
