@@ -15,6 +15,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.IndexColumn;
 
@@ -25,8 +26,12 @@ public class ReportField implements java.io.Serializable,
 	/**
 	 * 
 	 */
+	@Transient
 	private static final long serialVersionUID = -2871208732277362753L;
 
+	@Transient
+	long controlCount;
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "REPORTFIELD_ID")
@@ -132,6 +137,10 @@ public class ReportField implements java.io.Serializable,
 		return canBeSummarized;
 	}
 
+	public String getControlName() {
+		return columnName + controlCount++;
+	}
+	
 	public String getColumnName() {
 		return columnName;
 	}

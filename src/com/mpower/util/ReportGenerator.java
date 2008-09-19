@@ -63,9 +63,14 @@ public class ReportGenerator {
 
 	private JServer server = null;
 	private String reportUnitDataSourceURI;
-	private Map params = new HashMap();
-	private Map inputControls = new HashMap();
+	private Map params;
+	private Map inputControls;
 
+	public ReportGenerator() {
+		params = new HashMap();
+		inputControls = new HashMap();
+	}
+	
 	public Map getInputControls() {
 		return inputControls;
 	}
@@ -228,27 +233,27 @@ public class ReportGenerator {
 			case 4:	query += " >";
 			}
 			
-			if (rf.getFieldType() == ReportFieldType.STRING || rf.getFieldType() == ReportFieldType.DATE) {
-				query += " '" + filter.getValue() + "'";
-			} else {
-				query += " " + filter.getValue() + " ";
-			}
-
-			// if (rf.getFieldType() == ReportFieldType.STRING ||
-			// rf.getFieldType() == ReportFieldType.DATE) {
-			// query += " '" + filter.getValue() + "'";
-			// } else {
-			// query += " " + filter.getValue() + " ";
-			// }
-			query += " $P{" + rf.getColumnName() + "} ";
-
-			// drb.addParameter(rf.getColumnName(), "java.lang.String");
 			InputControlParameters ic = new InputControlParameters();
 			ic.setLabel(rf.getDisplayName());
 			ic.setType(rf.getFieldType());
 			ic.setFilter(filter.getOperator());
-			inputControls.put(rf.getColumnName(), ic);
-			params.put(rf.getColumnName(), filter.getValue());
+			String controlName = rf.getControlName();
+			
+			inputControls.put(controlName, ic);
+			
+			if ( rf.getFieldType() == ReportFieldType.DATE) {
+				query += " $P{" + controlName + "} ";
+				params.put(controlName, "java.util.Date");
+				drb.addParameter(controlName, "java.util.Date");				
+			} else	if(rf.getFieldType() == ReportFieldType.STRING) {
+				query += " $P{" + controlName + "} ";
+				drb.addParameter(controlName, "java.lang.String");
+				params.put(controlName, "java.lang.String");
+			} else if(rf.getFieldType() == ReportFieldType.DOUBLE) {
+				query += " $P{" + controlName + "} ";
+				drb.addParameter(controlName, "java.lang.Double");
+				params.put(controlName, "java.lang.Double");
+			} 
 		}
 		
 		if (wiz.getReportType().compareTo("summary") == 0) {
