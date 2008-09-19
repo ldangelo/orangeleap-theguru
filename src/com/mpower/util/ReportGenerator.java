@@ -5,6 +5,7 @@ import java.io.File;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -113,9 +114,7 @@ public class ReportGenerator {
 		return templateFile;
 	}
 
-	public DynamicReport Generate(ReportWizard wiz,
-			javax.sql.DataSource jdbcDataSource,
-			ReportFieldService reportFieldService) throws Exception {
+	public DynamicReport Generate(ReportWizard wiz,javax.sql.DataSource jdbcDataSource, ReportFieldService reportFieldService) throws Exception {
 		File templateFile = getTemplateFile();
 
 		initStyles();
@@ -135,54 +134,64 @@ public class ReportGenerator {
   			.setGrandTotalLegendStyle(headerVariables)
   			.setOddRowBackgroundStyle(oddRowStyle);
 	
-		//temp fix for summary record count -- basically if you pick record count it will
-		//not display any of the other summary info until alt solution is put in place
-		Boolean globalFooterVariableDefined = false;
-		//columnCount used to display record count 
-		Integer columnCount = new Integer(0);
-		 
-		if (wiz.getReportType().compareTo("summary") == 0) {
-			//Add Group by columns
-	  		//List<ReportField> groupBy = wiz.getSelectedReportFieldsInOrder();
-			//Iterator itGroupBy = groupBy.iterator();
-			List<ReportGroupByField> groupByFields = wiz.getReportGroupByFields();
-			Iterator itGroupByFields = groupByFields.iterator();
-	
-			while(itGroupByFields.hasNext()) {
-				ReportGroupByField group = (ReportGroupByField) itGroupByFields.next();
-				if (group != null) {
-					ReportField f = reportFieldService.find(group.getFieldId());
-					
-					if( f != null){
-						if (f.getId() != -1 && wiz.IsFieldGroupByField(f.getId())) {
-							columnCount += 1;
-							drb = AddColumnsAndOrGroups(f, globalFooterVariableDefined, drb, wiz);	
-						}
-					}
-				}
-			}
-		}
-		
-		//Add all remaining columns
+  		//create iterators
   		List<ReportField> fields = wiz.getSelectedReportFieldsInOrder();
-		Iterator itFields = fields.iterator();
-		
-		while(itFields.hasNext()) {
-			ReportField f = (ReportField) itFields.next();
-			
-			if (f.getSelected() && !wiz.IsFieldGroupByField(f.getId())) {
-				columnCount += 1;
-				drb = AddColumnsAndOrGroups(f, globalFooterVariableDefined, drb, wiz);	
+  		Iterator itFields = fields.iterator();
+  		List<ReportGroupByField> groupByFields = wiz.getReportGroupByFields();
+  		Iterator itGroupByFields = groupByFields.iterator();
+  		
+  		//get list of groupby fields in order
+  		List<ReportField> groupByFieldsList = new LinkedList<ReportField>();
+  		while (itGroupByFields.hasNext()){
+  			ReportGroupByField group = (ReportGroupByField) itGroupByFields.next();
+			if (group == null) continue;
+			ReportField f = reportFieldService.find(group.getFieldId());
+			if (f == null || f.getId() == -1) continue;
+			groupByFieldsList.add(f);
+  		}
+  		
+  		//get a list of all remaining columns selected fields(excluding groupby columns)
+  		List<ReportField> columnFieldsList = new LinkedList<ReportField>();
+  		while (itFields.hasNext()){
+  			ReportField f = (ReportField) itFields.next();
+			if (f == null || f.getId() == -1 || wiz.IsFieldGroupByField(f.getId())) continue;
+			columnFieldsList.add(f);
+  		}
+  		
+  		//Build columns 
+  		//Build group columns first then build all remaining columns
+  		List<AbstractColumn> groupByColumns = 	buildColumns(groupByFieldsList);
+  		List<AbstractColumn> columnsOnly = buildColumns(columnFieldsList);
+  		List<AbstractColumn> allColumns = new LinkedList<AbstractColumn>();
+  		allColumns.addAll(groupByColumns);
+  		allColumns.addAll(columnsOnly);
+  		
+  		//Build Groups
+  		List<ColumnsGroup> groupBy = buildGroups(groupByColumns);
+  		
+  		//Add Global footer variables to columns
+  		drb = AddGlobalFooterVariables(fields, columnsOnly,drb);
+  		
+  		//Add All Columns
+  		Iterator itColumnsBuilt = allColumns.iterator();
+  		while (itColumnsBuilt.hasNext()){
+  			AbstractColumn column = (AbstractColumn) itColumnsBuilt.next();
+  			drb.addColumn(column);
+  		}
+  		
+  		//Add Groups
+  		if (wiz.getReportType().compareTo("summary") == 0) {
+			Iterator itGroupsBuilt = groupBy.iterator();
+			while (itGroupsBuilt.hasNext()){
+				ColumnsGroup group = (ColumnsGroup) itGroupsBuilt.next();
+				drb.addGroup(group);
 			}
-		}
-		//Temp Fix - Record Count will not be displayed if any other summary fields were selected
-		if (wiz.getRecordCount()&& !globalFooterVariableDefined)
-			drb.addGlobalFooterVariable(columnCount, ColumnsGroupVariableOperation.COUNT,headerVariables).setGrandTotalLegend("Total Records");
-	
-		drb.setIgnorePagination(true);
+  		}
+  		drb.setIgnorePagination(true);
 		drb.setUseFullPageWidth(true);
 
 
+		//Build query
 		@SuppressWarnings("unused")
 		String query = "SELECT * FROM " + wiz.getDataSubSource().getViewName();
 		
@@ -279,64 +288,83 @@ public class ReportGenerator {
 
 		return dr;
 	}
-
-    private FastReportBuilder AddColumnsAndOrGroups(ReportField f, Boolean globalFooterVariableDefined,  FastReportBuilder drb, ReportWizard wiz) throws ColumnBuilderException {
-    	String valueClassName = null;
-		String pattern = null;
-		
-		
-		switch (f.getFieldType()) {
-        case NONE:   	valueClassName = String.class.getName(); pattern ="";	 		break;
-        case STRING:   	valueClassName = String.class.getName(); pattern ="";			break;
-        case INTEGER:   valueClassName = Long.class.getName(); 	 pattern ="";	 		break;
-        case DOUBLE:   	valueClassName = String.class.getName(); pattern ="";	 		break;
-        case DATE:   	valueClassName = Date.class.getName();   pattern ="MM/dd/yyyy";	break;
-        case MONEY:   	valueClassName = Float.class.getName();  pattern ="$ 0.00";		break;
-        case BOOLEAN:   valueClassName = Boolean.class.getName();pattern ="";	
-		}
-		AbstractColumn column = ColumnBuilder.getInstance()
-		 				.setColumnProperty(f.getColumnName(), valueClassName )
-		 				.setTitle(f.getDisplayName())
-		 				//.setStyle(detailStyle)
-		 				.setPattern(pattern)
-		 				.setHeaderStyle(headerStyle)
-		 				.build();
-		column.setName(f.getColumnName());
-
-		//Add Summary/Grand Total footers **Can Add Only one Global Footer Variable per Column**
-		if (f.getPerformSummary()){
-			drb.addGlobalFooterVariable(column, ColumnsGroupVariableOperation.SUM,headerVariables).setGrandTotalLegend("Total");
-			globalFooterVariableDefined = true;
-		}
-		if (f.getAverage()){
-			drb.addGlobalFooterVariable(column, ColumnsGroupVariableOperation.AVERAGE,headerVariables).setGrandTotalLegend("Average");
-			globalFooterVariableDefined = true;
-		}
-		if (f.getSmallestValue()){
-			drb.addGlobalFooterVariable(column, ColumnsGroupVariableOperation.LOWEST,headerVariables).setGrandTotalLegend("Min");
-			globalFooterVariableDefined = true;
-		}
-		if (f.getLargestValue()){
-			drb.addGlobalFooterVariable(column, ColumnsGroupVariableOperation.HIGHEST,headerVariables).setGrandTotalLegend("Max");
-			globalFooterVariableDefined = true;
-		}
-		drb.addColumn(column);
-		//column.getInitialExpression(ColumnsGroupVariableOperation.COUNT);
-
-		if (wiz.IsFieldGroupByField(f.getId()) && f.getId() != -1){
-			GroupBuilder groupBuilder = new GroupBuilder();
-			ColumnsGroup group = groupBuilder.setCriteriaColumn((PropertyColumn) column)
-									//TODO: figure out how to get the other layouts working --
-									//getting a Null pointer exception in the JRPenUtil.getPenFromLinePen 
-									//when using other layouts.
-									.setGroupLayout(GroupLayout.DEFAULT)
-									.build();
-			drb.addGroup(group); 
-		}
-		
-		
-		return drb;
-	}
+	
+			private List<AbstractColumn> buildColumns(List<ReportField> fields)throws ColumnBuilderException{
+				List<AbstractColumn> columnsBuilt = new LinkedList<AbstractColumn>();
+				Iterator itFields = fields.iterator();
+				String valueClassName = null;
+				String pattern = null;
+				while (itFields.hasNext()){
+					ReportField f = (ReportField) itFields.next();
+			    	switch (f.getFieldType()) {
+				        case NONE:   	valueClassName = String.class.getName(); pattern ="";	 		break;
+				        case STRING:   	valueClassName = String.class.getName(); pattern ="";			break;
+				        case INTEGER:   valueClassName = Long.class.getName(); 	 pattern ="";	 		break;
+				        case DOUBLE:   	valueClassName = String.class.getName(); pattern ="";	 		break;
+				        case DATE:   	valueClassName = Date.class.getName();   pattern ="MM/dd/yyyy";	break;
+				        case MONEY:   	valueClassName = Float.class.getName();  pattern ="$ 0.00";		break;
+				        case BOOLEAN:   valueClassName = Boolean.class.getName();pattern ="";	
+					}
+					AbstractColumn column = ColumnBuilder.getInstance()
+					 				.setColumnProperty(f.getColumnName(), valueClassName )
+					 				.setTitle(f.getDisplayName())
+					 				//.setStyle(detailStyle)
+					 				.setPattern(pattern)
+					 				.setHeaderStyle(headerStyle)
+					 				.build();
+					column.setName(f.getColumnName());
+					columnsBuilt.add(column);
+				}
+				return columnsBuilt;
+			}
+			
+			private List<ColumnsGroup> buildGroups(List<AbstractColumn> groupByColumnsBuilt){
+				List<ColumnsGroup> groupsBuilt = new LinkedList<ColumnsGroup>();
+				//Iterate thru the group by fields
+				Iterator itGroupByColumns = groupByColumnsBuilt.iterator();
+				while (itGroupByColumns.hasNext()){
+					AbstractColumn column = (AbstractColumn) itGroupByColumns.next();
+					GroupBuilder groupBuilder = new GroupBuilder();
+					ColumnsGroup group = groupBuilder.setCriteriaColumn((PropertyColumn) column)
+											.setDefaultHeaderVariableStyle(headerVariables)
+											.setGroupLayout(GroupLayout.DEFAULT)
+											.build();
+					groupsBuilt.add(group);
+				}
+				return groupsBuilt;
+			}	
+			
+			private FastReportBuilder AddGlobalFooterVariables(List<ReportField> fields, List<AbstractColumn> columnsBuilt, FastReportBuilder drb){
+			
+				//Iterate thru each of the fields to see if it is summarized  
+				Iterator itFields = fields.iterator();
+				while (itFields.hasNext()){
+					ReportField f = (ReportField) itFields.next();
+					Iterator itColumnsBuilt = columnsBuilt.iterator();
+					while (itColumnsBuilt.hasNext()){
+						AbstractColumn column = (AbstractColumn) itColumnsBuilt.next();
+						if (f.getColumnName() == column.getName()){
+							if (f.getPerformSummary()){
+								drb.addGlobalFooterVariable(column, ColumnsGroupVariableOperation.SUM,headerVariables).setGrandTotalLegend("Total");
+								break;
+							}
+							if (f.getAverage()){
+								drb.addGlobalFooterVariable(column, ColumnsGroupVariableOperation.AVERAGE,headerVariables).setGrandTotalLegend("Average");
+								break;
+							}
+							if (f.getSmallestValue()){
+								drb.addGlobalFooterVariable(column, ColumnsGroupVariableOperation.LOWEST,headerVariables).setGrandTotalLegend("Min");
+								break;
+							}
+							if (f.getLargestValue()){
+								drb.addGlobalFooterVariable(column, ColumnsGroupVariableOperation.HIGHEST,headerVariables).setGrandTotalLegend("Max");
+								break;
+							}
+						}//end if column name = field name
+					}//end while itColumnsBuilt
+				}//end while itFields
+				return drb;
+			}
 
 	private ResourceDescriptor putReportUnit(ResourceDescriptor rd,String name, String label, String desc, File report, Map params2) throws Exception 
     {
