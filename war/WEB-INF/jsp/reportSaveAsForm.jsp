@@ -13,9 +13,16 @@
 <tr><td>Report Comment</td><td><form:input path="reportComment" size="40" maxlength="80"/></td></tr>
 </table>
 
-
-<input type="submit" value="Cancel" name="_cancel">
-<input type="submit" value="Save" name="_target11">
+<div class="addbuttonposition">
+<table>
+<tr>
+<td align="Left" width=360>
+<input type="image" src="images/run_report_off.gif" value="Run Report" ALT="Run Report" name="_target12" onmouseover="this.src = 'images/run_report_on.gif';" onmouseout="this.src = 'images/run_report_off.gif';">
+<input type="image" src="images/cancel_off.gif" value="Cancel" name="_target9" ALT="Cancel" onmouseover="this.src = 'images/cancel_on.gif';" onmouseout="this.src = 'images/cancel_off.gif';">
+<input type="image" src="images/save_off.gif" value="Save" name="_target11" ALT="Save" onmouseover="this.src = 'images/save_on.gif';" onmouseout="this.src = 'images/save_off.gif';">
+</td>
+</table>
+</div>
 
 </form:form>
 
