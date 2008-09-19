@@ -213,9 +213,12 @@ public class ReportGenerator {
 		while (itFilter.hasNext()) {
 			ReportAdvancedFilter filter = (ReportAdvancedFilter) itFilter
 					.next();
+			
+			if (filter.getFieldId() == -1) break; // this is an empty filter
 			ReportField rf = reportFieldService.find(filter.getFieldId());
 
-			if (filter.getValue() == "") break; // this is an empty filter
+
+
 			
 			if (!bWhere) {
 				bWhere = true;

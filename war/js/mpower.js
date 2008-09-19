@@ -18,7 +18,7 @@ window.onload = function() {
 }
 
 function rowCloner(selector) {
-	$(selector).one("keyup",function(event){
+	$(selector).one("change",function(event){
 		if(event.keyCode != 9) { // ignore tab
 			addNewRow();
 		}

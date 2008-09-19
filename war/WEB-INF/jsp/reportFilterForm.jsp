@@ -13,6 +13,7 @@
 		<TR rowIndex="0">
 			<TD><SELECT id="advancedFilters[0].fieldId"
 				name="advancedFilters[0].fieldId">
+				<option label="None" value="-1">None</option>
 				<c:forEach var="fgroup" items="${fieldGroups}" varStatus="outer">
 					<c:forEach var="f" items="${fgroup.fields}" varStatus="inner">
 						<c:if test="${f != null }">
@@ -30,8 +31,7 @@
 				<option value="4">greater than</option>
 			</SELECT></TD>
 
-			<TD><input type="text" name="advancedFilters[0].value" value=""
-				maxlength="100" title="Value 0"></TD>
+			<TD>
 			<TD><img class="deleteButton" src="images/icons/deleteRow.png"
 				style="cursor: pointer; display: none;" /></TD>
 		</TR>
