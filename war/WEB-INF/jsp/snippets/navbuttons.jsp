@@ -13,7 +13,7 @@
 
 <td align="Right" width=360>
 <c:if test="${page == 0}">
-<input type="image" src="images/cancel_off.gif" value="Cancel" name="_cancel" ALT="Cancel" onmouseover="this.src = 'images/cancel_on.gif';" onmouseout="this.src = 'images/cancel_off.gif';">
+<input type="image" src="images/cancel_off.gif" value="Cancel" name="_target9" ALT="Cancel" onmouseover="this.src = 'images/cancel_on.gif';" onmouseout="this.src = 'images/cancel_off.gif';">
 </c:if>
 
 <c:if test="${page > 0}">
