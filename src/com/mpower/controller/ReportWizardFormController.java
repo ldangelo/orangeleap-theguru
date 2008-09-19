@@ -334,7 +334,15 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		File tempFile = File.createTempFile("wiz", ".jrxml");
 		DynamicJasperHelper.generateJRXML(dr,new ClassicLayoutManager(), reportGenerator.getParams(), null, tempFile.getPath());
 
-		reportGenerator.put(ResourceDescriptor.TYPE_REPORTUNIT,wiz.getReportName(),wiz.getReportComment(),wiz.getReportComment(),"/Reports/Clementine",tempFile,reportGenerator.getParams());
+		String reportTitle = wiz.getDataSubSource().getDisplayName() + " Custom Report";
+		if (wiz.getReportName() != null && wiz.getReportName().length() > 0)
+			reportTitle = wiz.getReportName();
+
+		String reportComment = wiz.getDataSubSource().getDisplayName() + " Custom Report";
+		if (wiz.getReportComment() != null && wiz.getReportComment().length() > 0)
+			reportComment = wiz.getReportComment();
+		
+		reportGenerator.put(ResourceDescriptor.TYPE_REPORTUNIT, reportTitle.replace(" ", "_"), reportTitle, reportComment, "/Reports/Clementine",tempFile, reportGenerator.getParams());
 
 		
 		//
