@@ -15,15 +15,16 @@
 <TR>
 <TH>Columns</TH><TH>        </TH><TH>Sum</TH><TH>Average</TH><TH>Largest Value</TH><TH>Smallest Value</TH>
 </TR>
-<TR>
+<!-- <TR>
 <TD>Record Count</TD><TD>        </TD><TD><input type="checkbox" name="recordCount"/></TD><TD></TD><TD></TD><TD></TD>
 
-</TR>
+</TR>-->
+<c:set var="summaryColumnsFound" value="false"/>
 <c:forEach var="fgroup" items="${fieldGroups}" varStatus="outer">
-
-
 <c:forEach var="f" items="${fgroup.fields}" varStatus="inner">
 <c:if test="${f.canBeSummarized}">
+<c:if test="${f.selected}">
+<c:set var="summaryColumnsFound" value="true"/>
 <TR>
 <TD>${f.displayName}</TD><TD></TD>
 <TD><input type=checkbox name="fieldGroups[${outer.count-1}].fields[${inner.count-1}].performSummary" onClick="javascript:SingleSelect('^(fieldGroups).*(${outer.count-1}).*(fields).*(${inner.count-1}).*', this)"/></TD>
@@ -32,14 +33,14 @@
 <TD><input type=checkbox name="fieldGroups[${outer.count-1}].fields[${inner.count-1}].smallestValue" onClick="javascript:SingleSelect('^(fieldGroups).*(${outer.count-1}).*(fields).*(${inner.count-1}).*', this)"/></TD>
 </TR>
 </c:if>
+</c:if>
 </c:forEach>
 </c:forEach>
-
 <TR>
 </TR>
 </Table>
+<c:if test="${!summaryColumnsFound}">No summary columns available for selected fields</c:if>
 <br>
-
 <br>
 <br>
 </div>
