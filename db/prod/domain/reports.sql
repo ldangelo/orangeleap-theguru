@@ -5,12 +5,15 @@ Insert into REPORTDATASUBSOURCE values(1,'People',0,'PERSON',1);
 insert into REPORTDATASUBSOURCE values(2,'People & Addresses',0,'vpeopleaddress',1);
 insert into REPORTDATASUBSOURCE values(3,'People & Gifts',0,'vpeoplegift',1);
 insert into REPORTDATASUBSOURCE values(4,'Gifts',0,'GIFT',2);
+insert into REPORTDATASUBSOURCE values(5,'People & Gift Distributions',0,'GIFT',2);
+insert into REPORTDATASUBSOURCE values(6,'Gift Distributions',0,'vgiftdistro',2);
 
 insert into REPORTFIELDGROUP values(1,'People General');
 insert into REPORTFIELDGROUP values(2,'People Address');
 insert into REPORTFIELDGROUP values(3,'People Misc.');
 insert into REPORTFIELDGROUP values(4,'Gift General');
 insert into REPORTFIELDGROUP values(5,'Gift Payment');
+insert into REPORTFIELDGROUP values(6,'Gift Distribution');
 
 insert into REPORTFIELDGROUP_ReportDataSubSource values(1,1,1);
 insert into REPORTFIELDGROUP_ReportDataSubSource values(3,1,2);
@@ -22,6 +25,9 @@ insert into REPORTFIELDGROUP_ReportDataSubSource values(2,3,7);
 insert into REPORTFIELDGROUP_ReportDataSubSource values(3,3,8);
 insert into REPORTFIELDGROUP_ReportDataSubSource values(4,3,9);
 insert into REPORTFIELDGROUP_ReportDataSubSource values(4,4,10);
+insert into REPORTFIELDGROUP_ReportDataSubSource values(6,5,11);
+insert into REPORTFIELDGROUP_ReportDataSubSource values(4,6,10);
+insert into REPORTFIELDGROUP_ReportDataSubSource values(6,6,12);
 
 insert into REPORTFIELD values(1,b'0',b'0','PERSON_ID','Account Number',b'1',b'0',b'0',b'0',b'0',b'0',3);
 insert into REPORTFIELD values(2,b'0',b'0','FIRST_NAME','First Name',b'1',b'0',b'0',b'0',b'0',b'0',1);
@@ -49,6 +55,9 @@ insert into REPORTFIELD values(23,b'0',b'0','POSTAL_CODE','Zip Code',b'1',b'0',b
 insert into REPORTFIELD values(24,b'0',b'0','STATE_PROVINCE','State',b'1',b'0',b'0',b'0',b'0',b'0',1);
 insert into REPORTFIELD values(25,b'0',b'0','TRANSACTION_DATE','Gift Date',b'1',b'0',b'0',b'0',b'0',b'0',4);
 insert into REPORTFIELD values(26,b'0',b'1','VALUE','Gift Amount',b'1',b'0',b'0',b'0',b'0',b'0',5);
+insert into REPORTFIELD values(27,b'0',b'1','AMOUNT','Gift Distribution Amount',b'1',b'0',b'0',b'0',b'0',b'0',5);
+insert into REPORTFIELD values(28,b'0',b'0','MOTIVATION_CODE','Motivation Code',b'1',b'0',b'0',b'0',b'0',b'0',0);
+insert into REPORTFIELD values(29,b'0',b'0','PROJECT_CODE','Project Code',b'1',b'0',b'0',b'0',b'0',b'0',0);
 
 
 -- Account Number in People General
@@ -95,10 +104,19 @@ insert into REPORTFIELD_REPORTFIELDGROUP values(24,2,19,24);
 insert into REPORTFIELD_REPORTFIELDGROUP values(25,4,20,25); 
 -- Gift Amount into gift general
 insert into REPORTFIELD_REPORTFIELDGROUP values(26,4,21,26); 
+-- Gift Distribution Amount into gift general
+insert into REPORTFIELD_REPORTFIELDGROUP values(27,6,20,27);
+-- Motivation Code into gift distribution 
+insert into REPORTFIELD_REPORTFIELDGROUP values(28,6,21,28);
+-- Project Code into gift distribution
+insert into REPORTFIELD_REPORTFIELDGROUP values(29,6,22,29);
+
 
 -- Drop views if they already exists
 DROP VIEW IF EXISTS vpeoplegift;
 DROP VIEW IF EXISTS vpeopleaddress;
+DROP VIEW IF EXISTS vpeopleagiftdistro;
+DROP VIEW IF EXISTS vgiftdistro;
 
 
 -- Create vpeopleaddress
@@ -106,3 +124,9 @@ create view vpeopleaddress as select `address`.`ADDRESS_LINE_1` AS `ADDRESS_LINE
 
 -- Create vpeoplegift
 create view vpeoplegift as select `gift`.`ACH_ACCOUNT_NUMBER` AS `ACH_ACCOUNT_NUMBER`,`gift`.`ACH_ROUTING_NUMBER` AS `ACH_ROUTING_NUMBER`,`gift`.`ACH_TYPE` AS `ACH_TYPE`,`gift`.`AUTH_CODE` AS `AUTH_CODE`,`gift`.`CHECK_NUMBER` AS `CHECK_NUMBER`,`gift`.`COMMENTS` AS `COMMENTS`,`gift`.`CREDIT_CARD_EXPIRATION_DATE` AS `CREDIT_CARD_EXPIRATION_DATE`,`gift`.`CREDIT_CARD_NUMBER` AS `CREDIT_CARD_NUMBER`,`gift`.`CREDIT_CARD_TYPE` AS `CREDIT_CARD_TYPE`,`gift`.`ORIGINAL_GIFT_ID` AS `ORIGINAL_GIFT_ID`,`gift`.`PAYMENT_TYPE` AS `PAYMENT_TYPE`,`gift`.`REFUND_GIFT_ID` AS `REFUND_GIFT_ID`,`gift`.`REFUND_GIFT_TRANSACTION_DATE` AS `REFUND_GIFT_TRANSACTION_DATE`,`gift`.`TRANSACTION_DATE` AS `TRANSACTION_DATE`,`gift`.`VALUE` AS `VALUE`,`vpeopleaddress`.`ADDRESS_LINE_1` AS `ADDRESS_LINE_1`,`vpeopleaddress`.`ADDRESS_LINE_2` AS `ADDRESS_LINE_2`,`vpeopleaddress`.`ADDRESS_LINE_3` AS `ADDRESS_LINE_3`,`vpeopleaddress`.`ADDRESS_TYPE` AS `ADDRESS_TYPE`,`vpeopleaddress`.`CITY` AS `CITY`,`vpeopleaddress`.`COUNTRY` AS `COUNTRY`,`vpeopleaddress`.`POSTAL_CODE` AS `POSTAL_CODE`,`vpeopleaddress`.`STATE_PROVINCE` AS `STATE_PROVINCE`,`vpeopleaddress`.`ANNIVERSARY` AS `ANNIVERSARY`,`vpeopleaddress`.`BIRTHDATE` AS `BIRTHDATE`,`vpeopleaddress`.`EMAIL` AS `EMAIL`,`vpeopleaddress`.`FIRST_NAME` AS `FIRST_NAME`,`vpeopleaddress`.`LAPSED_DONOR` AS `LAPSED_DONOR`,`vpeopleaddress`.`LAST_NAME` AS `LAST_NAME`,`vpeopleaddress`.`MAJOR_DONOR` AS `MAJOR_DONOR`,`vpeopleaddress`.`MARITAL_STATUS` AS `MARITAL_STATUS`,`vpeopleaddress`.`MIDDLE_NAME` AS `MIDDLE_NAME`,`vpeopleaddress`.`ORGANIZATION_NAME` AS `ORGANIZATION_NAME`,`vpeopleaddress`.`PREFERRED_PHONE_TYPE` AS `PREFERRED_PHONE_TYPE`,`vpeopleaddress`.`SPOUSE_FIRST_NAME` AS `SPOUSE_FIRST_NAME`,`vpeopleaddress`.`SPOUSE_NAME` AS `SPOUSE_NAME`,`vpeopleaddress`.`SUFFIX` AS `SUFFIX`,`vpeopleaddress`.`TITLE` AS `TITLE`,`vpeopleaddress`.`PERSON_ID` AS `PERSON_ID`,`vpeopleaddress`.`ADDRESS_ID` AS `ADDRESS_ID` from  `gift` join `vpeopleaddress` on  `gift`.`PERSON_ID` = `vpeopleaddress`.`PERSON_ID`;
+
+-- Create vpeoplegiftdistro
+CREATE VIEW VPEOPLEGIFTDISTRO AS SELECT ACH_ACCOUNT_NUMBER, ACH_ROUTING_NUMBER, ACH_TYPE, AUTH_CODE, CHECK_NUMBER, COMMENTS, CREDIT_CARD_EXPIRATION_DATE, CREDIT_CARD_NUMBER, CREDIT_CARD_TYPE, ORIGINAL_GIFT_ID,PAYMENT_TYPE, REFUND_GIFT_ID, REFUND_GIFT_TRANSACTION_DATE, TRANSACTION_DATE, VALUE, ADDRESS_LINE_1, ADDRESS_LINE_2, ADDRESS_LINE_3, ADDRESS_TYPE, CITY, COUNTRY, POSTAL_CODE, STATE_PROVINCE, ANNIVERSARY, BIRTHDATE, EMAIL, FIRST_NAME, LAPSED_DONOR, LAST_NAME, MAJOR_DONOR, MARITAL_STATUS, MIDDLE_NAME, ORGANIZATION_NAME, PREFERRED_PHONE_TYPE, SPOUSE_FIRST_NAME, SPOUSE_NAME, SUFFIX, TITLE, VPEOPLEADDRESS.PERSON_ID, ADDRESS_ID, DISTRO_LINE.AMOUNT, DISTRO_LINE.COMMITMENT_CODE, DISTRO_LINE.MOTIVATION_CODE, DISTRO_LINE.PROJECT_CODE FROM GIFT JOIN DISTRO_LINE ON GIFT.GIFT_ID = DISTRO_LINE.GIFT_ID JOIN VPEOPLEADDRESS ON GIFT.PERSON_ID = VPEOPLEADDRESS.PERSON_ID
+
+-- Create vgiftdistro
+CREATE VIEW VGIFTDISTRO AS SELECT ACH_ACCOUNT_NUMBER, ACH_ROUTING_NUMBER, ACH_TYPE, AUTH_CODE, CHECK_NUMBER, COMMENTS, CREDIT_CARD_EXPIRATION_DATE, CREDIT_CARD_NUMBER, CREDIT_CARD_TYPE, ORIGINAL_GIFT_ID,PAYMENT_TYPE, REFUND_GIFT_ID, REFUND_GIFT_TRANSACTION_DATE, TRANSACTION_DATE, VALUE, DISTRO_LINE.AMOUNT, DISTRO_LINE.COMMITMENT_CODE, DISTRO_LINE.MOTIVATION_CODE, DISTRO_LINE.PROJECT_CODE FROM GIFT JOIN DISTRO_LINE ON GIFT.GIFT_ID = DISTRO_LINE.GIFT_ID JOIN VPEOPLEADDRESS ON GIFT.PERSON_ID = VPEOPLEADDRESS.PERSON_ID
