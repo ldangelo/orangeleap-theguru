@@ -169,11 +169,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 			HttpServletResponse arg1, Object arg2, BindException arg3)
 			throws Exception {
 
-		//
-		// save the report to temporary file
-		//
-		// Render the jasper report
-		//
+		
 		return new ModelAndView(getSuccessView(),"reportsouce",wiz);
 	
 	}
