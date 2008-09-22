@@ -80,6 +80,9 @@ public class ReportWizard implements java.io.Serializable {
 	@IndexColumn(name="REPORTGROUPBYFIELD_ID")
 	private List<ReportGroupByField> reportGroupByFields;
 	
+	@Transient
+	private List<ReportChartSettings> reportChartSettings;
+	
 	@Column(name = "REPORT_TYPE")
 	private String reportType;
 	private Boolean recordCount;
@@ -98,6 +101,7 @@ public class ReportWizard implements java.io.Serializable {
 		//advancedFilters = LazyList.decorate(new ArrayList<ReportAdvancedFilter>(),FactoryUtils.instantiateFactory(ReportAdvancedFilter.class, new Class[]{ReportAdvancedFilter.class},new Object[]{}));
 		advancedFilters = LazyList.decorate(new ArrayList<ReportAdvancedFilter>(),FactoryUtils.instantiateFactory(ReportAdvancedFilter.class));
 		reportGroupByFields = LazyList.decorate(new ArrayList<ReportGroupByField>(),FactoryUtils.instantiateFactory(ReportGroupByField.class));
+		reportChartSettings = LazyList.decorate(new ArrayList<ReportChartSettings>(),FactoryUtils.instantiateFactory(ReportChartSettings.class));
 	}
 
 	public List<ReportAdvancedFilter> getAdvancedFilters() {
@@ -106,6 +110,10 @@ public class ReportWizard implements java.io.Serializable {
 
 	public List<ReportGroupByField> getReportGroupByFields() {
 		return reportGroupByFields;
+	}
+	
+	public List<ReportChartSettings> getReportChartSettings() {
+		return reportChartSettings;
 	}
 	
 	public ReportDataSource getDataSource() {
@@ -192,6 +200,10 @@ public class ReportWizard implements java.io.Serializable {
 	public void setReportGroupByFields(List<ReportGroupByField> reportGroupByFields) {
 		this.reportGroupByFields = reportGroupByFields;
 	}
+	
+	public void setReportChartSettings(List<ReportChartSettings> reportChartSettings) {
+		this.reportChartSettings = reportChartSettings;
+	}	
 	
 	public void setDataSource(ReportDataSource src) {
 		logger.info("**** in setSrc()");
