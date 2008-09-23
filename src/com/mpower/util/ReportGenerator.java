@@ -22,6 +22,7 @@ import com.mpower.domain.ReportAdvancedFilter;
 import com.mpower.domain.ReportField;
 import com.mpower.domain.ReportFieldType;
 import com.mpower.domain.ReportGroupByField;
+import com.mpower.domain.ReportStandardFilter;
 import com.mpower.domain.ReportWizard;
 import com.mpower.service.ReportFieldService;
 
@@ -204,13 +205,98 @@ public class ReportGenerator {
 		if (wiz.getRowCount() != -1)
 			query += " LIMIT 0," + wiz.getRowCount().toString();
 
+		Boolean bWhere = false;
+		
 		//
 		// Add any 'filters'
+		List<ReportStandardFilter> standardFilters = wiz.getStandardFilters();
+		Iterator itStandardFilters = standardFilters.iterator();
+		
 		List<ReportAdvancedFilter> filters = wiz.getAdvancedFilters();
 		Iterator itFilter = filters.iterator();
+		while (itStandardFilters.hasNext()) {
+			ReportStandardFilter filter = (ReportStandardFilter) itStandardFilters.next();
+			if (filter.getFieldId() == -1) break; // this is an empty filter
+			ReportField rf = reportFieldService.find(filter.getFieldId());
+			if (!bWhere) {
+				bWhere = true;
+				query += " WHERE ";
+			} else {
+				query += " AND ";
+			}
+			
+			
 
+			query += " " + rf.getColumnName();
+
+			
+			switch(filter.getDuration()) {
+			case 1: // Current FY
+				break;
+			case 2: // Previous FY
+				break;
+			case 3: // Current FY
+				break;
+			case 4: // Current FY
+				break;
+			case 5: // Current FY
+				break;
+			case 6: // Current FY
+				break;
+			case 7: // Current FY
+				break;
+			case 8: // Current FY
+				break;
+			case 9: // Current FY
+				break;
+			case 10: // Current FY
+				break;
+			case 11: // Current FY
+				break;
+			case 12: // Current FY
+				break;
+			case 13: // Current FY
+				break;
+			case 14: // Current FY
+				break;
+			case 15: // Current FY
+				break;
+			case 16: // Current FY
+				break;
+			case 17: // Current FY
+				break;
+			case 18: // Current FY
+				break;
+			case 19: // Current FY
+				break;
+			case 20: // Current FY
+				break;
+			case 21: // Today
+				query += " = CURDATE()";
+				break;
+			case 22: // Yesterday
+				query += " = Date_Add(CURDATE(),INTERVAL -1 DAY)";
+				break;
+			case 23: // Last 30
+				query += " > Date_Add(CURDATE(),INTERVAL -30 DAY)";
+				break;
+			case 24: // Last 60
+				query += " > Date_Add(CURDATE(),INTERVAL -60 DAY)";
+				break;
+			case 25: // Last 90
+				query += " > Date_Add(CURDATE(),INTERVAL -90 DAY)";
+				break;
+			case 26: // Last 120
+				query += " > Date_Add(CURDATE(),INTERVAL -120 DAY)";
+				break;
+			case 27: // Last 7
+				query += " > Date_Add(CURDATE(),INTERVAL -7 DAY)";
+				break;
+				
+			}
+		}
 		
-		Boolean bWhere = false;
+
 		while (itFilter.hasNext()) {
 			ReportAdvancedFilter filter = (ReportAdvancedFilter) itFilter
 					.next();
@@ -234,7 +320,15 @@ public class ReportGenerator {
 			case 1:	query += " = ";		break;
 			case 2:	query += " != ";	break;
 			case 3:	query += " < ";		break;
-			case 4:	query += " >";
+			case 4:	query += " >"; break;
+			case 5:	query += " <="; break;
+			case 6:	query += " >="; break;
+			case 7: break; // contains ; break;
+			case 8: break; // startswith ; break;			
+			case 9: break; // includes ; break;			
+			case 10: break; // excludes ; break;
+			case 11: query += " LIKE "; break; // like ; break;						
+		
 			}
 			
 			InputControlParameters ic = new InputControlParameters();
@@ -257,6 +351,18 @@ public class ReportGenerator {
 				query += " $P{" + controlName + "} ";
 				drb.addParameter(controlName, "java.lang.Double");
 				params.put(controlName, "java.lang.Double");
+			} else if(rf.getFieldType() == ReportFieldType.INTEGER) {
+				query += " $P{" + controlName + "} ";
+				drb.addParameter(controlName, "java.lang.Integer");
+				params.put(controlName, "java.lang.Integer");
+			} else if(rf.getFieldType() == ReportFieldType.MONEY) {
+				query += " $P{" + controlName + "} ";
+				drb.addParameter(controlName, "java.lang.Double");
+				params.put(controlName, "java.lang.Double");
+			} else if(rf.getFieldType() == ReportFieldType.BOOLEAN) {
+				query += " $P{" + controlName + "} ";
+				drb.addParameter(controlName, "java.lang.Boolean");
+				params.put(controlName, "java.lang.Boolean");
 			} 
 		}
 		
@@ -561,5 +667,11 @@ public class ReportGenerator {
 
 	public void setReportUnitDataSourceURI(String reportUnitDataSourceURI) {
 		this.reportUnitDataSourceURI = reportUnitDataSourceURI;
+	}
+
+	public void resetInputControls() {
+		params = new HashMap();
+		inputControls = new HashMap();
+		
 	}
 }

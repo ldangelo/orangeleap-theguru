@@ -193,6 +193,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		//
 		// Report Source
 		if (page == 0) {
+			reportGenerator.resetInputControls();
 			wiz.setDataSource(reportSourceService.find(wiz.getSrcId()));
 		}
 		//

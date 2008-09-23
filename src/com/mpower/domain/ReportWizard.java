@@ -77,6 +77,10 @@ public class ReportWizard implements java.io.Serializable {
 	private List<ReportAdvancedFilter> advancedFilters;
 
 	@OneToMany(cascade = CascadeType.ALL)
+	@IndexColumn(name="REPORTSTANDARDFILTER_ID")
+	private List<ReportStandardFilter> standardFilters;
+	
+	@OneToMany(cascade = CascadeType.ALL)
 	@IndexColumn(name="REPORTGROUPBYFIELD_ID")
 	private List<ReportGroupByField> reportGroupByFields;
 	
@@ -100,6 +104,7 @@ public class ReportWizard implements java.io.Serializable {
 		// create an advanced filter list decorated as a LazyList
 		//advancedFilters = LazyList.decorate(new ArrayList<ReportAdvancedFilter>(),FactoryUtils.instantiateFactory(ReportAdvancedFilter.class, new Class[]{ReportAdvancedFilter.class},new Object[]{}));
 		advancedFilters = LazyList.decorate(new ArrayList<ReportAdvancedFilter>(),FactoryUtils.instantiateFactory(ReportAdvancedFilter.class));
+		standardFilters = LazyList.decorate(new ArrayList<ReportStandardFilter>(),FactoryUtils.instantiateFactory(ReportStandardFilter.class));
 		reportGroupByFields = LazyList.decorate(new ArrayList<ReportGroupByField>(),FactoryUtils.instantiateFactory(ReportGroupByField.class));
 		reportChartSettings = LazyList.decorate(new ArrayList<ReportChartSettings>(),FactoryUtils.instantiateFactory(ReportChartSettings.class));
 	}
@@ -326,5 +331,13 @@ public class ReportWizard implements java.io.Serializable {
 
 	public void setReportPath(String reportPath) {
 		this.reportPath = reportPath;
+	}
+
+	public List<ReportStandardFilter> getStandardFilters() {
+		return standardFilters;
+	}
+
+	public void setStandardFilters(List<ReportStandardFilter> standardFilters) {
+		this.standardFilters = standardFilters;
 	}
 }

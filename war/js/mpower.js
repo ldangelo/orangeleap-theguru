@@ -1,8 +1,8 @@
 $(document).ready(function()
    {
-	rowCloner("#report_filters tr:last");
-	
-	$("#report_filters td .deleteButton").click(function(){
+	rowCloner("#report_advanced_filters tr:last");
+//	rowCloner("#report_standard_filters tr:last");
+	$("#report_advnaced_filters td .deleteButton").click(function(){
 		deleteRow($(this).parent().parent());
 	});
 	
@@ -20,7 +20,7 @@ window.onload = function() {
 function rowCloner(selector) {
 	$(selector).one("change",function(event){
 		if(event.keyCode != 9) { // ignore tab
-			addNewRow();
+			addNewRow(selector);
 		}
 		rowCloner(selector);
 	});
@@ -50,10 +50,10 @@ function callServer(name) {
 function callback(data) {
     alert("AJAX Response:" + data);
 }
-function addNewRow() {
-	$(".tablesorter tr:last .deleteButton").show();
-	var newRow = $(".tablesorter tr:last").clone(true);
-	newRow.find(".deleteButton").hide();
+function addNewRow(selector) {
+	$(selector).children("#deleteButton").show();
+	var newRow = $(selector).clone(true);
+	newRow.children("deleteButton").hide();
 	var i = newRow.attr("rowindex");
 	var j = parseInt(i) + 1;
 	newRow.attr("rowindex",j);
@@ -73,8 +73,8 @@ function addNewRow() {
 	});
 
 	newRow.removeClass("focused highlight");
-	$(".tablesorter").append(newRow);
-	$("#report_filters td .deleteButton").click(function(){
+	$(selector).parent().append(newRow);
+	$(selector.deleteButton).click(function(){
 		deleteRow($(this).parent().parent());
 	});
 }

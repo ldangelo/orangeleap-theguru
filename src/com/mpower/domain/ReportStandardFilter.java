@@ -17,5 +17,34 @@ public class ReportStandardFilter implements java.io.Serializable {
     @Column(name = "REPORTSTANDARDFILTER_ID")
     private long id;
 
+	@Column(name = "REPORTFIELD_ID")
+    Long        fieldId;
+	
+	@Column(name = "DURATION")
+	int 		duration;
 //    Set<ReportStandardView> views;
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public Long getFieldId() {
+		return fieldId;
+	}
+
+	public void setFieldId(Long fieldId) {
+		this.fieldId = fieldId;
+	}
+
+	public int getDuration() {
+		return duration;
+	}
+
+	public void setDuration(int duration) {
+		this.duration = duration;
+	}
 }
