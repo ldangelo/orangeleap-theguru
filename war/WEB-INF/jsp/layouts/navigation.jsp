@@ -71,6 +71,10 @@
 </c:when>
 
 <c:when test="${page == 8}">
+	 Step ${page+1} of ${maxpages+1}: Chart Settings
+</c:when>
+
+<c:when test="${page == 9}">
 	 Step ${page+1} of ${maxpages+1}: Save report
 </c:when>
 

@@ -19,7 +19,7 @@
 			<TD><SELECT id="reportGroupByFields[0].fieldId"
 				name="reportGroupByFields[0].fieldId"
 				onchange="javascript:groupByFieldRowCloner('^(reportGroupByFields).*(fieldId).*')">
-				<option label="" value="-1"></option>
+				<option label="" value="-1" selected></option>
 				<c:forEach var="fgroup" items="${fieldGroups}" varStatus="outer">
 					<c:forEach var="f" items="${fgroup.fields}" varStatus="inner">
 						<c:if test="${f != null }">

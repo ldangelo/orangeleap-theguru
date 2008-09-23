@@ -9,45 +9,31 @@ public class ReportChartSettings implements java.io.Serializable {
 
 	private String chartType;
 	
-	private long xAxisFieldId;
+	private long fieldId;
 	
-	private long yAxisFieldId;
-	
-	private String chartOperation;
-	
+	private String operation;
 	
 	public String getChartType() {
 		return chartType;
 	}
 
-	public void setChartType(String chartType) {
-		this.chartType = chartType;
+	public void setChartType(String value) {
+		this.chartType = value;
 	}
 	
-	public long getXAxisFieldId() {
-		return xAxisFieldId;
+	public long getFieldId() {
+		return fieldId;
 	}
 
-	public void setXAxisFieldId(long xAxisFieldId) {
-		this.xAxisFieldId = xAxisFieldId;
+	public void setFieldId(long value) {
+		this.fieldId = value;
 	}
 	
-	public long getYAxisFieldId() {
-		return yAxisFieldId;
+	public String getOperation() {
+		return operation;
 	}
 
-	public void setYAxisFieldId(long yAxisFieldId) {
-		this.yAxisFieldId = yAxisFieldId;
+	public void setOperation(String value) {
+		this.operation = value;
 	}
-	
-	public String getchartOperation() {
-		return chartOperation;
-	}
-
-	public void setchartOperation(String chartOperation) {
-		this.chartOperation = chartOperation;
-	}
-	
-	
-
 }

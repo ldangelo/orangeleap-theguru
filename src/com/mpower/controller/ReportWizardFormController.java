@@ -32,6 +32,7 @@ import com.mpower.domain.ReportDataSource;
 import com.mpower.domain.ReportDataSubSource;
 import com.mpower.domain.ReportField;
 import com.mpower.domain.ReportFieldGroup;
+import com.mpower.domain.ReportGroupByField;
 import com.mpower.domain.ReportWizard;
 import com.mpower.service.ReportFieldGroupService;
 import com.mpower.service.ReportFieldService;
@@ -139,7 +140,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 
 		Assert.notNull(request, "Request must not be null");
 
-		if (request.getParameter("_target11") != null) {
+		if (request.getParameter("_target12") != null) {
 			//
 			// We are saving this report to jasperserver
 			saveReport(wiz);
@@ -161,6 +162,12 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 			else
 				targetPage = 4;
 		}
+		if (targetPage == 8 && reportWizard.getReportType().compareTo("summary") != 0) {
+			if (currentPage == 7)
+				targetPage = 9;
+			else
+				targetPage = 7;			
+		}		
 		return targetPage;			
 	}
 	
@@ -287,14 +294,31 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 			
 		}
 
+		// chart options
+		if(page==8) {
+	  		List<ReportGroupByField> groupByFields = wiz.getReportGroupByFields();
+	  		Iterator itGroupByFields = groupByFields.iterator();
+	  		
+	  		//get list of groupby fields in order
+	  		List<ReportField> groupByFieldsList = new LinkedList<ReportField>();
+	  		while (itGroupByFields.hasNext()){
+	  			ReportGroupByField group = (ReportGroupByField) itGroupByFields.next();
+				if (group == null) continue;
+				ReportField f = reportFieldService.find(group.getFieldId());
+				if (f == null || f.getId() == -1) continue;
+				groupByFieldsList.add(f);
+	  		}
+			refData.put("reportGroupByFields", groupByFieldsList);
+		}
+		
 		// run a saved report
-		if (page==11) { 
+		if (page==12) { 
 			wiz.setReportPath("/Reports/Clementine/" + wiz.getReportName().replace(" ", "_"));
 			refData.put("reportPath", wiz.getReportPath());
 		}
 		
 		// running the report
-		if (page==12) { 
+		if (page==13) { 
 			@SuppressWarnings("unused")
 
 			
