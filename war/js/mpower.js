@@ -41,7 +41,7 @@ function groupByFieldRowCloner(regex) {
 		}
 	}
     if (addRow)
-    	addNewRow();
+    	addNewGroupByRow();
 }
 
 function callServer(name) {
@@ -75,6 +75,35 @@ function addNewRow(selector) {
 	newRow.removeClass("focused highlight");
 	$(selector).parent().append(newRow);
 	$(selector.deleteButton).click(function(){
+		deleteRow($(this).parent().parent());
+	});
+}
+
+function addNewGroupByRow() {
+	$(".tablesorter tr:last .deleteButton").show();
+	var newRow = $(".tablesorter tr:last").clone(true);
+	newRow.find(".deleteButton").hide();
+	var i = newRow.attr("rowindex");
+	var j = parseInt(i) + 1;
+	newRow.attr("rowindex",j);
+	var findExp = new RegExp("\\["+i+"\\]","gi");
+
+	newRow.find("input").each(function(){
+		var field = $(this);
+		var nameString = field.attr('name').replace(findExp, "["+j+"]");
+		field.attr('name',nameString);
+		field.val("");
+	});
+
+	newRow.find("select").each(function(){
+		var field = $(this);
+		var nameString = field.attr('name').replace(findExp, "["+j+"]");
+		field.attr('name',nameString);
+	});
+
+	newRow.removeClass("focused highlight");
+	$(".tablesorter").append(newRow);
+	$("#report_filters td .deleteButton").click(function(){
 		deleteRow($(this).parent().parent());
 	});
 }
