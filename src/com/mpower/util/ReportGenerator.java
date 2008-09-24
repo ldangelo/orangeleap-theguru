@@ -19,6 +19,7 @@ import net.sf.jasperreports.engine.JasperPrint;
 import com.jaspersoft.jasperserver.api.metadata.xml.domain.impl.ResourceDescriptor;
 import com.jaspersoft.jasperserver.irplugin.JServer;
 import com.mpower.domain.ReportAdvancedFilter;
+import com.mpower.domain.ReportChartSettings;
 import com.mpower.domain.ReportField;
 import com.mpower.domain.ReportFieldType;
 import com.mpower.domain.ReportGroupByField;
@@ -27,21 +28,19 @@ import com.mpower.domain.ReportWizard;
 import com.mpower.service.ReportFieldService;
 
 import ar.com.fdvs.dj.core.DJConstants;
-import ar.com.fdvs.dj.domain.AutoText;
 import ar.com.fdvs.dj.domain.ColumnsGroupVariableOperation;
+import ar.com.fdvs.dj.domain.DJChart;
+import ar.com.fdvs.dj.domain.DJChartOptions;
 import ar.com.fdvs.dj.domain.DynamicReport;
-import ar.com.fdvs.dj.domain.ImageBanner;
 import ar.com.fdvs.dj.domain.Style;
+import ar.com.fdvs.dj.domain.builders.ChartBuilderException;
 import ar.com.fdvs.dj.domain.builders.ColumnBuilder;
 import ar.com.fdvs.dj.domain.builders.ColumnBuilderException;
+import ar.com.fdvs.dj.domain.builders.DJChartBuilder;
 import ar.com.fdvs.dj.domain.builders.FastReportBuilder;
 import ar.com.fdvs.dj.domain.builders.GroupBuilder;
-import ar.com.fdvs.dj.domain.constants.Border;
-import ar.com.fdvs.dj.domain.constants.Font;
 import ar.com.fdvs.dj.domain.constants.GroupLayout;
-import ar.com.fdvs.dj.domain.constants.HorizontalAlign;
-import ar.com.fdvs.dj.domain.constants.Transparency;
-import ar.com.fdvs.dj.domain.constants.VerticalAlign;
+import ar.com.fdvs.dj.domain.constants.Page;
 import ar.com.fdvs.dj.domain.entities.ColumnsGroup;
 import ar.com.fdvs.dj.domain.entities.ColumnsGroupVariable;
 import ar.com.fdvs.dj.domain.entities.columns.AbstractColumn;
@@ -132,14 +131,19 @@ public class ReportGenerator {
 		
 		FastReportBuilder drb = new FastReportBuilder();
   		Integer margin = new Integer(20);
+  		Integer columnSpace = new Integer(10);
+  		
   		drb
   			.setTitleStyle(titleStyle)
   			.setTitle(reportTitle)					//defines the title of the report
  			.setDetailHeight(new Integer(15))
  			.setLeftMargin(margin).setRightMargin(margin).setTopMargin(margin).setBottomMargin(margin)
-//  			.setPrintBackgroundOnOddRows(true)
-  			.setGrandTotalLegendStyle(headerVariables)
-  			.setOddRowBackgroundStyle(oddRowStyle);
+ 			.setAllowDetailSplit(false);
+//  		.setPrintBackgroundOnOddRows(true)
+// 			.setGrandTotalLegendStyle(headerVariables)
+//  		.setOddRowBackgroundStyle(oddRowStyle)
+//  		.setColumnSpace(columnSpace)
+// 			.setPageSizeAndOrientation(Page.Page_Letter_Landscape());
 	
   		//create iterators
   		List<ReportField> fields = wiz.getSelectedReportFieldsInOrder();
@@ -173,9 +177,15 @@ public class ReportGenerator {
   		allColumns.addAll(groupByColumns);
   		allColumns.addAll(columnsOnly);
   		
+  		List<ColumnsGroup> groupBy = new LinkedList<ColumnsGroup>();
   		//Build Groups
-  		List<ColumnsGroup> groupBy = buildGroups(groupByColumns, columnsOnly, columnFieldsList);
+  		if (groupByColumns != null){
+  			groupBy = buildGroups(groupByColumns, columnsOnly, columnFieldsList);
+  		}
   		
+  		//Get the list of charts 
+  		List<DJChart> chartGroups = buildCharts(groupBy, allColumns, wiz, reportFieldService);
+  	
   		//Add Global footer variables to columns
   		drb = AddGlobalFooterVariables(fields, columnsOnly,drb);
   		
@@ -194,6 +204,17 @@ public class ReportGenerator {
 				drb.addGroup(group);
 			}
   		}
+  		
+  		//Add Charts
+ 		if (wiz.getReportType().compareTo("summary") == 0) {
+			Iterator itChartsBuilt = chartGroups.iterator();
+			while (itChartsBuilt.hasNext()){
+				DJChart chart = (DJChart) itChartsBuilt.next();
+				drb.addChart(chart);
+			}
+  		}
+
+  		//Set misc report options
   		drb.setIgnorePagination(true);
 		drb.setUseFullPageWidth(true);
 
@@ -439,7 +460,6 @@ public class ReportGenerator {
 		Iterator itGroupByColumns = groupByColumnsBuilt.iterator();
 		while (itGroupByColumns.hasNext()){
 			AbstractColumn column = (AbstractColumn) itGroupByColumns.next();
-			GroupBuilder groupBuilder = new GroupBuilder();
 			ColumnsGroup group = new ColumnsGroup();
 			group.setColumnToGroupBy((PropertyColumn) column);
 			group.setLayout(GroupLayout.DEFAULT);
@@ -480,6 +500,63 @@ public class ReportGenerator {
 		return cgvList;
 	}
 	
+	private List<DJChart> buildCharts(List<ColumnsGroup> groupByColumnsBuilt, List<AbstractColumn> allColumns, ReportWizard wiz,ReportFieldService reportFieldService) throws ChartBuilderException{
+		List<DJChart> chartsBuilt = new LinkedList<DJChart>();
+		List<ReportChartSettings> chartSettings = wiz.getReportChartSettings();
+		Iterator itChartSettings = chartSettings.iterator();
+		while (itChartSettings.hasNext()){
+			ReportChartSettings rcs = (ReportChartSettings) itChartSettings.next();
+			if (rcs.getChartType().compareTo("-1") == 0) continue; 
+			ReportField rfx = reportFieldService.find(rcs.getFieldIdx());
+			ColumnsGroup cg = getReportColumnsGroup(rfx, groupByColumnsBuilt);
+			ReportField rfy = reportFieldService.find(rcs.getFieldIdy());
+			List<AbstractColumn> columns = getReportAbstractColumn(rfy, allColumns);
+			
+			//DJChartBuilder cb = new DJChartBuilder(); 
+			DJChart chart = new DJChart();
+				DJChartOptions options = new DJChartOptions();
+				options.setPosition(DJChartOptions.POSITION_FOOTER);
+				options.setShowLabels(true);
+				chart.setOptions(options);
+				chart.setColumnsGroup(cg);
+				chart.setColumns(columns);
+				
+				//set chart type
+				if (rcs.getChartType().compareTo("Bar") == 0) chart.setType(DJChart.BAR_CHART);	
+				if (rcs.getChartType().compareTo("Pie") == 0) chart.setType(DJChart.PIE_CHART);
+				
+		        //set chart operation
+		        if (rcs.getOperation().compareTo("RecordCount") == 0) chart.setOperation(DJChart.CALCULATION_COUNT);
+		        if (rcs.getOperation().compareTo("Sum") == 0) chart.setOperation(DJChart.CALCULATION_SUM);
+		        						
+				chartsBuilt.add(chart);	
+		}//end while itChartSettings
+		return chartsBuilt;
+	}		
+
+	private List<AbstractColumn> getReportAbstractColumn(ReportField rfy, List<AbstractColumn> allColumns) {
+		List<AbstractColumn> columns = new LinkedList<AbstractColumn>();
+		Iterator itCol = allColumns.iterator();
+		while (itCol.hasNext()){
+			AbstractColumn column = (AbstractColumn) itCol.next();
+			if (rfy.getColumnName().compareToIgnoreCase(column.getName()) == 0){
+				columns.add(column);	
+			}
+		}
+		return columns;
+	}
+
+	private ColumnsGroup getReportColumnsGroup(ReportField rfx, List<ColumnsGroup> groupByColumnsBuilt) {
+		Iterator itGroupBy = groupByColumnsBuilt.iterator();
+		while (itGroupBy.hasNext()){
+			ColumnsGroup cg = (ColumnsGroup) itGroupBy.next();
+			if (rfx.getColumnName().compareToIgnoreCase(cg.getColumnToGroupBy().getName()) == 0){
+				return cg;	
+			}
+		}
+		return null;
+	}
+	
 	private FastReportBuilder AddGlobalFooterVariables(List<ReportField> fields, List<AbstractColumn> columnsBuilt, FastReportBuilder drb){
 	
 		//Iterate thru each of the fields to see if it is summarized  
@@ -487,27 +564,30 @@ public class ReportGenerator {
 		while (itFields.hasNext()){
 			ReportField f = (ReportField) itFields.next();
 			Iterator itColumnsBuilt = columnsBuilt.iterator();
-			while (itColumnsBuilt.hasNext()){
-				AbstractColumn column = (AbstractColumn) itColumnsBuilt.next();
-				if (f.getColumnName() == column.getName()){
-					if (f.getPerformSummary()){
-						drb.addGlobalFooterVariable(column, ColumnsGroupVariableOperation.SUM,headerVariables).setGrandTotalLegend("Total");
-						break;
-					}
-					if (f.getAverage()){
-						drb.addGlobalFooterVariable(column, ColumnsGroupVariableOperation.AVERAGE,headerVariables).setGrandTotalLegend("Average");
-						break;
-					}
-					if (f.getSmallestValue()){
-						drb.addGlobalFooterVariable(column, ColumnsGroupVariableOperation.LOWEST,headerVariables).setGrandTotalLegend("Min");
-						break;
-					}
-					if (f.getLargestValue()){
-						drb.addGlobalFooterVariable(column, ColumnsGroupVariableOperation.HIGHEST,headerVariables).setGrandTotalLegend("Max");
-						break;
-					}
-				}//end if column name = field name
-			}//end while itColumnsBuilt
+			//if the report field issummarized = true get the abstract column
+			if (f.getIsSummarized()){
+				while (itColumnsBuilt.hasNext()){
+					AbstractColumn column = (AbstractColumn) itColumnsBuilt.next();
+					if (f.getColumnName() == column.getName()){
+						if (f.getPerformSummary()){
+							drb.addGlobalFooterVariable(column, ColumnsGroupVariableOperation.SUM).setGrandTotalLegend("Total");
+							break;
+						}
+						if (f.getAverage()){
+							drb.addGlobalFooterVariable(column, ColumnsGroupVariableOperation.AVERAGE).setGrandTotalLegend("Average");
+							break;
+						}
+						if (f.getSmallestValue()){
+							drb.addGlobalFooterVariable(column, ColumnsGroupVariableOperation.LOWEST).setGrandTotalLegend("Min");
+							break;
+						}
+						if (f.getLargestValue()){
+							drb.addGlobalFooterVariable(column, ColumnsGroupVariableOperation.HIGHEST).setGrandTotalLegend("Max");
+							break;
+						}
+					}//end if column name = field name
+				}//end while itColumnsBuilt
+			}//end if isSummarized
 		}//end while itFields
 		return drb;
 	}
