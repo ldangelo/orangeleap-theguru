@@ -9,7 +9,9 @@ public class ReportChartSettings implements java.io.Serializable {
 
 	private String chartType;
 	
-	private long fieldId;
+	private long fieldIdx;
+	
+	private long fieldIdy;
 	
 	private String operation;
 	
@@ -21,12 +23,20 @@ public class ReportChartSettings implements java.io.Serializable {
 		this.chartType = value;
 	}
 	
-	public long getFieldId() {
-		return fieldId;
+	public long getFieldIdx() {
+		return fieldIdx;
 	}
 
-	public void setFieldId(long value) {
-		this.fieldId = value;
+	public void setFieldIdx(long value) {
+		this.fieldIdx = value;
+	}
+	
+	public long getFieldIdy() {
+		return fieldIdy;
+	}
+
+	public void setFieldIdy(long value) {
+		this.fieldIdy = value;
 	}
 	
 	public String getOperation() {

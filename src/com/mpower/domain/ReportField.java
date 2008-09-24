@@ -77,6 +77,7 @@ public class ReportField implements java.io.Serializable,
 
 	public void setPerformSummary(Boolean performSummary) {
 		this.performSummary = performSummary;
+		determineIsSummarized();
 	}
 
 	public Boolean getAverage() {
@@ -85,6 +86,7 @@ public class ReportField implements java.io.Serializable,
 
 	public void setAverage(Boolean average) {
 		this.average = average;
+		determineIsSummarized();
 	}
 
 	public Boolean getLargestValue() {
@@ -93,6 +95,7 @@ public class ReportField implements java.io.Serializable,
 
 	public void setLargestValue(Boolean largestValue) {
 		this.largestValue = largestValue;
+		determineIsSummarized();
 	}
 
 	public Boolean getSmallestValue() {
@@ -101,6 +104,7 @@ public class ReportField implements java.io.Serializable,
 
 	public void setSmallestValue(Boolean smallestValue) {
 		this.smallestValue = smallestValue;
+		determineIsSummarized();
 	}
 
 	@ManyToMany(cascade = CascadeType.ALL)
@@ -205,4 +209,11 @@ public class ReportField implements java.io.Serializable,
 		this.reportFieldGroup = reportFieldGroup;
 	}
 
+	public void determineIsSummarized() {
+		if (average || performSummary || largestValue || smallestValue)
+			setIsSummarized(true);
+		else
+			setIsSummarized(false);
+	}
+	
 }

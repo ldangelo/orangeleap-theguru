@@ -310,6 +310,18 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 				groupByFieldsList.add(f);
 	  		}
 			refData.put("reportGroupByFields", groupByFieldsList);
+			
+	  		List<ReportField> fields = wiz.getSelectedReportFieldsInOrder();
+	  		Iterator itSummarizedByFields = fields.iterator();
+	  		
+	  		//get list of summarized fields
+	  		List<ReportField> summarizedFieldsList = new LinkedList<ReportField>();
+	  		while (itSummarizedByFields.hasNext()){
+	  			ReportField field = (ReportField) itSummarizedByFields.next();
+	  			if (field.getIsSummarized())
+	  				summarizedFieldsList.add(field);
+	  		}
+			refData.put("reportSummarizedByFields", summarizedFieldsList);			
 		}
 		
 		// run a saved report
