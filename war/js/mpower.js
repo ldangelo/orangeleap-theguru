@@ -1,8 +1,8 @@
 $(document).ready(function()
    {
 	rowCloner("#report_advanced_filters tr:last");
-//	rowCloner("#report_standard_filters tr:last");
-	$("#report_advnaced_filters td .deleteButton").click(function(){
+	
+	$("#report_filters td .deleteButton").click(function(){
 		deleteRow($(this).parent().parent());
 	});
 	
