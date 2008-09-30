@@ -8,7 +8,7 @@
 <h3>Filter Information</h3>
 <Table>
 <h1>Standard Filters</h1>
-	<Table id="report_standard_filters" class="tablesorter">
+	<Table id="report_standard_filters" >
 <TR><TH>Fields</TH><TH>Duration</TH></TR>
 <TR>
 <TD>
@@ -56,13 +56,14 @@
 <option label="Current And Previous" value="19">Current and Previous CW</option>
 </optgroup>
 <optgroup label="Calendar Day">
-<option label="Today" value="20">Today CD</option>
-<option label="Yesterday" value="22">Yesterday CD</option>
-<option label="Last 30" value="23">Last 30 CD</option>
-<option label="Yesterday" value="24">Last 60 CD</option>
-<option label="Yesterday" value="25">Last 90 CD</option>
-<option label="Yesterday" value="26">Last 120 CD</option>
-<option label="Yesterday" value="27">Last 7 CD</option>
+<option label="Today CD" value="20">Today CD</option>
+<option label="Yesterday CD" value="22">Yesterday CD</option>
+<option label="Last 7 CD" value="27">Last 7 CD</option>
+<option label="Last 30 CD" value="23">Last 30 CD</option>
+<option label="Last 60 CD" value="24">Last 60 CD</option>
+<option label="Last 90 CD" value="25">Last 90 CD</option>
+<option label="Last 120 CD" value="26">Last 120 CD</option>
+
 </optgroup>
 </SELECT>
 </TD>
