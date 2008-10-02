@@ -87,6 +87,9 @@ public class ReportWizard implements java.io.Serializable {
 	@Transient
 	private List<ReportChartSettings> reportChartSettings;
 	
+	@Transient
+	private ReportCrossTabFields reportCrossTabFields;
+	
 	@Column(name = "REPORT_TYPE")
 	private String reportType;
 	private Boolean recordCount;
@@ -119,6 +122,10 @@ public class ReportWizard implements java.io.Serializable {
 	
 	public List<ReportChartSettings> getReportChartSettings() {
 		return reportChartSettings;
+	}
+	
+	public ReportCrossTabFields getReportCrossTabFields() {
+		return reportCrossTabFields;
 	}
 	
 	public ReportDataSource getDataSource() {
@@ -209,6 +216,10 @@ public class ReportWizard implements java.io.Serializable {
 	public void setReportChartSettings(List<ReportChartSettings> reportChartSettings) {
 		this.reportChartSettings = reportChartSettings;
 	}	
+	
+	public void setReportCrossTabFields(ReportCrossTabFields reportCrossTabFields) {
+		this.reportCrossTabFields = reportCrossTabFields;
+	}
 	
 	public void setDataSource(ReportDataSource src) {
 		logger.info("**** in setSrc()");
@@ -325,6 +336,22 @@ public class ReportWizard implements java.io.Serializable {
 		return result;
 	}
 	
+	public Boolean IsFieldChartField(long fieldId) {
+		Boolean result = false;
+		if (reportGroupByFields != null)
+		{
+			Iterator iteratorReportGroupByFields = reportGroupByFields.iterator();
+			while(iteratorReportGroupByFields.hasNext()) {
+				ReportGroupByField  reportGroupByField = (ReportGroupByField) iteratorReportGroupByFields.next();
+				if (reportGroupByField != null && reportGroupByField.fieldId == fieldId) {
+					result = true;
+					break;
+				}
+			}
+		}
+		return result;
+	}
+	
 	public String getReportPath() {
 		return reportPath;
 	}
@@ -339,5 +366,20 @@ public class ReportWizard implements java.io.Serializable {
 
 	public void setStandardFilters(List<ReportStandardFilter> standardFilters) {
 		this.standardFilters = standardFilters;
+	}
+	public ReportField getReportFieldByColumnName(String columnName) {
+		ReportField result = new ReportField();
+		if (fields != null)
+		{
+			Iterator iteratorReportFields = fields.iterator();
+			while(iteratorReportFields.hasNext()) {
+				ReportField  reportField = (ReportField) iteratorReportFields.next();
+				if (reportField != null && reportField.getColumnName() == columnName) {
+					result = reportField;
+					break;
+				}
+			}
+		}
+		return result;
 	}
 }
