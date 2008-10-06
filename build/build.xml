@@ -78,6 +78,16 @@
 	     	<!-- Add development data -->
 	     	<transaction src="${basedir}/db/prod/domain/reports.sql"/>
 	     </sql>
+		
+	     <sql driver="${mysql.db.driver}"
+	          url="${mysql.db.url}"
+	          userid="${mysql.db.user}"
+	          password="${mysql.db.pw}"
+	          encoding="UTF-8"
+	          classpath="${mysql.db.classpath}"
+	     	  delimiter="$$">
+	     	<transaction src="${basedir}/db/prod/domain/functions.sql"/>
+	     </sql>		
 	</target>
 
 	<target name="app.synch" description="Synchs the XMHTML, JSP, JS, CSS, and Images of the project with a running application.">

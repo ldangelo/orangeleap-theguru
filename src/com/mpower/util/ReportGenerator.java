@@ -221,7 +221,21 @@ public class ReportGenerator {
 
 		//Build query
 		@SuppressWarnings("unused")
-		String query = "SELECT * FROM " + wiz.getDataSubSource().getViewName();
+		String query = "SELECT";
+		List<ReportField> selectedReportFields = getSelectedReportFields(wiz, reportFieldService);
+		Iterator itSelectedReportFields = selectedReportFields.iterator();
+		boolean addComma = false;
+		while (itSelectedReportFields.hasNext()) {
+			ReportField selectedField = (ReportField) itSelectedReportFields.next();
+			if (addComma)
+				query = query + ",";
+			else
+				addComma = true;
+			
+			query = query + " " + selectedField.getColumnName();
+		}
+		
+		query = query + " FROM " + wiz.getDataSubSource().getViewName();
 		
 		if (wiz.getRowCount() != -1)
 			query += " LIMIT 0," + wiz.getRowCount().toString();
@@ -394,7 +408,7 @@ public class ReportGenerator {
 			Iterator itRptGroupByFields = rptGroupByFields.iterator();
 			
 			if (itRptGroupByFields != null){
-				boolean addComma = false;
+				addComma = false;
 				while (itRptGroupByFields.hasNext()){
 					ReportGroupByField groupByField = (ReportGroupByField) itRptGroupByFields.next();
 					if (groupByField != null) {						
@@ -423,6 +437,31 @@ public class ReportGenerator {
 		DynamicReport dr = drb.build();
 
 		return dr;
+	}
+	
+	private List<ReportField> getSelectedReportFields(ReportWizard wiz, ReportFieldService reportFieldService) {
+  		List<ReportField> fields = wiz.getSelectedReportFieldsInOrder();
+  		Iterator itFields = fields.iterator();
+  		List<ReportGroupByField> groupByFields = wiz.getReportGroupByFields();
+  		Iterator itGroupByFields = groupByFields.iterator();
+
+  		List<ReportField> selectedReportFieldsList = new LinkedList<ReportField>();
+  		while (itGroupByFields.hasNext()){
+  			ReportGroupByField group = (ReportGroupByField) itGroupByFields.next();
+			if (group == null) continue;
+			ReportField f = reportFieldService.find(group.getFieldId());
+			if (f == null || f.getId() == -1) continue;
+			selectedReportFieldsList.add(f);
+  		}
+  		
+  		//get a list of all remaining columns selected fields(excluding groupby columns)
+  		while (itFields.hasNext()){
+  			ReportField f = (ReportField) itFields.next();
+			if (f == null || f.getId() == -1 || wiz.IsFieldGroupByField(f.getId())) continue;
+			selectedReportFieldsList.add(f);
+  		}
+  		
+  		return selectedReportFieldsList; 
 	}
 	
 	private List<AbstractColumn> buildColumns(List<ReportField> fields)throws ColumnBuilderException{
