@@ -61,7 +61,7 @@ insert into REPORTFIELD values(26,b'0',b'1','VALUE','Gift Amount',b'1',b'0',b'0'
 insert into REPORTFIELD values(27,b'0',b'1','AMOUNT','Gift Distribution Amount',b'1',b'0',b'0',b'0',b'0',b'0',5);
 insert into REPORTFIELD values(28,b'0',b'0','MOTIVATION_CODE','Motivation Code',b'1',b'0',b'0',b'0',b'0',b'0',0);
 insert into REPORTFIELD values(29,b'0',b'0','PROJECT_CODE','Project Code',b'1',b'0',b'0',b'0',b'0',b'0',0);
-
+insert into REPORTFIELD values(30,b'0',b'0','GETPERSONCUSTOMFIELD(PERSON_ID, ''DOGNAME'')','Dog Name',b'1',b'0',b'0',b'0',b'0',b'0',0);
 
 -- Account Number in People General
 insert into REPORTFIELD_REPORTFIELDGROUP values(1,1,2,1);
@@ -113,6 +113,8 @@ insert into REPORTFIELD_REPORTFIELDGROUP values(27,6,20,27);
 insert into REPORTFIELD_REPORTFIELDGROUP values(28,6,21,28);
 -- Project Code into gift distribution
 insert into REPORTFIELD_REPORTFIELDGROUP values(29,6,22,29);
+-- Dog Name into People General
+insert into REPORTFIELD_REPORTFIELDGROUP values(30,3,2,30);
 
 
 -- Drop views if they already exists
