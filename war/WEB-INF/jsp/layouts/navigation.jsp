@@ -51,7 +51,12 @@
 </c:when>
 
 <c:when test="${page == 3}">
-	 Step ${page+1} of ${maxpages+1}: Select fields to group by
+		<c:if test='${reportType == "summary" }'>
+			 Step ${page+1} of ${maxpages+1}: Select fields to group by
+		</c:if>
+		<c:if test='${reportType == "matrix" }'>
+			 Step ${page+1} of ${maxpages+1}: Select matrix report options
+		</c:if>	
 </c:when>
 
 <c:when test="${page == 4}">

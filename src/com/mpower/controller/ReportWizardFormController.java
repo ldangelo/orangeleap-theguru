@@ -166,13 +166,13 @@ public class ReportWizardFormController extends AbstractWizardFormController {
             int currentPage) {
 		ReportWizard reportWizard = (ReportWizard)command;
 		int targetPage = super.getTargetPage(request, command, errors, currentPage);
-		if (targetPage == 3 && reportWizard.getReportType().compareTo("summary") != 0) {
+		if (targetPage == 3 && reportWizard.getReportType().compareTo("summary") != 0 && reportWizard.getReportType().compareTo("matrix") != 0) {
 			if (currentPage == 4)
 				targetPage = 2;
 			else
 				targetPage = 4;
 		}
-		if (targetPage == 8 && reportWizard.getReportType().compareTo("summary") != 0) {
+		if (targetPage == 8 && reportWizard.getReportType().compareTo("summary") != 0 && reportWizard.getReportType().compareTo("matrix") != 0) {
 			if (currentPage == 7)
 				targetPage = 9;
 			else
@@ -247,6 +247,8 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		//
 		// Report Group By Fields
 		if (page == 3) {
+			refData.put("reportType", wiz.getReportType());
+			
 			ReportDataSubSource rdss = reportSubSourceService.find(wiz.getSubSourceId());
 			List<ReportFieldGroup>    lrfg = reportFieldGroupService.readFieldGroupBySubSourceId(rdss.getId());
 			
