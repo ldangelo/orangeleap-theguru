@@ -1,6 +1,7 @@
 package com.mpower.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.Statement;
 import java.util.HashMap;
@@ -14,6 +15,12 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
+import javax.xml.parsers.*;
+
+import net.sf.jasperreports.crosstabs.JRCrosstab;
+import net.sf.jasperreports.engine.JRChild;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.xml.JRXmlWriter;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -22,6 +29,8 @@ import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractWizardFormController;
+import org.w3c.dom.*;
+import org.xml.sax.SAXException;
 
 import ar.com.fdvs.dj.core.DynamicJasperHelper;
 import ar.com.fdvs.dj.core.layout.ClassicLayoutManager;
@@ -43,6 +52,7 @@ import com.mpower.service.ReportWizardService;
 import com.mpower.service.SessionService;
 import com.mpower.util.ReportGenerator;
 import com.mpower.view.DynamicReportView;
+import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
 
 public class ReportWizardFormController extends AbstractWizardFormController {
 	private ReportSubSourceService  reportSubSourceService;
@@ -349,6 +359,10 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 			File tempFile = File.createTempFile("wiz", ".jrxml");
 			DynamicJasperHelper.generateJRXML(dr,new ClassicLayoutManager(), reportGenerator.getParams(), null, tempFile.getPath());
 
+			// TODO - only need to remove the cross tab data subset on matrix reports
+			//if (wiz.getReportType().compareToIgnoreCase("matrix") == 0)
+				removeCrossTabDataSubset(tempFile.getPath());
+
 			//
 			// save the report to the server
 			reportGenerator.put(ResourceDescriptor.TYPE_REPORTUNIT, tempFile.getName(), tempFile.getName(), tempFile.getName(), "/Reports/Clementine/Temp", tempFile,reportGenerator.getParams());
@@ -373,6 +387,10 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		File tempFile = File.createTempFile("wiz", ".jrxml");
 		DynamicJasperHelper.generateJRXML(dr,new ClassicLayoutManager(), reportGenerator.getParams(), null, tempFile.getPath());
 
+		// TODO - only need to remove the cross tab data subset on matrix reports
+		//if (wiz.getReportType().compareToIgnoreCase("matrix") == 0)
+			removeCrossTabDataSubset(tempFile.getPath());
+		
 		String reportTitle = wiz.getDataSubSource().getDisplayName() + " Custom Report";
 		if (wiz.getReportName() != null && wiz.getReportName().length() > 0)
 			reportTitle = wiz.getReportName();
@@ -419,6 +437,33 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		tempFile.delete();
 	}
 
+	public void removeCrossTabDataSubset(String fileName) throws ParserConfigurationException, SAXException, IOException {
+		// Load the report xml document
+	    DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+	    DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+	    Document document = documentBuilder.parse(new File(fileName));
+	    // Remove datasetRun element from the report xml
+	    removeAll(document, Node.ELEMENT_NODE, "datasetRun");
+	    document.normalize();
+	    // Save the xml back to the temp file
+	    XMLSerializer serializer = new XMLSerializer();
+	    serializer.setOutputCharStream(new java.io.FileWriter(fileName));
+	    serializer.serialize(document);	     
+	}
+
+	public static void removeAll(Node node, short nodeType, String name) {
+        if (node.getNodeType() == nodeType &&
+                (name == null || node.getNodeName().equals(name))) {
+            node.getParentNode().removeChild(node);
+        } else {
+            // Visit the children
+            NodeList list = node.getChildNodes();
+            for (int i=0; i<list.getLength(); i++) {
+                removeAll(list.item(i), nodeType, name);
+            }
+        }
+    }
+	
 	public void setDynamicView(DynamicReportView dynamicView) {
 		this.dynamicView = dynamicView;
 	}
