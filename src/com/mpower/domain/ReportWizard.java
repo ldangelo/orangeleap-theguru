@@ -110,6 +110,7 @@ public class ReportWizard implements java.io.Serializable {
 		standardFilters = LazyList.decorate(new ArrayList<ReportStandardFilter>(),FactoryUtils.instantiateFactory(ReportStandardFilter.class));
 		reportGroupByFields = LazyList.decorate(new ArrayList<ReportGroupByField>(),FactoryUtils.instantiateFactory(ReportGroupByField.class));
 		reportChartSettings = LazyList.decorate(new ArrayList<ReportChartSettings>(),FactoryUtils.instantiateFactory(ReportChartSettings.class));
+		reportCrossTabFields = new ReportCrossTabFields();
 	}
 
 	public List<ReportAdvancedFilter> getAdvancedFilters() {
@@ -301,8 +302,10 @@ public class ReportWizard implements java.io.Serializable {
 		}
 		
 		// if no fields are selected, use the default fields
-		if (fieldList.size() == 0){ 
-			fieldList = getDefaultReportFields();
+		if (this.getReportType().compareToIgnoreCase("matrix") != 0) {
+			if (fieldList.size() == 0){ 
+				fieldList = getDefaultReportFields();
+			}
 		}
 		return fieldList;
 	}
@@ -374,7 +377,7 @@ public class ReportWizard implements java.io.Serializable {
 			Iterator iteratorReportFields = fields.iterator();
 			while(iteratorReportFields.hasNext()) {
 				ReportField  reportField = (ReportField) iteratorReportFields.next();
-				if (reportField != null && reportField.getColumnName() == columnName) {
+				if (reportField != null && reportField.getColumnName().compareToIgnoreCase(columnName) == 0) {
 					result = reportField;
 					break;
 				}

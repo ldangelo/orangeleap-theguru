@@ -6,9 +6,13 @@ import java.util.List;
 import org.apache.commons.collections.FactoryUtils;
 import org.apache.commons.collections.list.LazyList;
 
+import ar.com.fdvs.dj.domain.ColumnsGroupVariableOperation;
+
 public class ReportCrossTabFields implements java.io.Serializable {
 	
 	public ReportCrossTabFields() {
+		this.reportCrossTabMeasure = -1;
+		this.reportCrossTabOperation = new String();
 		reportCrossTabRows = LazyList.decorate(new ArrayList<ReportGroupByField>(),FactoryUtils.instantiateFactory(ReportGroupByField.class));
 		reportCrossTabColumns = LazyList.decorate(new ArrayList<ReportGroupByField>(),FactoryUtils.instantiateFactory(ReportGroupByField.class));
 	}
@@ -17,10 +21,30 @@ public class ReportCrossTabFields implements java.io.Serializable {
 	 */
 	private static final long serialVersionUID = 1714845278538209085L;
 
+	private long reportCrossTabMeasure;
+	
+	private String reportCrossTabOperation;
+	
 	private List<ReportGroupByField> reportCrossTabRows;
 	
 	private List<ReportGroupByField> reportCrossTabColumns;
 	
+
+	public long getReportCrossTabMeasure() {
+		return reportCrossTabMeasure;
+	}
+
+	public void setReportCrossTabMeasure(long value) {
+		this.reportCrossTabMeasure = value;
+	}
+
+	public String getReportCrossTabOperation() {
+		return reportCrossTabOperation;
+	}
+
+	public void setReportCrossTabOperation(String value) {
+		this.reportCrossTabOperation = value;
+	}
 	
 	public List<ReportGroupByField> getReportCrossTabRows() {
 		return reportCrossTabRows;

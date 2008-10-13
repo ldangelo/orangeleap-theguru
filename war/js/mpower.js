@@ -1,6 +1,8 @@
 $(document).ready(function()
    {
 	rowCloner("#report_advanced_filters tr:last");
+	rowCloner("#report_matrixrows tr:last");
+	rowCloner("#report_matrixColumns tr:last");
 	
 	$("#report_filters td .deleteButton").click(function(){
 		deleteRow($(this).parent().parent());

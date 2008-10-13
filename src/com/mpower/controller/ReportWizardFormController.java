@@ -172,7 +172,22 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 			else
 				targetPage = 4;
 		}
-		if (targetPage == 8 && reportWizard.getReportType().compareTo("summary") != 0 && reportWizard.getReportType().compareTo("matrix") != 0) {
+
+		//
+		//Matrix Report Navigation
+		//skip to filters
+		if (targetPage == 4 && reportWizard.getReportType().compareTo("matrix") == 0) {
+			if (currentPage == 3)
+				targetPage = 7;
+		}
+		//go back from filters to Matrix Settings
+		if (targetPage == 6 && reportWizard.getReportType().compareTo("matrix") == 0) {
+			if (currentPage == 7)
+				targetPage = 3;
+		}
+
+		//skip chart settings for tabular and matrix reports
+		if (targetPage == 8 && reportWizard.getReportType().compareTo("summary") != 0 ) {
 			if (currentPage == 7)
 				targetPage = 9;
 			else
@@ -245,9 +260,11 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		}
 
 		//
-		// Report Group By Fields
+		// Report Group By Fields and Matrix Report
 		if (page == 3) {
-			refData.put("reportType", wiz.getReportType());
+			String reportType = wiz.getReportType();
+			refData.put("reportType", reportType);
+			
 			
 			ReportDataSubSource rdss = reportSubSourceService.find(wiz.getSubSourceId());
 			List<ReportFieldGroup>    lrfg = reportFieldGroupService.readFieldGroupBySubSourceId(rdss.getId());
@@ -265,6 +282,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 				ReportFieldGroup rfg = (ReportFieldGroup) itGroup.next();
 				fields.addAll(reportFieldService.readFieldByGroupId(rfg.getId()));
 			}
+			
 			wiz.setFields(fields);
 			refData.put("fields", fields);
 		}
@@ -361,8 +379,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 			File tempFile = File.createTempFile("wiz", ".jrxml");
 			DynamicJasperHelper.generateJRXML(dr,new ClassicLayoutManager(), reportGenerator.getParams(), null, tempFile.getPath());
 
-			// TODO - only need to remove the cross tab data subset on matrix reports
-			//if (wiz.getReportType().compareToIgnoreCase("matrix") == 0)
+			if (wiz.getReportType().compareToIgnoreCase("matrix") == 0)
 				removeCrossTabDataSubset(tempFile.getPath());
 
 			//
@@ -446,6 +463,10 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 	    Document document = documentBuilder.parse(new File(fileName));
 	    // Remove datasetRun element from the report xml
 	    removeAll(document, Node.ELEMENT_NODE, "datasetRun");
+	    // Remove detail element from the report xml
+	    removeAll(document, Node.ELEMENT_NODE, "detail");
+	    // Remove detail element from the report xml
+	    removeAll(document, Node.ELEMENT_NODE, "columnHeader");
 	    document.normalize();
 	    // Save the xml back to the temp file
 	    XMLSerializer serializer = new XMLSerializer();
