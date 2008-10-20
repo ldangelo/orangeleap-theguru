@@ -17,8 +17,7 @@
 		
 		<TR rowIndex="0">
 			<TD><SELECT id="reportCrossTabFields.reportCrossTabRows[0].fieldId"
-				name="reportCrossTabFields.reportCrossTabRows[0].fieldId"
-<!-- 			onchange="javascript:groupByFieldRowCloner('^(reportCrossTabFields).*(reportCrossTabRows).*(fieldId).*')"> -->
+				name="reportCrossTabFields.reportCrossTabRows[0].fieldId">
 				<option label="" value="-1" selected></option>
 				<c:forEach var="fgroup" items="${fieldGroups}" varStatus="outer">
 					<c:forEach var="f" items="${fgroup.fields}" varStatus="inner">
@@ -59,8 +58,7 @@
 		
 		<TR rowIndex="0">
 			<TD><SELECT id="reportCrossTabFields.reportCrossTabColumns[0].fieldId"
-				name="reportCrossTabFields.reportCrossTabColumns[0].fieldId"
-<!--  				onchange="javascript:groupByFieldRowCloner('^(reportCrossTabFields).*(reportCrossTabColumns).*(fieldId).*')">-->
+				name="reportCrossTabFields.reportCrossTabColumns[0].fieldId">
 				<option label="" value="-1" selected></option>
 				<c:forEach var="fgroup" items="${fieldGroups}" varStatus="outer">
 					<c:forEach var="f" items="${fgroup.fields}" varStatus="inner">

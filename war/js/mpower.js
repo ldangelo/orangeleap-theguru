@@ -1,6 +1,10 @@
 $(document).ready(function()
    {
+	
+	/* This code block is your window.onload.  Please don't set window.onload directly. */
+	
 	rowCloner("#report_advanced_filters tr:last");
+	rowCloner("#report_groupbyfields tr:last");
 	rowCloner("#report_matrixrows tr:last");
 	rowCloner("#report_matrixColumns tr:last");
 	
@@ -8,16 +12,10 @@ $(document).ready(function()
 		deleteRow($(this).parent().parent());
 	});
 	
-	$("#report_groupbyfields td .deleteButton").click(function(){
-		deleteRow($(this).parent().parent());
-	});
+	updateList(document.getElementById("move"), document.getElementById("newList"));
 	
    }
 );
-
-window.onload = function() {
-	updateList(document.getElementById('move'), document.getElementById('newList'));
-}
 
 function rowCloner(selector) {
 	$(selector).one("change",function(event){
@@ -28,24 +26,6 @@ function rowCloner(selector) {
 	});
 }
 
-function groupByFieldRowCloner(regex) {
-	var addRow = true;
-	re = new RegExp(regex);
-	for(i = 0; i < document.forms[0].elements.length; i++) {
-		elm = document.forms[0].elements[i];
-		if (elm.type == 'select-one') {
-			if (re.test(elm.name)) {
-				if (elm.value == -1) {
-					addRow = false;
-					break;
-				}
-			}
-		}
-	}
-    if (addRow)
-    	addNewGroupByRow();
-}
-
 function callServer(name) {
     Hello.greet(name, callback);
 }
@@ -53,37 +33,10 @@ function callback(data) {
     alert("AJAX Response:" + data);
 }
 function addNewRow(selector) {
-	$(selector).children("#deleteButton").show();
+	$(selector).find(".deleteButton").click(function(){
+			deleteRow($(this).parent().parent());
+		}).show();
 	var newRow = $(selector).clone(true);
-	newRow.children("deleteButton").hide();
-	var i = newRow.attr("rowindex");
-	var j = parseInt(i) + 1;
-	newRow.attr("rowindex",j);
-	var findExp = new RegExp("\\["+i+"\\]","gi");
-
-	newRow.find("input").each(function(){
-		var field = $(this);
-		var nameString = field.attr('name').replace(findExp, "["+j+"]");
-		field.attr('name',nameString);
-		field.val("");
-	});
-
-	newRow.find("select").each(function(){
-		var field = $(this);
-		var nameString = field.attr('name').replace(findExp, "["+j+"]");
-		field.attr('name',nameString);
-	});
-
-	newRow.removeClass("focused highlight");
-	$(selector).parent().append(newRow);
-	$(selector.deleteButton).click(function(){
-		deleteRow($(this).parent().parent());
-	});
-}
-
-function addNewGroupByRow() {
-	$(".tablesorter tr:last .deleteButton").show();
-	var newRow = $(".tablesorter tr:last").clone(true);
 	newRow.find(".deleteButton").hide();
 	var i = newRow.attr("rowindex");
 	var j = parseInt(i) + 1;
@@ -104,10 +57,7 @@ function addNewGroupByRow() {
 	});
 
 	newRow.removeClass("focused highlight");
-	$(".tablesorter").append(newRow);
-	$("#report_filters td .deleteButton").click(function(){
-		deleteRow($(this).parent().parent());
-	});
+	$(selector).parent().append(newRow);
 }
 
 function deleteRow(row) {

@@ -218,17 +218,17 @@ public class ReportGenerator {
  			Iterator itRow = rowFields.iterator();
  			while (itRow.hasNext()){
  				ReportGroupByField fGroupBy = (ReportGroupByField) itRow.next();
- 				if (fGroupBy.getFieldId() != -1){
+ 				if (fGroupBy != null && fGroupBy.getFieldId() != -1 ){
  					ReportField f = reportFieldService.find(fGroupBy.getFieldId());
  					reportFieldsOrderedList.add(f);
- 	 			}
+ 	 			}	
  			}
  			//Add Column Fields
  			List<ReportGroupByField> colFields = wiz.getReportCrossTabFields().getReportCrossTabColumns();
  			Iterator itCol = colFields.iterator();
  			while (itCol.hasNext()){
  				ReportGroupByField fGroupBy = (ReportGroupByField) itCol.next();
- 				if (fGroupBy.getFieldId() != -1){
+ 				if (fGroupBy != null && fGroupBy.getFieldId() != -1){
  					ReportField f = reportFieldService.find(fGroupBy.getFieldId());
  					reportFieldsOrderedList.add(f);
  	 			}
@@ -365,7 +365,7 @@ public class ReportGenerator {
 			ReportAdvancedFilter filter = (ReportAdvancedFilter) itFilter
 					.next();
 			
-			if (filter.getFieldId() == -1) break; // this is an empty filter
+			if (filter == null || filter.getFieldId() == -1) continue; // this is an empty filter
 			ReportField rf = reportFieldService.find(filter.getFieldId());
 
 
@@ -591,7 +591,7 @@ public class ReportGenerator {
 		Iterator itCTRows  = reportCrossTabRows.iterator();
 		while (itCTRows.hasNext()){
 			ReportGroupByField ctRow = (ReportGroupByField) itCTRows.next();
-			if (ctRow.getFieldId() != -1){
+			if (ctRow != null && ctRow.getFieldId() != -1){
 				ReportField fRow = reportFieldService.find(ctRow.getFieldId());
 				valueClassName = getValueClassName(fRow);
 				DJCrosstabRow row = new CrosstabRowBuilder().setProperty(fRow.getColumnName(),valueClassName)
@@ -609,7 +609,7 @@ public class ReportGenerator {
 		Iterator itCTCols  = reportCrossTabColumns.iterator();
 		while (itCTCols.hasNext()){
 			ReportGroupByField ctCol = (ReportGroupByField) itCTCols.next();
-			if (ctCol.getFieldId() != -1){
+			if (ctCol != null && ctCol.getFieldId() != -1){
 				ReportField fCol = reportFieldService.find(ctCol.getFieldId());
 				valueClassName = getValueClassName(fCol);
 				DJCrosstabColumn col = new CrosstabColumnBuilder().setProperty(fCol.getColumnName(),valueClassName)
