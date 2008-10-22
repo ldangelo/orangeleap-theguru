@@ -46,7 +46,7 @@ public class ReportDataSubSource implements java.io.Serializable,
 	
 	@Column(name = "VIEW_NAME")
 	private String viewName;
-	
+
 	@ManyToOne( cascade=CascadeType.ALL)
 	@IndexColumn(name="REPORTSOURCE_ID")
 	private ReportDataSource reportDataSource;
@@ -58,7 +58,12 @@ public class ReportDataSubSource implements java.io.Serializable,
 	// private ReportAdvancedFilter advancedFilter;
 	// private Integer rowCount;
 
+	@Column(name = "DATABASE_TYPE")
+	private ReportDatabaseType databaseType;
 
+	@Column(name = "JASPER_DATASOURCE_NAME")
+	private String jasperDatasourceName;
+	
 	public ReportDataSubSource(ReportDataSubSource reportDataSubSource) {
 		displayName      = reportDataSubSource.displayName;
 		viewName         = reportDataSubSource.viewName;
@@ -111,5 +116,21 @@ public class ReportDataSubSource implements java.io.Serializable,
 
 	public void setReportDataSource(ReportDataSource reportDataSouce) {
 		this.reportDataSource = reportDataSouce;
+	}
+
+	public void setDatabaseType(ReportDatabaseType databaseType) {
+		this.databaseType = databaseType;
+	}
+
+	public ReportDatabaseType getDatabaseType() {
+		return databaseType;
+	}
+
+	public void setJasperDatasourceName(String jasperDatasourceName) {
+		this.jasperDatasourceName = jasperDatasourceName;
+	}
+
+	public String getJasperDatasourceName() {
+		return jasperDatasourceName;
 	}
 }

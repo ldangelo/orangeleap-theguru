@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -21,6 +22,7 @@ import com.jaspersoft.jasperserver.irplugin.JServer;
 import com.mpower.domain.ReportAdvancedFilter;
 import com.mpower.domain.ReportChartSettings;
 import com.mpower.domain.ReportCrossTabFields;
+import com.mpower.domain.ReportDatabaseType;
 import com.mpower.domain.ReportField;
 import com.mpower.domain.ReportFieldType;
 import com.mpower.domain.ReportGroupByField;
@@ -157,7 +159,6 @@ public class ReportGenerator {
 //			.setGrandTotalLegendStyle(headerVariables)
 //			.setOddRowBackgroundStyle(oddRowStyle)
 //			.setPageSizeAndOrientation(Page.Page_Letter_Landscape());
-  		
  		//list used in for select statement of the query
  		List<ReportField> reportFieldsOrderedList = new LinkedList();
  		//
@@ -256,114 +257,11 @@ public class ReportGenerator {
   		//
 		//Build query
   		//
-		@SuppressWarnings("unused")
-		String query = "SELECT";
-		//List<ReportField> selectedReportFields = getSelectedReportFields(wiz, reportFieldService);
-		Iterator itSelectedReportFields = reportFieldsOrderedList.iterator();
-		boolean addComma = false;
-		while (itSelectedReportFields.hasNext()) {
-			ReportField selectedField = (ReportField) itSelectedReportFields.next();
-			if (addComma)
-				query = query + ",";
-			else
-				addComma = true;
-			
-			query = query + " " + selectedField.getColumnName();
-		}
-		
-		query = query + " FROM " + wiz.getDataSubSource().getViewName();
-		
-		Boolean bWhere = false;
-		
-		//
-		// Add any 'filters'
-		List<ReportStandardFilter> standardFilters = wiz.getStandardFilters();
-		Iterator itStandardFilters = standardFilters.iterator();
+		ReportQueryGenerator reportQueryGenerator = new ReportQueryGenerator(wiz, reportFieldService, reportFieldsOrderedList);
+		String query = reportQueryGenerator.getQueryString(); 
 		
 		List<ReportAdvancedFilter> filters = wiz.getAdvancedFilters();
 		Iterator itFilter = filters.iterator();
-		while (itStandardFilters.hasNext()) {
-			ReportStandardFilter filter = (ReportStandardFilter) itStandardFilters.next();
-			if (filter.getFieldId() == -1) break; // this is an empty filter
-			ReportField rf = reportFieldService.find(filter.getFieldId());
-			if (!bWhere) {
-				bWhere = true;
-				query += " WHERE ";
-			} else {
-				query += " AND ";
-			}
-			
-			
-			query += " " + rf.getColumnName();
-
-			
-			switch(filter.getDuration()) {
-			case 1: // Current FY
-				break;
-			case 2: // Previous FY
-				break;
-			case 3: // Current FY
-				break;
-			case 4: // Current FY
-				break;
-			case 5: // Current FY
-				break;
-			case 6: // Current FY
-				break;
-			case 7: // Current FY
-				break;
-			case 8: // Current FY
-				break;
-			case 9: // Current FY
-				break;
-			case 10: // Current FY
-				break;
-			case 11: // Current FY
-				break;
-			case 12: // Current FY
-				break;
-			case 13: // Current FY
-				break;
-			case 14: // Current FY
-				break;
-			case 15: // Current FY
-				break;
-			case 16: // Current FY
-				break;
-			case 17: // Current FY
-				break;
-			case 18: // Current FY
-				break;
-			case 19: // Current FY
-				break;
-			case 20: // Current FY
-				break;
-			case 21: // Today
-				query += " = CURDATE()";
-				break;
-			case 22: // Yesterday
-				query += " = Date_Add(CURDATE(),INTERVAL -1 DAY)";
-				break;
-			case 23: // Last 30
-				query += " > Date_Add(CURDATE(),INTERVAL -30 DAY)";
-				break;
-			case 24: // Last 60
-				query += " > Date_Add(CURDATE(),INTERVAL -60 DAY)";
-				break;
-			case 25: // Last 90
-				query += " > Date_Add(CURDATE(),INTERVAL -90 DAY)";
-				break;
-			case 26: // Last 120
-				query += " > Date_Add(CURDATE(),INTERVAL -120 DAY)";
-				break;
-			case 27: // Last 7
-				query += " > Date_Add(CURDATE(),INTERVAL -7 DAY)";
-				break;
-				
-			}
-		}
-		
-
 		while (itFilter.hasNext()) {
 			ReportAdvancedFilter filter = (ReportAdvancedFilter) itFilter
 					.next();
@@ -371,33 +269,6 @@ public class ReportGenerator {
 			if (filter == null || filter.getFieldId() == -1) continue; // this is an empty filter
 			ReportField rf = reportFieldService.find(filter.getFieldId());
 
-
-
-			
-			if (!bWhere) {
-				bWhere = true;
-				query += " WHERE ";
-			} else {
-				query += " AND ";
-			}
-
-			
-			query += " " + rf.getColumnName();
-			switch (filter.getOperator()) {
-			case 1:	query += " = ";		break;
-			case 2:	query += " != ";	break;
-			case 3:	query += " < ";		break;
-			case 4:	query += " >"; break;
-			case 5:	query += " <="; break;
-			case 6:	query += " >="; break;
-			case 7: break; // contains ; break;
-			case 8: break; // startswith ; break;			
-			case 9: break; // includes ; break;			
-			case 10: break; // excludes ; break;
-			case 11: query += " LIKE "; break; // like ; break;						
-		
-			}
-			
 			InputControlParameters ic = new InputControlParameters();
 			ic.setLabel(rf.getDisplayName());
 			ic.setType(rf.getFieldType());
@@ -407,140 +278,33 @@ public class ReportGenerator {
 			inputControls.put(controlName, ic);
 			
 			if ( rf.getFieldType() == ReportFieldType.DATE) {
-				query += " $P{" + controlName + "} ";
 				params.put(controlName, "java.util.Date");
 				drb.addParameter(controlName, "java.util.Date");				
 			} else	if(rf.getFieldType() == ReportFieldType.STRING) {
-				query += " $P{" + controlName + "} ";
 				drb.addParameter(controlName, "java.lang.String");
 				params.put(controlName, "java.lang.String");
 			} else if(rf.getFieldType() == ReportFieldType.DOUBLE) {
-				query += " $P{" + controlName + "} ";
 				drb.addParameter(controlName, "java.lang.Double");
 				params.put(controlName, "java.lang.Double");
 			} else if(rf.getFieldType() == ReportFieldType.INTEGER) {
-				query += " $P{" + controlName + "} ";
 				drb.addParameter(controlName, "java.lang.Integer");
 				params.put(controlName, "java.lang.Integer");
 			} else if(rf.getFieldType() == ReportFieldType.MONEY) {
-				query += " $P{" + controlName + "} ";
 				drb.addParameter(controlName, "java.lang.Double");
 				params.put(controlName, "java.lang.Double");
 			} else if(rf.getFieldType() == ReportFieldType.BOOLEAN) {
-				query += " $P{" + controlName + "} ";
 				drb.addParameter(controlName, "java.lang.Boolean");
 				params.put(controlName, "java.lang.Boolean");
 			} 
 		}
 		
-		//
-		//Add the order by clause
-		String orderBy = getOrderByClause(wiz, reportFieldService);
-		if (orderBy != null){
-			query += orderBy;
-		}
-
-		//Limit the number of rows returned 
-		if (wiz.getRowCount() != -1)
-			query += " LIMIT 0," + wiz.getRowCount().toString();
-		query += ";";
-
 		logger.info(query);
 
 		drb.setQuery(query, DJConstants.QUERY_LANGUAGE_SQL);
 		drb.setTemplateFile(templateFile.getAbsolutePath());
 		DynamicReport dr = drb.build();
-
+		
 		return dr;
-	}
-	
-
-	/**
-	 * Builds the order by clause for the summary and matrix reports.
-	 * <P>
-	 * {@code}String orderBy = getOrderByClause(wiz, reportFieldService);
-	 * @param ReportWizard wiz
-	 * @param ReportFieldService reportFieldService
-	 * @return String orderBy
-	 */
-	private String getOrderByClause(ReportWizard wiz, ReportFieldService reportFieldService) {
-		String orderBy = new String();
-		Boolean addComma = false;
-		//
-		//Summary Reports
-		if (wiz.getReportType().compareTo("summary") == 0) {
-			List<ReportGroupByField> rptGroupByFields = wiz.getReportGroupByFields();
-			Iterator itRptGroupByFields = rptGroupByFields.iterator();
-			
-			if (itRptGroupByFields != null){
-				addComma = false;
-				while (itRptGroupByFields.hasNext()){
-					ReportGroupByField groupByField = (ReportGroupByField) itRptGroupByFields.next();
-					if (groupByField != null) {						
-						if (groupByField.getFieldId() != -1){
-							if (!addComma) {
-								orderBy += " ORDER BY";
-								addComma = true;
-							}
-							else
-								orderBy += ","; 
-							ReportField rg = reportFieldService.find(groupByField.getFieldId());
-							orderBy += " " + rg.getColumnName();
-							orderBy += " " + groupByField.getSortOrder();	
-						}
-					}
-				}
-			}
-		return orderBy;
-		}//end if summary
-		//
-		//Matrix Reports
-		if (wiz.getReportType().compareTo("matrix") == 0) {
-			ReportCrossTabFields rptCTList = wiz.getReportCrossTabFields();
-			List<ReportGroupByField> ctRows = rptCTList.getReportCrossTabRows();
-			List<ReportGroupByField> ctCols = rptCTList.getReportCrossTabColumns();
-			addComma = false;
-			//order by rows first
-			Iterator itCtRows = ctRows.iterator();
-			while (itCtRows.hasNext()){
-				ReportGroupByField rowField = (ReportGroupByField) itCtRows.next();
-				if (rowField != null) {						
-					if (rowField.getFieldId() != -1){
-						if (!addComma) {
-							orderBy += " ORDER BY";
-							addComma = true;
-						}
-						else
-							orderBy += ","; 
-						ReportField rg = reportFieldService.find(rowField.getFieldId());
-						orderBy += " " + rg.getColumnName();
-						orderBy += " " + rowField.getSortOrder();	
-					}
-				}
-			}
-			
-			//order by Columns last
-			Iterator itCtCols = ctCols.iterator();
-			while (itCtCols.hasNext()){
-				ReportGroupByField colField = (ReportGroupByField) itCtCols.next();
-				if (colField != null) {						
-					if (colField.getFieldId() != -1){
-						if (!addComma) {
-							orderBy += " ORDER BY";
-							addComma = true;
-						}
-						else
-							orderBy += ","; 
-						ReportField rg = reportFieldService.find(colField.getFieldId());
-						orderBy += " " + rg.getColumnName();
-						orderBy += " " + colField.getSortOrder();	
-					}
-				}
-			}
-		return orderBy;
-		}//end if matrix report
-			
-		return null;
 	}
 
 	/**
@@ -844,13 +608,14 @@ public class ReportGenerator {
 		return drb;
 	}
 
-	private ResourceDescriptor putReportUnit(ResourceDescriptor rd,String name, String label, String desc, File report, Map params2) throws Exception 
+	private ResourceDescriptor putReportUnit(ResourceDescriptor rd,String name, String label, String desc, File report, Map params2, String jasperDatasourceName) throws Exception 
     {
 		File resourceFile = null;
 
 		ResourceDescriptor tmpDataSourceDescriptor = new ResourceDescriptor();
 		tmpDataSourceDescriptor.setWsType(ResourceDescriptor.TYPE_DATASOURCE);
-		tmpDataSourceDescriptor.setReferenceUri(reportUnitDataSourceURI);
+		//tmpDataSourceDescriptor.setReferenceUri(reportUnitDataSourceURI);
+		tmpDataSourceDescriptor.setReferenceUri(jasperDatasourceName);
 		tmpDataSourceDescriptor.setIsReference(true);
 		rd.getChildren().add(tmpDataSourceDescriptor);
 
@@ -933,7 +698,7 @@ public class ReportGenerator {
 	}
 
 	public ResourceDescriptor put(String type, String name, String label,
-			String desc, String parentFolder, File report, Map params)
+			String desc, String parentFolder, File report, Map params, String jasperDatasourceName)
 			throws Exception {
 		ResourceDescriptor rd = new ResourceDescriptor();
 		rd.setName(name);
@@ -947,7 +712,7 @@ public class ReportGenerator {
 		if (type.equalsIgnoreCase(ResourceDescriptor.TYPE_FOLDER)) {
 			return server.getWSClient().addOrModifyResource(rd, null);
 		} else if (type.equalsIgnoreCase(ResourceDescriptor.TYPE_REPORTUNIT)) {
-			return putReportUnit(rd, name, label, desc, report, params);
+			return putReportUnit(rd, name, label, desc, report, params, jasperDatasourceName);
 		}
 
 		// shouldn't reach here

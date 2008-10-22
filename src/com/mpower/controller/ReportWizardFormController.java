@@ -383,7 +383,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 
 			//
 			// save the report to the server
-			reportGenerator.put(ResourceDescriptor.TYPE_REPORTUNIT, tempFile.getName(), tempFile.getName(), tempFile.getName(), "/Reports/Clementine/Temp", tempFile,reportGenerator.getParams());
+			reportGenerator.put(ResourceDescriptor.TYPE_REPORTUNIT, tempFile.getName(), tempFile.getName(), tempFile.getName(), "/Reports/Clementine/Temp", tempFile,reportGenerator.getParams(), wiz.getDataSubSource().getJasperDatasourceName());
 
 			wiz.setReportPath("/Reports/Clementine/Temp/" + tempFile.getName());
 			refData.put("reportPath", wiz.getReportPath());
@@ -417,7 +417,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		if (wiz.getReportComment() != null && wiz.getReportComment().length() > 0)
 			reportComment = wiz.getReportComment();
 		
-		reportGenerator.put(ResourceDescriptor.TYPE_REPORTUNIT, reportTitle.replace(" ", "_"), reportTitle, reportComment, "/Reports/Clementine",tempFile, reportGenerator.getParams());
+		reportGenerator.put(ResourceDescriptor.TYPE_REPORTUNIT, reportTitle.replace(" ", "_"), reportTitle, reportComment, "/Reports/Clementine",tempFile, reportGenerator.getParams(), wiz.getDataSubSource().getJasperDatasourceName());
 
 		
 		//
