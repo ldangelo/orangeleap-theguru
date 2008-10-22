@@ -24,6 +24,7 @@ import com.mpower.domain.ReportCrossTabFields;
 import com.mpower.domain.ReportField;
 import com.mpower.domain.ReportFieldType;
 import com.mpower.domain.ReportGroupByField;
+import com.mpower.domain.ReportLayout;
 import com.mpower.domain.ReportStandardFilter;
 import com.mpower.domain.ReportWizard;
 import com.mpower.service.ReportFieldService;
@@ -112,7 +113,7 @@ public class ReportGenerator {
 		oddRowStyle = new Style();
 	}
 
-	private File getTemplateFile() throws Exception {
+	private File getTemplateFile(ReportLayout reportLayout) throws Exception {
 		startServer();
 
 		//
@@ -121,8 +122,10 @@ public class ReportGenerator {
 		ResourceDescriptor templateRD = new ResourceDescriptor();
 		// templateRD.setWsType(ResourceDescriptor.TYPE_JRXML);
 		// templateRD.setParentFolder("/templates");
-		templateRD
-				.setUriString("/templates/mpower_template_files/mpower_template_jrxml");
+		if (reportLayout == ReportLayout.LANDSCAPE)
+			templateRD.setUriString("/templates/mpower_report_template_landscape_files/mpower_report_template_landscape_jrxml");
+		else 
+			templateRD.setUriString("/templates/mpower_template_files/mpower_template_jrxml");
 		ResourceDescriptor rd = server.getWSClient().get(templateRD,
 				templateFile);
 
@@ -130,7 +133,7 @@ public class ReportGenerator {
 	}
 
 	public DynamicReport Generate(ReportWizard wiz,javax.sql.DataSource jdbcDataSource, ReportFieldService reportFieldService) throws Exception {
-		File templateFile = getTemplateFile();
+		File templateFile = getTemplateFile(wiz.getReportLayout());
 		initStyles();
 
 		String reportTitle = wiz.getDataSubSource().getDisplayName() + " Custom Report";

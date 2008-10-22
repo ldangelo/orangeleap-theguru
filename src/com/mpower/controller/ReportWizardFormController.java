@@ -265,7 +265,6 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 			String reportType = wiz.getReportType();
 			refData.put("reportType", reportType);
 			
-			
 			ReportDataSubSource rdss = reportSubSourceService.find(wiz.getSubSourceId());
 			List<ReportFieldGroup>    lrfg = reportFieldGroupService.readFieldGroupBySubSourceId(rdss.getId());
 			

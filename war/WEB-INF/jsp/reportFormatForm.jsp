@@ -42,6 +42,20 @@
 </TD>
 </TR>
 </TABLE>
+
+		<h2>
+		Select the report layout
+		</h2>
+
+<TABLE>
+<TR>
+<TD><SELECT id="reportLayout"
+	name="reportLayout">
+	<option value="PORTRAIT">Portrait</option>
+	<option value="LANDSCAPE">Landscape</option>
+</SELECT></TD>
+</TR>
+</TABLE>
 </div>
 <jsp:include page="snippets/navbuttons.jsp"/>
 </form:form>

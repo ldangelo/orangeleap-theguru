@@ -92,12 +92,14 @@ public class ReportWizard implements java.io.Serializable {
 	
 	@Column(name = "REPORT_TYPE")
 	private String reportType;
+	private ReportLayout reportLayout;
 	private Boolean recordCount;
 	private String reportColumnOrder;
 	private String reportPath;
 	
 	public ReportWizard() {
 		reportType = "tabular";
+		reportLayout = ReportLayout.PORTRAIT;
 		srcId = 0;
 		subSourceId = 0;
 		rowCount = -1;
@@ -167,6 +169,10 @@ public class ReportWizard implements java.io.Serializable {
 		return src;
 	}
 
+	public ReportLayout getReportLayout() {
+		return reportLayout;
+	}
+	
 	public String getReportName() {
 		return reportName;
 	}
@@ -259,7 +265,11 @@ public class ReportWizard implements java.io.Serializable {
 	public void setReportDataSource(ReportDataSource src) {
 		this.src = src;
 	}
-
+	
+	public void setReportLayout(ReportLayout value) {
+		reportLayout = value;
+	}
+	
 	public void setReportName(String name) {
 		reportName = name;
 	}
