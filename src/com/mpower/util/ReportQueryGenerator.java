@@ -248,6 +248,7 @@ public class ReportQueryGenerator {
 	private String buildAdvancedFilterWhereClause(Boolean includeWhere) {
 		String whereClause = ""; 
 		Iterator<ReportAdvancedFilter> itFilter = getReportWizard().getAdvancedFilters().iterator();
+		int index = 0;
 		while (itFilter.hasNext()) {
 			ReportAdvancedFilter filter = (ReportAdvancedFilter) itFilter
 					.next();
@@ -278,7 +279,8 @@ public class ReportQueryGenerator {
 		
 			}
 			
-			String controlName = rf.getControlName();
+			String controlName = rf.getColumnName() + Integer.toString(index);
+			index++;
 			
 			if ( rf.getFieldType() == ReportFieldType.DATE) {
 				whereClause += " $P{" + controlName + "} ";

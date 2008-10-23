@@ -262,6 +262,7 @@ public class ReportGenerator {
 		
 		List<ReportAdvancedFilter> filters = wiz.getAdvancedFilters();
 		Iterator itFilter = filters.iterator();
+		int index = 0;
 		while (itFilter.hasNext()) {
 			ReportAdvancedFilter filter = (ReportAdvancedFilter) itFilter
 					.next();
@@ -273,7 +274,9 @@ public class ReportGenerator {
 			ic.setLabel(rf.getDisplayName());
 			ic.setType(rf.getFieldType());
 			ic.setFilter(filter.getOperator());
-			String controlName = rf.getControlName();
+			
+			String controlName = rf.getColumnName() + Integer.toString(index);
+			index++;
 			
 			inputControls.put(controlName, ic);
 			
