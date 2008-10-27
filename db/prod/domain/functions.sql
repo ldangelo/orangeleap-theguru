@@ -1,3 +1,8 @@
+
+-- ******************* Un-comment out the below line when running this script on the QA Box. ***************************************
+-- DELIMITER $$
+
+
 -- Create function to retrieve person custom fields
 DROP FUNCTION IF EXISTS GETPERSONCUSTOMFIELD$$
 

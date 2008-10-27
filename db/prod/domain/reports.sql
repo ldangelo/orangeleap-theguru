@@ -4,15 +4,30 @@ insert into REPORTDATASOURCE values(2,'Gifts');
 -- MPX
 insert into REPORTDATASOURCE values(3,'MPX People');
 
-Insert into REPORTDATASUBSOURCE values(1,'People',0,'PERSON',1, 0, '/datasources/ReportWizardJdbcDS');
-insert into REPORTDATASUBSOURCE values(2,'People & Addresses',0,'VPEOPLEADDRESS',1, 0, '/datasources/ReportWizardJdbcDS');
-insert into REPORTDATASUBSOURCE values(3,'People & Gifts',0,'VPEOPLEGIFT',1, 0, '/datasources/ReportWizardJdbcDS');
-insert into REPORTDATASUBSOURCE values(4,'Gifts',0,'GIFT',2, 0, '/datasources/ReportWizardJdbcDS');
-insert into REPORTDATASUBSOURCE values(5,'People & Gift Distributions',0,'VPEOPLEGIFTDISTRO',1, 0, '/datasources/ReportWizardJdbcDS');
-insert into REPORTDATASUBSOURCE values(6,'Gift Distributions',0,'VGIFTDISTRO',2, 0, '/datasources/ReportWizardJdbcDS');
+
+insert into REPORTDATASUBSOURCE 
+		(REPORTSUBSOURCE_ID, DISPLAY_NAME, DATABASE_TYPE, VIEW_NAME, reportDataSource_REPORTSOURCE_ID, REPORT_FORMAT_TYPE, JASPER_DATASOURCE_NAME)
+		values(1,'People',0,'PERSON',1, 0, '/datasources/ReportWizardJdbcDS');
+insert into REPORTDATASUBSOURCE 
+		(REPORTSUBSOURCE_ID, DISPLAY_NAME, DATABASE_TYPE, VIEW_NAME, reportDataSource_REPORTSOURCE_ID, REPORT_FORMAT_TYPE, JASPER_DATASOURCE_NAME)
+		values(2,'People & Addresses',0,'VPEOPLEADDRESS',1, 0, '/datasources/ReportWizardJdbcDS');
+insert into REPORTDATASUBSOURCE 
+		(REPORTSUBSOURCE_ID, DISPLAY_NAME, DATABASE_TYPE, VIEW_NAME, reportDataSource_REPORTSOURCE_ID, REPORT_FORMAT_TYPE, JASPER_DATASOURCE_NAME)
+		values(3,'People & Gifts',0,'VPEOPLEGIFT',1, 0, '/datasources/ReportWizardJdbcDS');
+insert into REPORTDATASUBSOURCE
+		(REPORTSUBSOURCE_ID, DISPLAY_NAME, DATABASE_TYPE, VIEW_NAME, reportDataSource_REPORTSOURCE_ID, REPORT_FORMAT_TYPE, JASPER_DATASOURCE_NAME)
+		values(4,'Gifts',0,'GIFT',2, 0, '/datasources/ReportWizardJdbcDS');
+insert into REPORTDATASUBSOURCE 
+		(REPORTSUBSOURCE_ID, DISPLAY_NAME, DATABASE_TYPE, VIEW_NAME, reportDataSource_REPORTSOURCE_ID, REPORT_FORMAT_TYPE, JASPER_DATASOURCE_NAME)
+		values(5,'People & Gift Distributions',0,'VPEOPLEGIFTDISTRO',1, 0, '/datasources/ReportWizardJdbcDS');
+insert into REPORTDATASUBSOURCE 
+		(REPORTSUBSOURCE_ID, DISPLAY_NAME, DATABASE_TYPE, VIEW_NAME, reportDataSource_REPORTSOURCE_ID, REPORT_FORMAT_TYPE, JASPER_DATASOURCE_NAME)
+		values(6,'Gift Distributions',0,'VGIFTDISTRO',2, 0, '/datasources/ReportWizardJdbcDS');
 
 -- MPX 
-insert into REPORTDATASUBSOURCE values(7,'People',0,'ENTITY',3, 1, '/datasources/ReportWizardJdbcDSForMPX');
+insert into REPORTDATASUBSOURCE 
+		(REPORTSUBSOURCE_ID, DISPLAY_NAME, DATABASE_TYPE, VIEW_NAME, reportDataSource_REPORTSOURCE_ID, REPORT_FORMAT_TYPE, JASPER_DATASOURCE_NAME)
+		values(7,'People',0,'ENTITY',3, 1, '/datasources/ReportWizardJdbcDSForMPX');
 
 insert into REPORTFIELDGROUP values(1,'People General');
 insert into REPORTFIELDGROUP values(2,'People Address');
