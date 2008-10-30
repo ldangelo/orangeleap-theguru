@@ -270,34 +270,47 @@ public class ReportGenerator {
 			if (filter == null || filter.getFieldId() == -1) continue; // this is an empty filter
 			ReportField rf = reportFieldService.find(filter.getFieldId());
 
-			InputControlParameters ic = new InputControlParameters();
-			ic.setLabel(rf.getDisplayName());
-			ic.setType(rf.getFieldType());
-			ic.setFilter(filter.getOperator());
-			
 			String controlName = rf.getColumnName() + Integer.toString(index);
 			index++;
 			
-			inputControls.put(controlName, ic);
+			if (filter.getPromptForCriteria()) {
+				InputControlParameters ic = new InputControlParameters();
+				ic.setLabel(rf.getDisplayName());
+				ic.setType(rf.getFieldType());
+				ic.setFilter(filter.getOperator());
+				inputControls.put(controlName, ic);
+			}
 			
 			if ( rf.getFieldType() == ReportFieldType.DATE) {
-				params.put(controlName, "java.util.Date");
-				drb.addParameter(controlName, "java.util.Date");				
+				if (filter.getPromptForCriteria()) {
+					params.put(controlName, "java.util.Date");
+					drb.addParameter(controlName, "java.util.Date");
+				}								
 			} else	if(rf.getFieldType() == ReportFieldType.STRING) {
-				drb.addParameter(controlName, "java.lang.String");
-				params.put(controlName, "java.lang.String");
+				if (filter.getPromptForCriteria()) {
+					params.put(controlName, "java.lang.String");
+					drb.addParameter(controlName, "java.lang.String");
+				}								
 			} else if(rf.getFieldType() == ReportFieldType.DOUBLE) {
-				drb.addParameter(controlName, "java.lang.Double");
-				params.put(controlName, "java.lang.Double");
+				if (filter.getPromptForCriteria()) {
+					params.put(controlName, "java.lang.Double");
+					drb.addParameter(controlName, "java.lang.Double");
+				}								
 			} else if(rf.getFieldType() == ReportFieldType.INTEGER) {
-				drb.addParameter(controlName, "java.lang.Integer");
-				params.put(controlName, "java.lang.Integer");
+				if (filter.getPromptForCriteria()) {
+					params.put(controlName, "java.lang.Integer");
+					drb.addParameter(controlName, "java.lang.Integer");
+				}								
 			} else if(rf.getFieldType() == ReportFieldType.MONEY) {
-				drb.addParameter(controlName, "java.lang.Double");
-				params.put(controlName, "java.lang.Double");
+				if (filter.getPromptForCriteria()) {					
+					params.put(controlName, "java.lang.Double");
+					drb.addParameter(controlName, "java.lang.Double");
+				}							
 			} else if(rf.getFieldType() == ReportFieldType.BOOLEAN) {
-				drb.addParameter(controlName, "java.lang.Boolean");
-				params.put(controlName, "java.lang.Boolean");
+				if (filter.getPromptForCriteria()) {
+					params.put(controlName, "java.lang.Boolean");
+					drb.addParameter(controlName, "java.lang.Boolean");
+				}								
 			} 
 		}
 		

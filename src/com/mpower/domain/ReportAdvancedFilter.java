@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "REPORTADVANCEDFILTER")
@@ -24,6 +25,12 @@ public class ReportAdvancedFilter implements java.io.Serializable {
 	Integer operator;
 	String value;
 
+	@Transient
+	private boolean promptForCriteria;
+
+	@Transient
+	private String criteria;
+	
 	public ReportAdvancedFilter() {
 		fieldId = 0L;
 		value = "";
@@ -56,5 +63,21 @@ public class ReportAdvancedFilter implements java.io.Serializable {
 	
 	public void setValue(String value) {
 		this.value = value;
+	}
+	
+	public boolean getPromptForCriteria() {
+		return promptForCriteria;
+	}
+
+	public void setPromptForCriteria(boolean promptForCriteria) {
+		this.promptForCriteria = promptForCriteria;
+	}
+
+	public void setCriteria(String criteria) {
+		this.criteria = criteria;
+	}
+
+	public String getCriteria() {
+		return criteria;
 	}
 }

@@ -71,7 +71,7 @@
 </TABLE>
 <h1>Advanced Filters</h1>
 <TABLE id="report_advanced_filters" class="tablesorter">
-<TR><TH>Field</TH><TH>Operator</TH></TR>
+<TR><TH>Field</TH><TH>Operator</TH><TH>Prompt for value</TH><TH>Value</TH></TR>
 		<TR rowIndex="0">
 			<TD><SELECT id="advancedFilters[0].fieldId"
 				name="advancedFilters[0].fieldId">
@@ -96,7 +96,19 @@
 				<option value="11">like</option>
 			</SELECT></TD>
 
-			<TD>
+			<TD><input type="checkbox" 
+				id="advancedFilters[0].promptForCriteria"
+				name="advancedFilters[0].promptForCriteria" 
+				checked="checked"
+				value="true"
+				onclick="document.getElementById(this.name + 'TextBox').disabled=this.checked;document.getElementById(this.name + 'TextBox').value='';">
+			</TD>
+
+			<TD><input id="advancedFilters[0].promptForCriteriaTextBox" 
+				name="advancedFilters[0].criteria"
+				disabled="disabled">
+			</TD>
+
 			<TD><img  class="deleteButton" src="images/icons/deleteRow.png"
 				style="cursor: pointer; display: none;" /></TD>
 		</TR>

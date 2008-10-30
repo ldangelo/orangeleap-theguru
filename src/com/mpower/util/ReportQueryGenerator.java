@@ -1,5 +1,10 @@
 package com.mpower.util;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -87,8 +92,9 @@ public class ReportQueryGenerator {
 	 * <P>
 	 * {@code} String query = getQueryString();
 	 * @return String
+	 * @throws ParseException 
 	 */			
-	public String getQueryString() {
+	public String getQueryString() throws ParseException {
 		String query = buildSelectClause();
 		query += buildWhereClause();
 		query += buildOrderByClause();
@@ -134,8 +140,9 @@ public class ReportQueryGenerator {
 	 * <P>
 	 * {@code} String whereClause = buildWhereClause();
 	 * @return String
+	 * @throws ParseException 
 	 */	
-	private String buildWhereClause() {
+	private String buildWhereClause() throws ParseException {
 		// Add any 'filters'
 		String whereClause = "";
 		
@@ -244,8 +251,9 @@ public class ReportQueryGenerator {
 	 * {@code} whereClause += buildAdvancedFilterWhereClause(false);
 	 * @param includeWhere Specifies whether the returned string should begin with a WHERE if true, or with an AND if false.
 	 * @return String
+	 * @throws ParseException 
 	 */
-	private String buildAdvancedFilterWhereClause(Boolean includeWhere) {
+	private String buildAdvancedFilterWhereClause(Boolean includeWhere) throws ParseException {
 		String whereClause = ""; 
 		Iterator<ReportAdvancedFilter> itFilter = getReportWizard().getAdvancedFilters().iterator();
 		int index = 0;
@@ -263,7 +271,7 @@ public class ReportQueryGenerator {
 				whereClause += " AND ";
 			}
 			
-			whereClause += " " + rf.getColumnName();
+			whereClause += " " + getFieldNameForWhereClause(rf);
 			switch (filter.getOperator()) {
 			case 1:	whereClause += " = ";		break;
 			case 2:	whereClause += " != ";	break;
@@ -272,7 +280,7 @@ public class ReportQueryGenerator {
 			case 5:	whereClause += " <="; break;
 			case 6:	whereClause += " >="; break;
 			case 7: break; // contains ; break;
-			case 8: break; // startswith ; break;			
+			case 8: break; // starts with ; break;			
 			case 9: break; // includes ; break;			
 			case 10: break; // excludes ; break;
 			case 11: whereClause += " LIKE "; break; // like ; break;						
@@ -282,21 +290,165 @@ public class ReportQueryGenerator {
 			String controlName = rf.getColumnName() + Integer.toString(index);
 			index++;
 			
+
 			if ( rf.getFieldType() == ReportFieldType.DATE) {
-				whereClause += " $P{" + controlName + "} ";
+				if (filter.getPromptForCriteria()) {
+					whereClause += " $P{" + controlName + "} ";
+				} else {
+					whereClause += getFormattedDateString(filter.getCriteria()); 
+				}
 			} else	if(rf.getFieldType() == ReportFieldType.STRING) {
-				whereClause += " $P{" + controlName + "} ";
+				if (filter.getPromptForCriteria()) {
+					whereClause += " $P{" + controlName + "} ";
+				} else {
+					whereClause += " '" + filter.getCriteria() + "'";
+				}
 			} else if(rf.getFieldType() == ReportFieldType.DOUBLE) {
-				whereClause += " $P{" + controlName + "} ";
+				if (filter.getPromptForCriteria()) {
+					whereClause += " $P{" + controlName + "} ";
+				} else {
+					whereClause += " " + filter.getCriteria();
+				}
 			} else if(rf.getFieldType() == ReportFieldType.INTEGER) {
-				whereClause += " $P{" + controlName + "} ";
+				if (filter.getPromptForCriteria()) {
+					whereClause += " $P{" + controlName + "} ";
+				} else {
+					whereClause += " " + filter.getCriteria();
+				}
 			} else if(rf.getFieldType() == ReportFieldType.MONEY) {
-				whereClause += " $P{" + controlName + "} ";
+				if (filter.getPromptForCriteria()) {
+					whereClause += " $P{" + controlName + "} ";
+				} else {
+					whereClause += " " + filter.getCriteria();
+				}
 			} else if(rf.getFieldType() == ReportFieldType.BOOLEAN) {
-				whereClause += " $P{" + controlName + "} ";
-			} 
+				if (filter.getPromptForCriteria()) {
+					whereClause += " $P{" + controlName + "} ";
+				} else {
+					whereClause += " " + filter.getCriteria();
+				}
+			}
 		}
 		return whereClause;
+	}
+	
+
+	/**
+	 * Attempts to parse the incoming date string using the default locale first, and then various
+	 * other date formats.  If it is able to parse the date, it will then return a string with the
+	 * date formatted for mySql and SQL Server. 
+	 * <P>
+	 * {@code} whereClause += getFormattedDateString(filter.getCriteria());
+	 * @param dateString The string containing the date to be parsed and formatted.
+	 * @return String Date string formatted for mySql and SQL Server
+	 * @throws ParseException The exception to be thrown if the dateString is unable to be parsed.
+	 */
+	private String getFormattedDateString(String dateString) throws ParseException {
+		String result = "";
+		ParseException lastException = null;
+		Date whereDate = null;
+		SimpleDateFormat resultDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		
+		// First attempt to use the default locale to attempt to parse the date 
+		try {
+			whereDate = DateFormat.getDateInstance(DateFormat.SHORT).parse(dateString);
+			result = " '" +  resultDateFormat.format(whereDate) + "'";
+			return result;
+		}
+		catch (ParseException exception) {
+			lastException = exception;
+		}
+			
+		ArrayList<String> dateFormatStrings = new ArrayList<String>();
+		// Add various date formats
+		dateFormatStrings.add("yyyy-MM-dd");
+		dateFormatStrings.add("yyyy/MM/dd");
+		dateFormatStrings.add("yyyy MM dd");
+		dateFormatStrings.add("yyyy.MM.dd");
+	 
+		dateFormatStrings.add("yyyy-MMM-dd");
+		dateFormatStrings.add("yyyy/MMM/dd");
+		dateFormatStrings.add("yyyy MMM dd");
+		dateFormatStrings.add("yyyy.MMM.dd");
+
+		dateFormatStrings.add("MM-dd-yyyy");
+		dateFormatStrings.add("MM/dd/yyyy");
+		dateFormatStrings.add("MM dd yyyy");
+		dateFormatStrings.add("MM.dd.yyyy");
+		
+		dateFormatStrings.add("dd-MM-yyyy");
+		dateFormatStrings.add("dd/MM/yyyy");
+		dateFormatStrings.add("dd MM yyyy");
+		dateFormatStrings.add("dd.MM.yyyy");
+	 
+		dateFormatStrings.add("dd-MMM-yy");
+		dateFormatStrings.add("dd MMM yy");
+		dateFormatStrings.add("dd.MMM.yy");
+		dateFormatStrings.add("dd/MMM/yy");
+		
+		dateFormatStrings.add("yyyy-MM-dd hh:mm:ss");
+		dateFormatStrings.add("yyyy MM dd hh:mm:ss");
+		dateFormatStrings.add("yyyy.MM.dd hh:mm:ss");
+		dateFormatStrings.add("yyyy/MM/dd hh:mm:ss");
+	 
+		dateFormatStrings.add("yyyy-MMM-dd hh:mm:ss");
+		dateFormatStrings.add("yyyy MMM dd hh:mm:ss");
+		dateFormatStrings.add("yyyy.MMM.dd hh:mm:ss");
+		dateFormatStrings.add("yyyy/MMM/dd hh:mm:ss");
+		
+		dateFormatStrings.add("dd-MM-yyyy hh:mm:ss");
+		dateFormatStrings.add("dd MM yyyy hh:mm:ss");
+		dateFormatStrings.add("dd.MM.yyyy hh:mm:ss");
+		dateFormatStrings.add("dd/MM/yyyy hh:mm:ss");
+		
+		dateFormatStrings.add("dd-MMM-yyyy hh:mm:ss");
+		dateFormatStrings.add("dd/MMM/yyyy hh:mm:ss");
+		dateFormatStrings.add("dd MMM yyyy hh:mm:ss");
+		dateFormatStrings.add("dd.MMM.yyyy hh:mm:ss");
+		
+		for (String dateFormatString : dateFormatStrings) {
+	    	try {
+	    		SimpleDateFormat dateFormat = new SimpleDateFormat(dateFormatString);
+	    		dateFormat.setLenient(false);
+	    		whereDate = dateFormat.parse(dateString);
+				result = " '" +  resultDateFormat.format(whereDate) + "'";
+				return result;
+	    	}
+	  		catch (ParseException exception) {
+	  			lastException = exception;
+	  		}
+		}
+		
+		// If no date was parsed, throw the last parse exception
+		if (result.length() == 0 && lastException != null)
+			throw lastException;
+		
+		return result;
+	}
+	
+	/**
+	 * Returns a value for the field that will be used in the where clause.  For DateTime fields
+	 * this will return a string that will cause the time to be removed from the DateTime.  Other
+	 * field types may be returned with just the column name.
+	 * <P>
+	 * {@code} whereClause += " " + getFieldNameForWhereClause(reportField);
+	 * @param reportField The report field for which the function will generate a string to be used in the where clause.
+	 * @return String
+	 */
+	private String getFieldNameForWhereClause(ReportField reportField) {
+		String result = ""; 
+		if (reportField.getFieldType() == ReportFieldType.DATE) {
+			if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.MYSQL) {
+				result = "CAST(" + reportField.getColumnName() + " AS DATE)";	
+			}
+			else if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.SQLSERVER) {
+				result = "DATEADD(DAY, DATEDIFF(DAY, 0, " + reportField.getColumnName() + "), 0)";
+			}
+		}
+		else {
+			result = reportField.getColumnName();
+		}
+		return result;
 	}
 	
 	/**

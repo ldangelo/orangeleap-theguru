@@ -47,13 +47,21 @@ function addNewRow(selector) {
 		var field = $(this);
 		var nameString = field.attr('name').replace(findExp, "["+j+"]");
 		field.attr('name',nameString);
-		field.val("");
+		field.val("");	
+		var idString = field.attr('id').replace(findExp, "["+j+"]");
+		field.attr('id',idString);		
+	});
+	
+	newRow.find(":checkbox").each(function(){
+		$(this).val("true");
 	});
 
 	newRow.find("select").each(function(){
 		var field = $(this);
 		var nameString = field.attr('name').replace(findExp, "["+j+"]");
 		field.attr('name',nameString);
+		var idString = field.attr('id').replace(findExp, "["+j+"]");
+		field.attr('id',idString);				
 	});
 
 	newRow.removeClass("focused highlight");
@@ -167,3 +175,8 @@ function SingleSelect(regex,current) {
 	if (checked)
 		current.checked = true;
 }
+
+function toggleValueTextBoxEnabled() {
+	
+}
+
