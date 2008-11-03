@@ -94,15 +94,15 @@ insert into REPORTFIELD values(30,b'0',b'0','GETPERSONCUSTOMFIELD(PERSON_ID, ''D
 
 -- MPX 
 insert into REPORTFIELD values(31,b'0',b'0','ENTITYID','Account Number',b'1',b'0',b'0',b'0',b'0',b'0',3);
-insert into REPORTFIELD values(32,b'0',b'0','FIRSTNAME','First Name',b'1',b'0',b'0',b'0',b'0',b'0',0);
-insert into REPORTFIELD values(33,b'0',b'0','LASTNAME','Last Name',b'1',b'0',b'0',b'0',b'0',b'0',0);
-insert into REPORTFIELD values(34,b'0',b'0','ORGANIZATIONNAME','Organization Name',b'1',b'0',b'0',b'0',b'0',b'0',0);
-insert into REPORTFIELD values(35,b'0',b'0','ADDRESS1','Address 1',b'1',b'0',b'0',b'0',b'0',b'0',0);
-insert into REPORTFIELD values(36,b'0',b'0','ADDRESS2','Address 2',b'0',b'0',b'0',b'0',b'0',b'0',0);
-insert into REPORTFIELD values(37,b'0',b'0','ADDRESS3','Address 3',b'0',b'0',b'0',b'0',b'0',b'0',0);
-insert into REPORTFIELD values(38,b'0',b'0','CITY','City',b'1',b'0',b'0',b'0',b'0',b'0',0);
-insert into REPORTFIELD values(39,b'0',b'0','STATE','State',b'1',b'0',b'0',b'0',b'0',b'0',0);
-insert into REPORTFIELD values(40,b'0',b'0','POSTALCODE','Zip Code',b'1',b'0',b'0',b'0',b'0',b'0',0);
+insert into REPORTFIELD values(32,b'0',b'0','FIRSTNAME','First Name',b'1',b'0',b'0',b'0',b'0',b'0',1);
+insert into REPORTFIELD values(33,b'0',b'0','LASTNAME','Last Name',b'1',b'0',b'0',b'0',b'0',b'0',1);
+insert into REPORTFIELD values(34,b'0',b'0','ORGANIZATIONNAME','Organization Name',b'1',b'0',b'0',b'0',b'0',b'0',1);
+insert into REPORTFIELD values(35,b'0',b'0','ADDRESS1','Address 1',b'1',b'0',b'0',b'0',b'0',b'0',1);
+insert into REPORTFIELD values(36,b'0',b'0','ADDRESS2','Address 2',b'0',b'0',b'0',b'0',b'0',b'0',1);
+insert into REPORTFIELD values(37,b'0',b'0','ADDRESS3','Address 3',b'0',b'0',b'0',b'0',b'0',b'0',1);
+insert into REPORTFIELD values(38,b'0',b'0','CITY','City',b'1',b'0',b'0',b'0',b'0',b'0',1);
+insert into REPORTFIELD values(39,b'0',b'0','STATE','State',b'1',b'0',b'0',b'0',b'0',b'0',1);
+insert into REPORTFIELD values(40,b'0',b'0','POSTALCODE','Zip Code',b'1',b'0',b'0',b'0',b'0',b'0',1);
 
 
 -- Account Number in People General
