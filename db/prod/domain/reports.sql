@@ -27,7 +27,7 @@ insert into REPORTDATASUBSOURCE
 -- MPX 
 insert into REPORTDATASUBSOURCE 
 		(REPORTSUBSOURCE_ID, DISPLAY_NAME, DATABASE_TYPE, VIEW_NAME, reportDataSource_REPORTSOURCE_ID, REPORT_FORMAT_TYPE, JASPER_DATASOURCE_NAME)
-		values(7,'People',0,'ENTITY',3, 1, '/datasources/ReportWizardJdbcDSForMPX');
+		values(7,'People',1,'ENTITY',3, 1, '/datasources/ReportWizardJdbcDSForMPX');
 
 insert into REPORTFIELDGROUP values(1,'People General');
 insert into REPORTFIELDGROUP values(2,'People Address');
