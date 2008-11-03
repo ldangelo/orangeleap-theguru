@@ -93,7 +93,10 @@
 				<option value="4">greater than</option>
 				<option value="5">less or equal</option>
 				<option value="6">greater or equal</option>
-				<option value="11">like</option>
+				<option value="7">starts with</option>				
+				<option value="8">ends with</option>
+				<option value="9">contains</option>
+				<option value="10">does not contain</option>
 			</SELECT></TD>
 
 			<TD><input type="checkbox" 

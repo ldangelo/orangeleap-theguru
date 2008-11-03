@@ -273,24 +273,42 @@ public class ReportQueryGenerator {
 			
 			whereClause += " " + getFieldNameForWhereClause(rf);
 			switch (filter.getOperator()) {
-			case 1:	whereClause += " = ";		break;
-			case 2:	whereClause += " != ";	break;
-			case 3:	whereClause += " < ";		break;
-			case 4:	whereClause += " >"; break;
-			case 5:	whereClause += " <="; break;
-			case 6:	whereClause += " >="; break;
-			case 7: break; // contains ; break;
-			case 8: break; // starts with ; break;			
-			case 9: break; // includes ; break;			
-			case 10: break; // excludes ; break;
-			case 11: whereClause += " LIKE "; break; // like ; break;						
-		
+				case 1:	whereClause += " = ";		break;
+				case 2:	whereClause += " != ";		break;
+				case 3:	whereClause += " < ";		break;
+				case 4:	whereClause += " >"; 		break;
+				case 5:	whereClause += " <="; 		break;
+				case 6:	whereClause += " >="; 		break;
+				case 7: whereClause += " LIKE ";	break; // starts with 
+				case 8: whereClause += " LIKE ";	break; // ends with		
+				case 9: whereClause += " LIKE ";	break; // contains		
+				case 10:whereClause += " NOT LIKE ";break; // does not contain 
 			}
 			
 			String controlName = rf.getColumnName() + Integer.toString(index);
 			index++;
 			
-
+			//comparison filter operators
+			if (filter.getOperator() >= 7 && filter.getOperator() <= 10)
+			{
+				if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.MYSQL) {
+					switch (filter.getOperator()) {
+					case 7: whereClause += " CONCAT( ";	break; // starts with 
+					case 8: whereClause += " CONCAT( '%',";	break; // ends with		
+					case 9: whereClause += " CONCAT( '%',";	break; // contains		
+					case 10:whereClause += " CONCAT( '%',";break; // does not contain 
+					}
+				}
+				else if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.SQLSERVER) {
+					switch (filter.getOperator()) {
+					case 7: whereClause += "";	break; // starts with 
+					case 8: whereClause += " '%' + ";	break; // ends with		
+					case 9: whereClause += " '%' + ";	break; // contains		
+					case 10:whereClause += " '%' + ";break; // does not contain 
+					}	
+				}
+			}
+			
 			if ( rf.getFieldType() == ReportFieldType.DATE) {
 				if (filter.getPromptForCriteria()) {
 					whereClause += " $P{" + controlName + "} ";
@@ -326,6 +344,26 @@ public class ReportQueryGenerator {
 					whereClause += " $P{" + controlName + "} ";
 				} else {
 					whereClause += " " + filter.getCriteria();
+				}
+			}
+			
+			//comparison filter operators
+			if (filter.getOperator() >= 7 && filter.getOperator() <= 10){
+				if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.MYSQL) {	
+					switch (filter.getOperator()) {
+					case 7: whereClause += " , '%')";	break; // starts with 
+					case 8: whereClause += " ) ";		break; // ends with		
+					case 9: whereClause += "  , '%') ";	break; // contains		
+					case 10:whereClause += "  , '%')";	break; // does not contain
+					}
+				}
+				else if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.SQLSERVER) {
+					switch (filter.getOperator()) {
+					case 7: whereClause += " + '%' ";	break; // starts with 
+					case 8: whereClause += "";			break; // ends with		
+					case 9: whereClause += " + '%' ";	break; // contains		
+					case 10:whereClause += " + '%' ";	break; // does not contain
+					}	
 				}
 			}
 		}
