@@ -26,7 +26,7 @@ public class ReportQueryGenerator {
 	private ReportWizard reportWizard;
 	private ReportFieldService reportFieldService;
 	private List<ReportField> reportFieldsOrderedList;
-	
+		
     /**
      * Constructor for the <tt>QueryGenerator</tt>.
      * @param reportWizard ReportWizard that contains the various report options.
@@ -38,7 +38,66 @@ public class ReportQueryGenerator {
     	this.setReportFieldService(reportFieldService);
     	this.reportFieldsOrderedList = reportFieldsOrderedList;
     }
+   
+    public enum DatePart {
+        YEAR ("YEAR", "yy"),
+        QUARTER   ("QUARTER", "qq"),
+        MONTH   ("MONTH", "mm"),
+        WEEK    ("WEEK", "wk");
 
+        private final String mySQL;   
+        private final String SQL; 
+        DatePart(String mySQL, String SQL) {
+            this.mySQL = mySQL;
+            this.SQL = SQL;
+        }
+        public String mySQL()   { return mySQL; }
+        public String SQL() { return SQL; }
+
+    }
+
+   /*
+    public class DatePart{
+    	
+    	   public class SQLConstants {
+
+    	    	static final String YEAR = "yy";
+    	    	static final String QUARTER = "qq";
+    	    	static final String MONTH = "mm";
+    	    	static final String WEEK = "wk";
+
+    	    } 
+    	    
+    	    public class mySQLConstants {
+
+    	    	static final String YEAR = "YEAR";
+    	    	static final String QUARTER = "QUARTER";
+    	    	static final String MONTH = "MONTH";
+    	    	static final String WEEK = "WEEK";
+
+    	    } 
+    	String YEAR;
+  }
+   
+    
+    public class SQLConstants {
+
+    	static final String YEAR = "yy";
+    	static final String QUARTER = "qq";
+    	static final String MONTH = "mm";
+    	static final String WEEK = "wk";
+
+    } 
+    
+    public class mySQLConstants {
+
+    	static final String YEAR = "YEAR";
+    	static final String QUARTER = "QUARTER";
+    	static final String MONTH = "MONTH";
+    	static final String WEEK = "WEEK";
+
+    } 
+*/
 	/**
 	 * Sets the ReportWizard that contains the various report options.
 	 * @param reportWizard
@@ -52,7 +111,7 @@ public class ReportQueryGenerator {
 	 * @return
 	 */
 	public ReportWizard getReportWizard() {
-		return reportWizard;
+		return reportWizard; 
 	}
 
 	/**
@@ -150,7 +209,7 @@ public class ReportQueryGenerator {
 		whereClause += buildStandardFilterWhereClause(includeWhere);
 
 		includeWhere = whereClause.length() == 0;		
-		whereClause = buildAdvancedFilterWhereClause(includeWhere);
+		whereClause += buildAdvancedFilterWhereClause(includeWhere);
 		
 		return whereClause;
 	}
@@ -176,7 +235,7 @@ public class ReportQueryGenerator {
 				whereClause += " AND ";
 			}			
 		
-			whereClause += " " + rf.getColumnName();
+			//whereClause += " " + rf.getColumnName();
 			
 			switch(filter.getDuration()) {
 			case 1: // Current FY
@@ -199,47 +258,61 @@ public class ReportQueryGenerator {
 				break;
 			case 10: // Current FY
 				break;
-			case 11: // Current FY
+			case 11: // Current Calendar Year
+				whereClause += getSqlCalendarDurationCriteriaFromCurrentDate(DatePart.YEAR, rf.getColumnName(), 0);
 				break;
-			case 12: // Current FY
+			case 12: // Previous Calendar Year
+				whereClause += getSqlCalendarDurationCriteriaFromCurrentDate(DatePart.YEAR, rf.getColumnName(), -1);
 				break;
-			case 13: // Current FY
+			case 13: // Current and Previous Calendar Year
+				whereClause += "( " + getSqlCalendarDurationCriteriaFromCurrentDate(DatePart.YEAR, rf.getColumnName(), -1) +
+							   " OR " + 
+							   getSqlCalendarDurationCriteriaFromCurrentDate(DatePart.YEAR, rf.getColumnName(), 0) + " )";
 				break;
-			case 14: // Current FY
+			case 14: // Current Calendar Month
+				whereClause += getSqlCalendarDurationCriteriaFromCurrentDate(DatePart.MONTH, rf.getColumnName(), 0);
 				break;
-			case 15: // Current FY
+			case 15: // Previous Calendar Month
+				whereClause += getSqlCalendarDurationCriteriaFromCurrentDate(DatePart.MONTH, rf.getColumnName(), -1);
 				break;
-			case 16: // Current FY
+			case 16: // Current and Previous Calendar Month
+				whereClause += "( " + getSqlCalendarDurationCriteriaFromCurrentDate(DatePart.MONTH, rf.getColumnName(), -1) +
+				   			   " OR " + 
+				   			   getSqlCalendarDurationCriteriaFromCurrentDate(DatePart.MONTH, rf.getColumnName(), 0) + " )";
 				break;
-			case 17: // Current FY
+			case 17: // Current Calendar Week
+				whereClause += getSqlCalendarDurationCriteriaFromCurrentDate(DatePart.WEEK, rf.getColumnName(), 0);
 				break;
-			case 18: // Current FY
+			case 18: // Previous Calendar Week
+				whereClause += getSqlCalendarDurationCriteriaFromCurrentDate(DatePart.WEEK, rf.getColumnName(), -1);
 				break;
-			case 19: // Current FY
+			case 19: // Current and Previous Calendar Week
+				whereClause += "( " + getSqlCalendarDurationCriteriaFromCurrentDate(DatePart.WEEK, rf.getColumnName(), -1) +
+				   			   " OR " + 
+				   			   getSqlCalendarDurationCriteriaFromCurrentDate(DatePart.WEEK, rf.getColumnName(), 0) + " )";
+				break; 
+			case 20: // Today
+				whereClause += rf.getColumnName() + " = " + getSqlCriteriaDaysFromCurrentDate(0);
 				break;
-			case 20: // Current FY
+			case 21: // Yesterday
+				whereClause += rf.getColumnName() + " = " + getSqlCriteriaDaysFromCurrentDate(-1);
 				break;
-			case 21: // Today
-				whereClause += " = " ;
-				break;
-			case 22: // Yesterday
-				whereClause += " = " + getSqlCriteriaDaysFromCurrentDate(-1);
-				break;
+			case 22: // Last 7
+				whereClause += rf.getColumnName() + " > " + getSqlCriteriaDaysFromCurrentDate(-7);
+				break;		
 			case 23: // Last 30
-				whereClause += " > " + getSqlCriteriaDaysFromCurrentDate(-30);
+				whereClause += rf.getColumnName() + " > " + getSqlCriteriaDaysFromCurrentDate(-30);
 				break;
 			case 24: // Last 60
-				whereClause += " > " + getSqlCriteriaDaysFromCurrentDate(-60);
+				whereClause += rf.getColumnName() + " > " + getSqlCriteriaDaysFromCurrentDate(-60);
 				break;
 			case 25: // Last 90
-				whereClause += " > " + getSqlCriteriaDaysFromCurrentDate(-90);
+				whereClause += rf.getColumnName() + " > " + getSqlCriteriaDaysFromCurrentDate(-90);
 				break;
 			case 26: // Last 120
-				whereClause += " > " + getSqlCriteriaDaysFromCurrentDate(-120);
+				whereClause += rf.getColumnName() + " > " + getSqlCriteriaDaysFromCurrentDate(-120);
 				break;
-			case 27: // Last 7
-				whereClause += " > " + getSqlCriteriaDaysFromCurrentDate(-7);
-				break;				
+						
 			}
 		}
 		return whereClause;
@@ -492,7 +565,7 @@ public class ReportQueryGenerator {
 	/**
 	 * Builds and returns a string for either mySql or SQL Server that subtracts the specified number of days from the current date.
 	 * <P>
-	 * {@code} whereClause += "AND" + fieldName + " > " + getSqlCriteriaDaysFromCurrentDate(-7);
+	 * {@code} whereClause += rf.getColumnName() + " = " + getSqlCriteriaDaysFromCurrentDate(-1);
 	 * @param days Number of days from the current date
 	 * @return String
 	 */
@@ -507,6 +580,36 @@ public class ReportQueryGenerator {
 		return result;
 	}
 
+	/**
+	 * Builds and returns a string for either mySql or SQL Server that adds/subtracts the specified number of weeks, months, etc. from the current date.
+	 * <P>
+	 * {@code} whereClause += getSqlCalendarDurationCriteriaFromCurrentDate(DatePart.YEAR, rf.getColumnName(), 0);
+	 * @param DatePart datePart (YEAR, MONTH, QUARTER, WEEK)
+	 * @param String columnName Name of column
+	 * @param int duration Number of weeks, months, etc. from the current date. 
+	 * @return String
+	 */
+	private String getSqlCalendarDurationCriteriaFromCurrentDate(DatePart datePart, String columnName, int duration) {
+		String result = "";
+		if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.MYSQL) {
+			result = "( " + datePart.mySQL() + "(" + columnName + ") = " + datePart.mySQL() + "(CURDATE()) + " + Integer.toString(duration); 
+			if (datePart == DatePart.YEAR){
+				result += " AND YEAR(" + columnName + ") = (YEAR(CURDATE()) + " + Integer.toString(duration) + " ))";
+			}else{
+				result += " AND YEAR(" + columnName + ") = YEAR(CURDATE()) )";
+			}	
+		}
+		else if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.SQLSERVER) {
+			result = "( DATEPART(" + datePart.SQL() + ", " + columnName + ") = (DATEPART(" + datePart.SQL() + ", GETDATE()) + " + Integer.toString(duration) + ")";
+			if (datePart == DatePart.YEAR){
+				result += " AND YEAR(" + columnName + ") = (YEAR(GETDATE()) + " + Integer.toString(duration) + " )) " ;
+			}else{
+				result += " AND YEAR(" + columnName + ") = YEAR(GETDATE()) ) " ;
+			}
+		}
+		return result;
+	}
+	
 	/**
 	 * Builds and returns the order by clause for a summary or matrix report.
 	 * <P>

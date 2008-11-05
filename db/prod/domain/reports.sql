@@ -103,7 +103,7 @@ insert into REPORTFIELD values(37,b'0',b'0','ADDRESS3','Address 3',b'0',b'0',b'0
 insert into REPORTFIELD values(38,b'0',b'0','CITY','City',b'1',b'0',b'0',b'0',b'0',b'0',1);
 insert into REPORTFIELD values(39,b'0',b'0','STATE','State',b'1',b'0',b'0',b'0',b'0',b'0',1);
 insert into REPORTFIELD values(40,b'0',b'0','POSTALCODE','Zip Code',b'1',b'0',b'0',b'0',b'0',b'0',1);
-
+insert into REPORTFIELD values(41,b'0',b'0','ADDDATE','Add Date',b'1',b'0',b'0',b'0',b'0',b'0',4);
 
 -- Account Number in People General
 insert into REPORTFIELD_REPORTFIELDGROUP values(1,1,2,1);
@@ -167,6 +167,8 @@ insert into REPORTFIELD_REPORTFIELDGROUP values(32,7,22,32);
 insert into REPORTFIELD_REPORTFIELDGROUP values(33,7,22,33);
 -- Organization Name into people general
 insert into REPORTFIELD_REPORTFIELDGROUP values(34,7,22,34);
+-- Add Date into people general
+insert into REPORTFIELD_REPORTFIELDGROUP values(41,7,22,41);
 -- Address 1 into people address
 insert into REPORTFIELD_REPORTFIELDGROUP values(35,8,22,35);
 -- Address 2 into people address

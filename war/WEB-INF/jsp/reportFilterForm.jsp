@@ -57,8 +57,8 @@
 </optgroup>
 <optgroup label="Calendar Day">
 <option label="Today CD" value="20">Today CD</option>
-<option label="Yesterday CD" value="22">Yesterday CD</option>
-<option label="Last 7 CD" value="27">Last 7 CD</option>
+<option label="Yesterday CD" value="21">Yesterday CD</option>
+<option label="Last 7 CD" value="22">Last 7 CD</option>
 <option label="Last 30 CD" value="23">Last 30 CD</option>
 <option label="Last 60 CD" value="24">Last 60 CD</option>
 <option label="Last 90 CD" value="25">Last 90 CD</option>
