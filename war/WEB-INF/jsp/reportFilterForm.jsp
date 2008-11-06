@@ -71,8 +71,16 @@
 </TABLE>
 <h1>Advanced Filters</h1>
 <TABLE id="report_advanced_filters" class="tablesorter">
-<TR><TH>Field</TH><TH>Operator</TH><TH>Prompt for value</TH><TH>Value</TH></TR>
+<TR><TH>Logical Operator</TH><TH>Field</TH><TH>Operator</TH><TH>Prompt for value</TH><TH>Value</TH></TR>
+		
 		<TR rowIndex="0">
+			<TD><SELECT id="advancedFilters[0].logicalOperator"
+				name="advancedFilters[0].logicalOperator">
+				<option value="0"> </option>				
+				<option value="1">And</option>
+				<option value="2">Or</option>
+			</SELECT></TD>
+
 			<TD><SELECT id="advancedFilters[0].fieldId"
 				name="advancedFilters[0].fieldId">
 				<option label="None" value="-1">None</option>

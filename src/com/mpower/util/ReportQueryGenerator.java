@@ -341,7 +341,10 @@ public class ReportQueryGenerator {
 				includeWhere = false;
 				whereClause += " WHERE ";
 			} else {
-				whereClause += " AND ";
+				if (filter.getLogicalOperator() == 2)
+					whereClause += " OR ";
+				else
+					whereClause += " AND ";
 			}
 			
 			whereClause += " " + getFieldNameForWhereClause(rf);

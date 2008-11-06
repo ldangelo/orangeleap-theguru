@@ -31,6 +31,10 @@ public class ReportAdvancedFilter implements java.io.Serializable {
 	@Transient
 	private String criteria;
 	
+	@Transient
+	private Integer logicalOperator;
+	
+	
 	public ReportAdvancedFilter() {
 		fieldId = 0L;
 		value = "";
@@ -79,5 +83,13 @@ public class ReportAdvancedFilter implements java.io.Serializable {
 
 	public String getCriteria() {
 		return criteria;
+	}
+	
+	public Integer getLogicalOperator(){
+		return logicalOperator;
+	}
+	
+	public void setLogicalOperator(Integer value){
+		this.logicalOperator = value;
 	}
 }
