@@ -29,6 +29,7 @@ import com.mpower.domain.ReportGroupByField;
 import com.mpower.domain.ReportLayout;
 import com.mpower.domain.ReportStandardFilter;
 import com.mpower.domain.ReportWizard;
+import com.mpower.service.ReportCustomFilterDefinitionService;
 import com.mpower.service.ReportFieldService;
 
 import ar.com.fdvs.dj.core.DJConstants;
@@ -134,7 +135,8 @@ public class ReportGenerator {
 		return templateFile;
 	}
 
-	public DynamicReport Generate(ReportWizard wiz,javax.sql.DataSource jdbcDataSource, ReportFieldService reportFieldService) throws Exception {
+	public DynamicReport Generate(ReportWizard wiz,javax.sql.DataSource jdbcDataSource, ReportFieldService reportFieldService, 
+			ReportCustomFilterDefinitionService reportCustomFilterDefinitionService) throws Exception {
 		File templateFile = getTemplateFile(wiz.getReportLayout());
 		initStyles();
 
@@ -257,7 +259,8 @@ public class ReportGenerator {
   		//
 		//Build query
   		//
-		ReportQueryGenerator reportQueryGenerator = new ReportQueryGenerator(wiz, reportFieldService, reportFieldsOrderedList);
+		ReportQueryGenerator reportQueryGenerator = new ReportQueryGenerator(wiz, 
+				reportFieldService, reportCustomFilterDefinitionService, reportFieldsOrderedList);
 		String query = reportQueryGenerator.getQueryString(); 
 		
 		List<ReportAdvancedFilter> filters = wiz.getAdvancedFilters();

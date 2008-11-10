@@ -64,6 +64,11 @@ public class ReportDataSubSource implements java.io.Serializable,
 	@Column(name = "JASPER_DATASOURCE_NAME")
 	private String jasperDatasourceName;
 	
+	@ManyToMany(mappedBy="reportDataSubSource",cascade=CascadeType.ALL)
+	@IndexColumn(name="REPORTCUSTOMFILTERDEFINITION_ID")
+	@Column(name = " REPORTDATASUBSOURCE_REPORTCUSTOMFILTERDEFINITION_ID")
+	private List<ReportCustomFilterDefinition> reportCustomFilterDefinitions;
+	
 	public ReportDataSubSource(ReportDataSubSource reportDataSubSource) {
 		displayName      = reportDataSubSource.displayName;
 		viewName         = reportDataSubSource.viewName;
@@ -132,5 +137,13 @@ public class ReportDataSubSource implements java.io.Serializable,
 
 	public String getJasperDatasourceName() {
 		return jasperDatasourceName;
+	}
+
+	public void setReportCustomFilterDefinitions(List<ReportCustomFilterDefinition> reportCustomFilterDefinitions) {
+		this.reportCustomFilterDefinitions = reportCustomFilterDefinitions;
+	}
+
+	public List<ReportCustomFilterDefinition> getReportCustomFilterDefinitions() {
+		return reportCustomFilterDefinitions;
 	}
 }

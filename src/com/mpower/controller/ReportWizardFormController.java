@@ -37,12 +37,14 @@ import ar.com.fdvs.dj.core.layout.ClassicLayoutManager;
 import ar.com.fdvs.dj.domain.DynamicReport;
 import com.jaspersoft.jasperserver.api.metadata.xml.domain.impl.ResourceDescriptor;
 import com.mpower.domain.ReportAdvancedFilter;
+import com.mpower.domain.ReportCustomFilterDefinition;
 import com.mpower.domain.ReportDataSource;
 import com.mpower.domain.ReportDataSubSource;
 import com.mpower.domain.ReportField;
 import com.mpower.domain.ReportFieldGroup;
 import com.mpower.domain.ReportGroupByField;
 import com.mpower.domain.ReportWizard;
+import com.mpower.service.ReportCustomFilterDefinitionService;
 import com.mpower.service.ReportFieldGroupService;
 import com.mpower.service.ReportFieldService;
 import com.mpower.service.ReportSourceService;
@@ -68,7 +70,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 	private ReportFieldGroupService reportFieldGroupService;
 
 	private ReportFieldService      reportFieldService;
-
+	private ReportCustomFilterDefinitionService      reportCustomFilterDefinitionService;
 	private SessionService          sessionService;
 	private DataSource jdbcDataSource;
 	private String reportUnitDataSourceURI;
@@ -192,7 +194,27 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 				targetPage = 9;
 			else
 				targetPage = 7;			
-		}		
+		}
+
+		//skip summarized fields if no summary fields available
+		if (targetPage == 5) {
+			boolean fieldsToSummarize = false;
+			Iterator<ReportField> itFields = wiz.getSelectedReportFieldsInOrder().iterator();
+			while (itFields.hasNext()) {
+				ReportField field = (ReportField)itFields.next();
+				if (field.getCanBeSummarized()) {
+					fieldsToSummarize = true;
+					break;
+				}
+			}
+			if (!fieldsToSummarize) {
+				if (currentPage < 5)
+					targetPage = 6;
+				else
+					targetPage = 4;
+			}
+		}
+		
 		return targetPage;			
 	}
 	
@@ -241,15 +263,14 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 			wiz.setDataSubSource(rdss);
 			
 			List<ReportFieldGroup>    lrfg = reportFieldGroupService.readFieldGroupBySubSourceId(rdss.getId());
-			
 			wiz.setFieldGroups(lrfg);
 			refData.put("fieldGroups", lrfg);
+			
+			wiz.getDataSubSource().setReportCustomFilterDefinitions(reportCustomFilterDefinitionService.readReportCustomFilterDefinitionBySubSourceId(rdss.getId()));
 
 			List<ReportField> fields = new LinkedList<ReportField>();
 
-			
 			// Iterate across the field groups in the
-
 			Iterator itGroup = lrfg.iterator();
 			while (itGroup.hasNext()) {
 				ReportFieldGroup rfg = (ReportFieldGroup) itGroup.next();
@@ -321,7 +342,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		
 		if(page==7) {
 			refData.put("fieldGroups", wiz.getFieldGroups());
-			
+			refData.put("customFilters", wiz.getDataSubSource().getReportCustomFilterDefinitions());
 		}
 
 		// chart options
@@ -367,7 +388,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 
 
 
-			DynamicReport dr = reportGenerator.Generate(wiz, jdbcDataSource, reportFieldService);
+			DynamicReport dr = reportGenerator.Generate(wiz, jdbcDataSource, reportFieldService, reportCustomFilterDefinitionService);
 			String query = dr.getQuery().getText();
 			
 			//
@@ -400,7 +421,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		// First we must generate a jrxml file
 		//
 
-		DynamicReport dr = reportGenerator.Generate(wiz, jdbcDataSource, reportFieldService);
+		DynamicReport dr = reportGenerator.Generate(wiz, jdbcDataSource, reportFieldService, reportCustomFilterDefinitionService);
 		
 		File tempFile = File.createTempFile("wiz", ".jrxml");
 		DynamicJasperHelper.generateJRXML(dr,new ClassicLayoutManager(), reportGenerator.getParams(), null, tempFile.getPath());
@@ -535,5 +556,14 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 
 		return showPage(request, errors, getInitialPage(request, errors
 				.getTarget()));
+	}
+
+	public void setReportCustomFilterDefinitionService(
+			ReportCustomFilterDefinitionService reportCustomFilterDefinitionService) {
+		this.reportCustomFilterDefinitionService = reportCustomFilterDefinitionService;
+	}
+
+	public ReportCustomFilterDefinitionService getReportCustomFilterDefinitionService() {
+		return reportCustomFilterDefinitionService;
 	}
 }

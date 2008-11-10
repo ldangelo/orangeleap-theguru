@@ -31,6 +31,7 @@ import com.mpower.domain.ReportAdvancedFilter;
 import com.mpower.domain.ReportField;
 import com.mpower.domain.ReportWizard;
 import com.mpower.domain.ReportFieldType;
+import com.mpower.service.ReportCustomFilterDefinitionService;
 import com.mpower.service.ReportFieldService;
 import com.mpower.util.ReportGenerator;
 
@@ -63,7 +64,8 @@ public class DynamicReportView extends AbstractView {
 	
 
 	private ReportFieldService reportFieldService;
-
+	private ReportCustomFilterDefinitionService reportCustomFilterDefinitionService;
+	
 	public DynamicReportView() {
 		// TODO Auto-generated constructor stub
 	}
@@ -107,7 +109,7 @@ public class DynamicReportView extends AbstractView {
 
 
 
-		DynamicReport dr = reportGenerator.Generate(wiz, jdbcDataSource, reportFieldService);
+		DynamicReport dr = reportGenerator.Generate(wiz, jdbcDataSource, reportFieldService, reportCustomFilterDefinitionService);
 		String query = dr.getQuery().getText();
 		
 		//
@@ -163,6 +165,11 @@ public class DynamicReportView extends AbstractView {
 		this.reportFieldService = reportFieldService;
 	}
 
+	public void setReportCustomFilterDefinitionService(
+			ReportCustomFilterDefinitionService reportCustomFilterDefinitionService) {
+		this.reportCustomFilterDefinitionService = reportCustomFilterDefinitionService;
+	}
+	
 	public void setReportWizard(ReportWizard wiz) {
 		this.wiz = wiz;
 	}

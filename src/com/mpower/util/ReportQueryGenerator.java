@@ -10,12 +10,15 @@ import java.util.List;
 
 import com.mpower.domain.ReportAdvancedFilter;
 import com.mpower.domain.ReportCrossTabFields;
+import com.mpower.domain.ReportCustomFilter;
+import com.mpower.domain.ReportCustomFilterDefinition;
 import com.mpower.domain.ReportDatabaseType;
 import com.mpower.domain.ReportField;
 import com.mpower.domain.ReportFieldType;
 import com.mpower.domain.ReportGroupByField;
 import com.mpower.domain.ReportStandardFilter;
 import com.mpower.domain.ReportWizard;
+import com.mpower.service.ReportCustomFilterDefinitionService;
 import com.mpower.service.ReportFieldService;
 
 /**
@@ -25,6 +28,7 @@ import com.mpower.service.ReportFieldService;
 public class ReportQueryGenerator {
 	private ReportWizard reportWizard;
 	private ReportFieldService reportFieldService;
+	private ReportCustomFilterDefinitionService reportCustomFilterDefinitionService;
 	private List<ReportField> reportFieldsOrderedList;
 		
     /**
@@ -33,10 +37,12 @@ public class ReportQueryGenerator {
      * @param reportFieldService ReportFieldService the QueryGenerator will use to retrieve field information from the database.
      * @param reportFieldsOrderedList <tt>List&lt;ReportField&gt;</tt> of the report fields in the correct order.
      */
-    public ReportQueryGenerator(ReportWizard reportWizard, ReportFieldService reportFieldService, List<ReportField> reportFieldsOrderedList) {
-    	this.reportWizard = reportWizard;
+    public ReportQueryGenerator(ReportWizard reportWizard, ReportFieldService reportFieldService, 
+    		ReportCustomFilterDefinitionService reportCustomFilterDefinitionService, List<ReportField> reportFieldsOrderedList) {
+    	this.setReportWizard(reportWizard);
     	this.setReportFieldService(reportFieldService);
-    	this.reportFieldsOrderedList = reportFieldsOrderedList;
+    	this.setReportCustomFilterDefinitionService(reportCustomFilterDefinitionService);
+    	this.setReportFieldsOrderedList(reportFieldsOrderedList);
     }
    
     public enum DatePart {
@@ -129,6 +135,23 @@ public class ReportQueryGenerator {
 	public ReportFieldService getReportFieldService() {
 		return reportFieldService;
 	}
+
+	/**
+	 * Sets the ReportCustomFilterDefinitionService the QueryGenerator uses to retrieve custom filter definition information.
+	 * @param getReportCustomFilterDefinitionService
+	 */
+	public ReportCustomFilterDefinitionService getReportCustomFilterDefinitionService() {
+		return reportCustomFilterDefinitionService;
+	}
+
+	/** 
+	 * Returns the ReportCustomFilterDefinitionService the QueryGenerator uses to retrieve custom filter definition information.
+	 * @return ReportFieldService
+	 */
+	public void setReportCustomFilterDefinitionService(
+			ReportCustomFilterDefinitionService reportCustomFilterDefinitionService) {
+		this.reportCustomFilterDefinitionService = reportCustomFilterDefinitionService;
+	}
 	
 	/**
 	 * Sets the reportFieldsOrderedList that contains the report fields in the specified order.
@@ -210,7 +233,10 @@ public class ReportQueryGenerator {
 
 		includeWhere = whereClause.length() == 0;		
 		whereClause += buildAdvancedFilterWhereClause(includeWhere);
-		
+
+		includeWhere = whereClause.length() == 0;		
+		whereClause += buildCustomFilterWhereClause(includeWhere);
+
 		return whereClause;
 	}
 
@@ -446,6 +472,40 @@ public class ReportQueryGenerator {
 		return whereClause;
 	}
 	
+	/**
+	 * Builds and returns a portion of a where clause for the custom filters.
+	 * <P>
+	 * {@code} whereClause += buildCustomFilterWhereClause(false);
+	 * @param includeWhere Specifies whether the returned string should begin with a WHERE if true, or with an AND if false.
+	 * @return String
+	 * @throws ParseException 
+	 */
+	private String buildCustomFilterWhereClause(Boolean includeWhere) throws ParseException {
+		String whereClause = ""; 
+		Iterator<ReportCustomFilter> itFilter = getReportWizard().getReportCustomFilters().iterator();
+		while (itFilter.hasNext()) {
+			ReportCustomFilter filter = (ReportCustomFilter) itFilter.next();
+			
+			if (filter == null || filter.getCustomFilterId() <= 0) continue; // this is an empty filter
+			ReportCustomFilterDefinition reportCustomFilterDefinition = getReportCustomFilterDefinitionService().find(filter.getCustomFilterId());
+			if (reportCustomFilterDefinition == null) continue;
+			String filterString = reportCustomFilterDefinition.getSqlText();
+			if (filterString.length() == 0) continue;
+			if (includeWhere) {
+				includeWhere = false;
+				whereClause += " WHERE ";
+			} else {
+				whereClause += " AND ";
+			}
+			filterString = filterString.replace("[VIEWNAME]", getReportWizard().getDataSubSource().getViewName());
+			int criteriaSize = filter.getReportCustomFilterCriteria().size();
+			for (int index = 0; index < criteriaSize; index++) {
+				filterString = filterString.replace("{" + Integer.toString(index) + "}", filter.getReportCustomFilterCriteria().get(index));
+			}
+			whereClause += filterString;
+		}
+		return whereClause;
+	}
 
 	/**
 	 * Attempts to parse the incoming date string using the default locale first, and then various

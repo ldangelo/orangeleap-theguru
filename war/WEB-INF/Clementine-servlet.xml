@@ -55,6 +55,7 @@
         <property name="reportFieldGroupService" ref="reportFieldGroupService"/>
         <property name="reportFieldService" ref="reportFieldService"/>
 		<property name="reportWizardService" ref="reportWizardService"/>
+		<property name="reportCustomFilterDefinitionService" ref="reportCustomFilterDefinitionService"/>
 		<property name="reportUnitDataSourceURI" value="/datasources/ReportWizardJdbcDS"/>
         <property name="dynamicView" ref="dynamicReport"/>
         <property name="reportGenerator" ref="reportGenerator"/>

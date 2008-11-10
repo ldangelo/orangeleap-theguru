@@ -90,6 +90,9 @@ public class ReportWizard implements java.io.Serializable {
 	@Transient
 	private ReportCrossTabFields reportCrossTabFields;
 	
+	@Transient
+	private List<ReportCustomFilter> reportCustomFilters;
+
 	@Column(name = "REPORT_TYPE")
 	private String reportType;
 	private ReportLayout reportLayout;
@@ -113,6 +116,7 @@ public class ReportWizard implements java.io.Serializable {
 		reportGroupByFields = LazyList.decorate(new ArrayList<ReportGroupByField>(),FactoryUtils.instantiateFactory(ReportGroupByField.class));
 		reportChartSettings = LazyList.decorate(new ArrayList<ReportChartSettings>(),FactoryUtils.instantiateFactory(ReportChartSettings.class));
 		reportCrossTabFields = new ReportCrossTabFields();
+		reportCustomFilters = LazyList.decorate(new ArrayList<ReportCustomFilter>(),FactoryUtils.instantiateFactory(ReportCustomFilter.class));
 	}
 
 	public List<ReportAdvancedFilter> getAdvancedFilters() {
@@ -200,7 +204,7 @@ public class ReportWizard implements java.io.Serializable {
 		if (reportColumnOrder.length() == 0) {			
 			Iterator<ReportField> it = fields.iterator();			
 			while(it.hasNext()) {
-				ReportField f = (ReportField) it.next();
+				ReportField f = it.next();
 				
 				if (f.getSelected()) {
 					if (reportColumnOrder.length() > 0)
@@ -300,9 +304,9 @@ public class ReportWizard implements java.io.Serializable {
 		StringTokenizer stringTokenizer = new StringTokenizer(getReportColumnOrder(), ",");
 		while (stringTokenizer.hasMoreTokens()) {
 			int fieldId = Integer.parseInt(stringTokenizer.nextToken());
-			Iterator iteratorFields = fields.iterator();
+			Iterator<ReportField> iteratorFields = fields.iterator();
 			while(iteratorFields.hasNext()) {
-				ReportField reportField = (ReportField) iteratorFields.next();				
+				ReportField reportField = iteratorFields.next();				
 				if (reportField.getId() == fieldId) {
 					if (reportField.getSelected())
 						fieldList.add(reportField);
@@ -322,9 +326,9 @@ public class ReportWizard implements java.io.Serializable {
 
 	public List<ReportField> getDefaultReportFields() {
 		List<ReportField> fieldList = new LinkedList<ReportField>();
-		Iterator iteratorFields = fields.iterator();
+		Iterator<ReportField> iteratorFields = fields.iterator();
 		while(iteratorFields.hasNext()) {
-			ReportField reportField = (ReportField) iteratorFields.next();				
+			ReportField reportField = iteratorFields.next();				
 			if (reportField.getIsDefault()) {
 					reportField.setSelected(true);
 					fieldList.add(reportField);
@@ -384,9 +388,9 @@ public class ReportWizard implements java.io.Serializable {
 		ReportField result = new ReportField();
 		if (fields != null)
 		{
-			Iterator iteratorReportFields = fields.iterator();
+			Iterator<ReportField> iteratorReportFields = fields.iterator();
 			while(iteratorReportFields.hasNext()) {
-				ReportField  reportField = (ReportField) iteratorReportFields.next();
+				ReportField  reportField = iteratorReportFields.next();
 				if (reportField != null && reportField.getColumnName().compareToIgnoreCase(columnName) == 0) {
 					result = reportField;
 					break;
@@ -394,5 +398,13 @@ public class ReportWizard implements java.io.Serializable {
 			}
 		}
 		return result;
+	}
+
+	public void setReportCustomFilters(List<ReportCustomFilter> reportCustomFilter) {
+		this.reportCustomFilters = reportCustomFilter;
+	}
+
+	public List<ReportCustomFilter> getReportCustomFilters() {
+		return reportCustomFilters;
 	}
 }

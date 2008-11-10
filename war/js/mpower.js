@@ -3,6 +3,7 @@ $(document).ready(function()
 	
 	/* This code block is your window.onload.  Please don't set window.onload directly. */
 	
+	rowCloner("#report_standard_filters tr:last");
 	rowCloner("#report_advanced_filters tr:last");
 	rowCloner("#report_groupbyfields tr:last");
 	rowCloner("#report_matrixrows tr:last");
@@ -176,7 +177,66 @@ function SingleSelect(regex,current) {
 		current.checked = true;
 }
 
-function toggleValueTextBoxEnabled() {
+function addCustomFilterRow(elem, indexElement) {
+	var customFilterSelect = $(elem);
+	// Get the index and increment it
+	var customFiltersIndex = $(indexElement);
+	// minus 0 to make sure it's an integer
+	var customFiltersIndexValue = (customFiltersIndex.val() - 0);	
+	customFiltersIndex.val(customFiltersIndexValue + 1);
 	
-}
+	// Populate the new row with the details from the select box
+	var customFilterText = customFilterSelect.find("option:selected").text()
+	
+	// Create a new row
+	var row = $('<tr />');
+	var criteriaCount = 0;
+	var customFilterTextIndex = customFilterText.indexOf('[');
+	var cell = $('<td />');
+	while (customFilterTextIndex >= 0) {
+		// Parse through the string to find field names in brackets
+		cell.append(customFilterText.substring(0, customFilterTextIndex));
+		customFilterText = customFilterText.substring(customFilterTextIndex);
+		customFilterTextIndex = customFilterText.indexOf(']');
+		if (customFilterTextIndex >= 0) {
+			// Create input boxes for the fields
+			var newInput = $('<input />')
+				.attr('name', 'reportCustomFilters[' + customFiltersIndexValue + '].reportCustomFilterCriteria[' + criteriaCount + ']')
+				.attr('id', 'reportCustomFilters[' + customFiltersIndexValue + '].reportCustomFilterCriteria[' + criteriaCount + ']');
+			cell.append(newInput);
+			customFilterText = customFilterText.substring(customFilterTextIndex + 1);
+		}
+		customFilterTextIndex = customFilterText.indexOf('[');
+		criteriaCount = criteriaCount + 1;
+	}
+	
+	// Add any remaining text and append it to the cell and append that to the row
+	if (customFilterText != '') {
+		cell.append(customFilterText);
+	}	
+	row.append(cell);
+	
+	// Add the delete button in a new cell
+	cell = $('<td />');
+	var newButton = $('<img />')
+		.attr('class', 'deleteButton')
+		.attr('src', 'images/icons/deleteRow.png')
+		.attr('style', 'cursor: pointer;')
+	cell.append(newButton);
+	
+	// Add hidden field for filter id
+	var newInput = $('<input type="hidden" />')
+		.attr('name', 'reportCustomFilters[' + customFiltersIndexValue + '].customFilterId')
+		.attr('id', 'reportCustomFilters[' + customFiltersIndexValue + '].customFilterId')
+		.val(customFilterSelect.val());
+	cell.append(newInput);
+	row.append(cell);
+	
+	$('#report_custom_filters').append(row);
+	
+	// Clear the select box
+	customFilterSelect.val(0);
 
+	$('#report_custom_filters tr:last').find(".deleteButton").click(function(){
+		deleteRow($(this).parent().parent());});	
+}
