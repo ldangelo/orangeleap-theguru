@@ -66,7 +66,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 	private ReportSourceService     reportSourceService;
 	private ReportWizard            wiz;
 	private ReportWizardService     reportWizardService;
-	
+
 	private ReportFieldGroupService reportFieldGroupService;
 
 	private ReportFieldService      reportFieldService;
@@ -75,7 +75,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 	private DataSource jdbcDataSource;
 	private String reportUnitDataSourceURI;
 	private ReportGenerator	reportGenerator;
-	
+
 	public ReportWizardFormController() {
    	}
 
@@ -127,7 +127,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 	public SessionService getSessionService() {
 		return sessionService;
 	}
-	
+
 	// returns the last page as the success view
 	private String getSuccessView() {
 		return getPages()[getPages().length - 1];
@@ -136,7 +136,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 	@Override
 	public ModelAndView handleRequest(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
-		
+
 		Assert.notNull(request, "Request must not be null");
 
 
@@ -152,7 +152,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 
 		Assert.notNull(request, "Request must not be null");
 
-		if (request.getParameter("_target12") != null) {
+		if (request.getParameter("_target11") != null) {
 			//
 			// We are saving this report to jasperserver
 			saveReport(wiz);
@@ -217,15 +217,15 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		
 		return targetPage;			
 	}
-	
+
 	@Override
 	protected ModelAndView processFinish(HttpServletRequest request,
 			HttpServletResponse arg1, Object arg2, BindException arg3)
 			throws Exception {
 
-		
+
 		return new ModelAndView(getSuccessView(),"reportsouce",wiz);
-	
+
 	}
 
 	@SuppressWarnings("unchecked")
@@ -261,7 +261,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 			ReportDataSubSource       rdss = reportSubSourceService.find( wiz.getSubSourceId());
 			wiz.setDataSubSources(lrdss);
 			wiz.setDataSubSource(rdss);
-			
+
 			List<ReportFieldGroup>    lrfg = reportFieldGroupService.readFieldGroupBySubSourceId(rdss.getId());
 			wiz.setFieldGroups(lrfg);
 			refData.put("fieldGroups", lrfg);
@@ -288,13 +288,13 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 			
 			ReportDataSubSource rdss = reportSubSourceService.find(wiz.getSubSourceId());
 			List<ReportFieldGroup>    lrfg = reportFieldGroupService.readFieldGroupBySubSourceId(rdss.getId());
-			
+
 			wiz.setFieldGroups(lrfg);
 			refData.put("fieldGroups", lrfg);
 
 			List<ReportField> fields = new LinkedList<ReportField>();
 
-			
+
 			// Iterate across the field groups in the
 
 			Iterator itGroup = lrfg.iterator();
@@ -306,19 +306,19 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 			wiz.setFields(fields);
 			refData.put("fields", fields);
 		}
-		
+
 		//
 		// Report Columns
 		if (page == 4) {
 			ReportDataSubSource rdss = reportSubSourceService.find(wiz.getSubSourceId());
 			List<ReportFieldGroup>    lrfg = reportFieldGroupService.readFieldGroupBySubSourceId(rdss.getId());
-			
+
 			wiz.setFieldGroups(lrfg);
 			refData.put("fieldGroups", lrfg);
 
 			List<ReportField> fields = new LinkedList<ReportField>();
 
-			
+
 			// Iterate across the field groups in the
 
 			Iterator itGroup = lrfg.iterator();
@@ -329,17 +329,17 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 			wiz.setFields(fields);
 			refData.put("fields", fields);
 		}
-		
+
 		if(page==5) {
-		
+
 			refData.put("fieldGroups", wiz.getFieldGroups());
 		}
-		
+
 		if(page==6) {
 			refData.put("fieldGroups", wiz.getFieldGroups());
-			refData.put("fields", wiz.getSelectedReportFieldsInOrder());			
+			refData.put("fields", wiz.getSelectedReportFieldsInOrder());
 		}
-		
+
 		if(page==7) {
 			refData.put("fieldGroups", wiz.getFieldGroups());
 			refData.put("customFilters", wiz.getDataSubSource().getReportCustomFilterDefinitions());
@@ -349,7 +349,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		if(page==8) {
 	  		List<ReportGroupByField> groupByFields = wiz.getReportGroupByFields();
 	  		Iterator itGroupByFields = groupByFields.iterator();
-	  		
+
 	  		//get list of groupby fields in order
 	  		List<ReportField> groupByFieldsList = new LinkedList<ReportField>();
 	  		while (itGroupByFields.hasNext()){
@@ -360,10 +360,10 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 				groupByFieldsList.add(f);
 	  		}
 			refData.put("reportGroupByFields", groupByFieldsList);
-			
+
 	  		List<ReportField> fields = wiz.getSelectedReportFieldsInOrder();
 	  		Iterator itSummarizedByFields = fields.iterator();
-	  		
+
 	  		//get list of summarized fields
 	  		List<ReportField> summarizedFieldsList = new LinkedList<ReportField>();
 	  		while (itSummarizedByFields.hasNext()){
@@ -371,31 +371,27 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 	  			if (field.getIsSummarized())
 	  				summarizedFieldsList.add(field);
 	  		}
-			refData.put("reportSummarizedByFields", summarizedFieldsList);			
+			refData.put("reportSummarizedByFields", summarizedFieldsList);
 		}
-		
+
 		// run a saved report
-		if (page==12) { 
-			wiz.setReportPath("/Reports/Clementine/" + wiz.getReportName().replace(" ", "_"));
+		if (page==12) {
+		    //			wiz.setReportPath("/Reports/Clementine/" + wiz.getReportName().replace(" ", "_"));
 			refData.put("reportPath", wiz.getReportPath());
 		}
-		
+
 		// running the report
-		if (page==13) { 
+		if (page==13) {
 			@SuppressWarnings("unused")
-
-			
-
-
 
 			DynamicReport dr = reportGenerator.Generate(wiz, jdbcDataSource, reportFieldService, reportCustomFilterDefinitionService);
 			String query = dr.getQuery().getText();
-			
+
 			//
 			// execute the query and pass it to generateJasperPrint
 			Connection connection = jdbcDataSource.getConnection();
 			Statement statement = connection.createStatement();
-			
+
 			File tempFile = File.createTempFile("wiz", ".jrxml");
 			DynamicJasperHelper.generateJRXML(dr,new ClassicLayoutManager(), reportGenerator.getParams(), null, tempFile.getPath());
 
@@ -422,7 +418,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		//
 
 		DynamicReport dr = reportGenerator.Generate(wiz, jdbcDataSource, reportFieldService, reportCustomFilterDefinitionService);
-		
+
 		File tempFile = File.createTempFile("wiz", ".jrxml");
 		DynamicJasperHelper.generateJRXML(dr,new ClassicLayoutManager(), reportGenerator.getParams(), null, tempFile.getPath());
 
@@ -438,9 +434,11 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		if (wiz.getReportComment() != null && wiz.getReportComment().length() > 0)
 			reportComment = wiz.getReportComment();
 		
-		reportGenerator.put(ResourceDescriptor.TYPE_REPORTUNIT, reportTitle.replace(" ", "_"), reportTitle, reportComment, "/Reports/Clementine",tempFile, reportGenerator.getParams(), wiz.getDataSubSource().getJasperDatasourceName());
+		reportGenerator.put(ResourceDescriptor.TYPE_REPORTUNIT, reportTitle.replace(" ", "_"), reportTitle, reportComment,wiz.getReportPath(),tempFile, reportGenerator.getParams(), wiz.getDataSubSource().getJasperDatasourceName());
 
-		
+		reportGenerator.put(ResourceDescriptor.TYPE_REPORTUNIT, reportTitle.replace(" ", "_"), reportTitle, reportComment, wiz.getReportPath(),tempFile, reportGenerator.getParams());
+
+
 		//
 		// now we need to save the report to the jasperserver
 		//		ResourceDescriptor rd = new ResourceDescriptor();
@@ -453,23 +451,23 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		//		ResourceDescriptor jrxmlDescriptor = new ResourceDescriptor();
 		//		jrxmlDescriptor.setWsType(ResourceDescriptor.TYPE_JRXML);
 		//		jrxmlDescriptor.setName(wiz.getReportName());
-		//		jrxmlDescriptor.setLabel(wiz.getReportComment()); 
-		//		jrxmlDescriptor.setDescription(wiz.getReportComment()); 
+		//		jrxmlDescriptor.setLabel(wiz.getReportComment());
+		//		jrxmlDescriptor.setDescription(wiz.getReportComment());
 		//		jrxmlDescriptor.setIsNew(true);
 		//		jrxmlDescriptor.setHasData(true);
 		//		jrxmlDescriptor.setMainReport(true);
-		
+
 		//		rd.setWsType(ResourceDescriptor.TYPE_REPORTUNIT);
 		//		rd.setParentFolder("/Reports/Clementine");
 		//		rd.setIsNew(true);
 		//		rd.setUriString(rd.getParentFolder() + "/" + wiz.getReportName());
 		//		rd.setName(wiz.getReportName());
-		//		rd.setLabel(wiz.getReportComment()); 
-		//		rd.setDescription(wiz.getReportComment()); 
+		//		rd.setLabel(wiz.getReportComment());
+		//		rd.setDescription(wiz.getReportComment());
 		//		rd.getChildren().add(jrxmlDescriptor);
-		
+
 		//		reportGenerator.addOrModifyResource(rd,tempFile);
-		
+
 //		server.getWSClient().addOrModifyResource(rd, tempFile);
 
 		// delete the temporary file
