@@ -5,7 +5,7 @@
 	<tiles:putAttribute name="primaryNav" value="MPowerOpen Reports Wizard" />
 	<tiles:putAttribute name="secondaryNav" value="Search" />
 	<tiles:putAttribute name="mainContent" type="string">
-		<div class="content760 mainForm test">
+		<div id="formContent" class="content760 mainForm test">
 			<jsp:include page="reportSaveAsForm.jsp"/>
 		</div>
 	</tiles:putAttribute>
