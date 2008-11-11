@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
-
 <!--
   - DispatcherServlet application context for the Spring web MVC
   - implementation of Tangarine's web tier.
   -->
-<beans>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+
+
+
+	<bean id="JasperServerService" class="com.mpower.service.JasperServerServiceImpl">
+		<property name="userName" value="jasperadmin"/>
+		<property name="password" value="jasperadmin"/>
+		<property name="URI" value="http://127.0.0.1:8080/jasperserver/services/repository"/>
+	</bean>
+
+
+
 
     <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
         <property name="basename" value="messages"/>
@@ -24,33 +36,34 @@
 
 	<bean id="defaultHandlerMapping" class="org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping"/>
 
+
 	<bean id="dynamicReport" class="com.mpower.view.DynamicReportView">
 	    	<property name="jdbcDataSource" ref="dataSource"/>
 	    	<property name="reportFieldService" ref="reportFieldService"/>
 	    	<property name="reportGenerator" ref="reportGenerator"/>
 	</bean>
-    
+
 	<bean id="reportGenerator" class="com.mpower.util.ReportGenerator">
-		<property name="reportServicesURI" value="http://127.0.0.1:8080/jasperserver/services/repository"/>		
+		<property name="reportServicesURI" value="http://127.0.0.1:8080/jasperserver/services/repository"/>
 		<property name="reportUserName" value="jasperadmin"/>
-		<property name="reportPassword" value="jasperadmin"/>        
-		<property name="reportUnitDataSourceURI" value="/datasources/ReportWizardJdbcDS"/>		
+		<property name="reportPassword" value="jasperadmin"/>
+		<property name="reportUnitDataSourceURI" value="/datasources/ReportWizardJdbcDS"/>
 	</bean>
 
     <bean name="/dynamicReport.htm" class="com.mpower.controller.DynamicReportController">
 		<property name="dynamicView" ref="dynamicReport"/>
     </bean>
-    
+
 	<bean name="/ReportManager.htm" class="com.mpower.controller.ReportManagerFormController">
 		<property name="commandName"  value="reportmanager"/>
 		<property name="commandClass" value="com.mpower.domain.ReportManager"/>
 		<property name="reportWizardService" ref="reportWizardService"/>
 	</bean>
-	
+
     <bean name="/ReportWizard.htm" class="com.mpower.controller.ReportWizardFormController">
         <property name="commandName" value="reportsource"/>
         <property name="commandClass" value="com.mpower.domain.ReportWizard"/>
-        <property name="reportSourceService" ref="reportSourceService"/>  
+        <property name="reportSourceService" ref="reportSourceService"/>
         <property name="reportSubSourceService" ref="reportSubSourceService"/>
         <property name="reportFieldGroupService" ref="reportFieldGroupService"/>
         <property name="reportFieldService" ref="reportFieldService"/>
@@ -59,7 +72,7 @@
 		<property name="reportUnitDataSourceURI" value="/datasources/ReportWizardJdbcDS"/>
         <property name="dynamicView" ref="dynamicReport"/>
         <property name="reportGenerator" ref="reportGenerator"/>
-    	<property name="jdbcDataSource" ref="dataSource"/>               
+    	<property name="jdbcDataSource" ref="dataSource"/>
 	<property name="pages">
 		<list>
 			<value>ReportSource</value>
@@ -73,13 +86,14 @@
 			<value>ReportChartSettings</value>
 			<value>ReportSaveAs</value>
 			<value>ReportRedirect</value>
-			<value>ReportRedirect</value>			
-			<value>RunSavedReport</value>	
+			<value>ReportRedirect</value>
+			<value>RunSavedReport</value>
 			<value>RunReport</value>
-			<value>ReportRedirect</value>					
+			<value>ReportRedirect</value>
 		</list>
 	</property>
     </bean>
+
 
 	<!-- Configures the Tiles layout system -->
 	<bean id="tilesConfigurer"
