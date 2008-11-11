@@ -116,3 +116,11 @@ a:hover {
 .positionRelative {
 	position:relative;
 }
+
+div.scroll {
+   overflow: auto;
+   border: 1px solid #666;
+   padding: 8px;
+   height: 300px;
+}
+
