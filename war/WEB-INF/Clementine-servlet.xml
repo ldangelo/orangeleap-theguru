@@ -5,18 +5,28 @@
   -->
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dwr="http://www.directwebremoting.org/schema/spring-dwr"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-           http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
-
-
+           http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+	   http://www.directwebremoting.org/schema/spring-dwr 
+	   http://www.directwebremoting.org/schema/spring-dwr-2.0.xsd"> 
 
 	<bean id="JasperServerService" class="com.mpower.service.JasperServerServiceImpl">
 		<property name="userName" value="jasperadmin"/>
 		<property name="password" value="jasperadmin"/>
 		<property name="URI" value="http://127.0.0.1:8080/jasperserver/services/repository"/>
+		<dwr:remote javascript="JasperServerService"/>
+		
 	</bean>
 
-
+	<bean id="ReportSubSourceService" class="com.mpower.service.DWRReportSubSourceServiceImpl">
+	  <property name="reportSubSource" ref="reportSubSourceService"/>
+	  <dwr:remote javascript="ReportSubSourceService"/>
+	</bean>
+	<dwr:configuration>
+	  <dwr:convert type="bean" class="com.jaspersoft.jasperserver.api.metadata.xml.domain.impl.ResourceDescriptor"/>
+	  <dwr:convert type="bean" class="com.mpower.domain.dwr.ReportDataSubSource"/>
+	</dwr:configuration>
 
 
     <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
@@ -76,7 +86,6 @@
 	<property name="pages">
 		<list>
 			<value>ReportSource</value>
-			<value>ReportSubSource</value>
 			<value>ReportFormat</value>
 			<value>ReportGroupByFields</value>
 			<value>ReportColumns</value>
