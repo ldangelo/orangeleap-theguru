@@ -124,3 +124,6 @@ div.scroll {
    height: 300px;
 }
 
+select#subSourceId {
+   width: 400px;
+}
