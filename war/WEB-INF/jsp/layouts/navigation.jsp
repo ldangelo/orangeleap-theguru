@@ -43,14 +43,10 @@
 </c:when>
 
 <c:when test="${page == 1}">
-	 Step ${page+1} of ${maxpages+1}: Select report sub-type
-</c:when>
-
-<c:when test="${page == 2}">
 	 Step ${page+1} of ${maxpages+1}: Select report format
 </c:when>
 
-<c:when test="${page == 3}">
+<c:when test="${page == 2}">
 		<c:if test='${reportType == "summary" }'>
 			 Step ${page+1} of ${maxpages+1}: Select fields to group by
 		</c:if>
@@ -59,27 +55,27 @@
 		</c:if>	
 </c:when>
 
-<c:when test="${page == 4}">
+<c:when test="${page == 3}">
 	 Step ${page+1} of ${maxpages+1}: Select report columns
 </c:when>
 
-<c:when test="${page == 5}">
+<c:when test="${page == 4}">
 	 Step ${page+1} of ${maxpages+1}: Select information to summarize
 </c:when>
 
-<c:when test="${page == 6}">
+<c:when test="${page == 5}">
 	 Step ${page+1} of ${maxpages+1}: Order report columns
 </c:when>
 
-<c:when test="${page == 7}">
+<c:when test="${page == 6}">
 	 Step ${page+1} of ${maxpages+1}: Select report criteria
 </c:when>
 
-<c:when test="${page == 8}">
+<c:when test="${page == 7}">
 	 Step ${page+1} of ${maxpages+1}: Chart Settings
 </c:when>
 
-<c:when test="${page == 9}">
+<c:when test="${page == 8}">
 	 Step ${page+1} of ${maxpages+1}: Save report
 </c:when>
 
