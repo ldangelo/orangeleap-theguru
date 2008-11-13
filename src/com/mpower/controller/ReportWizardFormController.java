@@ -152,7 +152,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 
 		Assert.notNull(request, "Request must not be null");
 
-		if (request.getParameter("_target11") != null) {
+		if (request.getParameter("_target9") != null) {
 			//
 			// We are saving this report to jasperserver
 			saveReport(wiz);
@@ -168,36 +168,36 @@ public class ReportWizardFormController extends AbstractWizardFormController {
             int currentPage) {
 		ReportWizard reportWizard = (ReportWizard)command;
 		int targetPage = super.getTargetPage(request, command, errors, currentPage);
-		if (targetPage == 3 && reportWizard.getReportType().compareTo("summary") != 0 && reportWizard.getReportType().compareTo("matrix") != 0) {
-			if (currentPage == 4)
-				targetPage = 2;
+		if (targetPage == 2 && reportWizard.getReportType().compareTo("summary") != 0 && reportWizard.getReportType().compareTo("matrix") != 0) {
+			if (currentPage == 3)
+				targetPage = 1;
 			else
-				targetPage = 4;
+				targetPage = 3;
 		}
 
 		//
 		//Matrix Report Navigation
 		//skip to filters
-		if (targetPage == 4 && reportWizard.getReportType().compareTo("matrix") == 0) {
-			if (currentPage == 3)
-				targetPage = 7;
+		if (targetPage == 3 && reportWizard.getReportType().compareTo("matrix") == 0) {
+			if (currentPage == 2)
+				targetPage = 6;
 		}
 		//go back from filters to Matrix Settings
-		if (targetPage == 6 && reportWizard.getReportType().compareTo("matrix") == 0) {
-			if (currentPage == 7)
-				targetPage = 3;
+		if (targetPage == 5 && reportWizard.getReportType().compareTo("matrix") == 0) {
+			if (currentPage == 6)
+				targetPage = 2;
 		}
 
 		//skip chart settings for tabular and matrix reports
-		if (targetPage == 8 && reportWizard.getReportType().compareTo("summary") != 0 ) {
-			if (currentPage == 7)
-				targetPage = 9;
+		if (targetPage == 7 && reportWizard.getReportType().compareTo("summary") != 0 ) {
+			if (currentPage == 6)
+				targetPage = 8;
 			else
-				targetPage = 7;			
+				targetPage = 6;			
 		}
 
 		//skip summarized fields if no summary fields available
-		if (targetPage == 5) {
+		if (targetPage == 4) {
 			boolean fieldsToSummarize = false;
 			Iterator<ReportField> itFields = wiz.getSelectedReportFieldsInOrder().iterator();
 			while (itFields.hasNext()) {
@@ -208,8 +208,8 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 				}
 			}
 			if (!fieldsToSummarize) {
-				if (currentPage < 5)
-					targetPage = 6;
+				if (currentPage < 4)
+					targetPage = 5;
 				else
 					targetPage = 4;
 			}
@@ -241,30 +241,27 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		// Report Source
 		if (page == 0) {
 			reportGenerator.resetInputControls();
-			wiz.setDataSource(reportSourceService.find(wiz.getSrcId()));
-		}
-		//
-		// SubSources
-		if (page == 1) {
-			ReportDataSource rds = reportSourceService.find(wiz.getSrcId());
-			List<ReportDataSubSource> rdss = reportSubSourceService.readSubSourcesByReportSourceId(rds.getId());
-			wiz.setDataSource(rds);
-			wiz.setDataSubSources(rdss);
-			refData.put("reportDataSubSources", rdss);
-		}
+    }
 
 		//
 		// Report Format
-		if (page == 2) {
-			ReportDataSource rds = wiz.getReportDataSource();
+		if (page == 1) {
+			wiz.setDataSource(reportSourceService.find(wiz.getSrcId()));
+
+			ReportDataSource rds = reportSourceService.find(wiz.getSrcId());
 			List<ReportDataSubSource> lrdss = reportSubSourceService.readSubSourcesByReportSourceId(rds.getId());
-			ReportDataSubSource       rdss = reportSubSourceService.find( wiz.getSubSourceId());
+			wiz.setDataSource(rds);
 			wiz.setDataSubSources(lrdss);
-			wiz.setDataSubSource(rdss);
+			refData.put("reportDataSubSources", lrdss);
+
+
+			ReportDataSubSource       rdss = reportSubSourceService.find( wiz.getSubSourceId());
 
 			List<ReportFieldGroup>    lrfg = reportFieldGroupService.readFieldGroupBySubSourceId(rdss.getId());
 			wiz.setFieldGroups(lrfg);
 			refData.put("fieldGroups", lrfg);
+
+			wiz.setDataSubSource(rdss);
 			
 			wiz.getDataSubSource().setReportCustomFilterDefinitions(reportCustomFilterDefinitionService.readReportCustomFilterDefinitionBySubSourceId(rdss.getId()));
 
@@ -282,7 +279,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 
 		//
 		// Report Group By Fields and Matrix Report
-		if (page == 3) {
+		if (page == 2) {
 			String reportType = wiz.getReportType();
 			refData.put("reportType", reportType);
 			
@@ -309,7 +306,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 
 		//
 		// Report Columns
-		if (page == 4) {
+		if (page == 3) {
 			ReportDataSubSource rdss = reportSubSourceService.find(wiz.getSubSourceId());
 			List<ReportFieldGroup>    lrfg = reportFieldGroupService.readFieldGroupBySubSourceId(rdss.getId());
 
@@ -330,23 +327,23 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 			refData.put("fields", fields);
 		}
 
-		if(page==5) {
+		if(page==4) {
 
 			refData.put("fieldGroups", wiz.getFieldGroups());
 		}
 
-		if(page==6) {
+		if(page==5) {
 			refData.put("fieldGroups", wiz.getFieldGroups());
 			refData.put("fields", wiz.getSelectedReportFieldsInOrder());
 		}
 
-		if(page==7) {
+		if(page==6) {
 			refData.put("fieldGroups", wiz.getFieldGroups());
 			refData.put("customFilters", wiz.getDataSubSource().getReportCustomFilterDefinitions());
 		}
 
 		// chart options
-		if(page==8) {
+		if(page==7) {
 	  		List<ReportGroupByField> groupByFields = wiz.getReportGroupByFields();
 	  		Iterator itGroupByFields = groupByFields.iterator();
 
@@ -375,13 +372,13 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		}
 
 		// run a saved report
-		if (page==12) {
+		if (page==11) {
 		    //			wiz.setReportPath("/Reports/Clementine/" + wiz.getReportName().replace(" ", "_"));
 			refData.put("reportPath", wiz.getReportPath());
 		}
 
 		// running the report
-		if (page==13) {
+		if (page==12) {
 			@SuppressWarnings("unused")
 
 			DynamicReport dr = reportGenerator.Generate(wiz, jdbcDataSource, reportFieldService, reportCustomFilterDefinitionService);
@@ -423,7 +420,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		DynamicJasperHelper.generateJRXML(dr,new ClassicLayoutManager(), reportGenerator.getParams(), null, tempFile.getPath());
 
 		// TODO - only need to remove the cross tab data subset on matrix reports
-		//if (wiz.getReportType().compareToIgnoreCase("matrix") == 0)
+		if (wiz.getReportType().compareToIgnoreCase("matrix") == 0)
 			removeCrossTabDataSubset(tempFile.getPath());
 		
 		String reportTitle = wiz.getDataSubSource().getDisplayName() + " Custom Report";
@@ -434,9 +431,9 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		if (wiz.getReportComment() != null && wiz.getReportComment().length() > 0)
 			reportComment = wiz.getReportComment();
 		
-		reportGenerator.put(ResourceDescriptor.TYPE_REPORTUNIT, reportTitle.replace(" ", "_"), reportTitle, reportComment,wiz.getReportPath(),tempFile, reportGenerator.getParams(), wiz.getDataSubSource().getJasperDatasourceName());
+    		reportGenerator.put(ResourceDescriptor.TYPE_REPORTUNIT, reportTitle.replace(" ", "_"), reportTitle, reportComment,wiz.getReportPath(),tempFile, reportGenerator.getParams(), wiz.getDataSubSource().getJasperDatasourceName());
 
-		reportGenerator.put(ResourceDescriptor.TYPE_REPORTUNIT, reportTitle.replace(" ", "_"), reportTitle, reportComment, wiz.getReportPath(),tempFile, reportGenerator.getParams());
+        //    		reportGenerator.put(ResourceDescriptor.TYPE_REPORTUNIT, reportTitle.replace(" ", "_"), reportTitle, reportComment, wiz.getReportPath(),tempFile, reportGenerator.getParams());
 
 
 		//
