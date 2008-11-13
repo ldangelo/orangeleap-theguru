@@ -8,7 +8,7 @@
 	<hr width="100%" size=1 color="black">
 	<Table id="report_standard_filters" class="tablesorter">
 		<TR><TH>Fields</TH><TH>Duration</TH><TH></TH></TR>
-		<TR>
+		<TR rowIndex="0">
 			<TD>
 				<SELECT id="standardFilters[0].fieldId" name="standardFilters[0].fieldId">
 					<option label="None" value="-1">None</option>
@@ -87,12 +87,12 @@
 			</TD>
 			<TD>
 				<SELECT id="advancedFilters[0].fieldId"
-					name="advancedFilters[0].fieldId">
+					name="advancedFilters[0].fieldId"
 					<option label="None" value="-1">None</option>
 					<c:forEach var="fgroup" items="${fieldGroups}" varStatus="outer">
 						<c:forEach var="f" items="${fgroup.fields}" varStatus="inner">
 							<c:if test="${f != null }">
-								<option label="${f.displayName}" value="${f.id}">${f.displayName}"</option>
+								<option label="${f.displayName}" value="${f.id}" >${f.displayName}</option>
 							</c:if>
 						</c:forEach>
 					</c:forEach>
