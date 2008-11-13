@@ -79,13 +79,13 @@ $(function() {
 <form:form name="myform" method="post" commandName="reportsource">
   <div class="columns" style="width: 100%">
     <div class="column" style="width: 30%">Report Name:      </div>
-    <div class="column" ><form:input path="reportName" size="64"/></div>
+    <div class="column" ><form:input path="reportName" size="64" tabindex="1"/></div>
     <div class="clearColumns"></div>
   </div>
   
   <div class="columns" style="width: 100%">
     <div class="column" style="width: 30%">Report Description:</div>
-    <div class="column"><form:input path="reportComment" size="64"/></div>
+    <div class="column"><form:input path="reportComment" size="64" tabindex="2"/></div>
     <form:hidden path="reportPath" />
     <div class="clearColumns"></div>
   </div>
@@ -132,10 +132,10 @@ $(function() {
 <!--      <button type="button">New Folder</button> -->
     </div>
     <div class="column" style="width: 10%">
-      <button type="submit" name="_target10">Cancel</button>
+      <button type="submit" name="_target10" tabindex="4">Cancel</button>
     </div>
     <div class="column" style="width: 10%">
-      <button type="submit" name="_target11">Save<button>
+      <button type="submit" name="_target9" tabindex="3">Save<button>
     </div>
     <div class="clearColumns"></div>
   </div>
