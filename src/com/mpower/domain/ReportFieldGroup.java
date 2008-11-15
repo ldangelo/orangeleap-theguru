@@ -17,7 +17,10 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.hibernate.annotations.IndexColumn;
 import org.hibernate.annotations.Sort;
 import org.hibernate.annotations.SortType;
@@ -42,6 +45,16 @@ public class ReportFieldGroup implements java.io.Serializable,
 	@Column(name = " REPORTFIELDGROUP_REPORTFIELD_ID")
 	private List<ReportField>   fields;
 	
+	@Transient
+	protected final Log logger = LogFactory.getLog(getClass());
+
+  public long getFieldCount() {
+    int size = fields.size();
+
+    logger.info("getFieldCount() returns " + size);
+
+    return fields.size();
+  }
 
 	public List<ReportField> getFields() {
 		return fields;
