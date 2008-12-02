@@ -200,6 +200,8 @@ public class ReportQueryGenerator {
 				&& getReportWizard().getRowCount() > 0)
 			selectClause += " TOP " + getReportWizard().getRowCount(); 
 		
+		selectClause += " DISTINCT";
+
 		Iterator<ReportField> itReportFields = getReportFieldsOrderedList().iterator();
 		boolean addComma = false;
 		while (itReportFields.hasNext()) {
@@ -252,7 +254,7 @@ public class ReportQueryGenerator {
 		Iterator<ReportStandardFilter> itStandardFilters = getReportWizard().getStandardFilters().iterator();
 		while (itStandardFilters.hasNext()) {
 			ReportStandardFilter filter = (ReportStandardFilter) itStandardFilters.next();
-			if (filter.getFieldId() == -1) break; // this is an empty filter
+			if (filter == null || filter.getFieldId() == -1) break; // this is an empty filter
 			ReportField rf = reportFieldService.find(filter.getFieldId());
 			if (includeWhere) {
 				includeWhere = true;
