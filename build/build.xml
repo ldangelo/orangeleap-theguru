@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="clementine" basedir=".." default="8. Redeploy and Restart Tomcat">
+<project name="clementine" basedir="." default="8. Redeploy and Restart Tomcat">
 	<property name="internal.build.file" value="${basedir}/build/clementine-build.xml" />
 	<property file="${basedir}/build/build.properties" />
+	<property file="${basedir}/jasperserver/jasperserver.properties" />
 	<property name="lib.dir" value="${basedir}/lib" />
 	<property name="build.env" value="dev"/>
 	
@@ -89,6 +90,35 @@
 	     	<transaction src="${basedir}/db/prod/domain/functions.sql"/>
 	     </sql>		
 	</target>
+
+	<target name="10. Import JasperServer Repository">
+	  <echo message="${os.name} ${os.arch} ${os.version}"/>
+	  <exec executable="cmd" os="Windows">
+	    <arg value="/c"/>
+	    <arg value="import.bat" />
+	    <arg value="-p"/>
+	  </exec>
+	  
+	  <exec dir="${jasperserver.bin}/scripts/" executable="./js-import.sh" os="Mac OS X,unix">
+	    <arg value="--input-zip"/>
+	    <arg value="${basedir}/jasperserver/repository.zip"/>
+	  </exec>
+	</target>
+
+	<target name="11. Export JasperServer Repository">
+	  <echo message="${os.name} ${os.arch} ${os.version}"/>
+	  <exec dir="${jasperserver.bin}/scripts/" executable="cmd" os="Windows">
+	    <arg value="/c"/>
+	    <arg value="./import.bat" />
+	    <arg value="-p"/>
+	  </exec>
+
+	  <exec os="Mac OS X,unix" dir="${jasperserver.bin}/scripts/" executable="./js-export.sh">
+	    <arg value="--everything"/>
+	    <arg value="--output-zip"/>
+	    <arg value="${basedir}/jasperserver/repository.zip"/>
+	  </exec>
+	</target>	  
 
 	<target name="app.synch" description="Synchs the XMHTML, JSP, JS, CSS, and Images of the project with a running application.">
 		<ant antfile="${internal.build.file}" target="app.synch" />
