@@ -28,16 +28,23 @@ function addReports(results) {
 
 
 function updateReports(dtnode) {
+    var username = $("#username").attr("value");
+    var password = $("#password").attr("value");
     console.log("Updating reports " + dtnode);
     
     console.log("key = " + dtnode.data.key);
     $("#reportPath").attr("value", dtnode.data.key);
+
+    JasperServerService.setUserName(username);
+    JasperServerService.setPassword(password);
     JasperServerService.list(dtnode.data.key,addReports);
   }
 
 function updateTree(results) {
     var childNode;
     console.log(results);
+    var username = $("#username").attr("value");
+    var password = $("#password").attr("value");
     
     
     
@@ -58,18 +65,24 @@ function updateTree(results) {
 	    
 	    //
 	    // updateTree childnode
+	    JasperServerService.setUserName(username);
+	    JasperServerService.setPassword(password);
 	    JasperServerService.list(results[rs].uriString,updateTree);
 	}
     }
   }
 
 $(function() {
-    
+    var username = $("#username").attr("value");
+    var password = $("#password").attr("value");
+
     $("#treeview").dynatree({
 	imagePath: "skin/",
 	onFocus: function(dtnode) { updateReports(dtnode); }
     });
     
+    JasperServerService.setUserName(username);
+    JasperServerService.setPassword(password);
     JasperServerService.list("/",updateTree);
     
   });
@@ -77,6 +90,9 @@ $(function() {
 </script>
 
 <form:form name="myform" method="post" commandName="reportsource">
+<form:hidden path="username"/>
+<form:hidden path="password"/>
+
   <div class="columns" style="width: 100%">
     <div class="column" style="width: 30%">Report Name:      </div>
     <div class="column" ><form:input path="reportName" size="64" tabindex="1"/></div>
@@ -132,7 +148,7 @@ $(function() {
 <!--      <button type="button">New Folder</button> -->
     </div>
     <div class="column" style="width: 10%">
-      <button type="submit" name="_target10" tabindex="4">Cancel</button>
+      <button type="submit" name="_finish" tabindex="4">Cancel</button>
     </div>
     <div class="column" style="width: 10%">
       <button type="submit" name="_target9" tabindex="3">Save<button>

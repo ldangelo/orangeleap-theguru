@@ -12,8 +12,10 @@
 	   http://www.directwebremoting.org/schema/spring-dwr-2.0.xsd"> 
 
 	<bean id="JasperServerService" class="com.mpower.service.JasperServerServiceImpl">
+<!--
 		<property name="userName" value="jasperadmin"/>
 		<property name="password" value="jasperadmin"/>
+-->
 		<property name="URI" value="http://127.0.0.1:8080/jasperserver/services/repository"/>
 		<dwr:remote javascript="JasperServerService"/>
 		
