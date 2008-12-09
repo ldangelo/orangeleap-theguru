@@ -49,11 +49,10 @@
 
 <TABLE>
 <TR>
-<TD><SELECT id="reportLayout"
-	name="reportLayout">
-	<option value="PORTRAIT">Portrait</option>
-	<option value="LANDSCAPE">Landscape</option>
-</SELECT></TD>
+<TD>
+<form:select path="reportTemplatePath" multiple="false"	>
+	<form:options items="${reportsource.reportTemplateList}" itemLabel="description" itemValue="uriString"/>
+</form:select></TD>
 </TR>
 </TABLE>
 </div>

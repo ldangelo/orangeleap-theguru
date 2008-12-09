@@ -99,6 +99,10 @@ public class ReportWizard implements java.io.Serializable {
     private Boolean recordCount;
     private String reportColumnOrder;
     private String reportPath;
+    private String reportTemplatePath;
+
+    @Transient
+    private List   reportTemplateList;
 
     @Transient
     private String username;
@@ -445,5 +449,27 @@ public class ReportWizard implements java.io.Serializable {
 
     public String getTempFolderPath() {
 	return "/Reports/" + company + "/Temp";
+    }
+
+    public String getReportTemplatePath() {
+	return reportTemplatePath;
+    }
+
+    public void setReportTemplatePath(String path) {
+	int index = path.lastIndexOf('/');
+	reportTemplatePath = path + "_files/" + path.substring(index + 1) + "_jrxml";
+	//		reportTemplatePath = path;
+    }
+
+    public List getReportTemplateList() {
+	return reportTemplateList;
+    }
+
+    public void setReportTemplateList(List l) {
+	reportTemplateList = l;
+    }
+
+    public String getCompany() {
+	return company;
     }
 }

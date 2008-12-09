@@ -52,6 +52,7 @@ import com.mpower.service.ReportSubSourceService;
 import com.mpower.service.ReportWizardService;
 //import com.mpower.service.ReportWizardService;
 import com.mpower.service.SessionService;
+import com.mpower.service.JasperServerService;
 import com.mpower.util.ReportGenerator;
 import com.mpower.view.DynamicReportView;
 import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
@@ -66,7 +67,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
     private ReportSourceService     reportSourceService;
     private ReportWizard            wiz;
     private ReportWizardService     reportWizardService;
-
+    private JasperServerService     jasperServerService;
     private ReportFieldGroupService reportFieldGroupService;
 
     private ReportFieldService      reportFieldService;
@@ -253,6 +254,10 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 	    
 	    reportGenerator.setReportUserName(wiz.getUsername());
 	    reportGenerator.setReportPassword(wiz.getPassword());
+
+	    jasperServerService.setUserName(wiz.getUsername());
+	    jasperServerService.setPassword(wiz.getPassword());
+	    wiz.setReportTemplateList(jasperServerService.list("/Reports/" + wiz.getCompany() + "/templates"));
 	}
 	    
 	//
@@ -541,5 +546,9 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 
     public ReportCustomFilterDefinitionService getReportCustomFilterDefinitionService() {
 	return reportCustomFilterDefinitionService;
+    }
+
+    public void setJasperServerService(JasperServerService jss) {
+	jasperServerService = jss;
     }
 }

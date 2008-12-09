@@ -117,28 +117,28 @@ public class ReportGenerator {
 	oddRowStyle = new Style();
     }
 
-    private File getTemplateFile(ReportLayout reportLayout) throws Exception {
+    private File getTemplateFile(ReportWizard wiz) throws Exception {
 	startServer();
 
 	//
 	// get the report template file from the server
 	File templateFile = File.createTempFile("template", ".jrxml");
 	ResourceDescriptor templateRD = new ResourceDescriptor();
-	// templateRD.setWsType(ResourceDescriptor.TYPE_JRXML);
-	// templateRD.setParentFolder("/templates");
-	if (reportLayout == ReportLayout.LANDSCAPE)
-	    templateRD.setUriString("/Reports/" + reportCompany + "/templates/mpower_report_template_landscape_files/mpower_report_template_landscape_jrxml");
-	else 
-	    templateRD.setUriString("/Reports/" + reportCompany + "/templates/mpower_template_files/mpower_template_jrxml");
-	ResourceDescriptor rd = server.getWSClient().get(templateRD,
-	    templateFile);
+
+	templateRD.setWsType(ResourceDescriptor.TYPE_REPORTUNIT);
+        templateRD.setUriString(wiz.getReportTemplatePath());
+// 	if (reportLayout == ReportLayout.LANDSCAPE)
+// 	    templateRD.setUriString("/Reports/" + reportCompany + "/templates/mpower_report_template_landscape_files/mpower_report_template_landscape_jrxml");
+// 	else 
+// 	    templateRD.setUriString("/Reports/" + reportCompany + "/templates/mpower_template_files/mpower_template_jrxml");
+	ResourceDescriptor rd = server.getWSClient().get(templateRD, templateFile);
 
 	return templateFile;
     }
 
     public DynamicReport Generate(ReportWizard wiz,javax.sql.DataSource jdbcDataSource, ReportFieldService reportFieldService, 
 	ReportCustomFilterDefinitionService reportCustomFilterDefinitionService) throws Exception {
-	File templateFile = getTemplateFile(wiz.getReportLayout());
+	File templateFile = getTemplateFile(wiz);
 	initStyles();
 
 	String reportTitle = wiz.getDataSubSource().getDisplayName() + " Custom Report";

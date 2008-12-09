@@ -78,6 +78,7 @@
         <property name="reportSourceService" ref="reportSourceService"/>
         <property name="reportSubSourceService" ref="reportSubSourceService"/>
         <property name="reportFieldGroupService" ref="reportFieldGroupService"/>
+	<property name="jasperServerService" ref="JasperServerService"/>
         <property name="reportFieldService" ref="reportFieldService"/>
 		<property name="reportWizardService" ref="reportWizardService"/>
 		<property name="reportCustomFilterDefinitionService" ref="reportCustomFilterDefinitionService"/>
