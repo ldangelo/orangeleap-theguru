@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="clementine" basedir="." default="8. Redeploy and Restart Tomcat">
+<project name="clementine" basedir=".." default="8. Redeploy and Restart Tomcat">
 	<property name="internal.build.file" value="${basedir}/build/clementine-build.xml" />
 	<property file="${basedir}/build/build.properties" />
 	<property file="${basedir}/jasperserver/jasperserver.properties" />
@@ -61,7 +61,7 @@
 				<antcall target="5. Stop Tomcat"/>
 			</try>
 		</trycatch>
-		<sleep seconds="5"/>
+		<sleep seconds="15"/>
 		<antcall target="3. Undeploy War"/>
 		<antcall target="1. Deploy Exploded War"/>
 		<antcall target="4. Start Tomcat - Debug Mode"/>
@@ -93,10 +93,11 @@
 
 	<target name="10. Import JasperServer Repository">
 	  <echo message="${os.name} ${os.arch} ${os.version}"/>
-	  <exec executable="cmd" os="Windows">
+	  <exec dir="${jasperserver.bin}\scripts\" executable="cmd" os="Windows XP" >
 	    <arg value="/c"/>
-	    <arg value="import.bat" />
-	    <arg value="-p"/>
+	    <arg value="js-import.bat" />
+	    <arg value="--input-zip"/>
+	    <arg value="${basedir}\jasperserver\repository.zip"/>  	
 	  </exec>
 
 	  <exec dir="${jasperserver.bin}/scripts/" executable="./js-import.sh" os="Mac OS X,unix">
@@ -118,8 +119,33 @@
 	    <arg value="--output-zip"/>
 	    <arg value="${basedir}/jasperserver/repository.zip"/>
 	  </exec>
-	</target>	  
-
+	</target>	
+	
+	<target name="javadoc"  description="Compiles the library API documentation.">
+		<mkdir dir="./dist/javadoc"/> 
+		<delete dir="./dist/javadoc/net"/>
+		<delete>
+			<fileset dir="./dist/javadoc" includes="**/*.*" />
+		</delete>
+		<javadoc packagenames="com.mpower.*"
+				sourcepath="./src"
+				destdir="./dist/javadoc"
+				author="true"
+				version="true"
+				use="true"
+				windowtitle="Report Wizard API version ${version}"
+				maxmemory="128m">
+			<doctitle><![CDATA[<span style="font-family:verdana,arial,helvetica,sans-serif;font-size:16pt;font-style:normal;color:#000000;"><b><font color="#808080">Jasper</font><font color="#990000">Reports</font></b></span><br><span style="font-family:verdana,arial,helvetica,sans-serif;font-size:10pt;font-weight:bold;color:#000000;">version ${version}</span>]]></doctitle>
+			<bottom><![CDATA[<span style="font-decoration:none;font-family:verdana,arial,helvetica,sans-serif;font-size:8pt;font-style:normal;color:#000000;">&copy; 2001-2006 JasperSoft Corporation <a href="http://www.jaspersoft.com" target="_blank" style="color:#000000;">www.jaspersoft.com</a></span>]]></bottom>
+			<classpath>
+				<fileset dir="./lib">
+					<include name="**/*.jar"/>
+				</fileset>
+				<pathelement location="./build/classes"/>
+			</classpath>
+		</javadoc>
+	</target>
+	
 	<target name="app.synch" description="Synchs the XMHTML, JSP, JS, CSS, and Images of the project with a running application.">
 		<ant antfile="${internal.build.file}" target="app.synch" />
 	</target>
