@@ -152,11 +152,13 @@
 				style="width:545px"
 				onchange="populateCustomFilterRow(this, document.getElementById('report_filters_add'));" >
 				<option value="0">Select a custom filter from the drop down list</option>
-				<c:forEach var="customFilter" items="${customFilters}" varStatus="outer">
-					<c:if test="${customFilter != null}">
-						<option label="${customFilter.displayText}" value="${customFilter.id}">${customFilter.displayText}</option>
-					</c:if>
-				</c:forEach>
+				<optgroup>
+					<c:forEach var="customFilter" items="${customFilters}" varStatus="outer">
+						<c:if test="${customFilter != null}">
+							<option label="${customFilter.displayText}" value="${customFilter.id}">${customFilter.displayText}</option>
+						</c:if>
+					</c:forEach>
+				</optgroup>
 			</SELECT>
 		</TD>
 	</TR>

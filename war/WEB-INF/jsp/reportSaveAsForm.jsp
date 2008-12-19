@@ -147,12 +147,18 @@ $(function() {
       &nbsp;
 <!--      <button type="button">New Folder</button> -->
     </div>
+
+<input type="image" src="images/cancel_off.gif" value="Cancel" name="_finish" ALT="Cancel" onmouseover="this.src = 'images/cancel_on.gif';" onmouseout="this.src = 'images/cancel_off.gif';">
+<input type="image" src="images/save_off.gif" value="Save" name="_target9" ALT="Save" onmouseover="this.src = 'images/save_on.gif';" onmouseout="this.src = 'images/save_off.gif';">
+
+<!--
     <div class="column" style="width: 10%">
       <button type="submit" name="_finish" tabindex="4">Cancel</button>
     </div>
     <div class="column" style="width: 10%">
       <button type="submit" name="_target9" tabindex="3">Save<button>
     </div>
+    -->
     <div class="clearColumns"></div>
   </div>
 </form:form>
