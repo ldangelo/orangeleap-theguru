@@ -5,7 +5,7 @@
 
 <script type="text/javascript">
 function addSubSources(results) {
-console.log(results);
+//console.log(results);
       $("#subSourceId").empty();
 
       for (ss in results) {

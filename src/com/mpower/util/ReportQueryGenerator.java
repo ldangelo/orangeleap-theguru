@@ -8,13 +8,13 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-import com.mpower.domain.ReportAdvancedFilter;
 import com.mpower.domain.ReportCrossTabFields;
 import com.mpower.domain.ReportCustomFilter;
 import com.mpower.domain.ReportCustomFilterDefinition;
 import com.mpower.domain.ReportDatabaseType;
 import com.mpower.domain.ReportField;
 import com.mpower.domain.ReportFieldType;
+import com.mpower.domain.ReportFilter;
 import com.mpower.domain.ReportGroupByField;
 import com.mpower.domain.ReportStandardFilter;
 import com.mpower.domain.ReportWizard;
@@ -220,26 +220,61 @@ public class ReportQueryGenerator {
 	}
 
 	/**
-	 * Builds and returns a where clause based on the standard and advanced filters.
+	 * Builds and returns a where clause based on the filters.
 	 * <P>
 	 * {@code} String whereClause = buildWhereClause();
 	 * @return String
 	 * @throws ParseException 
 	 */	
 	private String buildWhereClause() throws ParseException {
-		// Add any 'filters'
 		String whereClause = "";
-		
-		Boolean includeWhere = whereClause.length() == 0;		
-		whereClause += buildStandardFilterWhereClause(includeWhere);
-
-		includeWhere = whereClause.length() == 0;		
-		whereClause += buildAdvancedFilterWhereClause(includeWhere);
-
-		includeWhere = whereClause.length() == 0;		
-		whereClause += buildCustomFilterWhereClause(includeWhere);
-
-		return whereClause;
+		// very first criteria doesn't need an and
+		boolean afterGroup = true;
+		int index = 0;
+		Iterator<ReportFilter> itFilters = getReportWizard().getReportFilters().iterator();
+		boolean addWhere = true;
+		// tracks whether the filters contain actual criteria or not
+		boolean hasCriteria = false;
+		while (itFilters.hasNext()) {
+			index++;
+			ReportFilter filter = (ReportFilter) itFilters.next();
+			if (filter == null) continue; // this is an empty filter
+			if (filter.getFilterType() == 1 && filter.getReportStandardFilter().getFieldId() == -1) continue; // this is an empty filter
+			if (filter.getFilterType() == 2 && filter.getReportCustomFilter().getCustomFilterId() <= 0) continue; // this is an empty filter
+			
+			if (addWhere) {
+				whereClause += " WHERE";
+				addWhere = false;
+			} else if (!afterGroup && filter.getFilterType() != 4) {
+				// Do not add And or Or the first record after a group, or on end groups
+				if (filter.getOperator() == 0)
+					whereClause += " AND";
+				else if (filter.getOperator() == 1)
+					whereClause += " OR";				
+			}
+			
+			if (filter.getOperatorNot() == 1)
+				whereClause += " NOT";
+			if (filter.getFilterType() == 3) {
+				afterGroup = true;
+				whereClause += " (";
+			} else if (filter.getFilterType() == 4) {
+				afterGroup = false;
+				whereClause += " )";
+			} else if (filter.getFilterType() == 1) {
+				hasCriteria = true;
+				afterGroup = false;
+				whereClause += buildStandardFilterWhereClause(filter.getReportStandardFilter(), index);
+			} else if (filter.getFilterType() == 2) {
+				hasCriteria = true;
+				afterGroup = false;
+				whereClause += buildCustomFilterWhereClause(filter.getReportCustomFilter());
+			}
+		}	
+		if (!hasCriteria)
+			return "";
+		else
+			return whereClause;
 	}
 
 	/**
@@ -248,263 +283,235 @@ public class ReportQueryGenerator {
 	 * {@code} whereClause += buildStandardFilterWhereClause(false);
 	 * @param includeWhere Specifies whether the returned string should begin with a WHERE if true, or with an AND if false.
 	 * @return String
+	 * @throws ParseException 
 	 */	
-	private String buildStandardFilterWhereClause(boolean includeWhere) {
-		String whereClause = ""; 
-		Iterator<ReportStandardFilter> itStandardFilters = getReportWizard().getStandardFilters().iterator();
-		while (itStandardFilters.hasNext()) {
-			ReportStandardFilter filter = (ReportStandardFilter) itStandardFilters.next();
-			if (filter == null || filter.getFieldId() == -1) break; // this is an empty filter
-			ReportField rf = reportFieldService.find(filter.getFieldId());
-			if (includeWhere) {
-				includeWhere = true;
-				whereClause += " WHERE ";
-			} else {
-				whereClause += " AND ";
-			}			
+	private String buildStandardFilterWhereClause(ReportStandardFilter reportStandardFilter, int index) throws ParseException {
+		String whereClause = " ("; 
+		ReportField rf = reportFieldService.find(reportStandardFilter.getFieldId());
+		String controlName = rf.getColumnName() + Integer.toString(index);
 		
-			//whereClause += " " + rf.getColumnName();
-			
-			switch(filter.getDuration()) {
-			case 1: // Current FY
+		switch(reportStandardFilter.getComparison()) {
+			case 1:	
+				whereClause += getFieldNameForWhereClause(rf) + " = ";
+				whereClause += buildPromptForCritiera(reportStandardFilter, controlName, rf);
 				break;
-			case 2: // Previous FY
+			case 2:	
+				whereClause += getFieldNameForWhereClause(rf) + " != ";
+				whereClause += buildPromptForCritiera(reportStandardFilter, controlName, rf);
 				break;
-			case 3: // Current FY
+			case 3:	
+				whereClause += getFieldNameForWhereClause(rf) + " < ";
+				whereClause += buildPromptForCritiera(reportStandardFilter, controlName, rf);
 				break;
-			case 4: // Current FY
+			case 4:	
+				whereClause += getFieldNameForWhereClause(rf) + " >";
+				whereClause += buildPromptForCritiera(reportStandardFilter, controlName, rf);
 				break;
-			case 5: // Current FY
+			case 5:	
+				whereClause += getFieldNameForWhereClause(rf) + " <=";
+				whereClause += buildPromptForCritiera(reportStandardFilter, controlName, rf);
 				break;
-			case 6: // Current FY
+			case 6:	
+				whereClause += getFieldNameForWhereClause(rf) + " >=";
+				whereClause += buildPromptForCritiera(reportStandardFilter, controlName, rf);
 				break;
-			case 7: // Current FY
+			case 7: 
+				whereClause += getFieldNameForWhereClause(rf) + " LIKE ";				
+				if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.MYSQL)
+					whereClause += " CONCAT( ";
+				else if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.SQLSERVER)
+					whereClause += "";
+				whereClause += buildPromptForCritiera(reportStandardFilter, controlName, rf);
+				if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.MYSQL)
+					whereClause += " , '%')";
+				else if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.SQLSERVER)
+					whereClause += " + '%' ";
+				break; // starts with 
+			case 8: 
+				whereClause += getFieldNameForWhereClause(rf) + " LIKE ";
+				if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.MYSQL)
+					whereClause += " CONCAT( '%',";
+				else if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.SQLSERVER)
+					whereClause += " '%' + "; 
+				whereClause += buildPromptForCritiera(reportStandardFilter, controlName, rf);
+				if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.MYSQL)
+					whereClause += " ) ";
+				else if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.SQLSERVER)
+					whereClause += "";
+				break; // ends with		
+			case 9: 
+				whereClause += getFieldNameForWhereClause(rf) + " LIKE ";
+				if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.MYSQL)
+					whereClause += " CONCAT( '%',";
+				else if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.SQLSERVER)
+					whereClause += " '%' + ";
+				whereClause += buildPromptForCritiera(reportStandardFilter, controlName, rf);
+				if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.MYSQL)
+					whereClause += "  , '%') ";
+				else if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.SQLSERVER)
+					whereClause += " + '%' ";
+				break; // contains		
+			case 10:
+				whereClause += getFieldNameForWhereClause(rf) + " NOT LIKE ";
+				if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.MYSQL)
+					whereClause += " CONCAT( '%',";
+				else if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.SQLSERVER)
+					whereClause += " '%' + ";
+				whereClause += buildPromptForCritiera(reportStandardFilter, controlName, rf);
+				if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.MYSQL)
+					whereClause += "  , '%')";
+				else if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.SQLSERVER)
+					whereClause += " + '%' ";				
+				break; // does not contain
+			// Duration filters
+			case 20: // Current FY
 				break;
-			case 8: // Current FY
+			case 21: // Previous FY
 				break;
-			case 9: // Current FY
+			case 22: // Current FY
 				break;
-			case 10: // Current FY
+			case 23: // Current FY
 				break;
-			case 11: // Current Calendar Year
+			case 24: // Current FY
+				break;
+			case 25: // Current FY
+				break;
+			case 26: // Current FY
+				break;
+			case 27: // Current FY
+				break;
+			case 28: // Current FY
+				break;
+			case 29: // Current FY
+				break;
+			case 30: // Current Calendar Year
 				whereClause += getSqlCalendarDurationCriteriaFromCurrentDate(DatePart.YEAR, rf.getColumnName(), 0);
 				break;
-			case 12: // Previous Calendar Year
+			case 31: // Previous Calendar Year
 				whereClause += getSqlCalendarDurationCriteriaFromCurrentDate(DatePart.YEAR, rf.getColumnName(), -1);
 				break;
-			case 13: // Current and Previous Calendar Year
+			case 32: // Current and Previous Calendar Year
 				whereClause += "( " + getSqlCalendarDurationCriteriaFromCurrentDate(DatePart.YEAR, rf.getColumnName(), -1) +
 							   " OR " + 
 							   getSqlCalendarDurationCriteriaFromCurrentDate(DatePart.YEAR, rf.getColumnName(), 0) + " )";
 				break;
-			case 14: // Current Calendar Month
+			case 33: // Current Calendar Month
 				whereClause += getSqlCalendarDurationCriteriaFromCurrentDate(DatePart.MONTH, rf.getColumnName(), 0);
 				break;
-			case 15: // Previous Calendar Month
+			case 34: // Previous Calendar Month
 				whereClause += getSqlCalendarDurationCriteriaFromCurrentDate(DatePart.MONTH, rf.getColumnName(), -1);
 				break;
-			case 16: // Current and Previous Calendar Month
+			case 35: // Current and Previous Calendar Month
 				whereClause += "( " + getSqlCalendarDurationCriteriaFromCurrentDate(DatePart.MONTH, rf.getColumnName(), -1) +
 				   			   " OR " + 
 				   			   getSqlCalendarDurationCriteriaFromCurrentDate(DatePart.MONTH, rf.getColumnName(), 0) + " )";
 				break;
-			case 17: // Current Calendar Week
+			case 36: // Current Calendar Week
 				whereClause += getSqlCalendarDurationCriteriaFromCurrentDate(DatePart.WEEK, rf.getColumnName(), 0);
 				break;
-			case 18: // Previous Calendar Week
+			case 37: // Previous Calendar Week
 				whereClause += getSqlCalendarDurationCriteriaFromCurrentDate(DatePart.WEEK, rf.getColumnName(), -1);
 				break;
-			case 19: // Current and Previous Calendar Week
+			case 38: // Current and Previous Calendar Week
 				whereClause += "( " + getSqlCalendarDurationCriteriaFromCurrentDate(DatePart.WEEK, rf.getColumnName(), -1) +
 				   			   " OR " + 
 				   			   getSqlCalendarDurationCriteriaFromCurrentDate(DatePart.WEEK, rf.getColumnName(), 0) + " )";
 				break; 
-			case 20: // Today
+			case 39: // Today
 				whereClause += rf.getColumnName() + " = " + getSqlCriteriaDaysFromCurrentDate(0);
 				break;
-			case 21: // Yesterday
+			case 40: // Yesterday
 				whereClause += rf.getColumnName() + " = " + getSqlCriteriaDaysFromCurrentDate(-1);
 				break;
-			case 22: // Last 7
+			case 41: // Last 7
 				whereClause += rf.getColumnName() + " > " + getSqlCriteriaDaysFromCurrentDate(-7);
 				break;		
-			case 23: // Last 30
+			case 42: // Last 30
 				whereClause += rf.getColumnName() + " > " + getSqlCriteriaDaysFromCurrentDate(-30);
 				break;
-			case 24: // Last 60
+			case 43: // Last 60
 				whereClause += rf.getColumnName() + " > " + getSqlCriteriaDaysFromCurrentDate(-60);
 				break;
-			case 25: // Last 90
+			case 44: // Last 90
 				whereClause += rf.getColumnName() + " > " + getSqlCriteriaDaysFromCurrentDate(-90);
 				break;
-			case 26: // Last 120
+			case 45: // Last 120
 				whereClause += rf.getColumnName() + " > " + getSqlCriteriaDaysFromCurrentDate(-120);
-				break;
-						
-			}
+				break;					
 		}
+		whereClause += ")";
 		return whereClause;
 	}
-	
-	/**
-	 * Builds and returns a portion of a where clause for the advanced filters.
-	 * <P>
-	 * {@code} whereClause += buildAdvancedFilterWhereClause(false);
-	 * @param includeWhere Specifies whether the returned string should begin with a WHERE if true, or with an AND if false.
-	 * @return String
-	 * @throws ParseException 
-	 */
-	private String buildAdvancedFilterWhereClause(Boolean includeWhere) throws ParseException {
-		String whereClause = ""; 
-		Iterator<ReportAdvancedFilter> itFilter = getReportWizard().getAdvancedFilters().iterator();
-		int index = 0;
-		while (itFilter.hasNext()) {
-			ReportAdvancedFilter filter = (ReportAdvancedFilter) itFilter
-					.next();
-			
-			if (filter == null || filter.getFieldId() == -1) continue; // this is an empty filter
-			ReportField rf = reportFieldService.find(filter.getFieldId());
 
-			if (includeWhere) {
-				includeWhere = false;
-				whereClause += " WHERE ";
+	/**
+	 * Builds and returns a portion of a standard filter where clause based on the field type and whether PromptForCriteria was selected.
+	 * <P>
+	 * whereClause += buildCustomFilterWhereClause(filter.getReportCustomFilter());
+	 * @return String
+	 * @throws ParseException 
+	 */
+	private String buildPromptForCritiera(ReportStandardFilter filter, String controlName, ReportField rf) throws ParseException {
+		String whereClause = "";
+		if ( rf.getFieldType() == ReportFieldType.DATE) {
+			if (filter.getPromptForCriteria()) {
+				whereClause += " $P{" + controlName + "} ";
 			} else {
-				if (filter.getLogicalOperator() == 2)
-					whereClause += " OR ";
-				else
-					whereClause += " AND ";
+				whereClause += getFormattedDateString(filter.getCriteria()); 
 			}
-			
-			whereClause += " " + getFieldNameForWhereClause(rf);
-			switch (filter.getOperator()) {
-				case 1:	whereClause += " = ";		break;
-				case 2:	whereClause += " != ";		break;
-				case 3:	whereClause += " < ";		break;
-				case 4:	whereClause += " >"; 		break;
-				case 5:	whereClause += " <="; 		break;
-				case 6:	whereClause += " >="; 		break;
-				case 7: whereClause += " LIKE ";	break; // starts with 
-				case 8: whereClause += " LIKE ";	break; // ends with		
-				case 9: whereClause += " LIKE ";	break; // contains		
-				case 10:whereClause += " NOT LIKE ";break; // does not contain 
+		} else	if(rf.getFieldType() == ReportFieldType.STRING) {
+			if (filter.getPromptForCriteria()) {
+				whereClause += " $P{" + controlName + "} ";
+			} else {
+				whereClause += " '" + filter.getCriteria() + "'";
 			}
-			
-			String controlName = rf.getColumnName() + Integer.toString(index);
-			index++;
-			
-			//comparison filter operators
-			if (filter.getOperator() >= 7 && filter.getOperator() <= 10)
-			{
-				if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.MYSQL) {
-					switch (filter.getOperator()) {
-					case 7: whereClause += " CONCAT( ";	break; // starts with 
-					case 8: whereClause += " CONCAT( '%',";	break; // ends with		
-					case 9: whereClause += " CONCAT( '%',";	break; // contains		
-					case 10:whereClause += " CONCAT( '%',";break; // does not contain 
-					}
-				}
-				else if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.SQLSERVER) {
-					switch (filter.getOperator()) {
-					case 7: whereClause += "";	break; // starts with 
-					case 8: whereClause += " '%' + ";	break; // ends with		
-					case 9: whereClause += " '%' + ";	break; // contains		
-					case 10:whereClause += " '%' + ";break; // does not contain 
-					}	
-				}
+		} else if(rf.getFieldType() == ReportFieldType.DOUBLE) {
+			if (filter.getPromptForCriteria()) {
+				whereClause += " $P{" + controlName + "} ";
+			} else {
+				whereClause += " " + filter.getCriteria();
 			}
-			
-			if ( rf.getFieldType() == ReportFieldType.DATE) {
-				if (filter.getPromptForCriteria()) {
-					whereClause += " $P{" + controlName + "} ";
-				} else {
-					whereClause += getFormattedDateString(filter.getCriteria()); 
-				}
-			} else	if(rf.getFieldType() == ReportFieldType.STRING) {
-				if (filter.getPromptForCriteria()) {
-					whereClause += " $P{" + controlName + "} ";
-				} else {
-					whereClause += " '" + filter.getCriteria() + "'";
-				}
-			} else if(rf.getFieldType() == ReportFieldType.DOUBLE) {
-				if (filter.getPromptForCriteria()) {
-					whereClause += " $P{" + controlName + "} ";
-				} else {
-					whereClause += " " + filter.getCriteria();
-				}
-			} else if(rf.getFieldType() == ReportFieldType.INTEGER) {
-				if (filter.getPromptForCriteria()) {
-					whereClause += " $P{" + controlName + "} ";
-				} else {
-					whereClause += " " + filter.getCriteria();
-				}
-			} else if(rf.getFieldType() == ReportFieldType.MONEY) {
-				if (filter.getPromptForCriteria()) {
-					whereClause += " $P{" + controlName + "} ";
-				} else {
-					whereClause += " " + filter.getCriteria();
-				}
-			} else if(rf.getFieldType() == ReportFieldType.BOOLEAN) {
-				if (filter.getPromptForCriteria()) {
-					whereClause += " $P{" + controlName + "} ";
-				} else {
-					whereClause += " " + filter.getCriteria();
-				}
+		} else if(rf.getFieldType() == ReportFieldType.INTEGER) {
+			if (filter.getPromptForCriteria()) {
+				whereClause += " $P{" + controlName + "} ";
+			} else {
+				whereClause += " " + filter.getCriteria();
 			}
-			
-			//comparison filter operators
-			if (filter.getOperator() >= 7 && filter.getOperator() <= 10){
-				if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.MYSQL) {	
-					switch (filter.getOperator()) {
-					case 7: whereClause += " , '%')";	break; // starts with 
-					case 8: whereClause += " ) ";		break; // ends with		
-					case 9: whereClause += "  , '%') ";	break; // contains		
-					case 10:whereClause += "  , '%')";	break; // does not contain
-					}
-				}
-				else if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.SQLSERVER) {
-					switch (filter.getOperator()) {
-					case 7: whereClause += " + '%' ";	break; // starts with 
-					case 8: whereClause += "";			break; // ends with		
-					case 9: whereClause += " + '%' ";	break; // contains		
-					case 10:whereClause += " + '%' ";	break; // does not contain
-					}	
-				}
+		} else if(rf.getFieldType() == ReportFieldType.MONEY) {
+			if (filter.getPromptForCriteria()) {
+				whereClause += " $P{" + controlName + "} ";
+			} else {
+				whereClause += " " + filter.getCriteria();
+			}
+		} else if(rf.getFieldType() == ReportFieldType.BOOLEAN) {
+			if (filter.getPromptForCriteria()) {
+				whereClause += " $P{" + controlName + "} ";
+			} else {
+				whereClause += " " + filter.getCriteria();
 			}
 		}
 		return whereClause;
 	}
-	
+
 	/**
-	 * Builds and returns a portion of a where clause for the custom filters.
+	 * Builds and returns a portion of a where clause for the custom filter.
 	 * <P>
-	 * {@code} whereClause += buildCustomFilterWhereClause(false);
-	 * @param includeWhere Specifies whether the returned string should begin with a WHERE if true, or with an AND if false.
+	 * whereClause += buildCustomFilterWhereClause(filter.getReportCustomFilter());
 	 * @return String
 	 * @throws ParseException 
 	 */
-	private String buildCustomFilterWhereClause(Boolean includeWhere) throws ParseException {
-		String whereClause = ""; 
-		Iterator<ReportCustomFilter> itFilter = getReportWizard().getReportCustomFilters().iterator();
-		while (itFilter.hasNext()) {
-			ReportCustomFilter filter = (ReportCustomFilter) itFilter.next();
-			
-			if (filter == null || filter.getCustomFilterId() <= 0) continue; // this is an empty filter
-			ReportCustomFilterDefinition reportCustomFilterDefinition = getReportCustomFilterDefinitionService().find(filter.getCustomFilterId());
-			if (reportCustomFilterDefinition == null) continue;
+	private String buildCustomFilterWhereClause(ReportCustomFilter filter) throws ParseException {
+		String whereClause = " "; 
+		ReportCustomFilterDefinition reportCustomFilterDefinition = getReportCustomFilterDefinitionService().find(filter.getCustomFilterId());
+		if (reportCustomFilterDefinition != null) {
 			String filterString = reportCustomFilterDefinition.getSqlText();
-			if (filterString.length() == 0) continue;
-			if (includeWhere) {
-				includeWhere = false;
-				whereClause += " WHERE ";
-			} else {
-				whereClause += " AND ";
+			if (filterString.length() != 0) {
+				filterString = filterString.replace("[VIEWNAME]", getReportWizard().getDataSubSource().getViewName());
+				int criteriaSize = filter.getReportCustomFilterCriteria().size();
+				for (int index = 0; index < criteriaSize; index++) {
+					filterString = filterString.replace("{" + Integer.toString(index) + "}", filter.getReportCustomFilterCriteria().get(index));
+				}
+				whereClause += filterString;
 			}
-			filterString = filterString.replace("[VIEWNAME]", getReportWizard().getDataSubSource().getViewName());
-			int criteriaSize = filter.getReportCustomFilterCriteria().size();
-			for (int index = 0; index < criteriaSize; index++) {
-				filterString = filterString.replace("{" + Integer.toString(index) + "}", filter.getReportCustomFilterCriteria().get(index));
-			}
-			whereClause += filterString;
 		}
 		return whereClause;
 	}
