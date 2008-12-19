@@ -12,7 +12,7 @@
   ];
   
 function addReports(results) {
-    console.log ("results " + results);
+    //console.log ("results " + results);
     dwr.util.removeAllRows("reports");
     
     
@@ -30,9 +30,9 @@ function addReports(results) {
 function updateReports(dtnode) {
     var username = $("#username").attr("value");
     var password = $("#password").attr("value");
-    console.log("Updating reports " + dtnode);
+    //console.log("Updating reports " + dtnode);
     
-    console.log("key = " + dtnode.data.key);
+    //console.log("key = " + dtnode.data.key);
     $("#reportPath").attr("value", dtnode.data.key);
 
     JasperServerService.setUserName(username);
@@ -42,7 +42,7 @@ function updateReports(dtnode) {
 
 function updateTree(results) {
     var childNode;
-    console.log(results);
+    //console.log(results);
     var username = $("#username").attr("value");
     var password = $("#password").attr("value");
     

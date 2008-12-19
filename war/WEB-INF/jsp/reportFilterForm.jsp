@@ -14,10 +14,12 @@
 
 	<select id="addFilterSelect" name="addFilterSelect"
 		onchange="cloneFilterRow(this, document.getElementById('report_filters_add'));">
-		<option label="" value="0"></option>
-		<option label="Standard Filter" value="1">Standard Filter</option>
-		<option label="Custom Filter" value="2">Custom Filter</option>
-		<option label="Group" value="3">Group</option>
+		<option label="Select type of filter to add" value="0">Select type of filter to add</option>
+		<optgroup>
+			<option label="Standard Filter" value="1">Standard Filter</option>
+			<option label="Custom Filter" value="2">Custom Filter</option>
+			<option label="Group" value="3">Group</option>
+		</optgroup>
 	</select>
 	<br>
 	<br>
