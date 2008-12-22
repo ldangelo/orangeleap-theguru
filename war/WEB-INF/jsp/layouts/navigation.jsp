@@ -1,6 +1,7 @@
 <%@ include file="/WEB-INF/jsp/include.jsp" %>
 <tiles:useAttribute name="primaryNav" />
 <tiles:useAttribute name="secondaryNav" />
+<!--
 <div id="banner">
 	<ol>
 		<li>
@@ -17,7 +18,7 @@
 		</li>
 	</ol>
 </div>
-
+-->
 <div id="navmain">
 	<div class="navLeftCap"></div>
 
@@ -39,14 +40,14 @@
 
 <c:choose>
 <c:when test="${page == 0}">
-	 Step ${page+1} of ${maxpages+1}: Select report type
+	 Select report type
 </c:when>
 
 <c:when test="${page == 1}">
-	 Step ${page+1} of ${maxpages+1}: Select report format
+	 Select report format
 </c:when>
 
-<c:when test="${page == 2}">
+<c:when test="${page == 3}">
 		<c:if test='${reportType == "summary" }'>
 			 Step ${page+1} of ${maxpages+1}: Select fields to group by
 		</c:if>
@@ -55,7 +56,7 @@
 		</c:if>	
 </c:when>
 
-<c:when test="${page == 3}">
+<c:when test="${page == 2}">
 	 Step ${page+1} of ${maxpages+1}: Select report columns
 </c:when>
 
@@ -86,5 +87,7 @@
 </ul>	
 		<div class="clearBoth"></div>
 	</div>
+
 	<div class="navRightCap"></div>
 </div>
+	

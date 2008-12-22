@@ -1,6 +1,7 @@
 <%@ include file="/WEB-INF/jsp/include.jsp" %>
 
 <form method="post">
+<jsp:include page="snippets/topnav.jsp"/>
   <h1>
     Report Wizard
   </h1>

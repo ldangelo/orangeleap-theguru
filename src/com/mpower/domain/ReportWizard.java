@@ -86,6 +86,13 @@ public class ReportWizard implements java.io.Serializable {
 	@Transient
 	private ReportCrossTabFields reportCrossTabFields;
 
+
+    @Transient
+    private String currentWizardStep;
+    
+    @Transient
+    private List  reportWizardSteps;
+    
 	@Column(name = "REPORT_TYPE")
 	private String reportType;
 	private ReportLayout reportLayout;
@@ -93,6 +100,7 @@ public class ReportWizard implements java.io.Serializable {
 	private String reportColumnOrder;
 	private String reportPath;
 	private String reportTemplatePath;
+
 
 	@Transient
 	private List   reportTemplateList;
@@ -444,5 +452,21 @@ public class ReportWizard implements java.io.Serializable {
 
 	public String getCompany() {
 		return company;
+	}
+
+	public String getCurrentWizardStep() {
+		return currentWizardStep;
+	}
+
+	public void setCurrentWizardStep(String wizardStep) {
+		this.currentWizardStep = wizardStep;
+	}
+
+	public List getReportWizardSteps() {
+		return reportWizardSteps;
+	}
+
+	public void setReportWizardSteps(List reportWizardSteps) {
+		this.reportWizardSteps = reportWizardSteps;
 	}
 }
