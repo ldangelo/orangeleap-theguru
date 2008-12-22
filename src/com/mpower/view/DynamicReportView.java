@@ -27,7 +27,6 @@ import org.springframework.ui.jasperreports.JasperReportsUtils;
 import org.springframework.web.servlet.view.AbstractView;
 
 import com.jaspersoft.jasperserver.api.metadata.xml.domain.impl.ResourceDescriptor;
-import com.mpower.domain.ReportAdvancedFilter;
 import com.mpower.domain.ReportField;
 import com.mpower.domain.ReportWizard;
 import com.mpower.domain.ReportFieldType;
