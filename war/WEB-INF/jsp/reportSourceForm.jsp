@@ -11,16 +11,21 @@ function addSubSources(results) {
       for (ss in results) {
          $("#subSourceId").append("<option value='" + results[ss].id + "'>" + results[ss].displayName + "</option>");
       }
+  $("#subSourceId option:first").attr("selected","selected");
 }
 
 function updateSubSource() {
   var srcId = $("#srcId").attr("value");
 
   ReportSubSourceService.readSubSourcesByReportSourceId(srcId,addSubSources);
+  
+
 }
 
 $(function() {
 updateSubSource();
+
+
 });
 
 </script>
