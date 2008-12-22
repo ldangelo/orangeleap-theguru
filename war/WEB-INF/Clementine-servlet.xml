@@ -90,8 +90,8 @@
 		<list>
 			<value>ReportSource</value>
 			<value>ReportFormat</value>
-			<value>ReportColumns</value>
 			<value>ReportGroupByFields</value>
+			<value>ReportColumns</value>
 			<value>ReportSummaryFields</value>
 			<value>ReportColumnsOrder</value>
 			<value>ReportFilter</value>
