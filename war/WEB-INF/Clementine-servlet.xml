@@ -90,12 +90,8 @@
 		<list>
 			<value>ReportSource</value>
 			<value>ReportFormat</value>
-			<value>ReportGroupByFields</value>
-			<value>ReportColumns</value>
-			<value>ReportSummaryFields</value>
-			<value>ReportColumnsOrder</value>
+			<value>ReportContent</value>
 			<value>ReportFilter</value>
-			<value>ReportChartSettings</value>
 			<value>ReportSaveAs</value>
 			<value>ReportRedirect</value>
 			<value>ReportRedirect</value>

@@ -17,8 +17,10 @@ public class ReportCustomFilter implements java.io.Serializable {
 	
 	private List<String> reportCustomFilterCriteria;
 
+	private String displayHtml;
+	
 	public ReportCustomFilter() {
-		reportCustomFilterCriteria = LazyList.decorate(new ArrayList<String>(),FactoryUtils.instantiateFactory(String.class));	
+		reportCustomFilterCriteria = LazyList.decorate(new ArrayList<String>(),FactoryUtils.instantiateFactory(String.class));
 	}
 	
 	public void setReportCustomFilterCriteria(
@@ -36,5 +38,28 @@ public class ReportCustomFilter implements java.io.Serializable {
 
 	public long getCustomFilterId() {
 		return customFilterId;
-	}	
+	}
+
+	public void setDisplayHtml(String displayHtml) {
+		this.displayHtml = displayHtml;
+	}
+
+	public String getDisplayHtml() {
+		String result = displayHtml;
+		result = result.replace("\"", "&quot;");
+		result = result.replace(">", "&gt;");
+		result = result.replace("<", "&lt;");
+		return result;
+	}
+	
+	public String getPopulatedDisplayHtml() {
+		String result = displayHtml;
+		if (result != null && result.length() != 0) {
+			int criteriaSize = getReportCustomFilterCriteria().size();
+			for (int index = 0; index < criteriaSize; index++) {
+				result = result.replace("{" + Integer.toString(index) + "}", getReportCustomFilterCriteria().get(index));
+			}
+		}
+		return result;
+	}
 }

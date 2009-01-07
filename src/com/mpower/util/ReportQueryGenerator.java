@@ -16,6 +16,7 @@ import com.mpower.domain.ReportField;
 import com.mpower.domain.ReportFieldType;
 import com.mpower.domain.ReportFilter;
 import com.mpower.domain.ReportGroupByField;
+import com.mpower.domain.ReportSelectedField;
 import com.mpower.domain.ReportStandardFilter;
 import com.mpower.domain.ReportWizard;
 import com.mpower.service.ReportCustomFilterDefinitionService;
@@ -38,11 +39,10 @@ public class ReportQueryGenerator {
      * @param reportFieldsOrderedList <tt>List&lt;ReportField&gt;</tt> of the report fields in the correct order.
      */
     public ReportQueryGenerator(ReportWizard reportWizard, ReportFieldService reportFieldService, 
-    		ReportCustomFilterDefinitionService reportCustomFilterDefinitionService, List<ReportField> reportFieldsOrderedList) {
+    		ReportCustomFilterDefinitionService reportCustomFilterDefinitionService) {
     	this.setReportWizard(reportWizard);
     	this.setReportFieldService(reportFieldService);
     	this.setReportCustomFilterDefinitionService(reportCustomFilterDefinitionService);
-    	this.setReportFieldsOrderedList(reportFieldsOrderedList);
     }
    
     public enum DatePart {
@@ -188,7 +188,7 @@ public class ReportQueryGenerator {
 	}
 
 	/**
-	 * Builds and returns a select clause based on the reportFieldsOrderedList.
+	 * Builds and returns a select clause based on the selected report fields.
 	 * <P>
 	 * {@code} String selectClause = buildSelectClause();
 	 * @return String
@@ -202,16 +202,20 @@ public class ReportQueryGenerator {
 		
 		selectClause += " DISTINCT";
 
-		Iterator<ReportField> itReportFields = getReportFieldsOrderedList().iterator();
+		Iterator<ReportSelectedField> itReportSelectedFields = getReportWizard().getReportSelectedFields().iterator();
 		boolean addComma = false;
-		while (itReportFields.hasNext()) {
-			ReportField selectedField = (ReportField) itReportFields.next();
-			if (addComma)
-				selectClause = selectClause + ",";
-			else
-				addComma = true;
-			
-			selectClause = selectClause + " " + selectedField.getColumnName();
+		while (itReportSelectedFields.hasNext()) {
+			ReportSelectedField selectedField = (ReportSelectedField) itReportSelectedFields.next();
+			ReportField reportField = getReportFieldService().find(selectedField.getFieldId());
+			if (reportField == null || reportField.getId() == -1) continue;
+			if (selectClause.indexOf(reportField.getColumnName()) == -1) {
+				if (addComma)
+					selectClause = selectClause + ",";
+				else
+					addComma = true;
+				
+				selectClause = selectClause + " " + reportField.getColumnName();
+			}
 		}
 		
 		selectClause = selectClause + " FROM " + getReportWizard().getDataSubSource().getViewName();		
@@ -292,15 +296,15 @@ public class ReportQueryGenerator {
 		
 		switch(reportStandardFilter.getComparison()) {
 			case 1:	
-				whereClause += getFieldNameForWhereClause(rf) + " = ";
+				whereClause += getFieldNameForWhereClause(rf) + " =";
 				whereClause += buildPromptForCritiera(reportStandardFilter, controlName, rf);
 				break;
 			case 2:	
-				whereClause += getFieldNameForWhereClause(rf) + " != ";
+				whereClause += getFieldNameForWhereClause(rf) + " !=";
 				whereClause += buildPromptForCritiera(reportStandardFilter, controlName, rf);
 				break;
 			case 3:	
-				whereClause += getFieldNameForWhereClause(rf) + " < ";
+				whereClause += getFieldNameForWhereClause(rf) + " <";
 				whereClause += buildPromptForCritiera(reportStandardFilter, controlName, rf);
 				break;
 			case 4:	
@@ -316,43 +320,43 @@ public class ReportQueryGenerator {
 				whereClause += buildPromptForCritiera(reportStandardFilter, controlName, rf);
 				break;
 			case 7: 
-				whereClause += getFieldNameForWhereClause(rf) + " LIKE ";				
+				whereClause += getFieldNameForWhereClause(rf) + " LIKE";				
 				if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.MYSQL)
-					whereClause += " CONCAT( ";
+					whereClause += " CONCAT(";
 				else if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.SQLSERVER)
 					whereClause += "";
 				whereClause += buildPromptForCritiera(reportStandardFilter, controlName, rf);
 				if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.MYSQL)
 					whereClause += " , '%')";
 				else if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.SQLSERVER)
-					whereClause += " + '%' ";
+					whereClause += " + '%'";
 				break; // starts with 
 			case 8: 
-				whereClause += getFieldNameForWhereClause(rf) + " LIKE ";
+				whereClause += getFieldNameForWhereClause(rf) + " LIKE";
 				if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.MYSQL)
 					whereClause += " CONCAT( '%',";
 				else if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.SQLSERVER)
-					whereClause += " '%' + "; 
+					whereClause += " '%' +"; 
 				whereClause += buildPromptForCritiera(reportStandardFilter, controlName, rf);
 				if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.MYSQL)
-					whereClause += " ) ";
+					whereClause += " )";
 				else if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.SQLSERVER)
 					whereClause += "";
 				break; // ends with		
 			case 9: 
-				whereClause += getFieldNameForWhereClause(rf) + " LIKE ";
+				whereClause += getFieldNameForWhereClause(rf) + " LIKE";
 				if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.MYSQL)
 					whereClause += " CONCAT( '%',";
 				else if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.SQLSERVER)
-					whereClause += " '%' + ";
+					whereClause += " '%' +";
 				whereClause += buildPromptForCritiera(reportStandardFilter, controlName, rf);
 				if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.MYSQL)
 					whereClause += "  , '%') ";
 				else if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.SQLSERVER)
-					whereClause += " + '%' ";
+					whereClause += " + '%'";
 				break; // contains		
 			case 10:
-				whereClause += getFieldNameForWhereClause(rf) + " NOT LIKE ";
+				whereClause += getFieldNameForWhereClause(rf) + " NOT LIKE";
 				if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.MYSQL)
 					whereClause += " CONCAT( '%',";
 				else if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.SQLSERVER)
@@ -361,7 +365,7 @@ public class ReportQueryGenerator {
 				if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.MYSQL)
 					whereClause += "  , '%')";
 				else if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.SQLSERVER)
-					whereClause += " + '%' ";				
+					whereClause += " + '%'";				
 				break; // does not contain
 			// Duration filters
 			case 20: // Current FY
@@ -689,15 +693,14 @@ public class ReportQueryGenerator {
 	 * @return String orderBy
 	 */
 	private String buildOrderByClause() {
-		//Add the order by clause
+		// Add the order by clause
 		String orderBy = "";
-		//Summary Reports
-		if (getReportWizard().getReportType().compareTo("summary") == 0) {
-			orderBy = getOrderByClauseForSummary();
-		}
-		//Matrix Reports
-		else if (getReportWizard().getReportType().compareTo("matrix") == 0) {
+		if (getReportWizard().getReportType().compareTo("matrix") == 0) {
+			// Matrix Reports			
 			orderBy = getOrderByClauseForMatrix();
+		} else {
+			// Tabular / Summary Reports			
+			orderBy = getOrderByClauseForSummary();
 		}
 		return orderBy;			
 	}
@@ -720,15 +723,17 @@ public class ReportQueryGenerator {
 			ReportGroupByField rowField = (ReportGroupByField) itCtRows.next();
 			if (rowField != null) {						
 				if (rowField.getFieldId() != -1){
-					if (!addComma) {
-						orderBy += " ORDER BY";
-						addComma = true;
-					}
-					else
-						orderBy += ","; 
 					ReportField rg = reportFieldService.find(rowField.getFieldId());
-					orderBy += " " + rg.getColumnName();
-					orderBy += " " + rowField.getSortOrder();	
+					if (orderBy.indexOf(rg.getColumnName()) == -1) {
+						if (!addComma) {
+							orderBy += " ORDER BY";
+							addComma = true;
+						}
+						else
+							orderBy += ","; 
+						orderBy += " " + rg.getColumnName();
+						orderBy += " " + rowField.getSortOrder();
+					}
 				}
 			}
 		}
@@ -740,15 +745,17 @@ public class ReportQueryGenerator {
 			ReportGroupByField colField = (ReportGroupByField) itCtCols.next();
 			if (colField != null) {						
 				if (colField.getFieldId() != -1){
-					if (!addComma) {
-						orderBy += " ORDER BY";
-						addComma = true;
-					}
-					else
-						orderBy += ","; 
 					ReportField rg = reportFieldService.find(colField.getFieldId());
-					orderBy += " " + rg.getColumnName();
-					orderBy += " " + colField.getSortOrder();	
+					if (orderBy.indexOf(rg.getColumnName()) == -1) {					
+						if (!addComma) {
+							orderBy += " ORDER BY";
+							addComma = true;
+						}
+						else
+							orderBy += ","; 
+						orderBy += " " + rg.getColumnName();
+						orderBy += " " + colField.getSortOrder();
+					}
 				}
 			}
 		}
@@ -764,24 +771,26 @@ public class ReportQueryGenerator {
 	private String getOrderByClauseForSummary() {
 		String orderBy = "";
 		Boolean addComma = false;
-		List<ReportGroupByField> rptGroupByFields = getReportWizard().getReportGroupByFields();
-		Iterator<ReportGroupByField> itRptGroupByFields = rptGroupByFields.iterator();
+		List<ReportSelectedField> reportSelectedFields = getReportWizard().getReportSelectedFields();
+		Iterator<ReportSelectedField> itReportSelectedFields = reportSelectedFields.iterator();
 		
-		if (itRptGroupByFields != null){
+		if (itReportSelectedFields != null){
 			addComma = false;
-			while (itRptGroupByFields.hasNext()){
-				ReportGroupByField groupByField = (ReportGroupByField) itRptGroupByFields.next();
-				if (groupByField != null) {						
-					if (groupByField.getFieldId() != -1){
+			while (itReportSelectedFields.hasNext()) {
+				ReportSelectedField reportSelectedField = (ReportSelectedField) itReportSelectedFields.next();
+				if (reportSelectedField != null 
+					&& reportSelectedField.getFieldId() != -1) {
+					ReportField rg = reportFieldService.find(reportSelectedField.getFieldId());					
+					if (orderBy.indexOf(rg.getColumnName()) == -1) {
+					
 						if (!addComma) {
 							orderBy += " ORDER BY";
 							addComma = true;
 						}
 						else
-							orderBy += ","; 
-						ReportField rg = reportFieldService.find(groupByField.getFieldId());
+							orderBy += ",";
 						orderBy += " " + rg.getColumnName();
-						orderBy += " " + groupByField.getSortOrder();	
+						orderBy += " " + reportSelectedField.getSortOrder();
 					}
 				}
 			}

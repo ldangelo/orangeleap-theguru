@@ -76,31 +76,28 @@ public class ReportWizard implements java.io.Serializable {
 	@IndexColumn(name="REPORTFILTER_ID")
 	private List<ReportFilter> reportFilters;
 
-	@OneToMany(cascade = CascadeType.ALL)
-	@IndexColumn(name="REPORTGROUPBYFIELD_ID")
-	private List<ReportGroupByField> reportGroupByFields;
-
 	@Transient
 	private List<ReportChartSettings> reportChartSettings;
 
 	@Transient
 	private ReportCrossTabFields reportCrossTabFields;
 
-
+	@Transient
+	private List<ReportSelectedField> reportSelectedFields;
+	
     @Transient
     private String currentWizardStep;
     
     @Transient
     private List  reportWizardSteps;
-    
+	
 	@Column(name = "REPORT_TYPE")
 	private String reportType;
 	private ReportLayout reportLayout;
 	private Boolean recordCount;
-	private String reportColumnOrder;
 	private String reportPath;
 	private String reportTemplatePath;
-
+	private String reportTemplateJRXML;	
 
 	@Transient
 	private List   reportTemplateList;
@@ -126,13 +123,9 @@ public class ReportWizard implements java.io.Serializable {
 		//
 		// create a filter list decorated as a LazyList
 		reportFilters = LazyList.decorate(new ArrayList<ReportFilter>(),FactoryUtils.instantiateFactory(ReportFilter.class));
-		reportGroupByFields = LazyList.decorate(new ArrayList<ReportGroupByField>(),FactoryUtils.instantiateFactory(ReportGroupByField.class));
 		reportChartSettings = LazyList.decorate(new ArrayList<ReportChartSettings>(),FactoryUtils.instantiateFactory(ReportChartSettings.class));
 		reportCrossTabFields = new ReportCrossTabFields();
-	}
-
-	public List<ReportGroupByField> getReportGroupByFields() {
-		return reportGroupByFields;
+		reportSelectedFields = LazyList.decorate(new ArrayList<ReportSelectedField>(),FactoryUtils.instantiateFactory(ReportSelectedField.class));
 	}
 
 	public List<ReportChartSettings> getReportChartSettings() {
@@ -191,6 +184,13 @@ public class ReportWizard implements java.io.Serializable {
 
 	public String getReportType() {
 		logger.info("**** getReportType");
+		if (reportType.compareTo("tabular") == 0 || reportType.compareTo("summary") == 0) {
+		    if (hasGroupByFields()) {
+		    	reportType = "summary";
+		    } else {
+		    	reportType = "tabular";
+		    }
+		}
 		return reportType;
 	}
 
@@ -204,28 +204,6 @@ public class ReportWizard implements java.io.Serializable {
 
 	public long getSubSourceId() {
 		return subSourceId;
-	}
-
-	public String getReportColumnOrder() {
-		if (reportColumnOrder == null)
-			reportColumnOrder = "";
-		if (reportColumnOrder.length() == 0) {			
-			Iterator<ReportField> it = fields.iterator();			
-			while(it.hasNext()) {
-				ReportField f = it.next();
-
-				if (f.getSelected()) {
-					if (reportColumnOrder.length() > 0)
-						reportColumnOrder += ",";
-					reportColumnOrder += f.getId();
-				}					
-			}			
-		}
-		return reportColumnOrder;
-	}
-
-	public void setReportGroupByFields(List<ReportGroupByField> reportGroupByFields) {
-		this.reportGroupByFields = reportGroupByFields;
 	}
 
 	public void setReportChartSettings(List<ReportChartSettings> reportChartSettings) {
@@ -284,9 +262,36 @@ public class ReportWizard implements java.io.Serializable {
 
 	public void setReportType(String type) {
 		logger.info("**** setReportType");
-		reportType = type;
+		if (type.compareTo("tabular") == 0 || type.compareTo("summary") == 0) {
+		    if (hasGroupByFields()) {
+		    	reportType = "summary";
+		    } else {
+		    	reportType = "tabular";
+		    }
+		} else {
+			reportType = type;
+		}
 	}
 
+	public boolean hasGroupByFields() {
+		boolean result = false;
+		List<ReportSelectedField> reportSelectedFields = getReportSelectedFields();
+		Iterator<ReportSelectedField> itReportSelectedFields = reportSelectedFields.iterator();
+		
+		if (itReportSelectedFields != null){
+			while (itReportSelectedFields.hasNext()) {
+				ReportSelectedField reportSelectedField = (ReportSelectedField) itReportSelectedFields.next();
+				if (reportSelectedField != null 
+					&& reportSelectedField.getFieldId() != -1
+					&& reportSelectedField.getGroupBy()) {
+					result = true;
+					break;
+				}
+			}
+		}
+		return result;		
+	}
+	
 	public void setRowCount(Integer rowCount) {
 		this.rowCount = rowCount;
 	}
@@ -299,72 +304,33 @@ public class ReportWizard implements java.io.Serializable {
 		this.subSourceId = srcId;
 	}
 
-	public void setReportColumnOrder(String order) {
-		this.reportColumnOrder = order;
-	}
 
-	public List<ReportField> getSelectedReportFieldsInOrder() {
-		List<ReportField> fieldList = new LinkedList<ReportField>();
-		StringTokenizer stringTokenizer = new StringTokenizer(getReportColumnOrder(), ",");
-		while (stringTokenizer.hasMoreTokens()) {
-			int fieldId = Integer.parseInt(stringTokenizer.nextToken());
-			Iterator<ReportField> iteratorFields = fields.iterator();
-			while(iteratorFields.hasNext()) {
-				ReportField reportField = iteratorFields.next();				
-				if (reportField.getId() == fieldId) {
-					if (reportField.getSelected())
-						fieldList.add(reportField);
-					break;
-				}
-			}
-		}
-
-		// if no fields are selected, use the default fields
-		if (this.getReportType().compareToIgnoreCase("matrix") != 0) {
-			if (fieldList.size() == 0){ 
-				fieldList = getDefaultReportFields();
-			}
-		}
-		return fieldList;
-	}
-
-	public List<ReportField> getDefaultReportFields() {
-		List<ReportField> fieldList = new LinkedList<ReportField>();
+	public void populateDefaultReportFields() {
+		reportSelectedFields.clear();
 		Iterator<ReportField> iteratorFields = fields.iterator();
 		while(iteratorFields.hasNext()) {
 			ReportField reportField = iteratorFields.next();				
 			if (reportField.getIsDefault()) {
-				reportField.setSelected(true);
-				fieldList.add(reportField);
+				ReportSelectedField reportSelectedField = new ReportSelectedField();
+				reportSelectedField.setAverage(reportField.getAverage());
+				reportSelectedField.setFieldId(reportField.getId());
+				reportSelectedField.setMax(reportField.getLargestValue());
+				reportSelectedField.setMin(reportField.getSmallestValue());
+				reportSelectedField.setSum(reportField.getPerformSummary());
+				reportSelectedField.setSortOrder("ASC");
+				reportSelectedFields.add(reportSelectedField);
 			}
 		}
-		return fieldList;
 	}
-
+	
 	public Boolean IsFieldGroupByField(long fieldId) {
 		Boolean result = false;
-		if (reportGroupByFields != null)
+		if (reportSelectedFields != null)
 		{
-			Iterator iteratorReportGroupByFields = reportGroupByFields.iterator();
-			while(iteratorReportGroupByFields.hasNext()) {
-				ReportGroupByField  reportGroupByField = (ReportGroupByField) iteratorReportGroupByFields.next();
-				if (reportGroupByField != null && reportGroupByField.fieldId == fieldId) {
-					result = true;
-					break;
-				}
-			}
-		}
-		return result;
-	}
-
-	public Boolean IsFieldChartField(long fieldId) {
-		Boolean result = false;
-		if (reportGroupByFields != null)
-		{
-			Iterator iteratorReportGroupByFields = reportGroupByFields.iterator();
-			while(iteratorReportGroupByFields.hasNext()) {
-				ReportGroupByField  reportGroupByField = (ReportGroupByField) iteratorReportGroupByFields.next();
-				if (reportGroupByField != null && reportGroupByField.fieldId == fieldId) {
+			Iterator<ReportSelectedField> iteratorReportSelectedFields = reportSelectedFields.iterator();
+			while(iteratorReportSelectedFields.hasNext()) {
+				ReportSelectedField reportSelectedField = (ReportSelectedField) iteratorReportSelectedFields.next();
+				if (reportSelectedField != null && reportSelectedField.getFieldId() == fieldId && reportSelectedField.getGroupBy()) {
 					result = true;
 					break;
 				}
@@ -432,13 +398,22 @@ public class ReportWizard implements java.io.Serializable {
 		return "/Reports/" + company + "/Temp";
 	}
 
+	public void setReportTemplateJRXML(String reportTemplateJRXML) {
+		this.reportTemplateJRXML = reportTemplateJRXML;
+	}
+
+	public String getReportTemplateJRXML() {
+		return reportTemplateJRXML;
+	}
+	
 	public String getReportTemplatePath() {
 		return reportTemplatePath;
 	}
 
 	public void setReportTemplatePath(String path) {
+		reportTemplatePath = path;
 		int index = path.lastIndexOf('/');
-		reportTemplatePath = path + "_files/" + path.substring(index + 1) + "_jrxml";
+		setReportTemplateJRXML(path + "_files/" + path.substring(index + 1) + "_jrxml");
 		//		reportTemplatePath = path;
 	}
 
@@ -454,6 +429,13 @@ public class ReportWizard implements java.io.Serializable {
 		return company;
 	}
 
+	public void setReportSelectedFields(List<ReportSelectedField> reportSelectedFields) {
+		this.reportSelectedFields = reportSelectedFields;
+	}
+
+	public List<ReportSelectedField> getReportSelectedFields() {
+		return reportSelectedFields;
+	}
 	public String getCurrentWizardStep() {
 		return currentWizardStep;
 	}
@@ -468,5 +450,5 @@ public class ReportWizard implements java.io.Serializable {
 
 	public void setReportWizardSteps(List reportWizardSteps) {
 		this.reportWizardSteps = reportWizardSteps;
-	}
+	}	
 }

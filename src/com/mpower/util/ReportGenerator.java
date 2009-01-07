@@ -27,6 +27,7 @@ import com.mpower.domain.ReportFieldType;
 import com.mpower.domain.ReportFilter;
 import com.mpower.domain.ReportGroupByField;
 import com.mpower.domain.ReportLayout;
+import com.mpower.domain.ReportSelectedField;
 import com.mpower.domain.ReportStandardFilter;
 import com.mpower.domain.ReportWizard;
 import com.mpower.service.ReportCustomFilterDefinitionService;
@@ -126,7 +127,7 @@ public class ReportGenerator {
 		ResourceDescriptor templateRD = new ResourceDescriptor();
 
 		templateRD.setWsType(ResourceDescriptor.TYPE_REPORTUNIT);
-		templateRD.setUriString(wiz.getReportTemplatePath());
+		templateRD.setUriString(wiz.getReportTemplateJRXML());
 		// 	if (reportLayout == ReportLayout.LANDSCAPE)
 		// 	    templateRD.setUriString("/Reports/" + reportCompany + "/templates/mpower_report_template_landscape_files/mpower_report_template_landscape_jrxml");
 		// 	else 
@@ -261,7 +262,7 @@ public class ReportGenerator {
 		//Build query
 		//
 		ReportQueryGenerator reportQueryGenerator = new ReportQueryGenerator(wiz, 
-				reportFieldService, reportCustomFilterDefinitionService, reportFieldsOrderedList);
+				reportFieldService, reportCustomFilterDefinitionService);
 		String query = reportQueryGenerator.getQueryString(); 
 
 		List<ReportFilter> filters = wiz.getReportFilters();
@@ -425,34 +426,28 @@ public class ReportGenerator {
 		return valueClassName;
 	}
 
-
-
 	private List<ReportField> getSelectedReportFields(ReportWizard wiz, ReportFieldService reportFieldService) {
-		List<ReportField> fields = wiz.getSelectedReportFieldsInOrder();
-		Iterator itFields = fields.iterator();
-		List<ReportGroupByField> groupByFields = wiz.getReportGroupByFields();
-		Iterator itGroupByFields = groupByFields.iterator();
+		Iterator<ReportSelectedField> itReportSelectedFields = wiz.getReportSelectedFields().iterator();
 
 		List<ReportField> selectedReportFieldsList = new LinkedList<ReportField>();
-		//get the groupby fields first
-		while (itGroupByFields.hasNext()){
-			ReportGroupByField group = (ReportGroupByField) itGroupByFields.next();
-			if (group == null) continue;
-			ReportField f = reportFieldService.find(group.getFieldId());
+
+		while (itReportSelectedFields.hasNext()){
+			ReportSelectedField reportSelectedField = (ReportSelectedField) itReportSelectedFields.next();
+			if (reportSelectedField == null) continue;
+			ReportField f = reportFieldService.find(reportSelectedField.getFieldId());
 			if (f == null || f.getId() == -1) continue;
+			f.setAverage(reportSelectedField.getAverage());
+			f.setIsSummarized(reportSelectedField.getIsSummarized());
+			f.setLargestValue(reportSelectedField.getMax());
+			f.setSmallestValue(reportSelectedField.getMin());
+			f.setPerformSummary(reportSelectedField.getSum());
+			f.setSelected(true);
 			selectedReportFieldsList.add(f);
 		}
-
-		//then get a list of all remaining selected fields(excluding groupby columns)
-		while (itFields.hasNext()){
-			ReportField f = (ReportField) itFields.next();
-			if (f == null || f.getId() == -1 || wiz.IsFieldGroupByField(f.getId())) continue;
-			selectedReportFieldsList.add(f);
-		}
-
+		
 		return selectedReportFieldsList; 
 	}
-
+	
 	private List<AbstractColumn> buildColumns(List<ReportField> fields)throws ColumnBuilderException{
 		List<AbstractColumn> columnsBuilt = new LinkedList<AbstractColumn>();
 		Iterator itFields = fields.iterator();

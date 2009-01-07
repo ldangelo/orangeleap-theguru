@@ -37,6 +37,9 @@ public class ReportCustomFilterDefinition implements java.io.Serializable,
 	@Column(name = "DISPLAY_TEXT", length = 8000)
 	private String displayText;
 
+	@Column(name = "DISPLAY_HTML", length = 8000)
+	private String displayHtml;
+	
 	@Column(name = "SQL_TEXT", length = 8000)
 	private String sqlText;
 	
@@ -95,4 +98,16 @@ public class ReportCustomFilterDefinition implements java.io.Serializable,
 	public List<ReportDataSubSource> getReportDataSubSource() {
 		return reportDataSubSource;
 	}
+
+	public void setDisplayHtml(String displayHtml) {
+		this.displayHtml = displayHtml;
+	}
+
+	public String getDisplayHtml() {
+		String result = displayHtml;
+		result = result.replace("\"", "&quot;");
+		result = result.replace(">", "&gt;");
+		result = result.replace("<", "&lt;");
+		return result; 
+	}	
 }
