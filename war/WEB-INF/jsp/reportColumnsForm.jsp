@@ -3,7 +3,7 @@
 <script type="text/javascript" src="js/mpower.reportfields.js"></script>
 
 <form method="post">
-<jsp:include page="snippets/topnav.jsp"/>
+
 <h1>Report Wizard</h1>
 <h2>Select the fields to display</h2>
 <hr width="100%" size=1 color="black">
