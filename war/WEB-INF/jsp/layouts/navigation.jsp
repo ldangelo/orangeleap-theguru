@@ -40,7 +40,7 @@
 
 <c:choose>
 <c:when test="${page == 0}">
-	 Step ${page+1} of ${maxpages+1}: Select report type
+	 Step ${page+1} of ${maxpages+1}: Select report data source
 </c:when>
 
 <c:when test="${page == 1}">
