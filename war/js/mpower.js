@@ -3,7 +3,7 @@ $(document).ready(function() {
 	
 	initializeMatrixScreen();
 	rowCloner("#report_groupbyfields tr:last");
-}
+	}
 );
 
 function rowCloner(selector) {
@@ -100,4 +100,17 @@ function initializeMatrixScreen() {
 	$('#report_matrixColumns').find(".deleteButton:visible").click(function(){
 		deleteRow($(this).parent().parent());
 	});		
+}
+
+function hideJasperMenuRows() {
+	var index = 0;
+	$('iframe').contents().find('#mainTable tr').each(function(){
+		if (index <= 5) {
+			var row = $(this);
+			row.hide();
+			index++;
+		} else {
+			return false;
+		}
+	});	
 }
