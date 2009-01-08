@@ -114,3 +114,7 @@ function hideJasperMenuRows() {
 		}
 	});	
 }
+
+function triggerClick(buttonSelector) {
+	$(buttonSelector).click();
+}

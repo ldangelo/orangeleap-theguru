@@ -38,6 +38,22 @@
 		  </c:if>-->
 </li>
 
+<li>
+	<a onclick="triggerClick(document.getElementById('saveReportHiddenInput'));">Save Report</a>
+</li>
+
+<li>
+	<a onclick="triggerClick(document.getElementById('reportCriteriaHiddenInput'));">Report Criteria</a>
+</li>
+
+<li>
+	<a onclick="triggerClick(document.getElementById('reportContentHiddenInput'));">Report Content</a>
+</li>
+
+<li>
+	<a onclick="triggerClick(document.getElementById('reportFormatHiddenInput'));">Report Format</a>
+</li>
+
 <c:choose>
 <c:when test="${page == 0}">
 	 Step ${page+1} of ${maxpages+1}: Select report data source
