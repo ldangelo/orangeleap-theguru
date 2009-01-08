@@ -62,14 +62,13 @@
 	</table>
 	<br>
 	<br>
-
 	<Table id="limit_row_count" class="tablesorter">	
 		<h2>Limit Row Count</h2>
 		<hr width="100%" size=1 color="black">
 		<TR><TH>Limit the number of rows displayed in this report.</TH></TR>
 		<TR>
 			<TD>
-				<SELECT id="rowCount" name="rowCount">
+				<SELECT id="rowCountSelect" name="rowCountSelect" onchange="updateRowCountInput(this);">
 					<option value="-1"
 						<c:if test="${rowCount == -1}"> selected="true" </c:if>
 					>All</option>
@@ -85,7 +84,15 @@
 					<option value="100"
 						<c:if test="${rowCount == 100}"> selected="true" </c:if>
 					>100</option>
-					<!-- <option>Custom</option> -->
+					<option value=""
+						<c:if test="${rowCount != -1 && rowCount != 10 && rowCount != 25 &&
+									rowCount != 50 && rowCount != 100}"> selected="true" </c:if>				
+					>Custom</option>
+				</SELECT>
+				<input id="rowCount" name="rowCount" value="${rowCount}"
+					<c:if test="${rowCount == -1 || rowCount == 10 || rowCount == 25 ||
+								rowCount == 50 || rowCount == 100}"> style="display:none" </c:if>
+				/>
 			</TD>
 		</TR>
 <!--		<TR>

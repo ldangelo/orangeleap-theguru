@@ -321,3 +321,16 @@ function displayPromptForCriteriaOptions(comparisonSelectId) {
 			filterRow.find("[objectname$=reportStandardFilter.criteria]").removeAttr("disabled");
 	}	
 }
+
+function updateRowCountInput(rowCountSelector) {
+	var rowCount = $(rowCountSelector).find('option:selected').val();
+	var rowCountInput = $('#rowCount');
+	rowCountInput.val(rowCount);
+	if (rowCount == '') {
+		rowCountInput.removeAttr('style');
+		rowCountInput.val('100');
+		rowCountInput.select();
+	} else {
+		rowCountInput.attr('style', 'display: none;');
+	}
+}
