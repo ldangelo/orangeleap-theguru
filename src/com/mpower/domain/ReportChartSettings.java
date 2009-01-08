@@ -15,6 +15,8 @@ public class ReportChartSettings implements java.io.Serializable {
 	
 	private String operation;
 	
+	private String location;
+	
 	public String getChartType() {
 		return chartType;
 	}
@@ -45,5 +47,13 @@ public class ReportChartSettings implements java.io.Serializable {
 
 	public void setOperation(String value) {
 		this.operation = value;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
+	}
+
+	public String getLocation() {
+		return location;
 	}
 }

@@ -87,6 +87,7 @@
 	<table id="chartSettings" class="tablesorter" bgcolor=#E0E0E0>
 		<tr>
 			<th>Chart Type</th>
+			<th>Location</th>
 			<th>Field for X-Axis/Value</th>
 			<th>Field for Y-Axis/Wedge</th>
 			<th>Operation for Y-Axis/Wedge</th>
@@ -108,10 +109,21 @@
 						selected="true"
 					</c:if>>Pie Chart</option>
 			</SELECT></TD>
-	
+			<TD><SELECT id="reportChartSettings[0].location"
+				name="reportChartSettings[0].location">
+				<OPTION label="Header" value="header"
+					<c:if test="${reportChartSettings[0].location == 'header'}">
+						selected="true"
+					</c:if>
+				>Header</OPTION>
+				<OPTION label="Footer" value="footer"
+					<c:if test="${reportChartSettings[0].location == 'footer'}">
+						selected="true"
+					</c:if>
+				>Footer</OPTION>	
+			</SELECT></TD>
 			<TD><SELECT id="reportChartSettings[0].fieldIdx"
 				name="reportChartSettings[0].fieldIdx"
-				style="width: 250px"
 				<c:forEach var="f" items="${reportGroupByFields}" varStatus="inner">
 						<c:if test="${f != null }">
 							<option label="${f.displayName}" value="${f.id}"
@@ -123,7 +135,6 @@
 	
 			<TD><SELECT id="reportChartSettings[0].fieldIdy"
 				name="reportChartSettings[0].fieldIdy"
-				style="width: 250px"
 				<c:forEach var="f" items="${reportSummarizedByFields}" varStatus="inner">
 						<c:if test="${f != null }">
 							<option label="${f.displayName}" value="${f.id}"
