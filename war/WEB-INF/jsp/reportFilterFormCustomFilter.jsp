@@ -7,7 +7,7 @@
 	<TR>
 		<TD>
 			<c:choose>
-				<c:when test="${(currentFilter == null)}">
+				<c:when test="${(currentFilter == null || currentFilter.reportCustomFilter.customFilterId == 0)}">
 					<SELECT id="customFilterSelect"
 						name="customFilterSelect"
 						style="width:545px"
