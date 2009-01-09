@@ -148,7 +148,7 @@ $(function() {
 <!--      <button type="button">New Folder</button> -->
     </div>
 
-<input type="image" src="images/cancel_off.gif" value="Cancel" name="_finish" ALT="Cancel" onmouseover="this.src = 'images/cancel_on.gif';" onmouseout="this.src = 'images/cancel_off.gif';">
+<input type="image" src="images/cancel_off.gif" value="Cancel" name="_target${reportsource.previousPage}" ALT="Cancel" onmouseover="this.src = 'images/cancel_on.gif';" onmouseout="this.src = 'images/cancel_off.gif';">
 <input type="image" src="images/save_off.gif" value="Save" name="_target5" ALT="Save" onmouseover="this.src = 'images/save_on.gif';" onmouseout="this.src = 'images/save_off.gif';">
 
 <input type="image" id="reportDataHiddenInput" name="_target0" value="Report Data" style="display:none" >
@@ -159,7 +159,7 @@ $(function() {
 
 <!--
     <div class="column" style="width: 10%">
-      <button type="submit" name="_finish" tabindex="4">Cancel</button>
+      <button type="submit" name="_target${previousPage +1}" tabindex="4">Cancel</button>
     </div>
     <div class="column" style="width: 10%">
       <button type="submit" name="_target5" tabindex="3">Save<button>
