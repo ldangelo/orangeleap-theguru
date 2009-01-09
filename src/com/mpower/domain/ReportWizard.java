@@ -111,6 +111,9 @@ public class ReportWizard implements java.io.Serializable {
 	@Transient
 	private String company;
 
+	@Transient
+	private Integer previousPage;
+	
 	public ReportWizard() {
 		reportType = "tabular";
 		reportLayout = ReportLayout.PORTRAIT;
@@ -119,7 +122,8 @@ public class ReportWizard implements java.io.Serializable {
 		rowCount = -1;
 		recordCount = false;
 		company = "Default";
-
+		previousPage = 0;
+		
 		//
 		// create a filter list decorated as a LazyList
 		reportFilters = LazyList.decorate(new ArrayList<ReportFilter>(),FactoryUtils.instantiateFactory(ReportFilter.class));
@@ -466,5 +470,13 @@ public class ReportWizard implements java.io.Serializable {
 
 	public void setReportWizardSteps(List reportWizardSteps) {
 		this.reportWizardSteps = reportWizardSteps;
+	}
+
+	public Integer getPreviousPage() {
+		return previousPage;
+	}
+
+	public void setPreviousPage(Integer previousPage) {
+		this.previousPage = previousPage;
 	}	
 }
