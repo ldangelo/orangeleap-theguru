@@ -151,6 +151,7 @@ $(function() {
 <input type="image" src="images/cancel_off.gif" value="Cancel" name="_finish" ALT="Cancel" onmouseover="this.src = 'images/cancel_on.gif';" onmouseout="this.src = 'images/cancel_off.gif';">
 <input type="image" src="images/save_off.gif" value="Save" name="_target5" ALT="Save" onmouseover="this.src = 'images/save_on.gif';" onmouseout="this.src = 'images/save_off.gif';">
 
+<input type="image" id="reportDataHiddenInput" name="_target0" value="Report Data" style="display:none" >
 <input type="image" id="reportFormatHiddenInput" name="_target1" value="Report Format" style="display:none" >
 <input type="image" id="reportContentHiddenInput" name="_target2" value="Report Content" style="display:none" >
 <input type="image" id="reportCriteriaHiddenInput" name="_target3" value="Report Criteria" style="display:none" >

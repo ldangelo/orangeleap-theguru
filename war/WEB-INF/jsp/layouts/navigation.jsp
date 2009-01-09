@@ -54,6 +54,11 @@
 	<a onclick="triggerClick(document.getElementById('reportFormatHiddenInput'));">Report Format</a>
 </li>
 
+<li>
+	<a onclick="triggerClick(document.getElementById('reportDataHiddenInput'));">Report Data</a>
+</li>
+
+
 <c:choose>
 <c:when test="${page == 0}">
 	 Step ${page+1} of ${maxpages+1}: Select report data source
