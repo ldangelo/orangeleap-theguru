@@ -222,6 +222,18 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 	}
 
 	@Override
+	protected int getTargetPage(HttpServletRequest request, Object command, Errors errors, int currentPage) {
+		//
+		// if we are saving a report then redirect the user back to where they hit saveas from
+		if (request.getParameter("_target5") != null) {
+			ReportWizard wiz = (ReportWizard) command;
+			return wiz.getPreviousPage();
+		}
+		
+		return super.getTargetPage(request, command, errors, currentPage);
+	}
+	
+	@Override
 	protected ModelAndView processFinish(HttpServletRequest request,
 			HttpServletResponse arg1, Object arg2, BindException arg3)
 	throws Exception {
@@ -241,6 +253,10 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		refData.put("page",page);
 		refData.put("maxpages", getPages().length-6); // 5 pages that are not actual steps
 
+		// see if we went backwards
+		if (wiz.getPreviousPage() > page)
+			wiz.setPreviousPage(page -1);
+		
 		//
 		// Report Source
 		if (page == 0) {
