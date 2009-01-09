@@ -339,6 +339,22 @@ public class ReportWizard implements java.io.Serializable {
 		return result;
 	}
 
+    public Boolean HasSummaryFields() {
+    	Boolean result = false;
+    	if (reportSelectedFields != null)
+    	{
+    	    Iterator<ReportSelectedField> itFields = reportSelectedFields.iterator();
+    	    while(itFields.hasNext()) {
+    	    	ReportSelectedField rptField = (ReportSelectedField) itFields.next();
+	    		if (rptField.getIsSummarized() == true) {
+	    		    result = true;
+	    		    break;
+	    		}
+    	    }
+    	}
+    	return result;
+    }
+	
 	public String getReportPath() {
 		return reportPath;
 	}

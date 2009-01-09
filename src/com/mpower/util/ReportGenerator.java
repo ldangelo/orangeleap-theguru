@@ -211,7 +211,7 @@ public class ReportGenerator {
 			}//end if Summary Report
 
 			//Add Global footer variables to the Report (Grand Totals at the end of the report)
-			drb = AddGlobalFooterVariables(reportFieldsOrderedList, builtColumns,drb);
+			//drb = AddGlobalFooterVariables(reportFieldsOrderedList, builtColumns,drb);
 		}//end Tabular and Summary Reports
 
 
@@ -492,8 +492,8 @@ public class ReportGenerator {
 				group.setColumnToGroupBy((PropertyColumn) column);
 				group.setLayout(GroupLayout.DEFAULT);
 
-				ArrayList cgvList = new ArrayList();
-				group.setFooterVariables(getColumnGroupVariables(cgvList, builtColumns, reportFieldsOrderedList, wiz));
+				//ArrayList cgvList = new ArrayList();
+				//group.setFooterVariables(getColumnGroupVariables(cgvList, builtColumns, reportFieldsOrderedList, wiz));
 
 				//add the group
 				groupsBuilt.add(group);
@@ -502,6 +502,7 @@ public class ReportGenerator {
 		return groupsBuilt;
 	}	
 
+	/*
 	private ArrayList getColumnGroupVariables(ArrayList cgvList, List<AbstractColumn> builtColumns, List<ReportField> reportFieldsOrderedList, ReportWizard wiz) {
 		//set the summary info for the groups
 		for(int index=0; index < reportFieldsOrderedList.size(); index++) {
@@ -530,6 +531,7 @@ public class ReportGenerator {
 		}//end for
 		return cgvList;
 	}
+	*/
 
 	private List<DJChart> buildCharts(List<ColumnsGroup> groupByColumnsBuilt, List<AbstractColumn> allColumns, ReportWizard wiz,ReportFieldService reportFieldService) throws ChartBuilderException{
 		List<DJChart> chartsBuilt = new LinkedList<DJChart>();
@@ -546,7 +548,12 @@ public class ReportGenerator {
 			//DJChartBuilder cb = new DJChartBuilder(); 
 			DJChart chart = new DJChart();
 			DJChartOptions options = new DJChartOptions();
-			options.setPosition(DJChartOptions.POSITION_FOOTER);
+			if (rcs.getLocation().compareToIgnoreCase("header") == 0){
+				options.setPosition(DJChartOptions.POSITION_HEADER);//DJChartOptions.POSITION_FOOTER
+			}
+			else
+				options.setPosition(DJChartOptions.POSITION_FOOTER);
+			
 			options.setShowLabels(true);
 			chart.setOptions(options);
 			chart.setColumnsGroup(cg);
@@ -588,6 +595,7 @@ public class ReportGenerator {
 		return null;
 	}
 
+	/*
 	private FastReportBuilder AddGlobalFooterVariables(List<ReportField> fields, List<AbstractColumn> columnsBuilt, FastReportBuilder drb){
 
 		//Iterate thru each of the fields to see if it is summarized  
@@ -602,19 +610,19 @@ public class ReportGenerator {
 					if (f.getColumnName() == column.getName()){
 						if (f.getPerformSummary()){
 							drb.addGlobalFooterVariable(column, ColumnsGroupVariableOperation.SUM).setGrandTotalLegend("Total");
-							break;
+							//break;
 						}
 						if (f.getAverage()){
 							drb.addGlobalFooterVariable(column, ColumnsGroupVariableOperation.AVERAGE).setGrandTotalLegend("Average");
-							break;
+							//break;
 						}
 						if (f.getSmallestValue()){
 							drb.addGlobalFooterVariable(column, ColumnsGroupVariableOperation.LOWEST).setGrandTotalLegend("Min");
-							break;
+							//break;
 						}
 						if (f.getLargestValue()){
 							drb.addGlobalFooterVariable(column, ColumnsGroupVariableOperation.HIGHEST).setGrandTotalLegend("Max");
-							break;
+							//break;
 						}
 					}//end if column name = field name
 				}//end while itColumnsBuilt
@@ -622,7 +630,8 @@ public class ReportGenerator {
 		}//end while itFields
 		return drb;
 	}
-
+	*/
+	
 	private ResourceDescriptor putReportUnit(ResourceDescriptor rd,String name, String label, String desc, File report, Map params2, String jasperDatasourceName) throws Exception 
 	{
 		File resourceFile = null;

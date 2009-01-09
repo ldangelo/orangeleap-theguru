@@ -1,9 +1,11 @@
 package com.mpower.controller;
 
+import java.io.Console;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -56,6 +58,8 @@ import com.mpower.service.ReportWizardService;
 import com.mpower.service.SessionService;
 import com.mpower.service.JasperServerService;
 import com.mpower.util.ReportGenerator;
+import com.mpower.util.ReportQueryGenerator;
+import com.mpower.util.ModifyReportJRXML;
 import com.mpower.view.DynamicReportView;
 import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
 
@@ -329,11 +333,25 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 			//Statement statement = connection.createStatement();
 
 			File tempFile = File.createTempFile("wiz", ".jrxml");
+			logger.info("Temp File: " + tempFile);
 			DynamicJasperHelper.generateJRXML(dr,new ClassicLayoutManager(), reportGenerator.getParams(), null, tempFile.getPath());
 
-			if (wiz.getReportType().compareToIgnoreCase("matrix") == 0)
-				removeCrossTabDataSubset(tempFile.getPath());
-
+		    //
+		    // modify the jrxml
+		    ModifyReportJRXML reportXMLModifier = new ModifyReportJRXML(wiz, reportFieldService);
+		    
+		    // DJ adds a dataset that causes an error on the matrix reports so we need to remove it 
+		    if (wiz.getReportType().compareToIgnoreCase("matrix") == 0)
+		    	reportXMLModifier.removeCrossTabDataSubset(tempFile.getPath());
+			
+		    // add the summary info/totals to the report - DJ only allows one per column and we need to allow multiple so 
+			// 		we are altering the XML directly to add the summary calculations to the jasper report,
+		    //		this also handles adding the calculations to the groups created by DJ. 	
+			if (wiz.HasSummaryFields() == true){
+				reportXMLModifier.AddGroupSummaryInfo(tempFile.getPath());
+			    reportXMLModifier.AddReportSummaryInfo(tempFile.getPath());
+			}
+			    
 			//
 			// save the report to the server
 			reportGenerator.put(ResourceDescriptor.TYPE_REPORTUNIT, tempFile.getName(), tempFile.getName(), tempFile.getName(), wiz.getTempFolderPath(), tempFile,reportGenerator.getParams(), wiz.getDataSubSource().getJasperDatasourceName());
@@ -356,12 +374,25 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		DynamicReport dr = reportGenerator.Generate(wiz, jdbcDataSource, reportFieldService, reportCustomFilterDefinitionService);
 
 		File tempFile = File.createTempFile("wiz", ".jrxml");
+		logger.info("Temp File: " + tempFile);
 		DynamicJasperHelper.generateJRXML(dr,new ClassicLayoutManager(), reportGenerator.getParams(), null, tempFile.getPath());
 
-		// TODO - only need to remove the cross tab data subset on matrix reports
-		if (wiz.getReportType().compareToIgnoreCase("matrix") == 0)
-			removeCrossTabDataSubset(tempFile.getPath());
-
+		//
+	    // modify the jrxml
+	    ModifyReportJRXML reportXMLModifier = new ModifyReportJRXML(wiz, reportFieldService);
+	    
+	    // DJ adds a dataset that causes an error on the matrix reports so we need to remove it 
+	    if (wiz.getReportType().compareToIgnoreCase("matrix") == 0)
+	    	reportXMLModifier.removeCrossTabDataSubset(tempFile.getPath());
+		
+	    // add the summary info/totals to the report - DJ only allows one per column and we need to allow multiple so 
+		// 		we are altering the XML directly to add the summary calculations to the jasper report,
+	    //		this also handles adding the calculations to the groups created by DJ. 	
+		if (wiz.HasSummaryFields() == true){
+			reportXMLModifier.AddGroupSummaryInfo(tempFile.getPath());
+		    reportXMLModifier.AddReportSummaryInfo(tempFile.getPath());
+		}
+		
 		String reportTitle = wiz.getDataSubSource().getDisplayName() + " Custom Report";
 		if (wiz.getReportName() != null && wiz.getReportName().length() > 0)
 			reportTitle = wiz.getReportName();
@@ -377,37 +408,6 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 
 		// delete the temporary file
 		tempFile.delete();
-	}
-
-	public void removeCrossTabDataSubset(String fileName) throws ParserConfigurationException, SAXException, IOException {
-		// Load the report xml document
-		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-		Document document = documentBuilder.parse(new File(fileName));
-		// Remove datasetRun element from the report xml
-		removeAll(document, Node.ELEMENT_NODE, "datasetRun");
-		// Remove detail element from the report xml
-		removeAll(document, Node.ELEMENT_NODE, "detail");
-		// Remove detail element from the report xml
-		removeAll(document, Node.ELEMENT_NODE, "columnHeader");
-		document.normalize();
-		// Save the xml back to the temp file
-		XMLSerializer serializer = new XMLSerializer();
-		serializer.setOutputCharStream(new java.io.FileWriter(fileName));
-		serializer.serialize(document);	     
-	}
-
-	public static void removeAll(Node node, short nodeType, String name) {
-		if (node.getNodeType() == nodeType &&
-				(name == null || node.getNodeName().equals(name))) {
-			node.getParentNode().removeChild(node);
-		} else {
-			// Visit the children
-			NodeList list = node.getChildNodes();
-			for (int i=0; i<list.getLength(); i++) {
-				removeAll(list.item(i), nodeType, name);
-			}
-		}
 	}
 
 	public void setDynamicView(DynamicReportView dynamicView) {
