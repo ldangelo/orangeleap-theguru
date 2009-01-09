@@ -550,7 +550,7 @@ public class ModifyReportJRXML {
 	    	frameWidth = (totalWidth + 4);
 	    	rptElementFrame.setAttribute("width", Integer.toString(frameWidth));
 	    	rptElementFrame.setAttribute("height", frameHeight.toString());
-	    	rptElementFrame.setAttribute("backcolor", "#FFFFFF");
+	    	rptElementFrame.setAttribute("backcolor", "#EEEFEF");
 	    	box.setAttribute("topPadding", "1");
 	    	box.setAttribute("leftPadding", "1");
 	    	box.setAttribute("bottomPadding", "1");
