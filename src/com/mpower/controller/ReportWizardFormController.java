@@ -82,6 +82,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 	private DataSource jdbcDataSource;
 	private String reportUnitDataSourceURI;
 	private ReportGenerator	reportGenerator;
+	private long previousDataSubSourceId = -1;
 
 	public ReportWizardFormController() {
 	}
@@ -159,34 +160,55 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 
 		Assert.notNull(request, "Request must not be null");
 		
-		if (page == 0 && request.getParameter("_target1") != null) {
-			wiz.setDataSource(reportSourceService.find(wiz.getSrcId()));
-			ReportDataSource rds = reportSourceService.find(wiz.getSrcId());
-			List<ReportDataSubSource> lrdss = reportSubSourceService.readSubSourcesByReportSourceId(rds.getId());
-			wiz.setDataSource(rds);
-			wiz.setDataSubSources(lrdss);
-			
-			ReportDataSubSource       rdss = reportSubSourceService.find( wiz.getSubSourceId());
-
-			List<ReportFieldGroup>    lrfg = reportFieldGroupService.readFieldGroupBySubSourceId(rdss.getId());
-			wiz.setFieldGroups(lrfg);
-			
-			wiz.setDataSubSource(rdss);
-
-			wiz.getDataSubSource().setReportCustomFilterDefinitions(reportCustomFilterDefinitionService.readReportCustomFilterDefinitionBySubSourceId(rdss.getId()));
-			
-			List<ReportField> fields = new LinkedList<ReportField>();
-			// Iterate across the field groups in the
-			Iterator itGroup = lrfg.iterator();
-			while (itGroup.hasNext()) {
-				ReportFieldGroup rfg = (ReportFieldGroup) itGroup.next();
-				fields.addAll(reportFieldService.readFieldByGroupId(rfg.getId()));
-			}
-			wiz.setFields(fields);
-			
-			// once the data source and sub-source have been selected, select the default fields
-			wiz.populateDefaultReportFields();
-		}
+		if (page == 0)
+		{
+			if (request.getParameter("_target0") != null
+				|| request.getParameter("_target1") != null
+				|| request.getParameter("_target2") != null
+				|| request.getParameter("_target3") != null
+				|| request.getParameter("_target4") != null) {
+				if (wiz.getSubSourceId() != previousDataSubSourceId || wiz.getDataSource() == null)
+				{
+					previousDataSubSourceId = wiz.getSubSourceId();
+					wiz.setDataSource(reportSourceService.find(wiz.getSrcId()));
+					ReportDataSource rds = reportSourceService.find(wiz.getSrcId());
+					List<ReportDataSubSource> lrdss = reportSubSourceService.readSubSourcesByReportSourceId(rds.getId());
+					wiz.setDataSource(rds);
+					wiz.setDataSubSources(lrdss);
+					
+					ReportDataSubSource       rdss = reportSubSourceService.find( wiz.getSubSourceId());
+		
+					List<ReportFieldGroup>    lrfg = reportFieldGroupService.readFieldGroupBySubSourceId(rdss.getId());
+					wiz.setFieldGroups(lrfg);
+					
+					wiz.setDataSubSource(rdss);
+		
+					wiz.getDataSubSource().setReportCustomFilterDefinitions(reportCustomFilterDefinitionService.readReportCustomFilterDefinitionBySubSourceId(rdss.getId()));
+					
+					List<ReportField> fields = new LinkedList<ReportField>();
+					// Iterate across the field groups in the
+					Iterator itGroup = lrfg.iterator();
+					while (itGroup.hasNext()) {
+						ReportFieldGroup rfg = (ReportFieldGroup) itGroup.next();
+						fields.addAll(reportFieldService.readFieldByGroupId(rfg.getId()));
+					}
+					wiz.setFields(fields);
+					
+					// once the data source and sub-source have been selected, select the default fields
+					wiz.populateDefaultReportFields();
+					
+					// clear out any selected filters, chart settings, etc.
+					wiz.getReportFilters().clear();
+					wiz.getReportChartSettings().clear();
+					wiz.getReportCrossTabFields().getReportCrossTabColumns().clear();
+					wiz.getReportCrossTabFields().getReportCrossTabRows().clear();
+					wiz.getReportCrossTabFields().setReportCrossTabMeasure(-1);
+				}
+			} else {
+				previousDataSubSourceId = -1;
+			}				
+		} 
+		
 		if (request.getParameter("_target5") != null) {
 			//
 			// We are saving this report to jasperserver
