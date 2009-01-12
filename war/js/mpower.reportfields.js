@@ -189,17 +189,20 @@ function setOptionsEnabled(rowSelector) {
 		// add the group by field to the x axis chart options
 		$('#reportChartSettings\\[0\\]\\.fieldIdx').append(field.find('option:selected').clone(true));
 	} else {
-		fieldRow.find('input[objectname$=count]').removeAttr('disabled');
-		fieldRow.find('input[objectname$=max]').removeAttr('disabled');
-		fieldRow.find('input[objectname$=min]').removeAttr('disabled');
+		//fieldRow.find('input[objectname$=count]').removeAttr('disabled');
+		fieldRow.find('input[objectname$=count]').attr('disabled','true');
 		fieldRow.find('input[objectname$=sum]').removeAttr('disabled');
 		fieldRow.find('input[objectname$=average]').removeAttr('disabled');		
 		if (field.find('option:selected').attr('fieldtype') != 'MONEY') {
 			fieldRow.find('input[fieldtype=summary]').attr('disabled', 'true');
 			fieldRow.find('select[fieldtype=summary]').attr('disabled', 'true');
+			fieldRow.find('input[objectname$=max]').attr('disabled', 'true');
+			fieldRow.find('input[objectname$=min]').attr('disabled', 'true');
 		} else {
 			fieldRow.find('input[fieldtype=summary]').removeAttr('disabled');
 			fieldRow.find('select[fieldtype=summary]').removeAttr('disabled');
+			fieldRow.find('input[objectname$=max]').removeAttr('disabled');
+			fieldRow.find('input[objectname$=min]').removeAttr('disabled');
 	    }
 		$('#reportChartSettings\\[0\\]\\.fieldIdy').append(field.find('option:selected[fieldtype="MONEY"]').clone(true));		
 	}
