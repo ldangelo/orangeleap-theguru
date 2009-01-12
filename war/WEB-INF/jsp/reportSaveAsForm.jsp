@@ -72,6 +72,23 @@ function updateTree(results) {
     }
   }
 
+function preventInvalidReportNameCharacters() {
+	var reportName = $('#reportName'); 
+	reportName.one("keydown",function(event){
+		preventInvalidReportNameCharacters();
+		if (event.keyCode == 222) // quotes
+			return false;
+	});
+}
+
+function removeInvalidReportNameCharacters() {
+	var reportName = $('#reportName');
+	reportName.one("change",function(event){
+		removeInvalidReportNameCharacters();
+		reportName.val(reportName.val().replace('\'', '').replace('\"', ''));
+	});
+}
+
 $(function() {
     var username = $("#username").attr("value");
     var password = $("#password").attr("value");
@@ -84,7 +101,9 @@ $(function() {
     JasperServerService.setUserName(username);
     JasperServerService.setPassword(password);
     JasperServerService.list("/",updateTree);
-    
+
+    preventInvalidReportNameCharacters();
+    removeInvalidReportNameCharacters();
   });
 
 </script>
@@ -95,7 +114,7 @@ $(function() {
 
   <div class="columns" style="width: 100%">
     <div class="column" style="width: 30%">Report Name:      </div>
-    <div class="column" ><form:input path="reportName" size="64" tabindex="1"/></div>
+    <div class="column" ><form:input id="reportName" path="reportName" size="64" tabindex="1"/></div>
     <div class="clearColumns"></div>
   </div>
   
