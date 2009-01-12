@@ -256,7 +256,8 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		// see if we went backwards
 		if (wiz.getPreviousPage() > page)
 			wiz.setPreviousPage(page -1);
-		
+
+		refData.put("previouspage", wiz.getPreviousPage());
 		//
 		// Report Source
 		if (page == 0) {
@@ -336,7 +337,11 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 
 		// filter screen
 		if(page==3) {
-		    refData.put("fieldGroups", wiz.getFieldGroups());
+			ReportDataSubSource rdss = reportSubSourceService.find(wiz.getSubSourceId());
+			List<ReportFieldGroup>    lrfg = reportFieldGroupService.readFieldGroupBySubSourceId(rdss.getId());
+			wiz.setFieldGroups(lrfg);
+		
+			refData.put("fieldGroups", wiz.getFieldGroups());
 		    refData.put("customFilters", wiz.getDataSubSource().getReportCustomFilterDefinitions());
 		    
 			List<ReportFilter> tempFilters = new LinkedList<ReportFilter>();

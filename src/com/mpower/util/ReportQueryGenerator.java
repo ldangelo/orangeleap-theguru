@@ -30,13 +30,11 @@ public class ReportQueryGenerator {
 	private ReportWizard reportWizard;
 	private ReportFieldService reportFieldService;
 	private ReportCustomFilterDefinitionService reportCustomFilterDefinitionService;
-	private List<ReportField> reportFieldsOrderedList;
 		
     /**
      * Constructor for the <tt>QueryGenerator</tt>.
      * @param reportWizard ReportWizard that contains the various report options.
      * @param reportFieldService ReportFieldService the QueryGenerator will use to retrieve field information from the database.
-     * @param reportFieldsOrderedList <tt>List&lt;ReportField&gt;</tt> of the report fields in the correct order.
      */
     public ReportQueryGenerator(ReportWizard reportWizard, ReportFieldService reportFieldService, 
     		ReportCustomFilterDefinitionService reportCustomFilterDefinitionService) {
@@ -154,22 +152,6 @@ public class ReportQueryGenerator {
 	}
 	
 	/**
-	 * Sets the reportFieldsOrderedList that contains the report fields in the specified order.
-	 * @param reportFieldsOrderedList
-	 */
-	public void setReportFieldsOrderedList(List<ReportField> reportFieldsOrderedList) {
-		this.reportFieldsOrderedList = reportFieldsOrderedList;
-	}
-
-	/**
-	 * Returns the fields for the report in their specified order.
-	 * @return <tt>List&lt;ReportField&gt;</tt>
-	 */
-	public List<ReportField> getReportFieldsOrderedList() {
-		return reportFieldsOrderedList;
-	}
-
-	/**
 	 * Builds and returns a mySql or SQL Server query.
 	 * <P>
 	 * {@code} String query = getQueryString();
@@ -202,6 +184,26 @@ public class ReportQueryGenerator {
 		
 		selectClause += " DISTINCT";
 
+		if (getReportWizard().getReportType().compareToIgnoreCase("matrix") == 0)
+		{
+			selectClause += buildSelectFieldsForMatrix();
+		} else {
+			selectClause += buildSelectFieldsForNonMatrix();
+		}
+		
+		selectClause = selectClause + " FROM " + getReportWizard().getDataSubSource().getViewName();		
+		
+		return selectClause;
+	}
+
+	/**
+	 * Builds and returns a the fields for tabular or summary reports for the select clause.
+	 * <P>
+	 * {@code} String selectClause += buildSelectFieldsForNonMatrix();
+	 * @return String
+	 */	
+	private String buildSelectFieldsForNonMatrix() {
+		String selectClause = "";
 		Iterator<ReportSelectedField> itReportSelectedFields = getReportWizard().getReportSelectedFields().iterator();
 		boolean addComma = false;
 		while (itReportSelectedFields.hasNext()) {
@@ -210,16 +212,68 @@ public class ReportQueryGenerator {
 			if (reportField == null || reportField.getId() == -1) continue;
 			if (selectClause.indexOf(reportField.getColumnName()) == -1) {
 				if (addComma)
-					selectClause = selectClause + ",";
+					selectClause += ",";
 				else
-					addComma = true;
-				
-				selectClause = selectClause + " " + reportField.getColumnName();
+					addComma = true;					
+				selectClause += " " + reportField.getColumnName();
 			}
 		}
-		
-		selectClause = selectClause + " FROM " + getReportWizard().getDataSubSource().getViewName();		
-		
+		return selectClause;
+	}
+
+
+	/**
+	 * Builds and returns a the fields for matrix reports for the select clause.
+	 * <P>
+	 * {@code} String selectClause += buildSelectFieldsForMatrix();
+	 * @return String
+	 */	
+	private String buildSelectFieldsForMatrix() {
+		String selectClause = "";
+		boolean addComma = false;
+		List<ReportGroupByField> rowFields = getReportWizard().getReportCrossTabFields().getReportCrossTabRows();
+		Iterator<ReportGroupByField> itRow = rowFields.iterator();
+		while (itRow.hasNext()){
+			ReportGroupByField fGroupBy = (ReportGroupByField) itRow.next();
+			if (fGroupBy != null && fGroupBy.getFieldId() != -1 ){
+				ReportField reportField = reportFieldService.find(fGroupBy.getFieldId());					
+				if (selectClause.indexOf(reportField.getColumnName()) == -1)
+				{
+					if (addComma)
+						selectClause = selectClause + ",";
+					else
+						addComma = true;
+					selectClause = selectClause + " " + reportField.getColumnName();
+				}
+			}	
+		}
+		//Add Column Fields
+		List<ReportGroupByField> colFields = getReportWizard().getReportCrossTabFields().getReportCrossTabColumns();
+		Iterator<ReportGroupByField> itCol = colFields.iterator();
+		while (itCol.hasNext()){
+			ReportGroupByField fGroupBy = (ReportGroupByField) itCol.next();
+			if (fGroupBy != null && fGroupBy.getFieldId() != -1){
+				ReportField reportField = reportFieldService.find(fGroupBy.getFieldId());
+				if (selectClause.indexOf(reportField.getColumnName()) == -1)
+				{
+					if (addComma)
+						selectClause = selectClause + ",";
+					else
+						addComma = true;
+					selectClause = selectClause + " " + reportField.getColumnName();
+				}
+			}
+		}
+		//Add the Measure
+		ReportField fMeasure = reportFieldService.find(getReportWizard().getReportCrossTabFields().getReportCrossTabMeasure());
+		if (fMeasure.getId() != -1 && selectClause.indexOf(fMeasure.getColumnName()) == -1)
+		{
+			if (addComma)
+				selectClause = selectClause + ",";
+			else
+				addComma = true;
+			selectClause = selectClause + " " + fMeasure.getColumnName();					
+		}
 		return selectClause;
 	}
 
