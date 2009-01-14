@@ -62,6 +62,10 @@ import com.mpower.util.ReportQueryGenerator;
 import com.mpower.util.ModifyReportJRXML;
 import com.mpower.view.DynamicReportView;
 import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
+import org.springframework.security.providers.dao.DaoAuthenticationProvider;
+import org.springframework.security.providers.dao.UserCache;
+import org.springframework.security.userdetails.UserDetails;
+import org.springframework.security.userdetails.UserDetailsService;
 
 public class ReportWizardFormController extends AbstractWizardFormController {
 	private ReportSubSourceService  reportSubSourceService;
@@ -83,7 +87,8 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 	private String reportUnitDataSourceURI;
 	private ReportGenerator	reportGenerator;
 	private long previousDataSubSourceId = -1;
-
+	private UserDetailsService userDetailsService;
+	
 	public ReportWizardFormController() {
 	}
 
@@ -226,6 +231,13 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		//
 		// if we are saving a report then redirect the user back to where they hit saveas from
 		if (request.getParameter("_target5") != null) {
+			try {
+				saveReport(wiz);
+			} catch (Exception e) {
+				logger.error(e.getLocalizedMessage());
+				errors.reject(e.getLocalizedMessage());
+			}
+			
 			ReportWizard wiz = (ReportWizard) command;
 			return wiz.getPreviousPage();
 		}
@@ -271,7 +283,11 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 				userName = wiz.getUsername();
 				password = wiz.getPassword();
 			} else {
+				
+				
+				UserDetails userDetails = userDetailsService.loadUserByUsername(userName);
 				wiz.setUsername(userName);
+				password = userDetails.getPassword();
 				wiz.setPassword(password);
 			}
 
@@ -516,5 +532,13 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 
 	public void setJasperServerService(JasperServerService jss) {
 		jasperServerService = jss;
+	}
+
+	public UserDetailsService getUserDetailsService() {
+		return userDetailsService;
+	}
+
+	public void setUserDetailsService(UserDetailsService userDetailsService) {
+		this.userDetailsService = userDetailsService;
 	}
 }
