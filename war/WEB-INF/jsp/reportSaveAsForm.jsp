@@ -158,7 +158,7 @@ return true;
       <table class="tablesorter">
 	<thead>
 	  <tr>
-	    <th class="header">Report Name</th><th class="header"> Report Description</th>
+	    <th class="header" style="width: 33%">Report Name</th><th class="header"> Report Description</th>
 	  </tr>
 	</thead>
       </table>
