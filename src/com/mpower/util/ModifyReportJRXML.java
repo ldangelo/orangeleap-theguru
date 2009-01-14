@@ -5,7 +5,6 @@ package com.mpower.util;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -76,7 +75,7 @@ public class ModifyReportJRXML {
     		jasperReport.insertBefore(groupElem, bkgNode);
     	
     	//iterate thru the fields to find the summary fields and create the variables
-    	Iterator itFields = getSelectedReportFieldsInOrder().iterator();
+    	Iterator<?> itFields = getSelectedReportFieldsInOrder().iterator();
     	while (itFields.hasNext()){
     		ReportField f = (ReportField) itFields.next();
     		if (f.getIsSummarized()){
@@ -132,9 +131,9 @@ public class ModifyReportJRXML {
     	}    	
     	
     	//iterate thru the fields to find the summary fields and add the variables and footers
-    	Iterator itFields = getSelectedReportFieldsInOrder().iterator();
+    	Iterator<?> itFields = getSelectedReportFieldsInOrder().iterator();
     	boolean addGroup = false;
-    	  List<String> groupsToAdd = new ArrayList();
+    	  List<String> groupsToAdd = new ArrayList<String>();
 
     	while (itFields.hasNext()){
     		ReportField f = (ReportField) itFields.next();
@@ -386,7 +385,7 @@ public class ModifyReportJRXML {
 			//
 			//Variables
 			Integer bandTotalHeight = 0;
-			Integer rowHeight = 17;  
+			Integer rowHeight = 16;  
 			int y = 0;
 	    	int x = 0;
 	    	int width = 0;
@@ -394,7 +393,7 @@ public class ModifyReportJRXML {
 			int widthCalc = 0;
 			int totalWidth = 0;
 			//get the total width
-			Iterator itTotalFieldWidth = getSelectedReportFieldsInOrder().iterator();
+			Iterator<?> itTotalFieldWidth = getSelectedReportFieldsInOrder().iterator();
 	    	while (itTotalFieldWidth.hasNext()){
 	    		ReportField fWidth = (ReportField) itTotalFieldWidth.next();
 	    		int lastColumnX = fieldProperties.get(fWidth.getDisplayName());
@@ -423,12 +422,12 @@ public class ModifyReportJRXML {
 	    		x = 0;
 	    		width = totalWidth;
 	    		frame.appendChild(buildSummaryLabel("Grand Totals", document, 0, 0, width, rowHeight, false, null));
-				frame.appendChild(addLine(document, 1, rowHeight+1, totalWidth));
-				y += rowHeight*3;
+				frame.appendChild(addLine(document, 1,  rowHeight+1, totalWidth));
+				y += rowHeight*2+2;
 	    		
 	    	}
 	    	else{
-		    	Iterator itFieldsGroupLabel = getSelectedReportFieldsInOrder().iterator();
+		    	Iterator<?> itFieldsGroupLabel = getSelectedReportFieldsInOrder().iterator();
 		    	while (itFieldsGroupLabel.hasNext()){
 		    		ReportField fLabel = (ReportField) itFieldsGroupLabel.next();
 		    		if (reportWizard.IsFieldGroupByField(fLabel.getId())){
@@ -436,9 +435,9 @@ public class ModifyReportJRXML {
 		    			width = fieldWidth.get(fLabel.getDisplayName());
 		    			String groupColumn = resetGroup.substring(resetGroup.indexOf("-") + 1);
 		    			if (fLabel.getDisplayName().compareToIgnoreCase(groupColumn) == 0){
-		    				frame.appendChild(buildSummaryLabel(null, document, x, y-2, width, rowHeight, true, fLabel.getColumnName()));
+		    				frame.appendChild(buildSummaryLabel(null, document, x, y, width, rowHeight, true, fLabel.getColumnName()));
 		    				frame.appendChild(addLine(document, 1, y+rowHeight+1, totalWidth));
-			    			y += rowHeight*3;
+			    			y += rowHeight*2+2;
 			    			break;
 			    		}
 		    		}
@@ -449,94 +448,90 @@ public class ModifyReportJRXML {
 	    	Boolean yFound = false; 
 	    	xCalc = 0;
 			widthCalc = 0;
-	    	Iterator itFieldsSum = getSelectedReportFieldsInOrder().iterator();
+	    	Iterator<?> itFieldsSum = getSelectedReportFieldsInOrder().iterator();
 	    	while (itFieldsSum.hasNext()){
 	    		ReportField f = (ReportField) itFieldsSum.next();
 	    		if (f.getIsSummarized()){
 	    			if (f.getPerformSummary()){
 	    				xCalc = fieldProperties.get(f.getDisplayName());
 		    			widthCalc = fieldWidth.get(f.getDisplayName());
-		    			frame.appendChild(buildSummaryNodes(f, "Sum", resetGroup, document, xCalc, widthCalc, y+1));
+		    			frame.appendChild(buildSummaryNodes(f, "Sum", resetGroup, document, xCalc, widthCalc, y, rowHeight));
 	    				yFound = true;
 	    			}
 	    		}
 	    	}
 	    	if (yFound){ 
-	    		y -= rowHeight;
-    			frame.appendChild(buildSummaryLabel("Total", document, x, y, width, rowHeight, false, null));
-	    		frame.appendChild(addLine(document, x, y+rowHeight, (xCalc + widthCalc)-x));	
-    			y += rowHeight*3;
+	    		frame.appendChild(addLine(document, x, y-1,  (xCalc + widthCalc)-x));
+	    		frame.appendChild(buildSummaryLabel("Total", document, x, y-rowHeight-2, totalWidth - x, rowHeight, false, null));
+	    		y += rowHeight*2+2;
     		}
 	    	
 	    	//Add the average to the footer section
 	    	yFound = false;
 	    	xCalc = 0;
 			widthCalc = 0;
-	    	Iterator itFieldsAvg = getSelectedReportFieldsInOrder().iterator();
+	    	Iterator<?> itFieldsAvg = getSelectedReportFieldsInOrder().iterator();
 	    	while (itFieldsAvg.hasNext()){
 	    		ReportField f = (ReportField) itFieldsAvg.next();
 	    		if (f.getIsSummarized()){
 	    			if (f.getAverage()){
 	    				xCalc = fieldProperties.get(f.getDisplayName());
 		    			widthCalc = fieldWidth.get(f.getDisplayName());
-		    			frame.appendChild(buildSummaryNodes(f, "Average", resetGroup, document, xCalc, widthCalc, y+1));
+		    			frame.appendChild(buildSummaryNodes(f, "Average", resetGroup, document, xCalc, widthCalc, y, rowHeight));
 	    				yFound = true;
 	    			}
 	    		}
 	    	}
-	    	if (yFound){
-	    		y -= rowHeight;
-	    		frame.appendChild(buildSummaryLabel("Average", document, x, y, width, rowHeight, false, null));
-	    		frame.appendChild(addLine(document, x, y+rowHeight, (xCalc + widthCalc)-x));	
-	    		y += rowHeight*3;
+	    	if (yFound){ 
+	    		frame.appendChild(addLine(document, x, y-1,  (xCalc + widthCalc)-x));
+	    		frame.appendChild(buildSummaryLabel("Average", document, x, y-rowHeight-2, totalWidth - x, rowHeight, false, null));
+	    		y += rowHeight*2+2;
     		}
-	    	
+	    		    	
 	    	//Add the max to the footer section
 	    	yFound = false;
 	    	xCalc = 0;
 			widthCalc = 0;
-	    	Iterator itFieldsMax = getSelectedReportFieldsInOrder().iterator();
+	    	Iterator<?> itFieldsMax = getSelectedReportFieldsInOrder().iterator();
 	    	while (itFieldsMax.hasNext()){
 	    		ReportField f = (ReportField) itFieldsMax.next();
 	    		if (f.getIsSummarized()){
 	    			if (f.getLargestValue()){
 	    				xCalc = fieldProperties.get(f.getDisplayName());
 		    			widthCalc = fieldWidth.get(f.getDisplayName());
-		    			frame.appendChild(buildSummaryNodes(f, "Highest", resetGroup, document, xCalc, widthCalc, y+1));
+		    			frame.appendChild(buildSummaryNodes(f, "Highest", resetGroup, document, xCalc, widthCalc, y, rowHeight));
 	    				yFound = true;
 	    			}
 	    		}
 	    	}
-	    	if (yFound){
-	    		y -= rowHeight;
-    			frame.appendChild(buildSummaryLabel("Max", document, x, y, width, rowHeight, false, null));
-	    		frame.appendChild(addLine(document, x, y+rowHeight, (xCalc + widthCalc)-x));	
-    			y += rowHeight*3;
+	    	if (yFound){ 
+	    		frame.appendChild(addLine(document, x, y-1,  (xCalc + widthCalc)-x));
+	    		frame.appendChild(buildSummaryLabel("Max", document, x, y-rowHeight-2, totalWidth - x, rowHeight, false, null));
+	    		y += rowHeight*2+2;
     		}
-	    
+	    		    
 	    	//Add the min to the footer section
 	    	yFound = false;
 	    	xCalc = 0;
 			widthCalc = 0;
-	    	Iterator itFieldsMin = getSelectedReportFieldsInOrder().iterator();
+	    	Iterator<?> itFieldsMin = getSelectedReportFieldsInOrder().iterator();
 	    	while (itFieldsMin.hasNext()){
 	    		ReportField f = (ReportField) itFieldsMin.next();
 	    		if (f.getIsSummarized()){
 	    			if (f.getSmallestValue()){
 	    				xCalc = fieldProperties.get(f.getDisplayName());
 		    			widthCalc = fieldWidth.get(f.getDisplayName());
-		    			frame.appendChild(buildSummaryNodes(f, "Lowest", resetGroup, document, xCalc, widthCalc, y+1));
+		    			frame.appendChild(buildSummaryNodes(f, "Lowest", resetGroup, document, xCalc, widthCalc, y+1, rowHeight));
 	    				yFound = true;
 	    			}
 	    		}
 	    	}
-	    	if (yFound){
-	    		y -= rowHeight;
-    			frame.appendChild(buildSummaryLabel("Min", document, x, y, width, rowHeight, false, null));
-	    		frame.appendChild(addLine(document, x, y+rowHeight, (xCalc + widthCalc)-x));
-    			y += rowHeight*3;
+	    	if (yFound){ 
+	    		frame.appendChild(addLine(document, x, y-1,  (xCalc + widthCalc)-x));
+	    		frame.appendChild(buildSummaryLabel("Min", document, x, y-rowHeight-2, totalWidth - x, rowHeight, false, null));
+	    		y += rowHeight*2+2;
     		}
-			    	
+	    				    	
 	    	bandTotalHeight = y - rowHeight + 4;
 	    	Integer frameHeight = bandTotalHeight;
 	    	
@@ -596,7 +591,7 @@ public class ModifyReportJRXML {
 	/**
 	 * create child "textField" of "band" with attributes
 	 */
-	private Node buildSummaryNodes(ReportField f, String calc, String resetGroup, Document document, int x, int width, int y) {
+	private Node buildSummaryNodes(ReportField f, String calc, String resetGroup, Document document, int x, int width, int y, int height) {
 		
 		//String varName = "variable-footer_global_" + columnName + "_" + calc;
 		String varName = null;
@@ -620,7 +615,7 @@ public class ModifyReportJRXML {
 			reportElement.setAttribute("x", Integer.toString(x));
 			reportElement.setAttribute("y",  Integer.toString(y));
 			reportElement.setAttribute("width", Integer.toString(width));
-			reportElement.setAttribute("height", "17");
+			reportElement.setAttribute("height", Integer.toString(height));
 			reportElement.setAttribute("style", "defaultDetailStyle");
 			textField.appendChild(reportElement);
 			
