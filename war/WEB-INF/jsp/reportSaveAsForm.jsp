@@ -106,6 +106,30 @@ $(function() {
     removeInvalidReportNameCharacters();
   });
 
+function checkForReturn(e)
+{
+var keynum;
+var keychar;
+var numcheck;
+
+if(window.event) // IE
+  {
+  keynum = e.keyCode;
+  }
+else if(e.which) // Netscape/Firefox/Opera
+  {
+  keynum = e.which;
+  }
+
+  // if the user has hit the return key then fire the click event on the submit button
+  if (keynum == 13) {
+  	$("#save").click();
+  	return false;
+	}
+
+return true;
+}
+
 </script>
 
 <form:form name="myform" method="post" commandName="reportsource">
@@ -114,7 +138,7 @@ $(function() {
 
   <div class="columns" style="width: 100%">
     <div class="column" style="width: 30%">Report Name:      </div>
-    <div class="column" ><form:input id="reportName" path="reportName" size="64" tabindex="1"/></div>
+    <div class="column" ><form:input path="reportName" size="64" tabindex="1" onkeypress="return checkForReturn(event)"/></div>
     <div class="clearColumns"></div>
   </div>
   
@@ -168,7 +192,7 @@ $(function() {
     </div>
 
 <input type="image" src="images/cancel_off.gif" value="Cancel" name="_target${reportsource.previousPage}" ALT="Cancel" onmouseover="this.src = 'images/cancel_on.gif';" onmouseout="this.src = 'images/cancel_off.gif';">
-<input type="image" src="images/save_off.gif" value="Save" name="_target5" ALT="Save" onmouseover="this.src = 'images/save_on.gif';" onmouseout="this.src = 'images/save_off.gif';">
+<input type="image" id="save" src="images/save_off.gif" value="Save" name="_target5" ALT="Save" onmouseover="this.src = 'images/save_on.gif';" onmouseout="this.src = 'images/save_off.gif';">
 
 <input type="image" id="reportDataHiddenInput" name="_target0" value="Report Data" style="display:none" >
 <input type="image" id="reportFormatHiddenInput" name="_target1" value="Report Format" style="display:none" >
