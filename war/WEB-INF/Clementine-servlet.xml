@@ -10,7 +10,33 @@
            http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
 	   http://www.directwebremoting.org/schema/spring-dwr 
 	   http://www.directwebremoting.org/schema/spring-dwr-2.0.xsd"> 
-
+	   
+   <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>/WEB-INF/jdbc.properties</value>
+                <!-- below is for jboss + postgresql only                  -->
+                <!-- <value>/WEB-INF/js.jdbc-postgresql.properties</value> -->
+            </list>
+        </property>
+    </bean>	   
+	
+	 <bean id="mpxDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="${userdetails.jdbc.driverClassName}" />
+		<property name="url" value="${userdetails.jdbc.url}"/>
+		<property name="username" value="${userdetails.jdbc.username}"/>
+		<property name="password" value="${userdetails.jdbc.password}"/>
+	</bean>
+	
+	<bean id="jdbcAuthenticationDao" class="org.springframework.security.userdetails.jdbc.JdbcDaoImpl">
+		<property name="dataSource" ref="mpxDataSource"/>
+		<property name="usersByUsernameQuery">
+			<value>${userdetails.userbyusernamequery}</value>
+		</property>
+		<property name="authoritiesByUsernameQuery">
+			<value>${userdetails.authoritiesbyusernamequery}</value>
+		</property>
+	</bean>
 	<bean id="JasperServerService" class="com.mpower.service.JasperServerServiceImpl">
 <!--
 		<property name="userName" value="jasperadmin"/>
@@ -78,7 +104,7 @@
         <property name="reportSourceService" ref="reportSourceService"/>
         <property name="reportSubSourceService" ref="reportSubSourceService"/>
         <property name="reportFieldGroupService" ref="reportFieldGroupService"/>
-	<property name="jasperServerService" ref="JasperServerService"/>
+		<property name="jasperServerService" ref="JasperServerService"/>
         <property name="reportFieldService" ref="reportFieldService"/>
 		<property name="reportWizardService" ref="reportWizardService"/>
 		<property name="reportCustomFilterDefinitionService" ref="reportCustomFilterDefinitionService"/>
@@ -86,6 +112,7 @@
         <property name="dynamicView" ref="dynamicReport"/>
         <property name="reportGenerator" ref="reportGenerator"/>
     	<property name="jdbcDataSource" ref="dataSource"/>
+    	<property name="userDetailsService" ref="jdbcAuthenticationDao"/>
 	<property name="pages">
 		<list>
 			<value>ReportSource</value>
