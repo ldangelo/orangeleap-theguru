@@ -177,13 +177,13 @@ public class ReportQueryGenerator {
 	 */		
 	private String buildSelectClause() {
 		String selectClause = "SELECT";
+
+		selectClause += " DISTINCT";
 		
 		if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.SQLSERVER
 				&& getReportWizard().getRowCount() > 0)
 			selectClause += " TOP " + getReportWizard().getRowCount(); 
 		
-		selectClause += " DISTINCT";
-
 		if (getReportWizard().getReportType().compareToIgnoreCase("matrix") == 0)
 		{
 			selectClause += buildSelectFieldsForMatrix();
