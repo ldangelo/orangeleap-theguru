@@ -9,23 +9,25 @@
 				onchange="filterCriteria(this);"  style="width: 150px">
 				<option label="None" value="-1">None</option>
 				<c:forEach var="fgroup" items="${fieldGroups}" varStatus="outer">
-					<c:forEach var="f" items="${fgroup.fields}" varStatus="inner">
-						<c:if test="${f != null }">
-							<option label="${f.displayName}" value="${f.id}" fieldType="${f.fieldType}" 
-								<c:if test="${(currentFilter != null) && (currentFilter.reportStandardFilter.fieldId == f.id)}">
-									selected="true"
-									<c:if test="${f.fieldType == 'DATE'}">
-										<c:set var="dateFieldSelected" scope="page" value="true"/>
+					<optgroup label="${fgroup.name}">
+						<c:forEach var="f" items="${fgroup.fields}" varStatus="inner">
+							<c:if test="${f != null }">
+								<option label="${f.displayName}" value="${f.id}" fieldType="${f.fieldType}" 
+									<c:if test="${(currentFilter != null) && (currentFilter.reportStandardFilter.fieldId == f.id)}">
+										selected="true"
+										<c:if test="${f.fieldType == 'DATE'}">
+											<c:set var="dateFieldSelected" scope="page" value="true"/>
+										</c:if>
 									</c:if>
-								</c:if>
-								>${f.displayName}</option>
-						</c:if>
-					</c:forEach>
+									>${f.displayName}</option>
+							</c:if>
+						</c:forEach>
+					</optgroup>
 				</c:forEach>
 			</SELECT>
 		</TD>
 		<TD>
-			<SELECT objectname="reportFilters[INDEXREPLACEMENT].reportStandardFilter.comparison" style="width: 170px"
+			<SELECT objectname="reportFilters[INDEXREPLACEMENT].reportStandardFilter.comparison" style="width: 140px"
 				onchange="displayPromptForCriteriaOptions(this);" >
 
 				<option value="1" 
@@ -127,7 +129,7 @@
 				onclick="togglePromptForCriteriaTextBox(this);"	>
 		</TD>
 		<TD>
-			<input objectname="reportFilters[INDEXREPLACEMENT].reportStandardFilter.criteria" 
+			<input objectname="reportFilters[INDEXREPLACEMENT].reportStandardFilter.criteria" style="width: 110px" 
 				<c:if test="${(dateFieldSelected != null) || (currentFilter == null) || ((currentFilter != null) && (currentFilter.reportStandardFilter.promptForCriteria == true))}">
 				disabled="disabled"
 				</c:if>

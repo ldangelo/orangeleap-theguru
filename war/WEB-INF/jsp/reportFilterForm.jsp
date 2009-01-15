@@ -59,6 +59,13 @@
 			</tr>
 			<c:set var="filterIndex" scope="request" value="${filterIndex + 1}"/>
 		</c:forEach>
+		<c:if test="${filterIndex == 0}">
+			<tr index="${filterIndex}">
+				<td><jsp:include page="/WEB-INF/jsp/reportFilterFormOperators.jsp" /></td>
+				<td><jsp:include page="/WEB-INF/jsp/reportFilterFormStandardFilter.jsp" /></td>
+				<td><jsp:include page="/WEB-INF/jsp/reportFilterFormActions.jsp" /></td>
+			</tr>
+		</c:if>
 	</table>
 	<br>
 	<br>

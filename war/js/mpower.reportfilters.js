@@ -22,11 +22,13 @@ $(document).ready(function()
 		}).show();
 		row.find(".moveDownButton").click(function(){
 			moveFilterRow($(this).parent().parent().parent().parent().parent().parent(), 1);
-		}).show();		
+		}).show();
+		row.find(".addButton").click(function(){
+			insertFilterRow($(this).parent().parent().parent().parent().parent().parent());
+		});		
    	});
    }
 );
-
 
 function togglePromptForCriteriaTextBox(checkBox) {
 	var promptForCriteria = $(checkBox);
@@ -82,26 +84,52 @@ function cloneFilterRow(filterSelectId, selectedFiltersId) {
 	if (filterValue == 1) {
 		// Add Standard Filter
 		filterTable = $("#report_standard_filters").clone(true);
-		addNewFilterRow(filterTable, selectedFiltersId, 1);
+		addNewFilterRow(filterTable, selectedFiltersId, 1, '#report_filters_add', true);
 	}
 	else if (filterValue == 2) {
 		// Add Custom Filter
 		filterTable = $("#report_custom_filters").clone(true);
-		addNewFilterRow(filterTable, selectedFiltersId, 2);
+		addNewFilterRow(filterTable, selectedFiltersId, 2, '#report_filters_add', true);
 	}
 	else if (filterValue == 3) {
 		// Add Group
 		filterTable = $("#report_filter_group_begin").clone(true);
-		addNewFilterRow(filterTable, selectedFiltersId, 3);
+		addNewFilterRow(filterTable, selectedFiltersId, 3, '#report_filters_add', true);
 		filterTable.parent().parent().find("table").attr('bgcolor','#C0C0C0');
 		filterTable = $("#report_filter_group_end").clone(true);
-		addNewFilterRow(filterTable, selectedFiltersId, 4);
+		addNewFilterRow(filterTable, selectedFiltersId, 4, '#report_filters_add', true);
 		filterTable.parent().parent().find("table").attr('bgcolor','#C0C0C0');
 	}
 	filterSelect.val(0);
 }
 
-function addNewFilterRow(filterTable, selectedFiltersId, filterType) {
+function insertFilterRow(filterRowSelector) {
+	var filterRow = $(filterRowSelector);
+	var filterType =  filterRow.find('[objectname$=filterType]').val();
+	var filterTable;
+	if (filterType == 1) {
+		// Add Standard Filter
+		filterTable = $("#report_standard_filters").clone(true);
+		addNewFilterRow(filterTable, '#report_filters_add', 1, filterRow, false);
+	}
+	else if (filterType == 2) {
+		// Add Custom Filter
+		filterTable = $("#report_custom_filters").clone(true);
+		addNewFilterRow(filterTable, '#report_filters_add', 2, filterRow, false);
+	}
+	else if (filterType == 3) {
+		// Add Group
+		filterTable = $("#report_filter_group_end").clone(true);
+		addNewFilterRow(filterTable, '#report_filters_add', 4, filterRow, false);
+		filterTable.parent().parent().find("table").attr('bgcolor','#C0C0C0');
+		filterTable = $("#report_filter_group_begin").clone(true);
+		addNewFilterRow(filterTable, '#report_filters_add', 3, filterRow, false);
+		filterTable.parent().parent().find("table").attr('bgcolor','#C0C0C0');
+	}
+}
+
+function addNewFilterRow(filterTable, selectedFiltersId, filterType, appendToSelector, append) {
+	var appendTo = $(appendToSelector);
 	var selectedFilters = $(selectedFiltersId);
 	if (filterTable != null) {
 		var i = parseInt(selectedFilters.attr('index'));
@@ -132,7 +160,10 @@ function addNewFilterRow(filterTable, selectedFiltersId, filterType) {
 		cell.append(operatorOptions);
 		row.append(cell);				
 
-		$("#report_filters_add").append(row);
+		if (append)
+			appendTo.append(row);
+		else
+			appendTo.after(row);
 		row.fadeIn("fast")
 		if (filterType != 4) {
 			row.find(".deleteButton").click(function(){
@@ -140,7 +171,9 @@ function addNewFilterRow(filterTable, selectedFiltersId, filterType) {
 			});
 		} else {
 			row.find('.deleteButton').attr("style", "cursor: auto;");
-			row.find('.deleteButton').attr('src', 'images/icons/blankSpace.png');			
+			row.find('.deleteButton').attr('src', 'images/icons/blankSpace.png');
+			row.find('.addButton').attr("style", "cursor: auto;");
+			row.find('.addButton').attr('src', 'images/icons/blankSpace.png');			
 		}
 		row.find(".moveUpButton").click(function(){
 			moveFilterRow($(this).parent().parent().parent().parent().parent().parent(), -1);
@@ -148,6 +181,9 @@ function addNewFilterRow(filterTable, selectedFiltersId, filterType) {
 		row.find(".moveDownButton").click(function(){
 			moveFilterRow($(this).parent().parent().parent().parent().parent().parent(), 1);
 		}).show();
+		row.find(".addButton").click(function(){
+			insertFilterRow($(this).parent().parent().parent().parent().parent().parent());
+		});		
 	}
 	cleanUpFilterTable(selectedFilters);
 }
