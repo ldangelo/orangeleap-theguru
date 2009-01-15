@@ -104,15 +104,19 @@ function initializeMatrixScreen() {
 
 function hideJasperMenuRows() {
 	var index = 0;
-	$('iframe').contents().find('#mainTable tr').each(function(){
-		if (index <= 5) {
-			var row = $(this);
-			row.hide();
-			index++;
-		} else {
-			return false;
-		}
-	});	
+	var contents = $('iframe').contents(); 
+	if (contents.find('[name=j_username]').length == 0)
+	{
+		$('iframe').contents().find('#mainTable tr').each(function(){
+			if (index <= 5) {
+				var row = $(this);
+				row.hide();
+				index++;
+			} else {
+				return false;
+			}
+		});
+	}
 }
 
 function triggerClick(buttonSelector) {
