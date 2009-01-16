@@ -1,8 +1,9 @@
 $(document).ready(function() {	
 	/* This code block is your window.onload.  Please don't set window.onload directly. */
-	
-	initializeMatrixScreen();
-	rowCloner("#report_groupbyfields tr:last");
+//	if ($jQuery("#report_groupbyfields") != null) {
+//	initializeMatrixScreen();
+//	rowCloner("#report_groupbyfields tr:last");
+//	}
 	}
 );
 

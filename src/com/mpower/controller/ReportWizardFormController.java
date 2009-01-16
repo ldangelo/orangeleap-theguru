@@ -358,8 +358,8 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 			List<ReportFieldGroup>    lrfg = reportFieldGroupService.readFieldGroupBySubSourceId(rdss.getId());
 			wiz.setFieldGroups(lrfg);
 		
-			refData.put("fieldGroups", wiz.getFieldGroups());
-		    refData.put("customFilters", wiz.getDataSubSource().getReportCustomFilterDefinitions());
+			refData.put("fieldGroups", lrfg);
+		    refData.put("customFilters", rdss.getReportCustomFilterDefinitions());
 		    
 			List<ReportFilter> tempFilters = new LinkedList<ReportFilter>();
 			tempFilters.addAll(wiz.getReportFilters());

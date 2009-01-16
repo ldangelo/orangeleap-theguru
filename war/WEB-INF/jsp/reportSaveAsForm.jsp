@@ -28,12 +28,12 @@ function addReports(results) {
 
 
 function updateReports(dtnode) {
-    var username = $("#username").attr("value");
-    var password = $("#password").attr("value");
+    var username = jQuery("#username").attr("value");
+    var password = jQuery("#password").attr("value");
     //console.log("Updating reports " + dtnode);
     
     //console.log("key = " + dtnode.data.key);
-    $("#reportPath").attr("value", dtnode.data.key);
+    jQuery("#reportPath").attr("value", dtnode.data.key);
 
     JasperServerService.setUserName(username);
     JasperServerService.setPassword(password);
@@ -43,8 +43,8 @@ function updateReports(dtnode) {
 function updateTree(results) {
     var childNode;
     //console.log(results);
-    var username = $("#username").attr("value");
-    var password = $("#password").attr("value");
+    var username = jQuery("#username").attr("value");
+    var password = jQuery("#password").attr("value");
     
     
     
@@ -52,9 +52,9 @@ function updateTree(results) {
     {
 	if (results[rs].wsType == "folder") {
 	    if (results[rs].parentFolder == "/") 
-		var rootNode = $("#treeview").dynatree("getRoot");
+		var rootNode = jQuery("#treeview").dynatree("getRoot");
 	    else
-		var rootNode = $("#treeview").dynatree("getTree").getNodeByKey(results[rs].parentFolder);
+		var rootNode = jQuery("#treeview").dynatree("getTree").getNodeByKey(results[rs].parentFolder);
 	    
 	    
 	    childNode = rootNode.append({
@@ -73,7 +73,7 @@ function updateTree(results) {
   }
 
 function preventInvalidReportNameCharacters() {
-	var reportName = $('#reportName'); 
+	var reportName = jQuery('#reportName'); 
 	reportName.one("keydown",function(event){
 		preventInvalidReportNameCharacters();
 		if (event.keyCode == 222) // quotes
@@ -82,18 +82,18 @@ function preventInvalidReportNameCharacters() {
 }
 
 function removeInvalidReportNameCharacters() {
-	var reportName = $('#reportName');
+	var reportName = jQuery('#reportName');
 	reportName.one("change",function(event){
 		removeInvalidReportNameCharacters();
 		reportName.val(reportName.val().replace('\'', '').replace('\"', ''));
 	});
 }
 
-$(function() {
-    var username = $("#username").attr("value");
-    var password = $("#password").attr("value");
+jQuery(function() {
+    var username = jQuery("#username").attr("value");
+    var password = jQuery("#password").attr("value");
 
-    $("#treeview").dynatree({
+    jQuery("#treeview").dynatree({
 	imagePath: "skin/",
 	onFocus: function(dtnode) { updateReports(dtnode); }
     });
@@ -123,7 +123,7 @@ else if(e.which) // Netscape/Firefox/Opera
 
   // if the user has hit the return key then fire the click event on the submit button
   if (keynum == 13) {
-  	$("#save").click();
+  	jQuery("#save").click();
   	return false;
 	}
 

@@ -16,6 +16,5 @@
 <script type="text/javascript" src="js/jquery.hoverIntent.js"></script>
 <script type="text/javascript" src="js/jquery.cluetip.js"></script>
 <script type="text/javascript" src="js/mpower.js"></script>
-<script type="text/javascript" src="dwr/engine.js"></script>
 
 

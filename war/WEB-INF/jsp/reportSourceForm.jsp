@@ -1,42 +1,46 @@
 <%@ include file="/WEB-INF/jsp/include.jsp"%>
-<script type='text/javascript' src='dwr/engine.js'></script>
-<script type='text/javascript' src='dwr/util.js'></script>
 <script type='text/javascript'
 	src='dwr/interface/ReportSubSourceService.js'></script>
+<script type='text/javascript' src='dwr/engine.js'></script>
+<script type='text/javascript' src='dwr/util.js'></script>
+
 
 <script type="text/javascript">
+ var $j = jQuery.noConflict();
+
+	$j(document).ready( function() {
+		updateSubSource();
+	});
 	function addSubSources(results) {
 		//console.log(results);
-		$("#subSourceId").empty();
+		$j("#subSourceId").empty();
 
 		for (ss in results) {
-			$("#subSourceId").append(
+			$j("#subSourceId").append(
 					"<option value='" + results[ss].id + "'>"
 							+ results[ss].displayName + "</option>");
 		}
-		$('#subSourceId').find("option:first").attr('selected', 'true')
-		$('#subSourceId').find(
-				"option[value=" + $('#originalSubSourceId').val() + "]").attr(
+		$j('#subSourceId').find("option:first").attr('selected', 'true')
+		$j('#subSourceId').find(
+				"option[value=" + $j('#originalSubSourceId').val() + "]").attr(
 				'selected', 'true');
 	}
 
 	function updateSubSource() {
-		var srcId = $("#srcId").attr("value");
+		var srcId = $j("#srcId").attr("value");
 
 		ReportSubSourceService.readSubSourcesByReportSourceId(srcId,
 				addSubSources);
-		$('#subSourceId').find(
-				"option[value=" + $('#originalSubSourceId').val() + "]").attr(
-				'selected', 'true');
+		$j('#subSourceId').find(
+				"option[value=" + $j('#originalSubSourceId').val() + "]").attr(
+				'selected', 'true'); 
 	}
 
 	function updateOriginalSubSourceId() {
-		$('#originalSubSourceId').val($('#subSourceId').find("option:selected").val());
+		$j('#originalSubSourceId').val($j('#subSourceId').find("option:selected").val());
 	}
 	
-	$( function() {
-		updateSubSource();
-	});
+
 </script>
 
 <form:form name="myform" method="post" commandName="reportsource">
