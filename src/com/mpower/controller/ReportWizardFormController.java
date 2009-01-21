@@ -1,45 +1,33 @@
 package com.mpower.controller;
 
-import java.io.Console;
 import java.io.File;
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
-import javax.xml.parsers.*;
-
-import net.sf.jasperreports.crosstabs.JRCrosstab;
-import net.sf.jasperreports.engine.JRChild;
-import net.sf.jasperreports.engine.JasperReport;
-import net.sf.jasperreports.engine.xml.JRXmlWriter;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.security.userdetails.UserDetails;
+import org.springframework.security.userdetails.UserDetailsService;
 import org.springframework.util.Assert;
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractWizardFormController;
-import org.w3c.dom.*;
-import org.xml.sax.SAXException;
 
 import ar.com.fdvs.dj.core.DynamicJasperHelper;
 import ar.com.fdvs.dj.core.layout.ClassicLayoutManager;
 import ar.com.fdvs.dj.domain.DynamicReport;
+
 import com.jaspersoft.jasperserver.api.metadata.xml.domain.impl.ResourceDescriptor;
-import com.mpower.domain.ReportCrossTabFields;
-import com.mpower.domain.ReportCustomFilterDefinition;
+import com.mpower.domain.ReportChartSettings;
 import com.mpower.domain.ReportDataSource;
 import com.mpower.domain.ReportDataSubSource;
 import com.mpower.domain.ReportField;
@@ -48,24 +36,17 @@ import com.mpower.domain.ReportFilter;
 import com.mpower.domain.ReportGroupByField;
 import com.mpower.domain.ReportSelectedField;
 import com.mpower.domain.ReportWizard;
+import com.mpower.service.JasperServerService;
 import com.mpower.service.ReportCustomFilterDefinitionService;
 import com.mpower.service.ReportFieldGroupService;
 import com.mpower.service.ReportFieldService;
 import com.mpower.service.ReportSourceService;
 import com.mpower.service.ReportSubSourceService;
 import com.mpower.service.ReportWizardService;
-//import com.mpower.service.ReportWizardService;
 import com.mpower.service.SessionService;
-import com.mpower.service.JasperServerService;
-import com.mpower.util.ReportGenerator;
-import com.mpower.util.ReportQueryGenerator;
 import com.mpower.util.ModifyReportJRXML;
+import com.mpower.util.ReportGenerator;
 import com.mpower.view.DynamicReportView;
-import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
-import org.springframework.security.providers.dao.DaoAuthenticationProvider;
-import org.springframework.security.providers.dao.UserCache;
-import org.springframework.security.userdetails.UserDetails;
-import org.springframework.security.userdetails.UserDetailsService;
 
 public class ReportWizardFormController extends AbstractWizardFormController {
 	private ReportSubSourceService  reportSubSourceService;
@@ -411,6 +392,17 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 				reportXMLModifier.AddGroupSummaryInfo(tempFile.getPath());
 			    reportXMLModifier.AddReportSummaryInfo(tempFile.getPath());
 			}
+		
+			//move the chart to the header or footer of the report
+			List<ReportChartSettings> rptChartSettings = wiz.getReportChartSettings();
+		    Iterator itRptChartSettings = rptChartSettings.iterator();
+		    while (itRptChartSettings.hasNext()){
+		    	ReportChartSettings rptChartSetting = (ReportChartSettings) itRptChartSettings.next();
+		    	String chartType = rptChartSetting.getChartType();
+		    	String chartLocation = rptChartSetting.getLocation();
+		    	reportXMLModifier.moveChartFromGroup(tempFile.getPath(), chartType, chartLocation);
+		    }
+			
 			    
 			//
 			// save the report to the server
@@ -451,7 +443,17 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		if (wiz.HasSummaryFields() == true){
 			reportXMLModifier.AddGroupSummaryInfo(tempFile.getPath());
 		    reportXMLModifier.AddReportSummaryInfo(tempFile.getPath());
-		}
+		   }
+		
+		//move the chart to the header or footer of the report
+		List<ReportChartSettings> rptChartSettings = wiz.getReportChartSettings();
+	    Iterator itRptChartSettings = rptChartSettings.iterator();
+	    while (itRptChartSettings.hasNext()){
+	    	ReportChartSettings rptChartSetting = (ReportChartSettings) itRptChartSettings.next();
+	    	String chartType = rptChartSetting.getChartType();
+	    	String chartLocation = rptChartSetting.getLocation();
+	    	reportXMLModifier.moveChartFromGroup(tempFile.getPath(), chartType, chartLocation);
+	    }
 		
 		String reportTitle = wiz.getDataSubSource().getDisplayName() + " Custom Report";
 		if (wiz.getReportName() != null && wiz.getReportName().length() > 0)

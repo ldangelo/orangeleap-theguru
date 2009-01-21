@@ -548,11 +548,8 @@ public class ReportGenerator {
 			//DJChartBuilder cb = new DJChartBuilder(); 
 			DJChart chart = new DJChart();
 			DJChartOptions options = new DJChartOptions();
-			if (rcs.getLocation().compareToIgnoreCase("header") == 0){
-				options.setPosition(DJChartOptions.POSITION_HEADER);//DJChartOptions.POSITION_FOOTER
-			}
-			else
-				options.setPosition(DJChartOptions.POSITION_FOOTER);
+			
+			options.setPosition(DJChartOptions.POSITION_HEADER);
 			
 			options.setShowLabels(true);
 			chart.setOptions(options);

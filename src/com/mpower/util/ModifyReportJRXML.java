@@ -695,10 +695,93 @@ public class ModifyReportJRXML {
 			variable.appendChild(initialValueExpression);
 			
 			return variable;
-		
-	
 	}
 
+	/**
+	 * Removes the chart from the group created by dynamic jasper and 
+	 * puts it in the pageHeader or lastPageFooter section of the report.
+	 * 
+	 * @param fileName file name of the XML document
+	 * @param chartType The type of chart. Currently we only support Bar and Pie.
+	 * @param location The location you want to put the chart.  (header or footer)
+	 */
+	public void moveChartFromGroup(String fileName, String chartType, String location) throws ParserConfigurationException, SAXException, IOException{
+		//Find the chart node copy it 
+		String chart = null;
+		if (chartType.compareToIgnoreCase("bar") == 0)
+			chart = "barChart";
+		else if (chartType.compareToIgnoreCase("pie") == 0)
+			chart = "pieChart";
+		else
+			chart = null;
+		if (chart != null){
+			Document document = loadXMLDocument(fileName);
+			Node chartNode = document.getElementsByTagName(chart).item(0);
+			if (chartNode != null){
+				Element chartElement = (Element) chartNode;
+				
+				Element chartRptElement = (Element) chartElement.getElementsByTagName("reportElement").item(0);	
+				//Add the printwhenexpression to the chart report element if it goes in the header
+				if (location.compareToIgnoreCase("header") == 0){
+					Element printWhenExpression = document.createElement("printWhenExpression");
+					printWhenExpression.appendChild(document.createCDATASection("new java.lang.Boolean(((Number)$V{PAGE_NUMBER}).doubleValue() == 1)"));
+					chartRptElement.appendChild(printWhenExpression);
+				}
+				
+				//change the band height back to 0
+				Element band = (Element) chartElement.getParentNode();
+				Integer bandHeight = Integer.decode(band.getAttribute("height"));
+				band.setAttribute("height", "0");
+				
+				//remove the group footer band node from the group added for the chart
+				Element chartGroup = (Element) band.getParentNode().getParentNode();
+				Node groupFooter = (Element) chartGroup.getElementsByTagName("groupFooter").item(0);
+				Node groupFooterBand = (Element) ((Element) groupFooter).getElementsByTagName("band").item(0);
+				groupFooter.replaceChild((Node) document.createElement("band"), groupFooterBand);
+				
+				//remove the chart node
+				removeAll(document, Node.ELEMENT_NODE, chart);
+				
+				//add the copied chart node to the pageHeader band or the last page footer
+				String position = null;
+				if (location.compareTo("header") == 0)
+					position = "pageHeader";
+				else
+					position = "lastPageFooter";
+				
+				Element positionNode = (Element) document.getElementsByTagName(position).item(0);
+				Element positionBandNode = (Element) positionNode.getElementsByTagName("band").item(0);
+				Integer positionBandHeight = Integer.decode(positionBandNode.getAttribute("height"));
+				
+				// set the y value on the chart depends on the position of the chart
+				//set the new band height to allow room for the chart
+				if (position.compareTo("pageHeader") == 0){
+					chartRptElement.setAttribute("y", positionBandHeight.toString());	
+					Integer newpositionNodeBandHeight = positionBandHeight + bandHeight;
+					positionBandNode.setAttribute("height", newpositionNodeBandHeight.toString());
+					
+				}
+				else{
+					//change the y for the other elements in the last page footer so the chart is above them
+					NodeList rptElementsInLastPgFt = positionBandNode.getElementsByTagName("reportElement");
+					Integer newpositionNodeBandHeight = positionBandHeight + bandHeight;
+					Integer numberOfRptElements = rptElementsInLastPgFt.getLength();
+					
+					for (int i = 0; i < numberOfRptElements; i++){
+						Integer yRptElement = Integer.decode(((Element) rptElementsInLastPgFt.item(i)).getAttribute("y"));
+						Integer yForOtherElements =  yRptElement + bandHeight;
+						((Element) rptElementsInLastPgFt.item(i)).setAttribute("y", yForOtherElements.toString());
+					}
+					chartRptElement.setAttribute("y", "0");
+					positionBandNode.setAttribute("height", newpositionNodeBandHeight.toString());
+				}
+								
+				positionBandNode.appendChild(chartNode);
+				saveXMLtoFile(fileName, document);	
+			}	
+		}
+	}
+	
 	/*
 	 * 
 	 */
@@ -747,7 +830,7 @@ public class ModifyReportJRXML {
 		
 		return selectedReportFieldsList; 
 	}
-    
+	
 	/**
 	 * Sets the ReportWizard that contains the various report options.
 	 * @param reportWizard
