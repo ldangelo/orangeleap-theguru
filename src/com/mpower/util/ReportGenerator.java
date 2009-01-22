@@ -279,8 +279,20 @@ public class ReportGenerator {
 			String controlName = rf.getColumnName() + Integer.toString(index);
 
 			if (filter.getReportStandardFilter().getPromptForCriteria()) {
+				String operatorDisplayName = new String();
+				switch (filter.getReportStandardFilter().getComparison()) {
+				case 1:   	operatorDisplayName = " equals ";					break;
+				case 3:   	operatorDisplayName = " less than ";				break;
+				case 5:   	operatorDisplayName = " less than or equal to ";	break;
+				case 4:   	operatorDisplayName = " greater than ";				break;
+				case 6:   	operatorDisplayName = " greater than or equal to "; break;
+				case 7:   	operatorDisplayName = " starts with "; 				break;
+				case 8:   	operatorDisplayName = " ends with ";				break;
+				case 9:   	operatorDisplayName = " contains ";
+				}
+				
 				InputControlParameters ic = new InputControlParameters();
-				ic.setLabel(rf.getDisplayName());
+				ic.setLabel(rf.getDisplayName() + operatorDisplayName);
 				ic.setType(rf.getFieldType());
 				ic.setFilter(filter.getOperator());
 				inputControls.put(controlName, ic);
