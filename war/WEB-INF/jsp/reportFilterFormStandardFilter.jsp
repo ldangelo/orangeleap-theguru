@@ -1,8 +1,8 @@
 <%@ include file="/WEB-INF/jsp/include.jsp"%>
 
 <TABLE id="report_standard_filters" class="tablesorter" style="display: none;" bgcolor=#E0E0E0 >
-	<TR><TH>Field</TH><TH>Comparison / Duration</TH><TH>Prompt for</TH><TH>Value</TH></TR>
-	<TR rowIndex="${filterIndex}">
+	<TR index="-1" ><TH>Field</TH><TH>Comparison / Duration</TH><TH>Prompt for</TH><TH>Value</TH></TR>
+	<TR index="-1" >
 		<TD>
 			<input type="hidden" value="1" objectname="reportFilters[INDEXREPLACEMENT].filterType" />
 			<SELECT objectname="reportFilters[INDEXREPLACEMENT].reportStandardFilter.fieldId" 

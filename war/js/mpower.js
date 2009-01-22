@@ -1,9 +1,9 @@
 $(document).ready(function() {	
 	/* This code block is your window.onload.  Please don't set window.onload directly. */
-//	if ($jQuery("#report_groupbyfields") != null) {
-//	initializeMatrixScreen();
+	if (jQuery("#report_matrixColumns").length > 0) {
+	initializeMatrixScreen();
 //	rowCloner("#report_groupbyfields tr:last");
-//	}
+	}
 	}
 );
 
@@ -23,10 +23,10 @@ function callback(data) {
     alert("AJAX Response:" + data);
 }
 function addNewRow(selector) {
-	$(selector).find(".deleteButton").click(function(){
-			deleteRow($(this).parent().parent());
+	$(selector).parents('tr').find(".deleteButton").click(function(){
+			deleteRow($(this).parents('tr'));
 		}).show();
-	var newRow = $(selector).clone(true);
+	var newRow = $(selector).parents('tr').clone(false);
 	newRow.find(".deleteButton").hide();
 	var i = newRow.attr("rowindex");
 	var j = parseInt(i) + 1;
@@ -51,16 +51,16 @@ function addNewRow(selector) {
 		var nameString = field.attr('name').replace(findExp, "["+j+"]");
 		field.attr('name',nameString);
 		var idString = field.attr('id').replace(findExp, "["+j+"]");
-		field.attr('id',idString);				
+		field.attr('id',idString);
 	});
 
 	newRow.removeClass("focused highlight");
-	$(selector).parent().append(newRow);
+	$(selector).parents('table').append(newRow);
 }
 
 function deleteRow(row) {
 	if($(".tablesorter tbody tr").length > 1) {
-		row.fadeOut("slow",function(){$(this).remove();})
+		row.fadeOut("fast",function(){$(this).remove();})
 	} else {
 		alert("Sorry, you cannot delete that row since it's the only remaining row.")
 	};
@@ -93,8 +93,8 @@ function SingleSelect(regex,current) {
 }
 
 function initializeMatrixScreen() {
-	rowCloner("#report_matrixrows tr:last");
-	rowCloner("#report_matrixColumns tr:last");
+	rowCloner("#report_matrixrows tr:last select[id$=fieldId]");
+	rowCloner("#report_matrixColumns tr:last select[id$=fieldId]");
 	$('#report_matrixrows').find(".deleteButton:visible").click(function(){
 		deleteRow($(this).parent().parent());
 	});
@@ -121,5 +121,5 @@ function hideJasperMenuRows() {
 }
 
 function triggerClick(buttonSelector) {
-	$(buttonSelector).click();
+	jQuery(buttonSelector).click();
 }

@@ -1,6 +1,5 @@
 <%@ include file="/WEB-INF/jsp/include.jsp"%>
-<script type='text/javascript'
-	src='dwr/interface/ReportSubSourceService.js'></script>
+<script type='text/javascript' src='dwr/interface/ReportSubSourceService.js'></script>
 <script type='text/javascript' src='dwr/engine.js'></script>
 <script type='text/javascript' src='dwr/util.js'></script>
 
@@ -20,10 +19,10 @@
 					"<option value='" + results[ss].id + "'>"
 							+ results[ss].displayName + "</option>");
 		}
-		$j('#subSourceId').find("option:first").attr('selected', 'true')
+		$j('#subSourceId').find("option:first").attr('selected', 'true');
 		$j('#subSourceId').find(
-				"option[value=" + $j('#originalSubSourceId').val() + "]").attr(
-				'selected', 'true');
+				"option[value=" + $j('#previousSubSourceId').val() + "]").attr(
+				'selected', 'true');		
 	}
 
 	function updateSubSource() {
@@ -31,15 +30,11 @@
 
 		ReportSubSourceService.readSubSourcesByReportSourceId(srcId,
 				addSubSources);
+		$j('#subSourceId').find("option:first").attr('selected', 'true');
 		$j('#subSourceId').find(
-				"option[value=" + $j('#originalSubSourceId').val() + "]").attr(
-				'selected', 'true'); 
+				"option[value=" + $j('#previousSubSourceId').val() + "]").attr(
+				'selected', 'true');	
 	}
-
-	function updateOriginalSubSourceId() {
-		$j('#originalSubSourceId').val($j('#subSourceId').find("option:selected").val());
-	}
-	
 
 </script>
 
@@ -56,11 +51,11 @@
 	<h2>Select a secondary data source</h2>
 	<hr width="100%" size=1 color="black">
 	
-	<form:select path="subSourceId" size="15" onchange="updateOriginalSubSourceId()" >
+	<form:select path="subSourceId" size="15"  >
 	</form:select>
 	<br>
-	<input type="hidden" id="originalSubSourceId"
-		name="originalSubSourceId" value="${subSourceId}" readonly="readonly"
+	<input type="hidden" id="previousSubSourceId"
+		name="previousSubSourceId" value="${previousSubSourceId}" readonly="readonly"
 		style="border: none;">
 	<div class="buttonposition"><jsp:include
 		page="snippets/navbuttons.jsp" /></div>

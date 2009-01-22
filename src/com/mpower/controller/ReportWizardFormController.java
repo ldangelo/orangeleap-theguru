@@ -145,55 +145,43 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		ReportWizard wiz = (ReportWizard) command;
 
 		Assert.notNull(request, "Request must not be null");
-		
-		if (page == 0)
+		if ((wiz.getSubSourceId() != previousDataSubSourceId || wiz.getDataSource() == null) && wiz.getSubSourceId() != 0)
 		{
-			if (request.getParameter("_target0") != null
-				|| request.getParameter("_target1") != null
-				|| request.getParameter("_target2") != null
-				|| request.getParameter("_target3") != null
-				|| request.getParameter("_target4") != null) {
-				if (wiz.getSubSourceId() != previousDataSubSourceId || wiz.getDataSource() == null)
-				{
-					previousDataSubSourceId = wiz.getSubSourceId();
-					wiz.setDataSource(reportSourceService.find(wiz.getSrcId()));
-					ReportDataSource rds = reportSourceService.find(wiz.getSrcId());
-					List<ReportDataSubSource> lrdss = reportSubSourceService.readSubSourcesByReportSourceId(rds.getId());
-					wiz.setDataSource(rds);
-					wiz.setDataSubSources(lrdss);
-					
-					ReportDataSubSource       rdss = reportSubSourceService.find( wiz.getSubSourceId());
-		
-					List<ReportFieldGroup>    lrfg = reportFieldGroupService.readFieldGroupBySubSourceId(rdss.getId());
-					wiz.setFieldGroups(lrfg);
-					
-					wiz.setDataSubSource(rdss);
-		
-					wiz.getDataSubSource().setReportCustomFilterDefinitions(reportCustomFilterDefinitionService.readReportCustomFilterDefinitionBySubSourceId(rdss.getId()));
-					
-					List<ReportField> fields = new LinkedList<ReportField>();
-					// Iterate across the field groups in the
-					Iterator itGroup = lrfg.iterator();
-					while (itGroup.hasNext()) {
-						ReportFieldGroup rfg = (ReportFieldGroup) itGroup.next();
-						fields.addAll(reportFieldService.readFieldByGroupId(rfg.getId()));
-					}
-					wiz.setFields(fields);
-					
-					// once the data source and sub-source have been selected, select the default fields
-					wiz.populateDefaultReportFields();
-					
-					// clear out any selected filters, chart settings, etc.
-					wiz.getReportFilters().clear();
-					wiz.getReportChartSettings().clear();
-					wiz.getReportCrossTabFields().getReportCrossTabColumns().clear();
-					wiz.getReportCrossTabFields().getReportCrossTabRows().clear();
-					wiz.getReportCrossTabFields().setReportCrossTabMeasure(-1);
-				}
-			} else {
-				previousDataSubSourceId = -1;
-			}				
-		} 
+			previousDataSubSourceId = wiz.getSubSourceId();
+			wiz.setDataSource(reportSourceService.find(wiz.getSrcId()));
+			ReportDataSource rds = reportSourceService.find(wiz.getSrcId());
+			List<ReportDataSubSource> lrdss = reportSubSourceService.readSubSourcesByReportSourceId(rds.getId());
+			wiz.setDataSource(rds);
+			wiz.setDataSubSources(lrdss);
+			
+			ReportDataSubSource       rdss = reportSubSourceService.find( wiz.getSubSourceId());
+
+			List<ReportFieldGroup>    lrfg = reportFieldGroupService.readFieldGroupBySubSourceId(rdss.getId());
+			wiz.setFieldGroups(lrfg);
+			
+			wiz.setDataSubSource(rdss);
+
+			wiz.getDataSubSource().setReportCustomFilterDefinitions(reportCustomFilterDefinitionService.readReportCustomFilterDefinitionBySubSourceId(rdss.getId()));
+			
+			List<ReportField> fields = new LinkedList<ReportField>();
+			// Iterate across the field groups in the
+			Iterator itGroup = lrfg.iterator();
+			while (itGroup.hasNext()) {
+				ReportFieldGroup rfg = (ReportFieldGroup) itGroup.next();
+				fields.addAll(reportFieldService.readFieldByGroupId(rfg.getId()));
+			}
+			wiz.setFields(fields);
+			
+			// once the data source and sub-source have been selected, select the default fields
+			wiz.populateDefaultReportFields();
+			
+			// clear out any selected filters, chart settings, etc.
+			wiz.getReportFilters().clear();
+			wiz.getReportChartSettings().clear();
+			wiz.getReportCrossTabFields().getReportCrossTabColumns().clear();
+			wiz.getReportCrossTabFields().getReportCrossTabRows().clear();
+			wiz.getReportCrossTabFields().setReportCrossTabMeasure(-1);
+		}
 		
 		if (request.getParameter("_target5") != null) {
 			//
@@ -286,6 +274,8 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 				wiz.setReportTemplateList(jasperServerService.list("/Reports/" + wiz.getCompany() + "/templates"));
 				wiz.setReportTemplatePath(((ResourceDescriptor)wiz.getReportTemplateList().get(0)).getUriString());
 			}
+			
+			refData.put("previousSubSourceId", previousDataSubSourceId);
 		}
 
 		//
@@ -542,5 +532,13 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 
 	public void setUserDetailsService(UserDetailsService userDetailsService) {
 		this.userDetailsService = userDetailsService;
+	}
+	
+	public long getPreviousDataSubSourceId() {
+		return previousDataSubSourceId;
+	}
+
+	public void setPreviousDataSubSourceId(long previousDataSubSourceId) {
+		this.previousDataSubSourceId = previousDataSubSourceId;
 	}
 }

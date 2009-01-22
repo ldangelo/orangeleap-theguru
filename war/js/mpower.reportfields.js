@@ -78,8 +78,8 @@ function deleteFieldRow(fieldRow) {
 function deleteAllFieldRows() {
 	$('#report_fields_add').find('tr[index!=-1]').fadeOut("fast",function(){
 		$(this).remove();
-		cleanUpFieldTable('#report_fields_add');
 	});
+	cleanUpFieldTable('#report_fields_add');	
 }
 
 function moveFieldRow(fieldRow, moveBy) {

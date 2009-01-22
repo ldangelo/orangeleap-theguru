@@ -1,7 +1,7 @@
 <%@ include file="/WEB-INF/jsp/include.jsp"%>
 <table id="report_filters_operator" class="tablesorter" style="display: none;" bgcolor=#E0E0E0 >
-	<tr><th>Operators</th></tr>
-	<TR>
+	<tr index="-1" ><th>Operators</th></tr>
+	<TR index="-1" >
 		<TD>
 			<SELECT objectname="reportFilters[INDEXREPLACEMENT].operator" >
 				<option value="0" 

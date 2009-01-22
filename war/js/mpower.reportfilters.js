@@ -6,7 +6,7 @@ $(document).ready(function()
 	$('#report_filters_add').find('table').fadeIn('fast');
 	cleanUpFilterTable('#report_filters_add');
 	
-	$('#report_filters_add').find("tr[index]").each(function() {
+	$('#report_filters_add').find("tr[index!=-1]").each(function() {
 		var row = $(this);		
 		var filterType = row.find('input:hidden[name*=filterType]').val();
 		if (filterType != 4) {
@@ -44,17 +44,13 @@ function populateCustomFilterRow(customFilterSelectId, selectedFiltersId) {
 	// Get the index and increment it
 	var customFiltersIndexValue = parseInt($(selectedFiltersId).attr('index'));	
 	
-	// Populate the new row with the details from the select box
-	var customFilterText = customFilterSelect.find("option:selected").text()
-	
 	// Create a new row
 	var row = $('<tr />');
-	var criteriaCount = 0;
-	var customFilterTextIndex = customFilterText.indexOf('[');
 	var cell = $('<td />');
 
 	var findExp = new RegExp("{[0-9]*}","gi");
 	var displayHtml = customFilterSelect.find("option:selected").attr('displayhtml');
+	displayHtml = displayHtml.replace('></OPTION>','/>');
 	cell.append(displayHtml.replace(findExp, ""));
 
 	// Add hidden field for filter id
@@ -196,7 +192,7 @@ function deleteFilterRow(filterRow) {
 		var filterTable = $(filterRow).parent().parent();
 		var foundRow = false;
 		var groupCount = 0;
-		filterTable.find("tr[index]").each(function() {
+		filterTable.find("tr[index!=-1]").each(function() {
 			var row = $(this);
 			if (filterRow.attr('id') == row.attr('id')) {
 				foundRow = true;
@@ -227,7 +223,7 @@ function moveFilterRow(filterRow, moveBy) {
 	var filterTable = $(filterRow).parent().parent();
 
 	if (newIndex >= 0) {
-		filterTable.find("tr[index]").each(function() {
+		filterTable.find("tr[index!=-1]").each(function() {
 			var row = $(this);
 			if (parseInt(row.attr('index')) == newIndex) {
 				row.attr('index', index);
@@ -243,7 +239,7 @@ function moveFilterRow(filterRow, moveBy) {
 
 function sortFilterTable(filterTableSelector) {
 	var filterTable = $(filterTableSelector);
-	var rows = filterTable.find('tr[index]').get();
+	var rows = filterTable.find('tr[index!=-1]').get();
 	
     rows.sort(function(a, b) {
       var keyA = parseInt($(a).attr('index'));
@@ -260,12 +256,11 @@ function sortFilterTable(filterTableSelector) {
 
 function cleanUpFilterTable(filterTableSelector) {
 	var filterTable = $(filterTableSelector);
-	var rows = filterTable.find('tr[index]').get();
 	var index = 0;
 	var groupCount = 0;
 	var beginGroup = false;
 	var firstRow = true;
-	filterTable.find("tr[index]").each(function() {
+	filterTable.find('tr[index!=-1]').each(function() {
 		var filterTableRow = $(this);
 		if (beginGroup || firstRow) {
 			filterTableRow.find('select[objectname$=operator]').attr("disabled", true);
@@ -315,7 +310,7 @@ function cleanUpFilterTableProcessRow(filterRow, index) {
 		field.attr('id',idString);		
 	});
 
-	row.find("select[objectname]").each(function(){
+	row.find("select[objectname!='']").each(function(){
 		var field = $(this);
 		var nameString = field.attr('objectname').replace(findExp, "["+index+"]");
 		field.attr('name',nameString);

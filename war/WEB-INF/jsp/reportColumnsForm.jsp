@@ -95,7 +95,6 @@
 			<th>Field for Y-Axis/Wedge</th>
 			<th>Operation for Y-Axis/Wedge</th>
 		</tr>
-	
 		<TR rowIndex="0">
 			<TD><SELECT id="reportChartSettings[0].chartType"
 				name="reportChartSettings[0].chartType" >

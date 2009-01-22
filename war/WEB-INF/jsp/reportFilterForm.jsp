@@ -33,7 +33,7 @@
 	<br>
 	<br>
  	<table id="report_filters_add" class="tablesorter" index="0" bgcolor=#E0E0E0 >
-		<tr><th>Selected Filters</th></tr>
+		<tr index="-1" ><th>Selected Filters</th></tr>
         <c:set var="filterIndex" scope="request" value="0"/>	
 	    <c:forEach var="filter" items="${selectedFilters}" varStatus="outer">
 			<c:set var="currentFilter" scope="request" value="${filter}"/>

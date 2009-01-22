@@ -24,19 +24,6 @@
 
 <div class="container">
 	<ul class="primaryNav">
-		<li>
-<!-- 		  <c:if test="${page > 2}">
-		  Jump to Step		    
-		    <select>
-		      <option>Report Format</option>
-		      <option>Select Columns</option>
-		      <option>Summary Information</option>
-		      <option>Order Columns</option>
-		      <option>Filter Report</option>
-		      <option>Run Report</option>
-		    </select>
-		  </c:if>-->
-</li>
 
 <li>
 	<a onclick="triggerClick(document.getElementById('saveReportHiddenInput'));">Save Report</a>
@@ -57,8 +44,7 @@
 <li>
 	<a onclick="triggerClick(document.getElementById('reportDataHiddenInput'));">Report Data</a>
 </li>
-
-
+</ul>
 <c:choose>
 <c:when test="${page == 0}">
 	 Step ${page+1} of ${maxpages+1}: Select report data source
@@ -82,7 +68,7 @@
 </c:choose>
 
 
-</ul>	
+	
 		<div class="clearBoth"></div>
 	</div>
 	<div class="navRightCap"></div>
