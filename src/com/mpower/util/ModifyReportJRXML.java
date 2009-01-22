@@ -6,6 +6,7 @@ package com.mpower.util;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -80,19 +81,19 @@ public class ModifyReportJRXML {
     		ReportField f = (ReportField) itFields.next();
     		if (f.getIsSummarized()){
     			if (f.getPerformSummary()){
-    				variable =	buildVariableNode(f.getColumnName(), "Sum", "global_column_0", document);
+    				variable =	buildVariableNode(f, "Sum", "global_column_0", document);
         			jasperReport.insertBefore(variable, node);
         		}
     			if (f.getAverage()){
-    				variable =	buildVariableNode(f.getColumnName(), "Average", "global_column_0", document);
+    				variable =	buildVariableNode(f, "Average", "global_column_0", document);
         			jasperReport.insertBefore(variable, node);
     			}
     			if (f.getLargestValue()){
-    				variable =	buildVariableNode(f.getColumnName(), "Highest", "global_column_0", document);
+    				variable =	buildVariableNode(f, "Highest", "global_column_0", document);
         			jasperReport.insertBefore(variable, node);
     			}
     			if (f.getSmallestValue()){
-    				variable =	buildVariableNode(f.getColumnName(), "Lowest", "global_column_0", document);
+    				variable =	buildVariableNode(f, "Lowest", "global_column_0", document);
         			jasperReport.insertBefore(variable, node);
     			}
     		}
@@ -146,22 +147,22 @@ public class ModifyReportJRXML {
     	            	if (groupName != null && groupName != ""){
     	            		Node groupFooterNode = groupFooterNodes.item(i);
 	    	            	if (f.getPerformSummary()){
-			    				variable =	buildVariableNode(f.getColumnName(), "Sum", groupName, document);
+			    				variable =	buildVariableNode(f, "Sum", groupName, document);
 			        			jasperReport.insertBefore(variable, node);
 			        			addGroup = true;
 			        		 }
 			    			if (f.getAverage()){
-			    				variable =	buildVariableNode(f.getColumnName(), "Average", groupName, document);
+			    				variable =	buildVariableNode(f, "Average", groupName, document);
 			        			jasperReport.insertBefore(variable, node);
 			        			addGroup = true;
 			        		}
 			    			if (f.getLargestValue()){
-			    				variable =	buildVariableNode(f.getColumnName(), "Highest", groupName, document);
+			    				variable =	buildVariableNode(f, "Highest", groupName, document);
 			        			jasperReport.insertBefore(variable, node);
 			        			addGroup = true;
 			        		}
 			    			if (f.getSmallestValue()){
-			    				variable =	buildVariableNode(f.getColumnName(), "Lowest", groupName, document);
+			    				variable =	buildVariableNode(f, "Lowest", groupName, document);
 			        			jasperReport.insertBefore(variable, node);
 			        			addGroup = true;
 			        		}
@@ -593,8 +594,19 @@ public class ModifyReportJRXML {
 	 */
 	private Node buildSummaryNodes(ReportField f, String calc, String resetGroup, Document document, int x, int width, int y, int height) {
 		
-		//String varName = "variable-footer_global_" + columnName + "_" + calc;
 		String varName = null;
+		String valueClassName = null;
+		String pattern = null;
+		//set the field data type
+		switch (f.getFieldType()) {
+		case NONE:   	valueClassName = String.class.getName(); pattern ="";	 		break;
+		case STRING:   	valueClassName = String.class.getName(); pattern ="";			break;
+		case INTEGER:   valueClassName = Long.class.getName(); 	 pattern ="";	 		break;
+		case DOUBLE:   	valueClassName = String.class.getName(); pattern ="";	 		break;
+		case DATE:   	valueClassName = Date.class.getName();   pattern ="MM/dd/yyyy";	break;
+		case MONEY:   	valueClassName = Float.class.getName();  pattern ="$ 0.00";		break;
+		case BOOLEAN:   valueClassName = Boolean.class.getName();pattern ="";	
+		}
 		if (resetGroup.compareToIgnoreCase("global_column_0") == 0)
 			varName = "variable-footer_global_" + f.getColumnName()+ "_" + calc;	
 		else
@@ -603,7 +615,7 @@ public class ModifyReportJRXML {
 		textField.setAttribute("isStretchWithOverflow", "true");
 		textField.setAttribute("evaluationTime", "Group");
 		textField.setAttribute("evaluationGroup", resetGroup);
-		textField.setAttribute("pattern", "$ 0.00");
+		textField.setAttribute("pattern", pattern);
 		//band.appendChild(textField);
 		
 			//create child "reportElement" of "textField" with attr
@@ -625,7 +637,7 @@ public class ModifyReportJRXML {
 			
 			////create child "textFieldExpression" of "textField" with attr
 			Element textFieldExpression = document.createElement("textFieldExpression");
-			textFieldExpression.setAttribute("class", "java.lang.Float");
+			textFieldExpression.setAttribute("class", valueClassName);
 			textFieldExpression.appendChild(document.createCDATASection("$V{" + varName + "}"));
 			textField.appendChild(textFieldExpression);
 		
@@ -672,8 +684,22 @@ public class ModifyReportJRXML {
 	 * @param document XML document.
 	 * @return Element
 	 */
-	private Node buildVariableNode(String columnName, String calc, String resetGroup, Document document ) {
+	private Node buildVariableNode(ReportField f, String calc, String resetGroup, Document document ) {
 		String varName = null;
+		String columnName = f.getColumnName();
+		String valueClassName = null;
+		String initialize = "()";
+		//set the field data type
+		switch (f.getFieldType()) {
+		case NONE:   	valueClassName = String.class.getName(); break;
+		case STRING:   	valueClassName = String.class.getName(); break;
+		case INTEGER:   valueClassName = Long.class.getName(); 	 initialize = "(\"0\")"; break;
+		case DOUBLE:   	valueClassName = String.class.getName(); initialize = "(\"0\")"; break;
+		case DATE:   	valueClassName = Date.class.getName();   break;
+		case MONEY:   	valueClassName = Float.class.getName();  initialize = "(\"0\")"; break;
+		case BOOLEAN:   valueClassName = Boolean.class.getName();
+		}
+		
 		if (resetGroup.compareToIgnoreCase("global_column_0") == 0)
 			varName = "variable-footer_global_" + columnName + "_" + calc;	
 		else
@@ -681,20 +707,20 @@ public class ModifyReportJRXML {
 		
 		Element variable = document.createElement("variable");
 		variable.setAttribute("name", varName);
-		variable.setAttribute("class", "java.lang.Float");
+		variable.setAttribute("class", valueClassName);
 		variable.setAttribute("resetType", "Group");
 		variable.setAttribute("resetGroup", resetGroup);
 		variable.setAttribute("calculation", calc);
 		
-			Element variableExpression = document.createElement("variableExpression");
-			variableExpression.appendChild(document.createCDATASection("$F{" + columnName + "}"));
-			variable.appendChild(variableExpression);
-			
-			Element initialValueExpression = document.createElement("initialValueExpression");
-			initialValueExpression.appendChild(document.createCDATASection("new java.lang.Float(\"0\")"));
-			variable.appendChild(initialValueExpression);
-			
-			return variable;
+		Element variableExpression = document.createElement("variableExpression");
+		variableExpression.appendChild(document.createCDATASection("$F{" + columnName + "}"));
+		variable.appendChild(variableExpression);
+		
+		Element initialValueExpression = document.createElement("initialValueExpression");
+		initialValueExpression.appendChild(document.createCDATASection("new " + valueClassName + initialize));
+		variable.appendChild(initialValueExpression);
+		
+		return variable;
 	}
 
 	/**

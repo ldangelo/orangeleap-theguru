@@ -186,8 +186,6 @@ function setOptionsEnabled(rowSelector) {
 	var field = fieldRow.find('select[objectname$=fieldId]'); 
 	if (fieldRow.find('input[objectname$=groupBy]').attr('checked')) {
 		fieldRow.find('input[objectname$=count]').attr('disabled', 'true');
-		fieldRow.find('input[objectname$=max]').attr('disabled', 'true');
-		fieldRow.find('input[objectname$=min]').attr('disabled', 'true');
 		fieldRow.find('input[objectname$=sum]').attr('disabled', 'true');
 		fieldRow.find('input[objectname$=average]').attr('disabled', 'true');
 		// add the group by field to the x axis chart options
@@ -200,8 +198,6 @@ function setOptionsEnabled(rowSelector) {
 		if (field.find('option:selected').attr('fieldtype') != 'MONEY') {
 			fieldRow.find('input[fieldtype=summary]').attr('disabled', 'true');
 			fieldRow.find('select[fieldtype=summary]').attr('disabled', 'true');
-			fieldRow.find('input[objectname$=max]').attr('disabled', 'true');
-			fieldRow.find('input[objectname$=min]').attr('disabled', 'true');
 		} else {
 			fieldRow.find('input[fieldtype=summary]').removeAttr('disabled');
 			fieldRow.find('select[fieldtype=summary]').removeAttr('disabled');
