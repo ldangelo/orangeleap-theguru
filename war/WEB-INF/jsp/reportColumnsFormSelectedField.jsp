@@ -3,7 +3,7 @@
 <tr index="${fieldIndex}" id="fieldRow" name="fieldRow">
 	<td>
 		<select objectname="reportSelectedFields[INDEXREPLACEMENT].fieldId" style="width: 260px"
-			onchange="setSummaryCheckboxesEnabled(this);">
+			onchange="setOptionsEnabled($(this).parent().parent());">
 			<c:forEach var="fgroup" items="${fieldGroups}" varStatus="outer">
 				<optgroup label="${fgroup.name}">
 					<c:forEach var="f" items="${fgroup.fields}" varStatus="inner">
@@ -35,7 +35,7 @@
 		</select>
 	</td>
 	<td align=center>
-		<input value="true" onchange="sortFieldTable('#report_fields_add');" objectname="reportSelectedFields[INDEXREPLACEMENT].groupBy" type="checkbox" 
+		<input value="true" onclick="sortFieldTable('#report_fields_add');" objectname="reportSelectedFields[INDEXREPLACEMENT].groupBy" type="checkbox" 
 			<c:if test="${(currentField != null) && (currentField.groupBy == true)}">
 				checked="true"
 			</c:if>

@@ -32,7 +32,7 @@
 			</optgroup>
 			<option groupid="-1">All Fields</option>
 		</select></td>
-		<td><select id="fields" size=10 style="width: 512px"
+		<td><select id="fields" size=10 style="width: 512px; display: none;"
 			ondblclick="addReportField(this);">
 			<c:forEach var="fgroup" items="${fieldGroups}" varStatus="outer">
 				<optgroup label="${fgroup.name}" fieldgroupid=${fgroup.id}>
@@ -43,6 +43,9 @@
 					</c:forEach>
 				</optgroup>
 			</c:forEach>
+		</select>
+		<select id="fieldsDisplay" size=10 style="width: 512px;"
+			ondblclick="addReportField(this);">
 		</select></td>
 	</tr>
 </table>
@@ -54,7 +57,7 @@
 	<tr>
 		<td>
 		<table id="report_fields_add" index="0" class="tablesorter"	bgcolor=#E0E0E0>
-			<tr>
+			<tr index="-1">
 				<th>Field</th>
 				<th align=center>Sort Order</th>
 				<th align=center>Group By</th>
@@ -69,10 +72,10 @@
 						onclick="deleteAllFieldRows();"/> 
 				</th>
 			</tr>
-        	<c:set var="fieldIndex" scope="request" value="0"/>	
+        	<c:set var="fieldIndex" scope="request" value="0"/>
 	    	<c:forEach var="field" items="${selectedFields}" varStatus="outer">
 				<c:set var="currentField" scope="request" value="${field}"/>
-				<jsp:include page="/WEB-INF/jsp/reportColumnsFormSelectedField.jsp" /></td>
+				<jsp:include page="/WEB-INF/jsp/reportColumnsFormSelectedField.jsp" />
 				<c:set var="fieldIndex" scope="request" value="${fieldIndex + 1}"/>
 			</c:forEach>
 		</table>
@@ -95,7 +98,7 @@
 	
 		<TR rowIndex="0">
 			<TD><SELECT id="reportChartSettings[0].chartType"
-				name="reportChartSettings[0].chartType"
+				name="reportChartSettings[0].chartType" >
 				<option label="" value="-1"
 					<c:if test="${reportChartSettings[0].chartType == '-1'}">
 						selected="true"
@@ -123,7 +126,7 @@
 				>Footer</OPTION>	
 			</SELECT></TD>
 			<TD><SELECT id="reportChartSettings[0].fieldIdx"
-				name="reportChartSettings[0].fieldIdx"
+				name="reportChartSettings[0].fieldIdx" >
 				<c:forEach var="f" items="${reportGroupByFields}" varStatus="inner">
 						<c:if test="${f != null }">
 							<option label="${f.displayName}" value="${f.id}"
@@ -134,7 +137,7 @@
 					</c:forEach></SELECT></TD>
 	
 			<TD><SELECT id="reportChartSettings[0].fieldIdy"
-				name="reportChartSettings[0].fieldIdy"
+				name="reportChartSettings[0].fieldIdy" >
 				<c:forEach var="f" items="${reportSummarizedByFields}" varStatus="inner">
 						<c:if test="${f != null }">
 							<option label="${f.displayName}" value="${f.id}"
@@ -145,7 +148,7 @@
 					</c:forEach></SELECT></TD>
 	
 			<TD><SELECT id="reportChartSettings[0].operation"
-				name="reportChartSettings[0].operation"
+				name="reportChartSettings[0].operation" >
 				<option label="Record Count" value="RecordCount" 
 					<c:if test="${reportChartSettings[0].operation == 'RecordCount'}">
 						selected="true"

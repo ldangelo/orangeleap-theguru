@@ -7,8 +7,8 @@ $(document).ready(function() {
 function initializeFieldScreen() {
 	$('#fieldGroups').find("option:first").attr('selected', 'true');
 	updateDisplayedFields();
-	cleanUpFieldTable();
-	$('#report_fields_add').find("tr[index]").each(function() {
+	cleanUpFieldTable('#report_fields_add');
+	$('#report_fields_add').find("tr[index!=-1]").each(function() {
 		var row = $(this);		
 		row.find(".deleteButton").click(function(){
 				deleteFieldRow($(this).parent().parent());
@@ -25,20 +25,25 @@ function initializeFieldScreen() {
 function updateDisplayedFields() {
 	var groupId = $('#fieldGroups').find("option:selected").attr('groupid');
 	var fields = $('#fields'); 
+	var fieldsDisplay = $('#fieldsDisplay');
 	if (groupId == -1) {
-		fields.find('optgroup').removeAttr('style');
+		fields.find('optgroup').attr('hidden', 'false');
 	} else {
-		fields.find('optgroup').attr('style', 'display: none;');
-		fields.find('optgroup[fieldgroupid=' + groupId + ']').removeAttr('style');
+		fields.find('optgroup').attr('hidden', 'true');
+		fields.find('optgroup[fieldgroupid=' + groupId + ']').attr('hidden', 'false');
 	}
 	var searchText = $('#fieldSearch').val();
 	if (searchText != '') {
-		fields.find('option').removeAttr('style');
-		$('#fields').find('option:not(option:Contains("' + searchText + '"))').attr('style', 'display:none');
+		fields.find('option').attr('hidden', 'false');
+		$('#fields').find('option:not(option:Contains("' + searchText + '"))').attr('hidden', 'true');
 	} else {
-		fields.find('option').removeAttr('style');
+		fields.find('option').attr('hidden', 'false');
 	}
-	fields.find("option:visible:first").attr('selected', 'true');
+	fieldsDisplay.empty();
+	fieldsDisplay.append(fields.find('optgroup').clone());
+	fieldsDisplay.find('optgroup[hidden=true]').remove();
+	fieldsDisplay.find('option[hidden=true]').remove();
+	fieldsDisplay.find("option:visible:first").attr('selected', 'true');
 }
 
 function addReportField(fieldSelector) {
@@ -71,7 +76,7 @@ function deleteFieldRow(fieldRow) {
 }
 
 function deleteAllFieldRows() {
-	$('#report_fields_add').find('tr[index]').fadeOut("fast",function(){
+	$('#report_fields_add').find('tr[index!=-1]').fadeOut("fast",function(){
 		$(this).remove();
 		cleanUpFieldTable('#report_fields_add');
 	});
@@ -84,7 +89,7 @@ function moveFieldRow(fieldRow, moveBy) {
 	var fieldTable = $(fieldRow).parent().parent();
 
 	if (newIndex >= 0) {
-		fieldTable.find("tr[index]").each(function() {
+		fieldTable.find("tr[index!=-1]").each(function() {
 			var row = $(this);
 			if (parseInt(row.attr('index')) == newIndex) {
 				row.attr('index', index);
@@ -99,7 +104,7 @@ function moveFieldRow(fieldRow, moveBy) {
 
 function sortFieldTable(fieldTableSelector) {
 	var fieldTable = $(fieldTableSelector);
-	var rows = fieldTable.find('tr[index]').get();
+	var rows = fieldTable.find('tr[index!=-1]').get();
 	
     rows.sort(function(a, b) {
       var keyA = parseInt($(a).attr('index'));
@@ -130,20 +135,19 @@ function cleanUpFieldTable(fieldTableSelector) {
 	yAxisSelect.find('option').remove();
 
 	var fieldTable = $(fieldTableSelector);
-	var rows = fieldTable.find('tr[index]').get();
 	var index = 0;
 	var groupCount = 0;
 	var beginGroup = false;
 	var firstRow = true;
 	
-	fieldTable.find("tr[index]").each(function() {
+	fieldTable.find("tr[index!=-1]").each(function() {
 		var fieldTableRow = $(this);
 		fieldTableRow.attr('index', index);
 		fieldTableRow.attr('id', 'fieldRow' + index);
 		fieldTableRow.attr('name', 'fieldRow' + index);
 		var findExp = new RegExp("\\[INDEXREPLACEMENT\\]","gi");
 
-		fieldTableRow.find("input[objectname]").each(function(){
+		fieldTableRow.find("input[objectname!='']").each(function(){
 			var field = $(this);
 			var nameString = field.attr('objectname').replace(findExp, "["+index+"]");
 			field.attr('name',nameString);
@@ -151,7 +155,7 @@ function cleanUpFieldTable(fieldTableSelector) {
 			field.attr('id',idString);		
 		});
 
-		fieldTableRow.find("select[objectname]").each(function(){
+		fieldTableRow.find("select[objectname!='']").each(function(){
 			var field = $(this);
 			var nameString = field.attr('objectname').replace(findExp, "["+index+"]");
 			field.attr('name',nameString);
@@ -189,7 +193,7 @@ function setOptionsEnabled(rowSelector) {
 		// add the group by field to the x axis chart options
 		$('#reportChartSettings\\[0\\]\\.fieldIdx').append(field.find('option:selected').clone(true));
 	} else {
-		//fieldRow.find('input[objectname$=count]').removeAttr('disabled');
+		//fieldRow.find('input [objectname$=count]').removeAttr('disabled');
 		fieldRow.find('input[objectname$=count]').attr('disabled','true');
 		fieldRow.find('input[objectname$=sum]').removeAttr('disabled');
 		fieldRow.find('input[objectname$=average]').removeAttr('disabled');		
