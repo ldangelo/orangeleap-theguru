@@ -70,6 +70,9 @@ public class ReportField implements java.io.Serializable,
 
 	@Column(name = "SMALLEST_VALUE")
 	private Boolean smallestValue;
+	
+	@Column(name = "RECORD_COUNT")
+	private Boolean recordCount;
 
 	public Boolean getPerformSummary() {
 		return performSummary;
@@ -104,6 +107,15 @@ public class ReportField implements java.io.Serializable,
 
 	public void setSmallestValue(Boolean smallestValue) {
 		this.smallestValue = smallestValue;
+		determineIsSummarized();
+	}
+	
+	public Boolean getRecordCount() {
+		return recordCount;
+	}
+
+	public void setRecordCount(Boolean recordCount) {
+		this.recordCount = recordCount;
 		determineIsSummarized();
 	}
 
@@ -210,7 +222,7 @@ public class ReportField implements java.io.Serializable,
 	}
 
 	public void determineIsSummarized() {
-		if (average || performSummary || largestValue || smallestValue)
+		if (average || performSummary || largestValue || smallestValue || recordCount)
 			setIsSummarized(true);
 		else
 			setIsSummarized(false);

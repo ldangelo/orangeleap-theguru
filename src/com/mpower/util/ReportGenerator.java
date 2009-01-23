@@ -453,7 +453,9 @@ public class ReportGenerator {
 			f.setLargestValue(reportSelectedField.getMax());
 			f.setSmallestValue(reportSelectedField.getMin());
 			f.setPerformSummary(reportSelectedField.getSum());
+			f.setRecordCount(reportSelectedField.getCount());
 			f.setSelected(true);
+			
 			selectedReportFieldsList.add(f);
 		}
 		
@@ -506,7 +508,7 @@ public class ReportGenerator {
 
 				//ArrayList cgvList = new ArrayList();
 				//group.setFooterVariables(getColumnGroupVariables(cgvList, builtColumns, reportFieldsOrderedList, wiz));
-
+				
 				//add the group
 				groupsBuilt.add(group);
 			}

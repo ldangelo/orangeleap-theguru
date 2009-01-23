@@ -321,6 +321,7 @@ public class ReportWizard implements java.io.Serializable {
 				reportSelectedField.setMax(reportField.getLargestValue());
 				reportSelectedField.setMin(reportField.getSmallestValue());
 				reportSelectedField.setSum(reportField.getPerformSummary());
+				reportSelectedField.setCount(reportField.getRecordCount());
 				reportSelectedField.setSortOrder("ASC");
 				reportSelectedFields.add(reportSelectedField);
 			}

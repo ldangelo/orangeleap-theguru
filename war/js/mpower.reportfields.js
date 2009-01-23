@@ -185,14 +185,14 @@ function setOptionsEnabled(rowSelector) {
 	var fieldRow = $(rowSelector);
 	var field = fieldRow.find('select[objectname$=fieldId]'); 
 	if (fieldRow.find('input[objectname$=groupBy]').attr('checked')) {
-		fieldRow.find('input[objectname$=count]').attr('disabled', 'true');
+		//fieldRow.find('input[objectname$=count]').attr('disabled', 'true');
 		fieldRow.find('input[objectname$=sum]').attr('disabled', 'true');
 		fieldRow.find('input[objectname$=average]').attr('disabled', 'true');
 		// add the group by field to the x axis chart options
 		$('#reportChartSettings\\[0\\]\\.fieldIdx').append(field.find('option:selected').clone(true));
 	} else {
 		//fieldRow.find('input [objectname$=count]').removeAttr('disabled');
-		fieldRow.find('input[objectname$=count]').attr('disabled','true');
+		//fieldRow.find('input[objectname$=count]').attr('disabled','true');
 		fieldRow.find('input[objectname$=sum]').removeAttr('disabled');
 		fieldRow.find('input[objectname$=average]').removeAttr('disabled');		
 		if (field.find('option:selected').attr('fieldtype') != 'MONEY') {

@@ -96,6 +96,10 @@ public class ModifyReportJRXML {
     				variable =	buildVariableNode(f, "Lowest", "global_column_0", document);
         			jasperReport.insertBefore(variable, node);
     			}
+    			if (f.getRecordCount()){
+    				variable =	buildVariableNode(f, "Count", "global_column_0", document);
+        			jasperReport.insertBefore(variable, node);
+    			}
     		}
     	}
     	
@@ -163,6 +167,11 @@ public class ModifyReportJRXML {
 			        		}
 			    			if (f.getSmallestValue()){
 			    				variable =	buildVariableNode(f, "Lowest", groupName, document);
+			        			jasperReport.insertBefore(variable, node);
+			        			addGroup = true;
+			        		}
+			    			if (f.getRecordCount()){
+			    				variable =	buildVariableNode(f, "Count", groupName, document);
 			        			jasperReport.insertBefore(variable, node);
 			        			addGroup = true;
 			        		}
@@ -462,8 +471,8 @@ public class ModifyReportJRXML {
 	    		}
 	    	}
 	    	if (yFound){ 
-	    		frame.appendChild(addLine(document, x, y-1,  (xCalc + widthCalc)-x));
-	    		frame.appendChild(buildSummaryLabel("Total", document, x, y-rowHeight-2, totalWidth - x, rowHeight, false, null));
+	    		frame.appendChild(addLine(document, x, y-1,  totalWidth - x));
+	    		frame.appendChild(buildSummaryLabel("Sum", document, x, y-rowHeight-2, totalWidth - x, rowHeight, false, null));
 	    		y += rowHeight*2+2;
     		}
 	    	
@@ -484,8 +493,8 @@ public class ModifyReportJRXML {
 	    		}
 	    	}
 	    	if (yFound){ 
-	    		frame.appendChild(addLine(document, x, y-1,  (xCalc + widthCalc)-x));
-	    		frame.appendChild(buildSummaryLabel("Average", document, x, y-rowHeight-2, totalWidth - x, rowHeight, false, null));
+	    		frame.appendChild(addLine(document, x, y-1,  totalWidth - x));
+	    		frame.appendChild(buildSummaryLabel("Avg", document, x, y-rowHeight-2, totalWidth - x, rowHeight, false, null));
 	    		y += rowHeight*2+2;
     		}
 	    		    	
@@ -506,7 +515,7 @@ public class ModifyReportJRXML {
 	    		}
 	    	}
 	    	if (yFound){ 
-	    		frame.appendChild(addLine(document, x, y-1,  (xCalc + widthCalc)-x));
+	    		frame.appendChild(addLine(document, x, y-1,  totalWidth - x));
 	    		frame.appendChild(buildSummaryLabel("Max", document, x, y-rowHeight-2, totalWidth - x, rowHeight, false, null));
 	    		y += rowHeight*2+2;
     		}
@@ -522,14 +531,36 @@ public class ModifyReportJRXML {
 	    			if (f.getSmallestValue()){
 	    				xCalc = fieldProperties.get(f.getDisplayName());
 		    			widthCalc = fieldWidth.get(f.getDisplayName());
-		    			frame.appendChild(buildSummaryNodes(f, "Lowest", resetGroup, document, xCalc, widthCalc, y+1, rowHeight));
+		    			frame.appendChild(buildSummaryNodes(f, "Lowest", resetGroup, document, xCalc, widthCalc, y, rowHeight));
 	    				yFound = true;
 	    			}
 	    		}
 	    	}
 	    	if (yFound){ 
-	    		frame.appendChild(addLine(document, x, y-1,  (xCalc + widthCalc)-x));
+	    		frame.appendChild(addLine(document, x, y-1,  totalWidth - x));
 	    		frame.appendChild(buildSummaryLabel("Min", document, x, y-rowHeight-2, totalWidth - x, rowHeight, false, null));
+	    		y += rowHeight*2+2;
+    		}
+	    	
+	    	//Add count to the footer section
+	    	yFound = false;
+	    	xCalc = 0;
+			widthCalc = 0;
+	    	Iterator<?> itFieldsCount = getSelectedReportFieldsInOrder().iterator();
+	    	while (itFieldsCount.hasNext()){
+	    		ReportField f = (ReportField) itFieldsCount.next();
+	    		if (f.getIsSummarized()){
+	    			if (f.getRecordCount()){
+	    				xCalc = fieldProperties.get(f.getDisplayName());
+		    			widthCalc = fieldWidth.get(f.getDisplayName());
+		    			frame.appendChild(buildSummaryNodes(f, "Count", resetGroup, document, xCalc, widthCalc, y+1, rowHeight));
+	    				yFound = true;
+	    			}
+	    		}
+	    	}
+	    	if (yFound){ 
+	    		frame.appendChild(addLine(document, x, y-1,  totalWidth - x));//(xCalc + widthCalc)-x)
+	    		frame.appendChild(buildSummaryLabel("Count", document, x, y-rowHeight-2, totalWidth - x, rowHeight, false, null));
 	    		y += rowHeight*2+2;
     		}
 	    				    	
@@ -598,15 +629,23 @@ public class ModifyReportJRXML {
 		String valueClassName = null;
 		String pattern = null;
 		//set the field data type
-		switch (f.getFieldType()) {
-		case NONE:   	valueClassName = String.class.getName(); pattern ="";	 		break;
-		case STRING:   	valueClassName = String.class.getName(); pattern ="";			break;
-		case INTEGER:   valueClassName = Long.class.getName(); 	 pattern ="";	 		break;
-		case DOUBLE:   	valueClassName = String.class.getName(); pattern ="";	 		break;
-		case DATE:   	valueClassName = Date.class.getName();   pattern ="MM/dd/yyyy";	break;
-		case MONEY:   	valueClassName = Float.class.getName();  pattern ="$ 0.00";		break;
-		case BOOLEAN:   valueClassName = Boolean.class.getName();pattern ="";	
+		if (calc.compareToIgnoreCase("count") == 0){
+			valueClassName = Long.class.getName();
+			pattern ="";
+		}else{
+			switch (f.getFieldType()) {
+			case NONE:   	valueClassName = String.class.getName(); pattern ="";	 		break;
+			case STRING:   	valueClassName = String.class.getName(); pattern ="";			break;
+			case INTEGER:   valueClassName = Long.class.getName(); 	 pattern ="";	 		break;
+			case DOUBLE:   	valueClassName = String.class.getName(); pattern ="";	 		break;
+			case DATE:   	valueClassName = Date.class.getName();   pattern ="MM/dd/yyyy";	break;
+			case MONEY:   	valueClassName = Float.class.getName();  pattern ="$ 0.00";		break;
+			case BOOLEAN:   valueClassName = Boolean.class.getName();pattern ="";	
+			}
 		}
+		
+		
+		
 		if (resetGroup.compareToIgnoreCase("global_column_0") == 0)
 			varName = "variable-footer_global_" + f.getColumnName()+ "_" + calc;	
 		else
@@ -690,16 +729,22 @@ public class ModifyReportJRXML {
 		String valueClassName = null;
 		String initialize = "()";
 		//set the field data type
-		switch (f.getFieldType()) {
-		case NONE:   	valueClassName = String.class.getName(); break;
-		case STRING:   	valueClassName = String.class.getName(); break;
-		case INTEGER:   valueClassName = Long.class.getName(); 	 initialize = "(\"0\")"; break;
-		case DOUBLE:   	valueClassName = String.class.getName(); initialize = "(\"0\")"; break;
-		case DATE:   	valueClassName = Date.class.getName();   break;
-		case MONEY:   	valueClassName = Float.class.getName();  initialize = "(\"0\")"; break;
-		case BOOLEAN:   valueClassName = Boolean.class.getName();
+		if (calc.compareToIgnoreCase("count") == 0){
+			valueClassName = Long.class.getName();
+			initialize = "(\"0\")";
+		}else{
+			switch (f.getFieldType()) {
+			case NONE:   	valueClassName = String.class.getName(); break;
+			case STRING:   	valueClassName = String.class.getName(); break;
+			case INTEGER:   valueClassName = Long.class.getName(); 	 initialize = "(\"0\")"; break;
+			case DOUBLE:   	valueClassName = String.class.getName(); initialize = "(\"0\")"; break;
+			case DATE:   	valueClassName = Date.class.getName();   break;
+			case MONEY:   	valueClassName = Float.class.getName();  initialize = "(\"0\")"; break;
+			case BOOLEAN:   valueClassName = Boolean.class.getName();
+			}
 		}
-		
+		int test1 = new Integer(3);
+		long test = new Long(0);
 		if (resetGroup.compareToIgnoreCase("global_column_0") == 0)
 			varName = "variable-footer_global_" + columnName + "_" + calc;	
 		else
