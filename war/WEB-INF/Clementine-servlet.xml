@@ -42,7 +42,7 @@
 		<property name="userName" value="jasperadmin"/>
 		<property name="password" value="jasperadmin"/>
 -->
-		<property name="URI" value="http://127.0.0.1:8080/jasperserver/services/repository"/>
+		<property name="URI" value="http://${jasper.host}:${jasper.port}/jasperserver/services/repository"/>
 		<dwr:remote javascript="JasperServerService"/>
 		
 	</bean>
@@ -82,7 +82,7 @@
 	</bean>
 
 	<bean id="reportGenerator" class="com.mpower.util.ReportGenerator">
-		<property name="reportServicesURI" value="http://127.0.0.1:8080/jasperserver/services/repository"/>
+		<property name="reportServicesURI" value="http://${jasper.host}:${jasper.port}/jasperserver/services/repository"/>
 		<property name="reportUserName" value="jasperadmin"/>
 		<property name="reportPassword" value="jasperadmin"/>
 		<property name="reportUnitDataSourceURI" value="/datasources/ReportWizardJdbcDS"/>
