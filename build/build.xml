@@ -111,6 +111,7 @@
 	  <exec dir="${jasperserver.bin}/scripts/" executable="cmd" os="Windows XP">
 	    <arg value="/c"/>
 	  	<arg value="js-export.bat" />
+	  	<arg value="--everything"/>
 	  	<arg value="--output-zip"/>
 	  	<arg value="${basedir}\jasperserver\repository.zip"/>  	
 	  </exec>
