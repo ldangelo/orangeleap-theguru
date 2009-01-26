@@ -108,10 +108,11 @@
 
 	<target name="11. Export JasperServer Repository">
 	  <echo message="${os.name} ${os.arch} ${os.version}"/>
-	  <exec dir="${jasperserver.bin}/scripts/" executable="cmd" os="Windows">
+	  <exec dir="${jasperserver.bin}/scripts/" executable="cmd" os="Windows XP">
 	    <arg value="/c"/>
-	    <arg value="./import.bat" />
-	    <arg value="-p"/>
+	  	<arg value="js-export.bat" />
+	  	<arg value="--output-zip"/>
+	  	<arg value="${basedir}\jasperserver\repository.zip"/>  	
 	  </exec>
 
 	  <exec os="Mac OS X,unix" dir="${jasperserver.bin}/scripts/" executable="./js-export.sh">
