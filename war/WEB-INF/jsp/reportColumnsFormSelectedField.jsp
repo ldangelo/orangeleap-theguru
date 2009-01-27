@@ -22,6 +22,11 @@
 	</td>
 	<td align=center>
 		<select objectname="reportSelectedFields[INDEXREPLACEMENT].sortOrder">
+			<option value=""
+				<c:if test="${(currentField != null) && (currentField.sortOrder == '')}">
+											selected="true"
+				</c:if>
+				></option>
 			<option value="ASC"
 				<c:if test="${(currentField != null) && (currentField.sortOrder == 'ASC')}">
 											selected="true"

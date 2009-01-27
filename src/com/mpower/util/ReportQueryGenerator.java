@@ -786,7 +786,10 @@ public class ReportQueryGenerator {
 						else
 							orderBy += ","; 
 						orderBy += " " + rg.getColumnName();
-						orderBy += " " + rowField.getSortOrder();
+						if (rowField.getSortOrder().compareTo("") != 0)
+							orderBy += " " + rowField.getSortOrder();
+						else
+							orderBy += " ASC";
 					}
 				}
 			}
@@ -808,7 +811,10 @@ public class ReportQueryGenerator {
 						else
 							orderBy += ","; 
 						orderBy += " " + rg.getColumnName();
-						orderBy += " " + colField.getSortOrder();
+						if (colField.getSortOrder().compareTo("") != 0)
+							orderBy += " " + colField.getSortOrder();
+						else
+							orderBy += " ASC";
 					}
 				}
 			}
@@ -835,8 +841,9 @@ public class ReportQueryGenerator {
 				if (reportSelectedField != null 
 					&& reportSelectedField.getFieldId() != -1) {
 					ReportField rg = reportFieldService.find(reportSelectedField.getFieldId());					
-					if (orderBy.indexOf(rg.getColumnName()) == -1) {
-					
+					if (orderBy.indexOf(rg.getColumnName()) == -1  
+							&& (reportSelectedField.getSortOrder().compareTo("") != 0
+									|| reportSelectedField.getGroupBy())) {					
 						if (!addComma) {
 							orderBy += " ORDER BY";
 							addComma = true;
@@ -844,7 +851,10 @@ public class ReportQueryGenerator {
 						else
 							orderBy += ",";
 						orderBy += " " + rg.getColumnName();
-						orderBy += " " + reportSelectedField.getSortOrder();
+						if (reportSelectedField.getSortOrder().compareTo("") != 0)
+							orderBy += " " + reportSelectedField.getSortOrder();
+						else
+							orderBy += " ASC";								
 					}
 				}
 			}

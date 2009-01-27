@@ -136,6 +136,7 @@ public class ReportField implements java.io.Serializable,
 		canBeSummarized = f.canBeSummarized;
 		isSummarized = f.isSummarized;
 		selected = f.selected;
+		recordCount = f.recordCount;
 		// reportFieldGroup = new
 		// ArrayList<ReportFieldGroup>(f.reportFieldGroup);
 	}
@@ -222,7 +223,7 @@ public class ReportField implements java.io.Serializable,
 	}
 
 	public void determineIsSummarized() {
-		if (average || performSummary || largestValue || smallestValue || recordCount)
+		if (average || performSummary || largestValue || smallestValue || (recordCount != null && recordCount))
 			setIsSummarized(true);
 		else
 			setIsSummarized(false);
