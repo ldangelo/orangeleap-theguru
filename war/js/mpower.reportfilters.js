@@ -27,6 +27,7 @@ $(document).ready(function()
 			insertFilterRow($(this).parent().parent().parent().parent().parent().parent());
 		});		
    	});
+	
    }
 );
 
@@ -274,7 +275,9 @@ function cleanUpFilterTable(filterTableSelector) {
 		filterTableRow.attr('index', index);
 		filterTableRow.attr('id', 'filterTable' + index);
 		filterTableRow.attr('name', 'filterTable' + index);
-		cleanUpFilterTableProcessRow(filterTableRow, index)
+		cleanUpFilterTableProcessRow(filterTableRow, index);
+		filterCriteria(filterTableRow.find('[objectname$=fieldId]'));
+		applyMasks(filterTableRow);
 		if (filterTableRow.find('input:hidden[name*=filterType]').val() == 3) {
 			beginGroup = true;
 			filterTableRow.find('#beginGroupLabel').html(replicateString('<img src="images/icons/blankSpace.png"/>><img src="images/icons/blankSpace.png"/>', groupCount) + 'Begin Group');
@@ -288,6 +291,14 @@ function cleanUpFilterTable(filterTableSelector) {
 		index++;	
    	});
 	filterTable.attr('index',index);
+}
+
+function applyMasks(filterTableRowSelector) {
+	var filterRow = $(filterTableRowSelector);
+	var fieldtype = filterRow.find('[objectname$=fieldId]').find('option:selected').attr('fieldtype');
+	filterRow.find('[objectname$=criteria]').attr('fieldtype', fieldtype);
+	filterRow.find('input').unmask();
+	filterRow.find('input[fieldtype=DATE]').mask('99/99/9999');	
 }
 
 function replicateString(string, number) {
@@ -330,10 +341,10 @@ function filterCriteria(fieldSelectId) {
 		if (comparison.find("option:selected").attr('dateonly') == "true")
 		{
 			comparison.val(1);
-			displayPromptForCriteriaOptions(comparison)
 		}
 		comparison.find("optgroup[dateonly=true]").hide();
 	}
+	displayPromptForCriteriaOptions(comparison)
 }
 
 function displayPromptForCriteriaOptions(comparisonSelectId) {
