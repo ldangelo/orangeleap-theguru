@@ -8,17 +8,21 @@
 <hr width="100%" size=1 color="black">
 <div class="columns">
 	<br>
-	<table>
+	<table class="tablesorter">
 		<thead>
-			<th>Step 1.   Select the Rows</th>
-		</thead>
+			<th>Step 1.   Select Rows</th>
+			<th>Step 2.   Select Columns</th>
+			<th>Step 3.   Select Measure</th>
+</thead>
 		<tr>
 			<td><img height="87" width="203" src="images/reportmatrixstyle_row.gif" alt="Matrix Report" title="Matrix Report"/> </td>
+			<td><img height="87" width="203" src="images/reportmatrixstyle_column.gif" alt="Matrix Report" title="Matrix Report"/> </td>
+			<td><img height="87" width="203" src="images/reportmatrixstyle_measure.gif" alt="Matrix Report" title="Matrix Report"/> </td>
 		</tr>
 	</table>
 	<Table id="report_matrixrows" class="tablesorter" bgcolor=#E0E0E0 onmouseout="$('#matrix_preview td').css('backgroundColor','white');" onmouseover="$('#matrix_preview td[celltype=row]').css('backgroundColor','red')" >
 		<tr rowindex="-1" > 
-			<th>Row Fields</th>
+			<th>Select Rows</th>
 			<th>Sort order</th>
 			<th></th>
 		</tr>
@@ -37,17 +41,10 @@
 		<jsp:include page="/WEB-INF/jsp/reportMatrixFormRow.jsp" />
 	</Table>
 	<br>
-	<table>
-		<thead>
-			<th>Step 2.   Select the Columns</th>
-		</thead>
-		<tr>
-			<td><img height="87" width="203" src="images/reportmatrixstyle_column.gif" alt="Matrix Report" title="Matrix Report"/> </td>
-		</tr>
-	</table>
+	
 	<Table id="report_matrixColumns" class="tablesorter" bgcolor=#E0E0E0 onmouseout="$('#matrix_preview td').css('backgroundColor','white');" onmouseover="$('#matrix_preview td[celltype=column]').css('backgroundColor','red')" >
 		<tr rowindex="-1" > 
-			<th>Column Fields</th>
+			<th>Select Columns</th>
 			<th>Sort order</th>
 			<th></th>
 		</tr>
@@ -66,17 +63,10 @@
 		<jsp:include page="/WEB-INF/jsp/reportMatrixFormColumn.jsp" />
 	</Table>
 	<br>
-	<table>
-		<thead>
-			<th>Step 3.   Select the Measure</th>
-		</thead>
-		<tr>
-			<td><img height="87" width="203" src="images/reportmatrixstyle_measure.gif" alt="Matrix Report" title="Matrix Report"/> </td>
-		</tr>
-	</table>
+	
 	<Table id="report_matrixMeasure" class="tablesorter" bgcolor=#E0E0E0 onmouseout="$('#matrix_preview td').css('backgroundColor','white');" onmouseover="$('#matrix_preview td[celltype=measure]').css('backgroundColor','red');" >
 		<tr rowindex="-1" > 
-			<th>Measure</th>
+			<th>Select Measure</th>
 			<th>Operation</th>
 		</tr>
 		
