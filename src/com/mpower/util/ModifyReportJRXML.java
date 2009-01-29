@@ -445,7 +445,7 @@ public class ModifyReportJRXML {
 		    			width = fieldWidth.get(fLabel.getDisplayName());
 		    			String groupColumn = resetGroup.substring(resetGroup.indexOf("-") + 1);
 		    			if (fLabel.getDisplayName().compareToIgnoreCase(groupColumn) == 0){
-		    				frame.appendChild(buildSummaryLabel(null, document, x, y, width, rowHeight, true, fLabel.getColumnName()));
+		    				frame.appendChild(buildSummaryLabel(null, document, x, y, totalWidth - x, rowHeight, true, fLabel.getColumnName()));
 		    				frame.appendChild(addLine(document, 1, y+rowHeight+1, totalWidth));
 			    			y += rowHeight*2+2;
 			    			break;
@@ -667,7 +667,7 @@ public class ModifyReportJRXML {
 			reportElement.setAttribute("y",  Integer.toString(y));
 			reportElement.setAttribute("width", Integer.toString(width));
 			reportElement.setAttribute("height", Integer.toString(height));
-			reportElement.setAttribute("style", "defaultDetailStyle");
+//			reportElement.setAttribute("style", "SummaryStyle");
 			textField.appendChild(reportElement);
 			
 			//create child "textElement" of "textField" (it's empty)
@@ -695,7 +695,7 @@ public class ModifyReportJRXML {
 			reportElement2.setAttribute("y", Integer.toString(y));
 			reportElement2.setAttribute("width", Integer.toString(width));
 			reportElement2.setAttribute("height", Integer.toString(height));
-			reportElement2.setAttribute("style", "defaultDetailStyle");
+
 			textField2.appendChild(reportElement2);
 			
 			//create child "textElement" of "textField" (it's empty)
@@ -705,10 +705,14 @@ public class ModifyReportJRXML {
 			////create child "textFieldExpression" of "textField" with attr
 			Element textFieldExpression2 = document.createElement("textFieldExpression");
 			textFieldExpression2.setAttribute("class", "java.lang.String");
-			if (groupHeaderFlag)
+			if (groupHeaderFlag){
 				textFieldExpression2.appendChild(document.createCDATASection("$F{" + groupColumn + "}"));
-			else
+				//reportElement2.setAttribute("style", "SummaryStyle");
+			}
+			else{
 				textFieldExpression2.appendChild(document.createCDATASection("\"" + calc + "\""));
+				//reportElement2.setAttribute("style", "SummaryStyleBlue");
+			}
 			textField2.appendChild(textFieldExpression2);
 		
 		return textField2;
@@ -770,7 +774,7 @@ public class ModifyReportJRXML {
 
 	/**
 	 * Removes the chart from the group created by dynamic jasper and 
-	 * puts it in the pageHeader or lastPageFooter section of the report.
+	 * puts it in the title or lastPageFooter section of the report.
 	 * 
 	 * @param fileName file name of the XML document
 	 * @param chartType The type of chart. Currently we only support Bar and Pie.
@@ -813,10 +817,10 @@ public class ModifyReportJRXML {
 				//remove the chart node
 				removeAll(document, Node.ELEMENT_NODE, chart);
 				
-				//add the copied chart node to the pageHeader band or the last page footer
+				//add the copied chart node to the title band or the last page footer
 				String position = null;
 				if (location.compareTo("header") == 0)
-					position = "pageHeader";
+					position = "title";
 				else
 					position = "lastPageFooter";
 				
@@ -826,7 +830,7 @@ public class ModifyReportJRXML {
 				
 				// set the y value on the chart depends on the position of the chart
 				//set the new band height to allow room for the chart
-				if (position.compareTo("pageHeader") == 0){
+				if (position.compareTo("title") == 0){
 					chartRptElement.setAttribute("y", positionBandHeight.toString());	
 					Integer newpositionNodeBandHeight = positionBandHeight + bandHeight;
 					positionBandNode.setAttribute("height", newpositionNodeBandHeight.toString());
