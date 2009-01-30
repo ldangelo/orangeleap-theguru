@@ -421,6 +421,9 @@ public class ReportQueryGenerator {
 				else if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.SQLSERVER)
 					whereClause += " + '%'";				
 				break; // does not contain
+			case 11:	
+				whereClause += getFieldNameForWhereClause(rf) + " IS NOT NULL";
+				break;							
 			// Duration filters
 			case 20: // Current FY
 				break;
