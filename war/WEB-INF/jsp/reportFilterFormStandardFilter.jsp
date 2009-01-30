@@ -64,7 +64,7 @@
 					<option label="Previous 2 FY" value="25" dateonly="true"  
 						<c:if test="${(currentFilter != null) && (currentFilter.reportStandardFilter.comparison == 25)}"> selected="true" </c:if> >Previous 2 FY</option>
 				</optgroup>
-				<optgroup label="Fiscal Quater" dateonly="true" 
+				<optgroup label="Fiscal Quarter" dateonly="true" 
 					<c:if test="${dateFieldSelected == null}"> style="display: none;" </c:if> >
 					<option label="Current" value="26" dateonly="true"  
 						<c:if test="${(currentFilter != null) && (currentFilter.reportStandardFilter.comparison == 26)}"> selected="true" </c:if> >Current FQ</option>
