@@ -218,6 +218,28 @@ ul.formFields li input.textError {
 	border:1px solid #d00;
 	padding:4px;
 }
+table div.criteriaWrapper {
+	position:relative;
+	width:100%;
+}
+table span.criteriaWrapper {
+	position:relative;
+	width:100%;
+}
+div > a.dp-choose-date { 
+	position:absolute;
+	top: -3px; 
+	left: 95px;
+}
+span > a.dp-choose-date { 
+	position:absolute;
+	top: -6px; 
+	left: 95px;
+}
+input.customCriteria {
+	padding:1px;
+	margin:2px
+}
 .globalFormErrors h5 {
 	margin:6px 0 4px;
 	font-size:13px;

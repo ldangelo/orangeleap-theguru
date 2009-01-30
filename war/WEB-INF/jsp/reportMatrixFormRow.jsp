@@ -6,15 +6,17 @@
 		style="width: 260px">
 		<option label="" value="-1" selected></option>
 		<c:forEach var="fgroup" items="${fieldGroups}" varStatus="outer">
-			<c:forEach var="f" items="${fgroup.fields}" varStatus="inner">
-				<c:if test="${f != null }">
-					<option label="${f.displayName}" value="${f.id}"
-						<c:if test="${fieldId != -1 && fieldId == f.id}">
-							selected="true"
-						</c:if>
-					>${f.displayName}</option>
-				</c:if>
-			</c:forEach>
+			<optgroup label="${fgroup.name}">
+				<c:forEach var="f" items="${fgroup.fields}" varStatus="inner">
+					<c:if test="${f != null }">
+						<option label="${f.displayName}" value="${f.id}"
+							<c:if test="${fieldId != -1 && fieldId == f.id}">
+								selected="true"
+							</c:if>
+						>${f.displayName}</option>
+					</c:if>
+				</c:forEach>
+			</optgroup>
 		</c:forEach>
 	</SELECT></TD>
 

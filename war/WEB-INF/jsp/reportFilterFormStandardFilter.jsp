@@ -46,6 +46,8 @@
 					<c:if test="${(currentFilter != null) && (currentFilter.reportStandardFilter.comparison == 8)}"> selected="true" </c:if> >ends with</option>
 				<option value="9"
 					 <c:if test="${(currentFilter != null) && (currentFilter.reportStandardFilter.comparison == 9)}"> selected="true" </c:if> >contains</option>
+				<option value="9"
+					 <c:if test="${(currentFilter != null) && (currentFilter.reportStandardFilter.comparison == 11)}"> selected="true" </c:if> >has any value</option>
 				<!-- Date only options -->
 				<optgroup label="Fiscal Year" dateonly="true" 
 					<c:if test="${dateFieldSelected == null}"> style="display: none;" </c:if> >
@@ -129,6 +131,7 @@
 				onclick="togglePromptForCriteriaTextBox(this);"	>
 		</TD>
 		<TD>
+			<div class="criteriaWrapper">
 			<input objectname="reportFilters[INDEXREPLACEMENT].reportStandardFilter.criteria" style="width: 110px" 
 				<c:if test="${(dateFieldSelected != null) || (currentFilter == null) || ((currentFilter != null) && (currentFilter.reportStandardFilter.promptForCriteria == true))}">
 				disabled="disabled"
@@ -137,6 +140,7 @@
 					value="${currentFilter.reportStandardFilter.criteria}"
 				</c:if>
 			>
+			</div>
 		</TD>
 	</TR>
 </Table>

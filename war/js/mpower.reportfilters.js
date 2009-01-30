@@ -295,10 +295,19 @@ function cleanUpFilterTable(filterTableSelector) {
 
 function applyMasks(filterTableRowSelector) {
 	var filterRow = $(filterTableRowSelector);
-	var fieldtype = filterRow.find('[objectname$=fieldId]').find('option:selected').attr('fieldtype');
-	filterRow.find('[objectname$=criteria]').attr('fieldtype', fieldtype);
+	var fieldtype = filterRow.find('select[objectname$=fieldId]').find('option:selected').attr('fieldtype');
+	filterRow.find('input[objectname$=criteria]').attr('fieldtype', fieldtype);
 	filterRow.find('input').unmask();
-	filterRow.find('input[fieldtype=DATE]').mask('99/99/9999');	
+	filterRow.find('input[fieldtype=DATE]').mask('99/99/9999');
+	//filterRow.find('input[fieldtype=MONEY]').mask('$.');
+
+	Date.format = 'mm/dd/yyyy';	
+	// do not process custom filter rows
+	if (fieldtype != null) {
+		filterRow.find('a.dp-choose-date').hide();
+		filterRow.find('input[fieldtype=DATE]').parent('div.criteriaWrapper').find('a.dp-choose-date').show();
+	}
+	filterRow.find('input[fieldtype=DATE]').datePicker({startDate:'01/01/1900'});	
 }
 
 function replicateString(string, number) {
@@ -350,7 +359,9 @@ function filterCriteria(fieldSelectId) {
 function displayPromptForCriteriaOptions(comparisonSelectId) {
 	var comparison = $(comparisonSelectId);
 	var filterRow = comparison.parent().parent();
-	if (comparison.find("option:selected").attr('dateonly') == "true") {
+	if (comparison.find("option:selected").attr('dateonly') == "true"
+		// has any value
+		|| comparison.find("option:selected").val() == 11) {
 		filterRow.find("[objectname$=promptForCriteria]").attr("disabled", "true");
 		filterRow.find("[objectname$=reportStandardFilter.criteria]").attr("disabled", "true");
 	}
