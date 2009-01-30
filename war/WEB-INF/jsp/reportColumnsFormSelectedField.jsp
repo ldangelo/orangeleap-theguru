@@ -26,7 +26,7 @@
 				<c:if test="${(currentField != null) && (currentField.sortOrder == '')}">
 											selected="true"
 				</c:if>
-				></option>
+				>None</option>
 			<option value="ASC"
 				<c:if test="${(currentField != null) && (currentField.sortOrder == 'ASC')}">
 											selected="true"

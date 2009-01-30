@@ -101,7 +101,7 @@
 				<option label="" value="-1"
 					<c:if test="${reportChartSettings[0].chartType == '-1'}">
 						selected="true"
-					</c:if>></option>
+					</c:if>>No Chart</option>
 				<option label="Bar Chart" value="Bar"
 					<c:if test="${reportChartSettings[0].chartType == 'Bar'}">
 						selected="true"

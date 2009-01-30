@@ -322,7 +322,7 @@ public class ReportWizard implements java.io.Serializable {
 				reportSelectedField.setMin(reportField.getSmallestValue());
 				reportSelectedField.setSum(reportField.getPerformSummary());
 				reportSelectedField.setCount(reportField.getRecordCount());
-				reportSelectedField.setSortOrder("ASC");
+				reportSelectedField.setSortOrder("");
 				reportSelectedFields.add(reportSelectedField);
 			}
 		}
