@@ -271,6 +271,11 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 
 				jasperServerService.setUserName(userName);
 				jasperServerService.setPassword(password);
+				//we want to allow the users logged in as a company to also see the default templates as well
+				if (wiz.getReportTemplateList() != null)
+					wiz.getReportTemplateList().clear();
+				if ( !(wiz.getCompany().compareToIgnoreCase("default") == 0))
+					wiz.setReportTemplateList(jasperServerService.list("/Reports/Default/templates"));
 				wiz.setReportTemplateList(jasperServerService.list("/Reports/" + wiz.getCompany() + "/templates"));
 				wiz.setReportTemplatePath(((ResourceDescriptor)wiz.getReportTemplateList().get(0)).getUriString());
 			}

@@ -443,7 +443,10 @@ public class ReportWizard implements java.io.Serializable {
 	}
 
 	public void setReportTemplateList(List l) {
-		reportTemplateList = l;
+		if (reportTemplateList == null)
+			reportTemplateList = l;
+		else 
+			reportTemplateList.addAll(l);
 	}
 
 	public String getCompany() {
