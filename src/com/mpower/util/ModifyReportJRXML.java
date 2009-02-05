@@ -240,10 +240,8 @@ public class ModifyReportJRXML {
                     		x = Integer.parseInt(textFieldProperties.item(textFieldPropertiesIndex).getAttributes().getNamedItem("x").getNodeValue());
                     		width = Integer.parseInt(textFieldProperties.item(textFieldPropertiesIndex).getAttributes().getNamedItem("width").getNodeValue());
                     	} else if (textFieldProperties.item(textFieldPropertiesIndex).getNodeName().equals("textFieldExpression")) {
-                    		//if (textFieldProperties.item(textFieldPropertiesIndex).getTextContent().contains("$F{")) {
                     			String cdata = textFieldProperties.item(textFieldPropertiesIndex).getTextContent(); 
                     			fieldName =cdata.substring(1, cdata.length() - 1);
-                    		//}                    			
                     	}
                     }
                 	if (fieldName != null && x != -1)
@@ -283,10 +281,8 @@ public class ModifyReportJRXML {
                     		x = Integer.parseInt(textFieldProperties.item(textFieldPropertiesIndex).getAttributes().getNamedItem("x").getNodeValue());
                     		width = Integer.parseInt(textFieldProperties.item(textFieldPropertiesIndex).getAttributes().getNamedItem("width").getNodeValue());
                     	} else if (textFieldProperties.item(textFieldPropertiesIndex).getNodeName().equals("textFieldExpression")) {
-                    		//if (textFieldProperties.item(textFieldPropertiesIndex).getTextContent().contains("$F{")) {
                     			String cdata = textFieldProperties.item(textFieldPropertiesIndex).getTextContent(); 
                     			fieldName = cdata.substring(1, cdata.length() - 1);
-                    		//}                    			
                     	}
                     }
                 	if (fieldName != null && x != -1)
@@ -445,7 +441,7 @@ public class ModifyReportJRXML {
 		    			width = fieldWidth.get(fLabel.getDisplayName());
 		    			String groupColumn = resetGroup.substring(resetGroup.indexOf("-") + 1);
 		    			if (fLabel.getDisplayName().compareToIgnoreCase(groupColumn) == 0){
-		    				frame.appendChild(buildSummaryLabel(null, document, x, y, totalWidth - x, rowHeight, true, fLabel.getColumnName()));
+		    				frame.appendChild(buildSummaryLabel(null, document, x, y, totalWidth - x, rowHeight, true, fLabel));
 		    				frame.appendChild(addLine(document, 1, y+rowHeight+1, totalWidth));
 			    			y += rowHeight*2+2;
 			    			break;
@@ -685,8 +681,8 @@ public class ModifyReportJRXML {
 	/**
 	 * Adds the static text labels to the report.
 	 */
-	private Node buildSummaryLabel(String calc, Document document, int x, int y, int width, int height, Boolean groupHeaderFlag, String groupColumn) {
-		Element textField2 = document.createElement("textField");
+	private Node buildSummaryLabel(String calc, Document document, int x, int y, int width, int height, Boolean groupHeaderFlag, ReportField f) {
+			Element textField2 = document.createElement("textField");
 		
 			Element reportElement2 = document.createElement("reportElement");
 			reportElement2.setAttribute("key", "global_legend_footer_" + calc);
@@ -704,8 +700,18 @@ public class ModifyReportJRXML {
 			
 			////create child "textFieldExpression" of "textField" with attr
 			Element textFieldExpression2 = document.createElement("textFieldExpression");
-			textFieldExpression2.setAttribute("class", "java.lang.String");
+			String valueClassName = String.class.getName();
 			if (groupHeaderFlag){
+				switch (f.getFieldType()) {
+				case NONE:   	valueClassName = String.class.getName();	break;
+				case STRING:   	valueClassName = String.class.getName();	break;
+				case INTEGER:   valueClassName = Long.class.getName(); 		break;
+				case DOUBLE:   	valueClassName = String.class.getName();	break;
+				case DATE:   	valueClassName = Date.class.getName();  	break;
+				case MONEY:   	valueClassName = Float.class.getName(); 	break;
+				case BOOLEAN:   valueClassName = Boolean.class.getName();	
+				}
+				String groupColumn = f.getColumnName();
 				textFieldExpression2.appendChild(document.createCDATASection("$F{" + groupColumn + "}"));
 				//reportElement2.setAttribute("style", "SummaryStyle");
 			}
@@ -713,6 +719,7 @@ public class ModifyReportJRXML {
 				textFieldExpression2.appendChild(document.createCDATASection("\"" + calc + "\""));
 				//reportElement2.setAttribute("style", "SummaryStyleBlue");
 			}
+			textFieldExpression2.setAttribute("class", valueClassName);
 			textField2.appendChild(textFieldExpression2);
 		
 		return textField2;
