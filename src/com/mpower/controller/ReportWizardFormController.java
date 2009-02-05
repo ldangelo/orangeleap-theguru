@@ -183,7 +183,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 			wiz.getReportCrossTabFields().setReportCrossTabMeasure(-1);
 		}
 		
-		if (request.getParameter("_target5") != null) {
+		if (request.getParameter("_target5") != null || request.getParameter("_target5.x") != null) {
 			//
 			// We are saving this report to jasperserver
 			try {
@@ -199,7 +199,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 	protected int getTargetPage(HttpServletRequest request, Object command, Errors errors, int currentPage) {
 		//
 		// if we are saving a report then redirect the user back to where they hit saveas from
-		if (request.getParameter("_target5") != null) {
+		if (request.getParameter("_target5") != null || request.getParameter("_target5.x") != null) {
 			try {
 				saveReport(wiz);
 			} catch (Exception e) {
