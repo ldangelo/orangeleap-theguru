@@ -18,31 +18,28 @@ import java.net.MalformedURLException;
  */
 public class LocalDTDResolver implements EntityResolver {
 
-	 String mySystemIdToIntercept;
-	 File myLocalDtdPath;
-	 URL localDtdFileAsUrl;
+	String mySystemIdToIntercept;
+	File myLocalDtdPath;
+	URL localDtdFileAsUrl;
 
-	 public LocalDTDResolver( String systemIdToIntercept, File localDtdPath )
-	 throws MalformedURLException
-	 {
-	 	   mySystemIdToIntercept = systemIdToIntercept;
-	 	   myLocalDtdPath = localDtdPath;
+	public LocalDTDResolver( String systemIdToIntercept, File localDtdPath )
+	throws MalformedURLException
+	{
+		mySystemIdToIntercept = systemIdToIntercept;
+		myLocalDtdPath = localDtdPath;
 
-	 localDtdFileAsUrl = myLocalDtdPath.toURI().toURL();
-	 }
+		localDtdFileAsUrl = new URL(myLocalDtdPath.getPath());
+	}
 
-	 public InputSource resolveEntity (String publicId, String systemId)
-	  {
-	  if (systemId.equals( mySystemIdToIntercept ))
-	  {
-	  return new InputSource( localDtdFileAsUrl.toString() );
-	  }
-	  else
-	  {
-	  // use the default behaviour (?)
-	  return null;
-	  }
-	  }
+	public InputSource resolveEntity (String publicId, String systemId)
+	{
+		if (systemId.equals(mySystemIdToIntercept)) {
+			return new InputSource( localDtdFileAsUrl.toString() );
+		} else {
+			// use the default behaviour (?)
+			return null;
+		}
+	}
 }
 
 

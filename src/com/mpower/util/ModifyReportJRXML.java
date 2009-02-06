@@ -304,22 +304,51 @@ public class ModifyReportJRXML {
 	 */
 	private Document loadXMLDocument(String fileName)
 	throws ParserConfigurationException, SAXException, IOException {
-	// Load the report xml document
-	DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-	documentBuilderFactory.setNamespaceAware(false);
-	DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-	LocalDTDResolver LocalDTDResolver
-	 = new LocalDTDResolver(
-	 "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd",
-	 		                    new File("C:/dev/apps/eclipse-3.4/workspace/Clementine/lib/war/bin/jasperreport.dtd")
-	 );
+		// Load the report xml document
+		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+		documentBuilderFactory.setNamespaceAware(false);
+		DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+		String localDTDFile = getLocalDirName() + "jasperreport.dtd";
+		LocalDTDResolver LocalDTDResolver
+		= new LocalDTDResolver(
+				"http://jasperreports.sourceforge.net/dtds/jasperreport.dtd",
+				new File(localDTDFile)
+		);
 
+		documentBuilder.setEntityResolver( LocalDTDResolver );
 
-	documentBuilder.setEntityResolver( LocalDTDResolver );
-
-	Document document = documentBuilder.parse(new File(fileName));
-	return document;
+		Document document = documentBuilder.parse(new File(fileName));
+		return document;
 	}
+	
+	private String getClassName()
+	{
+		String thisClassName;
+
+		//Build a string with executing class's name
+		thisClassName = this.getClass().getName();
+		thisClassName = thisClassName.substring(thisClassName.lastIndexOf(".") + 1,thisClassName.length());
+		thisClassName += ".class";  //this is the name of the bytecode file that is executing
+
+		return thisClassName;
+	}
+
+	private String getLocalDirName()
+	{
+		String localDirName;
+
+		//Use that name to get a URL to the directory we are executing in
+		java.net.URL myURL = this.getClass().getResource(getClassName());  //Open a URL to the our .class file
+
+		//Clean up the URL and make a String with absolute path name
+		localDirName = myURL.getPath();  //Strip path to URL object out
+		localDirName = myURL.getPath().replaceAll("%20", " ");  //change %20 chars to spaces  
+
+		//Get the current execution directory
+		localDirName = localDirName.substring(0,localDirName.lastIndexOf("clementine.jar"));  //clean off the file name
+
+		return localDirName;
+	}	 
 
 	private Element createGroup(Document document,
 			HashMap<String, Integer> fieldProperties,
@@ -948,9 +977,4 @@ public class ModifyReportJRXML {
 	public ReportFieldService getReportFieldService() {
 		return reportFieldService;
 	}
-
-
-
-	}
-
-
+}
