@@ -139,6 +139,7 @@ public class ReportGenerator {
 
 	public DynamicReport Generate(ReportWizard wiz,javax.sql.DataSource jdbcDataSource, ReportFieldService reportFieldService, 
 			ReportCustomFilterDefinitionService reportCustomFilterDefinitionService) throws Exception {
+		resetInputControls();
 		File templateFile = getTemplateFile(wiz);
 		initStyles();
 
