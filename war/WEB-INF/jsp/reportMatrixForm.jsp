@@ -1,5 +1,5 @@
 <%@ include file="/WEB-INF/jsp/include.jsp"%>
-
+<script type="text/javascript" src="js/mpower.reportmatrix.js"></script>
 
 <form method="post">
 <h1>Report Wizard</h1>
@@ -69,34 +69,20 @@
 			<th>Select Measure</th>
 			<th>Operation</th>
 		</tr>
-		
-		<TR rowIndex="0">
-			<TD style="width:360px"><SELECT id="reportCrossTabFields.reportCrossTabMeasure"
-				name="reportCrossTabFields.reportCrossTabMeasure"
-				style="width:260px" 
- 				<!-- onchange="populateMatrixPreview();" --> > 
-				<option label="" value="-1" selected></option>
-				<c:forEach var="fgroup" items="${fieldGroups}" varStatus="outer">
-					<c:forEach var="f" items="${fgroup.fields}" varStatus="inner">
-						<c:if test="${f != null }">
-							<option label="${f.displayName}" value="${f.id}"
-								<c:if test="${matrixMeasure == f.id}">selected="true"</c:if>
-							>${f.displayName}</option>
-						</c:if>
-					</c:forEach>
-				</c:forEach>
-			</SELECT></TD>
-			
-			<TD style="width:390px"><SELECT id="reportCrossTabFields.reportCrossTabOperation"
-				name="reportCrossTabFields.reportCrossTabOperation"
-				style="width:260px" >
-				<option value="SUM" <c:if test="${matrixOperation == 'SUM'}">selected="true"</c:if>>Sum</option>
-				<option value="AVERAGE" <c:if test="${matrixOperation == 'AVERAGE'}">selected="true"</c:if>>Average</option>
-				<option value="MAX" <c:if test="${matrixOperation == 'MAX'}">selected="true"</c:if>>Max</option>
-				<option value="MIN" <c:if test="${matrixOperation == 'MIN'}">selected="true"</c:if>>Min</option>
-				<option value="COUNT" <c:if test="${matrixOperation == 'COUNT'}">selected="true"</c:if>>Count</option>
-			</SELECT></TD>
-		</TR>
+
+       	<c:set var="measureIndex" scope="request" value="0"/>	
+    	<c:forEach var="column" items="${matrixColumns}" varStatus="outer">
+			<c:set var="fieldId" scope="request" value="${column.fieldId}"/>
+			<c:set var="sortOrder" scope="request" value="${column.sortOrder}"/>
+			<c:if test="${(fieldId != null && fieldId != -1) || (sortOrder != null && sortOrder != 'ASC')}">
+				<jsp:include page="/WEB-INF/jsp/reportMatrixFormMeasure.jsp" />
+				<c:set var="measureIndex" scope="request" value="${measureIndex + 1}"/>
+			</c:if>
+		</c:forEach>
+		<c:set var="fieldId" scope="request" value="-1"/>
+		<c:set var="sortOrder" scope="request" value=""/>
+		<jsp:include page="/WEB-INF/jsp/reportMatrixFormMeasure.jsp" />		
+
 	</Table>
 
 <br>

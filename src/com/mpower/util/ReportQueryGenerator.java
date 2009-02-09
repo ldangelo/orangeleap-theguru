@@ -265,6 +265,23 @@ public class ReportQueryGenerator {
 			}
 		}
 		//Add the Measure
+		List<ReportGroupByField> colMeasure = getReportWizard().getReportCrossTabFields().getReportCrossTabMeasure();
+		Iterator<ReportGroupByField> itMeasure = colMeasure.iterator();
+		while (itMeasure.hasNext()){
+			ReportGroupByField fGroupBy = (ReportGroupByField) itMeasure.next();
+			if (fGroupBy != null && fGroupBy.getFieldId() != -1){
+				ReportField reportField = reportFieldService.find(fGroupBy.getFieldId());
+				if (selectClause.indexOf(reportField.getColumnName()) == -1)
+				{
+					if (addComma)
+						selectClause = selectClause + ",";
+					else
+						addComma = true;
+					selectClause = selectClause + " " + reportField.getColumnName();
+				}
+			}
+		}
+/*		
 		ReportField fMeasure = reportFieldService.find(getReportWizard().getReportCrossTabFields().getReportCrossTabMeasure());
 		if (fMeasure.getId() != -1 && selectClause.indexOf(fMeasure.getColumnName()) == -1)
 		{
@@ -274,7 +291,9 @@ public class ReportQueryGenerator {
 				addComma = true;
 			selectClause = selectClause + " " + fMeasure.getColumnName();					
 		}
+*/		
 		return selectClause;
+
 	}
 
 	/**

@@ -39,6 +39,7 @@ import ar.com.fdvs.dj.domain.DJChart;
 import ar.com.fdvs.dj.domain.DJChartOptions;
 import ar.com.fdvs.dj.domain.DJCrosstab;
 import ar.com.fdvs.dj.domain.DJCrosstabColumn;
+import ar.com.fdvs.dj.domain.DJCrosstabMeasure;
 import ar.com.fdvs.dj.domain.DJCrosstabRow;
 import ar.com.fdvs.dj.domain.DynamicReport;
 import ar.com.fdvs.dj.domain.Style;
@@ -243,8 +244,18 @@ public class ReportGenerator {
 				}
 			}
 			//Add the Measure
-			ReportField fMeasure = reportFieldService.find(wiz.getReportCrossTabFields().getReportCrossTabMeasure());
-			reportFieldsOrderedList.add(fMeasure);
+			//Add Column Fields
+			List<ReportGroupByField> measureFields = wiz.getReportCrossTabFields().getReportCrossTabMeasure();
+			Iterator itMeasure = measureFields.iterator();
+			while (itMeasure.hasNext()){
+				ReportGroupByField fGroupBy = (ReportGroupByField) itMeasure.next();
+				if (fGroupBy != null && fGroupBy.getFieldId() != -1){
+					ReportField f = reportFieldService.find(fGroupBy.getFieldId());
+					reportFieldsOrderedList.add(f);
+				}
+			}
+			//List<ReportGroupByField> fMeasure = wiz.getReportCrossTabFields().getReportCrossTabMeasure();
+			//reportFieldsOrderedList.add(fMeasure);
 
 			List<AbstractColumn> builtMatrixColumns = buildColumns(reportFieldsOrderedList);
 			Iterator itMatrixColumnsBuilt = builtMatrixColumns.iterator();
@@ -372,9 +383,33 @@ public class ReportGenerator {
 		.setColumnStyles(detailStyle, detailStyle, detailStyle)
 		.setCellBorder(Border.THIN);
 
+		
+		String valueClassName = null;
+		
 		//
 		//Add a Measure to the builder(can only have one)
+		String operation = reportCrossTabFields.getReportCrossTabOperation();
+		ColumnsGroupVariableOperation cgvo = null;
+		
+		List<ReportGroupByField> reportCrossTabMeasure =	reportCrossTabFields.getReportCrossTabMeasure();
+		Iterator itCTMeasure  = reportCrossTabMeasure.iterator();
+		while (itCTMeasure.hasNext()){
+			ReportGroupByField ctMeasure = (ReportGroupByField) itCTMeasure.next();
+			if (ctMeasure != null && ctMeasure.getFieldId() != -1){
+				ReportField fMeasure = reportFieldService.find(ctMeasure.getFieldId());
+				valueClassName = getValueClassName(fMeasure);
+				if (operation.compareToIgnoreCase("AVERAGE") == 0) cgvo = ColumnsGroupVariableOperation.AVERAGE;
+				if (operation.compareToIgnoreCase("SUM") == 0) cgvo = ColumnsGroupVariableOperation.SUM;
+				if (operation.compareToIgnoreCase("HIGHEST") == 0) cgvo = ColumnsGroupVariableOperation.HIGHEST;
+				if (operation.compareToIgnoreCase("LOWEST") ==0) cgvo = ColumnsGroupVariableOperation.LOWEST;
+				if (operation.compareToIgnoreCase("COUNT") ==0) cgvo = ColumnsGroupVariableOperation.COUNT;
+				if (cgvo == null) cgvo = ColumnsGroupVariableOperation.COUNT;
+				cb.addMeasure(fMeasure.getColumnName(), valueClassName, cgvo, fMeasure.getDisplayName(), detailStyle );;	
+			}
+		}
+/*
 		ReportField measure = reportFieldService.find(reportCrossTabFields.getReportCrossTabMeasure());
+		
 		String operation = reportCrossTabFields.getReportCrossTabOperation();
 		String valueClassName = getValueClassName(measure);
 		ColumnsGroupVariableOperation cgvo = null;
@@ -385,6 +420,7 @@ public class ReportGenerator {
 		if (operation.compareToIgnoreCase("COUNT") ==0) cgvo = ColumnsGroupVariableOperation.COUNT;
 		if (cgvo == null) cgvo = ColumnsGroupVariableOperation.COUNT;
 		cb.addMeasure(measure.getColumnName(), valueClassName, cgvo, measure.getDisplayName(), detailStyle );
+*/
 
 		//
 		//Add rows to the builder

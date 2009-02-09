@@ -180,7 +180,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 			wiz.getReportChartSettings().clear();
 			wiz.getReportCrossTabFields().getReportCrossTabColumns().clear();
 			wiz.getReportCrossTabFields().getReportCrossTabRows().clear();
-			wiz.getReportCrossTabFields().setReportCrossTabMeasure(-1);
+			wiz.getReportCrossTabFields().getReportCrossTabMeasure().clear();
 		}
 		
 		if (request.getParameter("_target5") != null || request.getParameter("_target5.x") != null) {
