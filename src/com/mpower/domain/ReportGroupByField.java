@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "REPORTGROUPBYFIELD")
@@ -25,11 +26,15 @@ public class ReportGroupByField implements java.io.Serializable {
 	@Enumerated
 	@Column(name = "GROUPDATEBYOPTION")
 	Integer groupDateByOption;
+	
+	@Transient
+	String calculation;
 
 	public ReportGroupByField() {
 		fieldId = 0L;
 		sortOrder = "";
 		groupDateByOption = 0;
+		calculation = "";
 	}
 
 	public Long getFieldId()
@@ -57,5 +62,13 @@ public class ReportGroupByField implements java.io.Serializable {
 	public void setGroupDateByOption(Integer value)
 	{	
 		this.groupDateByOption = value;
+	}
+	
+	public String getCalculation() {
+		return calculation;
+	}
+
+	public void setCalculation(String value) {
+		this.calculation = value;
 	}
 }	
