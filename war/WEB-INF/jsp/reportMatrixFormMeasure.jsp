@@ -23,9 +23,8 @@
 		</c:forEach>
 	</SELECT></TD>
 
-
-	<TD style="width:390px"><SELECT id="reportCrossTabFields.reportCrossTabOperation"
-				name="reportCrossTabFields.reportCrossTabOperation"
+	<TD style="width:390px"><SELECT id="reportCrossTabFields.reportCrossTabMeasure[${measureIndex}].calculation"
+				name="reportCrossTabFields.reportCrossTabMeasure[${measureIndex}].calculation"
 				style="width:260px" >
 				<!-- <option value="SUM" <c:if test="${matrixOperation == 'SUM'}">selected="true"</c:if>>Sum</option>
 				<option value="AVERAGE" <c:if test="${matrixOperation == 'AVERAGE'}">selected="true"</c:if>>Average</option>
@@ -36,15 +35,15 @@
 				<!-- options -->
 				<!-- <c:if test="${dateFieldSelected == null}"> style="display: none;" </c:if> > -->
 					<option label="Sum" value="SUM" moneyonly="true" 
-						<c:if test="${(currentFilter != null) && (currentFilter.reportStandardFilter.comparison == 20)}"> selected="true" </c:if> >Sum</option>
+						<c:if test="${calculation == 'SUM'}"> selected="true" </c:if> >Sum</option>
 					<option label="Average" value="AVERAGE" moneyonly="true" 
-						<c:if test="${(currentFilter != null) && (currentFilter.reportStandardFilter.comparison == 21)}"> selected="true" </c:if> >Average</option>
+						<c:if test="${calculation == 'AVERAGE'}"> selected="true" </c:if> >Average</option>
 					<option label="Max" value="MAX" moneyonly="false" 
-						<c:if test="${(currentFilter != null) && (currentFilter.reportStandardFilter.comparison == 22)}"> selected="true" </c:if> >Max</option>
+						<c:if test="${calculation == 'MAX'}"> selected="true" </c:if> >Max</option>
 					<option label="Min" value="MIN" moneyonly="false"  
-						<c:if test="${(currentFilter != null) && (currentFilter.reportStandardFilter.comparison == 23)}"> selected="true" </c:if> >Min</option>
+						<c:if test="${calculation == 'MIN'}"> selected="true" </c:if> >Min</option>
 					<option label="Count" value="COUNT" moneyonly="false"  
-						<c:if test="${(currentFilter != null) && (currentFilter.reportStandardFilter.comparison == 24)}"> selected="true" </c:if> >Count</option>
+						<c:if test="${calculation == 'COUNT'}"> selected="true" </c:if> >Count</option>
 			</SELECT></TD>
 <!--  
 	<TD style="width: 360px"><SELECT
@@ -71,9 +70,9 @@
 				<option value="3">Year</option>
 			</SELECT></TD>-->
 
-	<TD><img class="deleteButton" src="images/icons/deleteRow.png"
+	<!--  <TD><img class="deleteButton" src="images/icons/deleteRow.png"
 		<c:if test="${fieldId == -1 && (sortOrder == '' || sortOrder == 'ASC')}">
 			style="cursor: pointer; display: none;"
 		</c:if>
-	/></TD>
+	/></TD> -->
 </TR>

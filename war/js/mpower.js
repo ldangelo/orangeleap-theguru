@@ -95,16 +95,17 @@ function SingleSelect(regex,current) {
 function initializeMatrixScreen() {
 	rowCloner("#report_matrixrows tr:last select[id$=fieldId]");
 	rowCloner("#report_matrixColumns tr:last select[id$=fieldId]");
-	rowCloner("#report_matrixMeasure tr:last select[id$=fieldId]");
+	//rowCloner("#report_matrixMeasure tr:last select[id$=fieldId]");
 	$('#report_matrixrows').find(".deleteButton:visible").click(function(){
 		deleteRow($(this).parent().parent());
 	});
 	$('#report_matrixColumns').find(".deleteButton:visible").click(function(){
 		deleteRow($(this).parent().parent());
 	});
-	$('#report_matrixMeasure').find(".deleteButton:visible").click(function(){
-		deleteRow($(this).parent().parent());
-	});	
+	//$('#report_matrixMeasure').find(".deleteButton:visible").click(function(){
+		//deleteRow($(this).parent().parent());
+	//});	
+	fillCalcOptions('#reportCrossTabFields\\.reportCrossTabMeasure\\[0\\]\\.fieldId');
 }
 
 function hideJasperMenuRows() {

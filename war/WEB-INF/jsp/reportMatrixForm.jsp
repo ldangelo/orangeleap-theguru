@@ -71,18 +71,19 @@
 		</tr>
 
        	<c:set var="measureIndex" scope="request" value="0"/>	
-    	<c:forEach var="column" items="${matrixColumns}" varStatus="outer">
-			<c:set var="fieldId" scope="request" value="${column.fieldId}"/>
-			<c:set var="sortOrder" scope="request" value="${column.sortOrder}"/>
+    	<c:forEach var="measure" items="${matrixMeasures}" varStatus="outer">
+			<c:set var="fieldId" scope="request" value="${measure.fieldId}"/>
+			<c:set var="calculation" scope="request" value="${measure.calculation}"/>
 			<c:if test="${(fieldId != null && fieldId != -1) || (sortOrder != null && sortOrder != 'ASC')}">
 				<jsp:include page="/WEB-INF/jsp/reportMatrixFormMeasure.jsp" />
 				<c:set var="measureIndex" scope="request" value="${measureIndex + 1}"/>
 			</c:if>
 		</c:forEach>
-		<c:set var="fieldId" scope="request" value="-1"/>
-		<c:set var="sortOrder" scope="request" value=""/>
-		<jsp:include page="/WEB-INF/jsp/reportMatrixFormMeasure.jsp" />		
-
+		<c:if test="${measureIndex == 0}">
+			<c:set var="fieldId" scope="request" value="-1"/>
+			<c:set var="sortOrder" scope="request" value=""/>
+			<jsp:include page="/WEB-INF/jsp/reportMatrixFormMeasure.jsp" /> 
+		</c:if>
 	</Table>
 
 <br>

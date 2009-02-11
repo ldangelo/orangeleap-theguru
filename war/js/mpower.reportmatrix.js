@@ -38,7 +38,7 @@ $(document).ready(function()
 function fillCalcOptions(fieldSelectId) {
 	var fieldSelect = $(fieldSelectId);
 	var filterRow = fieldSelect.parent().parent();
-	var calculation = $("#reportCrossTabFields\\.reportCrossTabOperation");
+	var calculation =  $("[id$=calculation]");
 	if (fieldSelect.find("option:selected").attr('fieldType') == "MONEY")
 		calculation.find("option[moneyonly=true]").show();
 	else

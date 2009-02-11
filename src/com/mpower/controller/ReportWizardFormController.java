@@ -322,9 +322,11 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 				tempRows.addAll(wiz.getReportCrossTabFields().getReportCrossTabRows());
 				refData.put("matrixRows", tempRows);
 				wiz.getReportCrossTabFields().getReportCrossTabRows().clear();
-				
-				refData.put("matrixMeasure", wiz.getReportCrossTabFields().getReportCrossTabMeasure());
-				refData.put("matrixOperation", wiz.getReportCrossTabFields().getReportCrossTabOperation());
+
+				List<ReportGroupByField> tempMeasures = new LinkedList<ReportGroupByField>();
+				tempMeasures.addAll(wiz.getReportCrossTabFields().getReportCrossTabMeasure());
+				refData.put("matrixMeasures", tempMeasures);
+				wiz.getReportCrossTabFields().getReportCrossTabMeasure().clear();
 			}
 		}
 
@@ -343,7 +345,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 			// Clear out the selected fields because some items do not post back correctly
 			wiz.getReportFilters().clear();
 			
-		    refData.put("rowCount", wiz.getRowCount());			
+		    refData.put("rowCount", wiz.getRowCount());
 		}
 		
 		// run a saved report
