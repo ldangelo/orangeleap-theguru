@@ -110,7 +110,38 @@
 	</Table>
 	<br>
 	<br>
+ 	<h2>Advanced Options</h2>
+	<hr width="100%" size=1 color="black">
+	<table class="tablesorter" id="showSqlQueryTable">
+		<th>
+			<span id="showSqlQuerySpan" style="cursor: pointer;text-decoration:underline;" onclick="showSqlQueryClick();" >Show SQL Query</span>
+			<input type="checkbox" style="display:none" id="showSqlQuery" name="showSqlQuery" value="true" />
+		</th>
+	</table>
+    <br>
+	<br>
 	<br>
 </div>
 <jsp:include page="snippets/navbuttons.jsp" /></form>
 
+
+<c:if test="${showSqlQuery && sqlQuery != null && sqlQuery != ''}">
+	<div id="dialog" class="jqmWindow jqmID1" style="z-index: 3000; margin-left: -207.5px; margin-top: -159px; display: block;">
+	  <div class="modalTopLeft">
+		<div class="modalTopRight">
+			<h4 id="modalTitle" class="dragHandle">
+				Report SQL Query</h4>
+			<a class="jqmClose hideText" href="javascript:void(0)">Close</a>
+		</div>
+	  </div>
+	  <div class="modalContentWrapper">
+		<div class="modalContent">
+			<TEXTAREA id="sqlQuery" ROWS="15" COLS="100">${sqlQuery}</TEXTAREA>
+		</div>
+		<div class="modalSideRight"></div>
+	  </div>
+	  <div class="modalBottomLeft"> 
+	    <div class="modalBottomRight"></div>
+	  </div>
+	</div>
+</c:if>

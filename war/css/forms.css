@@ -260,3 +260,9 @@ input.customCriteria {
 	background:transparent url(../images/icons/document_forbidden.png) no-repeat left 10px;
 	padding-bottom:4px;
 }
+a.hideText {
+	font-size: 0;
+    text-decoration: none;
+    line-height: 0;
+    color: transparent;
+}

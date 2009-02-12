@@ -114,6 +114,9 @@ public class ReportWizard implements java.io.Serializable {
 	@Transient
 	private Integer previousPage;
 	
+	@Transient
+	private boolean showSqlQuery;
+
 	public ReportWizard() {
 		reportType = "tabular";
 		reportLayout = ReportLayout.PORTRAIT;
@@ -123,6 +126,7 @@ public class ReportWizard implements java.io.Serializable {
 		recordCount = false;
 		company = "Default";
 		previousPage = 0;
+		showSqlQuery = false;
 		
 		//
 		// create a filter list decorated as a LazyList
@@ -482,5 +486,13 @@ public class ReportWizard implements java.io.Serializable {
 
 	public void setPreviousPage(Integer previousPage) {
 		this.previousPage = previousPage;
-	}	
+	}
+
+	public void setShowSqlQuery(boolean showSqlQuery) {
+		this.showSqlQuery = showSqlQuery;
+	}
+
+	public boolean getShowSqlQuery() {
+		return showSqlQuery;
+	}
 }

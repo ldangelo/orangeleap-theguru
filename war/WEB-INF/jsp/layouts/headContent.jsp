@@ -18,6 +18,8 @@
 <script type="text/javascript" src="js/jquery.maskedinput-1.2.1.js"></script>
 <script type="text/javascript" src="js/date.js"></script>
 <script type="text/javascript" src="js/jquery.datePicker.js"></script>
+<script type="text/javascript" src="js/jqModal.js"></script>
+<script type="text/javascript" src="js/jqDnR.js"></script>
 <script type="text/javascript" src="js/mpower.js"></script>
 
 

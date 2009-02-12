@@ -46,6 +46,7 @@ import com.mpower.service.ReportWizardService;
 import com.mpower.service.SessionService;
 import com.mpower.util.ModifyReportJRXML;
 import com.mpower.util.ReportGenerator;
+import com.mpower.util.ReportQueryGenerator;
 import com.mpower.view.DynamicReportView;
 
 public class ReportWizardFormController extends AbstractWizardFormController {
@@ -335,6 +336,13 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 			ReportDataSubSource rdss = reportSubSourceService.find(wiz.getSubSourceId());
 			List<ReportFieldGroup>    lrfg = reportFieldGroupService.readFieldGroupBySubSourceId(rdss.getId());
 			wiz.setFieldGroups(lrfg);
+			
+		    if (wiz.getShowSqlQuery()) {
+		    	ReportQueryGenerator reportQueryGenerator = new ReportQueryGenerator(wiz, reportFieldService, reportCustomFilterDefinitionService);
+		    	refData.put("showSqlQuery", wiz.getShowSqlQuery());
+				refData.put("sqlQuery", reportQueryGenerator.getQueryString());
+				wiz.setShowSqlQuery(false);
+		    }
 		
 			refData.put("fieldGroups", lrfg);
 		    refData.put("customFilters", rdss.getReportCustomFilterDefinitions());

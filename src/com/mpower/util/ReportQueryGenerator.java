@@ -191,7 +191,7 @@ public class ReportQueryGenerator {
 			selectClause += buildSelectFieldsForNonMatrix();
 		}
 		
-		selectClause = selectClause + " FROM " + getReportWizard().getDataSubSource().getViewName();		
+		selectClause = selectClause + System.getProperty("line.separator") + "FROM " + getReportWizard().getDataSubSource().getViewName();		
 		
 		return selectClause;
 	}
@@ -320,7 +320,7 @@ public class ReportQueryGenerator {
 			if (filter.getFilterType() == 2 && filter.getReportCustomFilter().getCustomFilterId() <= 0) continue; // this is an empty filter
 			
 			if (addWhere) {
-				whereClause += " WHERE";
+				whereClause += System.getProperty("line.separator") + "WHERE";
 				addWhere = false;
 			} else if (!afterGroup && filter.getFilterType() != 4) {
 				// Do not add And or Or the first record after a group, or on end groups
@@ -802,7 +802,7 @@ public class ReportQueryGenerator {
 					ReportField rg = reportFieldService.find(rowField.getFieldId());
 					if (orderBy.indexOf(rg.getColumnName()) == -1) {
 						if (!addComma) {
-							orderBy += " ORDER BY";
+							orderBy += System.getProperty("line.separator") + "ORDER BY";
 							addComma = true;
 						}
 						else
@@ -827,7 +827,7 @@ public class ReportQueryGenerator {
 					ReportField rg = reportFieldService.find(colField.getFieldId());
 					if (orderBy.indexOf(rg.getColumnName()) == -1) {					
 						if (!addComma) {
-							orderBy += " ORDER BY";
+							orderBy += System.getProperty("line.separator") + "ORDER BY";
 							addComma = true;
 						}
 						else
@@ -867,7 +867,7 @@ public class ReportQueryGenerator {
 							&& (reportSelectedField.getSortOrder().compareTo("") != 0
 									|| reportSelectedField.getGroupBy())) {					
 						if (!addComma) {
-							orderBy += " ORDER BY";
+							orderBy += System.getProperty("line.separator") + "ORDER BY";
 							addComma = true;
 						}
 						else

@@ -54,6 +54,7 @@
 	/*margin-right: 3px;*/
 }
 #navmain ul li a {
+	cursor:pointer;
 	/*background-color: #444;*/
 	color: #333;
 	text-decoration: none;

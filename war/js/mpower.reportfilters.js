@@ -27,9 +27,27 @@ $(document).ready(function()
 			insertFilterRow($(this).parent().parent().parent().parent().parent().parent());
 		});		
    	});
-	
+	if ($('#sqlQuery').length > 0) {
+		var targetOffset = $('#showSqlQuerySpan').offset().top;
+		scrollTo(0,targetOffset);
+		
+		$('#dialog').jqm({overlay: 50, onShow: MPower.centerDialog}).jqDrag('.dragHandle');		
+		$('#dialog').jqmShow();	
+	}
    }
 );
+
+var MPower = {
+		centerDialog: function($hash) {
+			var $dialog = $hash.w;
+			var x = "-" + ($dialog.width() / 2) + "px";
+			var y = "-" + ($dialog.height() / 2) + "px";
+			$dialog.css("margin-left", x);
+			$dialog.css("margin-top", y);
+			$dialog.show();
+		}	
+	}
+
 
 function togglePromptForCriteriaTextBox(checkBox) {
 	var promptForCriteria = $(checkBox);
@@ -330,7 +348,7 @@ function cleanUpFilterTableProcessRow(filterRow, index) {
 		field.attr('id',idString);		
 	});
 
-	row.find("select[objectname!='']").each(function(){
+	row.find("select[objectname!=]").each(function(){
 		var field = $(this);
 		var nameString = field.attr('objectname').replace(findExp, "["+index+"]");
 		field.attr('name',nameString);
@@ -386,4 +404,11 @@ function updateRowCountInput(rowCountSelector) {
 	} else {
 		rowCountInput.attr('style', 'display: none;');
 	}
+}
+
+function showSqlQueryClick() {
+	var targetOffset = $('#showSqlQuerySpan').offset().top;
+	scrollTo(0,targetOffset);
+	$('#showSqlQuery').attr('checked', 'true');
+	triggerClick(document.getElementById('reportCriteriaHiddenInput'));
 }
