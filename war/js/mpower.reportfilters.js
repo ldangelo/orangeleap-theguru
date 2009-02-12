@@ -358,20 +358,24 @@ function cleanUpFilterTableProcessRow(filterRow, index) {
 }
 
 function filterCriteria(fieldSelectId) {
-	var fieldSelect = $(fieldSelectId);
+ 	var fieldSelect = $(fieldSelectId);
 	var filterRow = fieldSelect.parent().parent();
-	var comparison = filterRow.find("select[objectname*=comparison]");
-	if (fieldSelect.find("option:selected").attr('fieldType') == "DATE")
-		comparison.find("optgroup[dateonly=true]").show();
-	else
-	{
-		if (comparison.find("option:selected").attr('dateonly') == "true")
+	var baseComparison = $('#baseComparisonSelect');
+	var comparison = filterRow.find('select[objectname*=comparison]');
+	var comparisonValue = comparison.val();
+	comparison.empty();
+	comparison.append(baseComparison.find("option:not([dateonly=true])").clone());
+	comparison.append(baseComparison.find("optgroup[dateonly=true]").clone());
+	if (fieldSelect.find('option:selected').attr('fieldType') != 'DATE') {
+		if (comparison.find('option:selected').attr('dateonly') == 'true')
 		{
 			comparison.val(1);
 		}
-		comparison.find("optgroup[dateonly=true]").hide();
+		comparison.find('[dateonly=true]').remove();
 	}
-	displayPromptForCriteriaOptions(comparison)
+	if (comparison.find('option[value=' + comparisonValue + ']').length > 0)
+		comparison.val(comparisonValue);
+	displayPromptForCriteriaOptions(comparison);
 }
 
 function displayPromptForCriteriaOptions(comparisonSelectId) {

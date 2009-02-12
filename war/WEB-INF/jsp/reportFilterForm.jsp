@@ -12,7 +12,9 @@
 <jsp:include page="/WEB-INF/jsp/reportFilterFormActions.jsp" />
 <jsp:include page="/WEB-INF/jsp/reportFilterFormBeginGroup.jsp" />
 <jsp:include page="/WEB-INF/jsp/reportFilterFormEndGroup.jsp" />
-
+<c:set var="comparisonSelectId" scope="request" value="baseComparisonSelect"/>
+<jsp:include page="/WEB-INF/jsp/reportFilterFormStandardFilterComparison.jsp" />
+<c:set var="comparisonSelectId" scope="request" value=""/>
 
 <h1>Report Wizard</h1>
 <div class="columns">
