@@ -14,9 +14,7 @@
    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="locations">
             <list>
-                <value>/WEB-INF/jdbc.properties</value>
-                <!-- below is for jboss + postgresql only                  -->
-                <!-- <value>/WEB-INF/js.jdbc-postgresql.properties</value> -->
+				<value>classpath:mpower.properties</value>
             </list>
         </property>
     </bean>	   
