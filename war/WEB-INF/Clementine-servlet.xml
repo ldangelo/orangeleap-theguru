@@ -40,7 +40,7 @@
 		<property name="userName" value="jasperadmin"/>
 		<property name="password" value="jasperadmin"/>
 -->
-		<property name="URI" value="http://${jasper.host}:${jasper.port}/jasperserver/services/repository"/>
+		<property name="URI" value="http://${jasper.host}:${jasper.port}/${contextPrefix}jasperserver/services/repository"/>
 		<dwr:remote javascript="JasperServerService"/>
 		
 	</bean>
