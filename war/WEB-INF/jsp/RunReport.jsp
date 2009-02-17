@@ -10,8 +10,14 @@
 			<div class="buttonposition"></div>
 <br>
 <p align="center">
+					<%
+					String contextPrefix = System.getProperty("contextPrefix");
+					if (contextPrefix == null) contextPrefix = "";
+					pageContext.setAttribute("contextPrefix",contextPrefix);
+					%>
+
 			<iframe
-				src="/jasperserver/flow.html?_flowId=viewReportFlow&reportUnit=${reportPath}&standAlone=false&ParentFolderUri=/reports/Clementine/Temp"
+				src="/${contextPrefix}jasperserver/flow.html?_flowId=viewReportFlow&reportUnit=${reportPath}&standAlone=false&ParentFolderUri=/reports/Clementine/Temp"
 				width="97%" height="700px" onload="hideJasperMenuRows();"> </iframe>
 </p>
 			<input type="image" id="reportDataHiddenInput" name="_target0"

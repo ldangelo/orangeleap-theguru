@@ -11,7 +11,12 @@
 					<jsp:include page="reportSourceForm.jsp" />
 				</c:when>
 				<c:otherwise>
-					<c:redirect url="../jasperserver" />
+					<%
+					String contextPrefix = System.getProperty("contextPrefix");
+					if (contextPrefix == null) contextPrefix = "";
+					pageContext.setAttribute("contextPrefix",contextPrefix);
+					%>
+					<c:redirect url="../${contextPrefix}jasperserver" />
 				</c:otherwise>
 			</c:choose>
 		</div>
