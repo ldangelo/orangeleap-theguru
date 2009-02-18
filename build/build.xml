@@ -39,6 +39,9 @@
 	    	<jvmarg value="-XX:PermSize=64m"/>
 	    	<jvmarg value="-XX:MaxPermSize=128m" />
 	    	<jvmarg value="-Dcom.sun.management.jmxremote"/>
+	    	<jvmarg value="-Dmysql.host=localhost"/>
+	    	<jvmarg value="-Dmysql.port=3306"/>
+	    	<jvmarg value="-DcontextPrefix="/>
 	    </java>
 	</target>
 
