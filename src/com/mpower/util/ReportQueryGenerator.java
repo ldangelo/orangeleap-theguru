@@ -4,6 +4,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -206,16 +207,18 @@ public class ReportQueryGenerator {
 		String selectClause = "";
 		Iterator<ReportSelectedField> itReportSelectedFields = getReportWizard().getReportSelectedFields().iterator();
 		boolean addComma = false;
+		List<Long> addedFields = new ArrayList<Long>();
 		while (itReportSelectedFields.hasNext()) {
 			ReportSelectedField selectedField = (ReportSelectedField) itReportSelectedFields.next();
 			ReportField reportField = getReportFieldService().find(selectedField.getFieldId());
 			if (reportField == null || reportField.getId() == -1) continue;
-			if (selectClause.indexOf(reportField.getColumnName()) == -1) {
+			if (addedFields.indexOf(reportField.getId()) == -1) {
 				if (addComma)
 					selectClause += ",";
 				else
 					addComma = true;					
 				selectClause += " " + reportField.getColumnName();
+				addedFields.add(reportField.getId());
 			}
 		}
 		return selectClause;
@@ -233,17 +236,18 @@ public class ReportQueryGenerator {
 		boolean addComma = false;
 		List<ReportGroupByField> rowFields = getReportWizard().getReportCrossTabFields().getReportCrossTabRows();
 		Iterator<ReportGroupByField> itRow = rowFields.iterator();
+		List<Long> addedFields = new ArrayList<Long>();
 		while (itRow.hasNext()){
 			ReportGroupByField fGroupBy = (ReportGroupByField) itRow.next();
 			if (fGroupBy != null && fGroupBy.getFieldId() != -1 ){
-				ReportField reportField = reportFieldService.find(fGroupBy.getFieldId());					
-				if (selectClause.indexOf(reportField.getColumnName()) == -1)
-				{
+				ReportField reportField = reportFieldService.find(fGroupBy.getFieldId());
+				if (addedFields.indexOf(reportField.getId()) == -1) {
 					if (addComma)
 						selectClause = selectClause + ",";
 					else
 						addComma = true;
 					selectClause = selectClause + " " + reportField.getColumnName();
+					addedFields.add(reportField.getId());					
 				}
 			}	
 		}
@@ -254,13 +258,13 @@ public class ReportQueryGenerator {
 			ReportGroupByField fGroupBy = (ReportGroupByField) itCol.next();
 			if (fGroupBy != null && fGroupBy.getFieldId() != -1){
 				ReportField reportField = reportFieldService.find(fGroupBy.getFieldId());
-				if (selectClause.indexOf(reportField.getColumnName()) == -1)
-				{
+				if (addedFields.indexOf(reportField.getId()) == -1) {
 					if (addComma)
 						selectClause = selectClause + ",";
 					else
 						addComma = true;
 					selectClause = selectClause + " " + reportField.getColumnName();
+					addedFields.add(reportField.getId());					
 				}
 			}
 		}
@@ -271,13 +275,13 @@ public class ReportQueryGenerator {
 			ReportGroupByField fGroupBy = (ReportGroupByField) itMeasure.next();
 			if (fGroupBy != null && fGroupBy.getFieldId() != -1){
 				ReportField reportField = reportFieldService.find(fGroupBy.getFieldId());
-				if (selectClause.indexOf(reportField.getColumnName()) == -1)
-				{
+				if (addedFields.indexOf(reportField.getId()) == -1) {
 					if (addComma)
 						selectClause = selectClause + ",";
 					else
 						addComma = true;
 					selectClause = selectClause + " " + reportField.getColumnName();
+					addedFields.add(reportField.getId());					
 				}
 			}
 		}
@@ -793,6 +797,7 @@ public class ReportQueryGenerator {
 		ReportCrossTabFields rptCTList = getReportWizard().getReportCrossTabFields();
 		List<ReportGroupByField> ctRows = rptCTList.getReportCrossTabRows();
 		addComma = false;
+		List<Long> addedFields = new ArrayList<Long>();		
 		//order by rows first
 		Iterator<ReportGroupByField> itCtRows = ctRows.iterator();
 		while (itCtRows.hasNext()){
@@ -800,7 +805,7 @@ public class ReportQueryGenerator {
 			if (rowField != null) {						
 				if (rowField.getFieldId() != -1){
 					ReportField rg = reportFieldService.find(rowField.getFieldId());
-					if (orderBy.indexOf(rg.getColumnName()) == -1) {
+					if (addedFields.indexOf(rg.getId()) == -1) {
 						if (!addComma) {
 							orderBy += System.getProperty("line.separator") + "ORDER BY";
 							addComma = true;
@@ -808,6 +813,7 @@ public class ReportQueryGenerator {
 						else
 							orderBy += ","; 
 						orderBy += " " + rg.getColumnName();
+						addedFields.add(rg.getId());						
 						if (rowField.getSortOrder().compareTo("") != 0)
 							orderBy += " " + rowField.getSortOrder();
 						else
@@ -825,7 +831,7 @@ public class ReportQueryGenerator {
 			if (colField != null) {						
 				if (colField.getFieldId() != -1){
 					ReportField rg = reportFieldService.find(colField.getFieldId());
-					if (orderBy.indexOf(rg.getColumnName()) == -1) {					
+					if (addedFields.indexOf(rg.getId()) == -1) {
 						if (!addComma) {
 							orderBy += System.getProperty("line.separator") + "ORDER BY";
 							addComma = true;
@@ -833,6 +839,7 @@ public class ReportQueryGenerator {
 						else
 							orderBy += ","; 
 						orderBy += " " + rg.getColumnName();
+						addedFields.add(rg.getId());						
 						if (colField.getSortOrder().compareTo("") != 0)
 							orderBy += " " + colField.getSortOrder();
 						else
@@ -855,15 +862,15 @@ public class ReportQueryGenerator {
 		Boolean addComma = false;
 		List<ReportSelectedField> reportSelectedFields = getReportWizard().getReportSelectedFields();
 		Iterator<ReportSelectedField> itReportSelectedFields = reportSelectedFields.iterator();
-		
+		List<Long> addedFields = new ArrayList<Long>();		
 		if (itReportSelectedFields != null){
 			addComma = false;
 			while (itReportSelectedFields.hasNext()) {
 				ReportSelectedField reportSelectedField = (ReportSelectedField) itReportSelectedFields.next();
 				if (reportSelectedField != null 
 					&& reportSelectedField.getFieldId() != -1) {
-					ReportField rg = reportFieldService.find(reportSelectedField.getFieldId());					
-					if (orderBy.indexOf(rg.getColumnName()) == -1  
+					ReportField rg = reportFieldService.find(reportSelectedField.getFieldId());
+					if (addedFields.indexOf(rg.getId()) == -1					
 							&& (reportSelectedField.getSortOrder().compareTo("") != 0
 									|| reportSelectedField.getGroupBy())) {					
 						if (!addComma) {
@@ -873,6 +880,7 @@ public class ReportQueryGenerator {
 						else
 							orderBy += ",";
 						orderBy += " " + rg.getColumnName();
+						addedFields.add(rg.getId());						
 						if (reportSelectedField.getSortOrder().compareTo("") != 0)
 							orderBy += " " + reportSelectedField.getSortOrder();
 						else
