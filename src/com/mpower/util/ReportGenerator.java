@@ -53,8 +53,10 @@ import ar.com.fdvs.dj.domain.builders.DJChartBuilder;
 import ar.com.fdvs.dj.domain.builders.FastReportBuilder;
 import ar.com.fdvs.dj.domain.builders.GroupBuilder;
 import ar.com.fdvs.dj.domain.constants.Border;
+import ar.com.fdvs.dj.domain.constants.Font;
 import ar.com.fdvs.dj.domain.constants.GroupLayout;
 import ar.com.fdvs.dj.domain.constants.Page;
+import ar.com.fdvs.dj.domain.constants.VerticalAlign;
 import ar.com.fdvs.dj.domain.entities.ColumnsGroup;
 import ar.com.fdvs.dj.domain.entities.ColumnsGroupVariable;
 import ar.com.fdvs.dj.domain.entities.columns.AbstractColumn;
@@ -67,12 +69,10 @@ import org.apache.commons.logging.LogFactory;
 public class ReportGenerator {
 	protected final Log logger = LogFactory.getLog(getClass());
 
-	private Style detailStyle;
-	private Style headerStyle;
-	private Style headerVariables;
+	//private Style headerStyle;**
+	//private Style headerVariables;
 	private Style titleStyle;
-	private Style importeStyle;
-	private Style oddRowStyle;
+	private Style defaultDetailStyle;
 	private String reportServicesURI;
 	private String reportUserName;
 	private String reportPassword;
@@ -106,17 +106,13 @@ public class ReportGenerator {
 	}
 
 	private void initStyles() {
-		detailStyle = new Style("detail");
+		//headerStyle = new Style("header");
 
-		headerStyle = new Style("header");
-
-		headerVariables = new Style("headerVariables");
+		//headerVariables = new Style("headerVariables");
 
 		titleStyle = new Style("titleStyle");
-
-		importeStyle = new Style();
-
-		oddRowStyle = new Style();
+		
+		
 	}
 
 	private File getTemplateFile(ReportWizard wiz) throws Exception {
@@ -129,10 +125,6 @@ public class ReportGenerator {
 
 		templateRD.setWsType(ResourceDescriptor.TYPE_REPORTUNIT);
 		templateRD.setUriString(wiz.getReportTemplateJRXML());
-		// 	if (reportLayout == ReportLayout.LANDSCAPE)
-		// 	    templateRD.setUriString("/Reports/" + reportCompany + "/templates/mpower_report_template_landscape_files/mpower_report_template_landscape_jrxml");
-		// 	else 
-		// 	    templateRD.setUriString("/Reports/" + reportCompany + "/templates/mpower_template_files/mpower_template_jrxml");
 		ResourceDescriptor rd = server.getWSClient().get(templateRD, templateFile);
 
 		return templateFile;
@@ -161,10 +153,7 @@ public class ReportGenerator {
 		.setIgnorePagination(true)
 		.setUseFullPageWidth(true)
 		.setWhenNoDataShowNoDataSection();
-		//			.setPrintBackgroundOnOddRows(true)
-		//			.setGrandTotalLegendStyle(headerVariables)
-		//			.setOddRowBackgroundStyle(oddRowStyle)
-		//			.setPageSizeAndOrientation(Page.Page_Letter_Landscape());
+		
 		//list used in for select statement of the query
 		List<ReportField> reportFieldsOrderedList = new LinkedList();
 		//
@@ -211,9 +200,6 @@ public class ReportGenerator {
 					drb.addChart(chart);
 				}
 			}//end if Summary Report
-
-			//Add Global footer variables to the Report (Grand Totals at the end of the report)
-			//drb = AddGlobalFooterVariables(reportFieldsOrderedList, builtColumns,drb);
 		}//end Tabular and Summary Reports
 
 
@@ -254,8 +240,6 @@ public class ReportGenerator {
 					reportFieldsOrderedList.add(f);
 				}
 			}
-			//List<ReportGroupByField> fMeasure = wiz.getReportCrossTabFields().getReportCrossTabMeasure();
-			//reportFieldsOrderedList.add(fMeasure);
 
 			List<AbstractColumn> builtMatrixColumns = buildColumns(reportFieldsOrderedList);
 			Iterator itMatrixColumnsBuilt = builtMatrixColumns.iterator();
@@ -369,6 +353,23 @@ public class ReportGenerator {
 		//get the settings for the crosstab report
 		ReportCrossTabFields reportCrossTabFields = wiz.getReportCrossTabFields();
 
+		//Set up styling for matrix report
+		
+		Style CrossTabColRowHeaderStyle = Style.createBlankStyle("CrossTabColRowHeaderStyle");
+		CrossTabColRowHeaderStyle.setFont(Font.ARIAL_MEDIUM_BOLD);
+		CrossTabColRowHeaderStyle.setPaddingLeft(2);
+		CrossTabColRowHeaderStyle.setVerticalAlign(VerticalAlign.MIDDLE);
+		
+		Style CrossTabColRowHeaderTotalStyle = Style.createBlankStyle("CrossTabColRowHeaderTotalStyle");
+		CrossTabColRowHeaderTotalStyle.setFont(Font.ARIAL_MEDIUM_BOLD);
+		CrossTabColRowHeaderTotalStyle.setPaddingLeft(2);
+		CrossTabColRowHeaderTotalStyle.setVerticalAlign(VerticalAlign.MIDDLE);
+		
+		Style CrossTabTotalStyle = Style.createBlankStyle("CrossTabTotalStyle");
+		CrossTabTotalStyle.setFont(Font.ARIAL_MEDIUM);
+		CrossTabTotalStyle.setPaddingLeft(2);
+		CrossTabTotalStyle.setVerticalAlign(VerticalAlign.MIDDLE);
+		
 		//
 		//Create the crosstab builder
 		CrosstabBuilder cb = new CrosstabBuilder();
@@ -378,18 +379,18 @@ public class ReportGenerator {
 		//manually from the jrxml file before saving. (See the ReportFormWizardController removeCrossTabDataSubset.)
 		.setDatasource(null,DJConstants.DATA_SOURCE_ORIGIN_USE_REPORT_CONNECTION, DJConstants.DATA_SOURCE_TYPE_SQL_CONNECTION)
 		.setUseFullWidth(true)
-		.setColorScheme(4)
-		.setAutomaticTitle(true).setRowStyles(detailStyle, detailStyle, detailStyle)
-		.setColumnStyles(detailStyle, detailStyle, detailStyle)
+		.setColorScheme(DJConstants.COLOR_SCHEMA_GRAY)
+		.setAutomaticTitle(true)
+		.setHeaderStyle(CrossTabColRowHeaderStyle)
 		.setCellBorder(Border.THIN);
-
-		
+			
 		String valueClassName = null;
-		
+			
 		//
 		//Add a Measure to the builder(can only have one)
 		String operation = reportCrossTabFields.getReportCrossTabOperation();
 		ColumnsGroupVariableOperation cgvo = null;
+		
 		
 		List<ReportGroupByField> reportCrossTabMeasure =	reportCrossTabFields.getReportCrossTabMeasure();
 		Iterator itCTMeasure  = reportCrossTabMeasure.iterator();
@@ -404,23 +405,15 @@ public class ReportGenerator {
 				if (operation.compareToIgnoreCase("LOWEST") ==0) cgvo = ColumnsGroupVariableOperation.LOWEST;
 				if (operation.compareToIgnoreCase("COUNT") ==0) cgvo = ColumnsGroupVariableOperation.COUNT;
 				if (cgvo == null) cgvo = ColumnsGroupVariableOperation.COUNT;
-				cb.addMeasure(fMeasure.getColumnName(), valueClassName, cgvo, fMeasure.getDisplayName(), detailStyle );;	
+				
+				//set up style for measure to add the pattern/format for the different data types - money, dates, etc...
+				String pattern = getPattern(fMeasure);
+				CrossTabTotalStyle.setPattern(pattern);
+				CrossTabColRowHeaderTotalStyle.setPattern(pattern);
+
+				cb.addMeasure(fMeasure.getColumnName(), valueClassName, cgvo, fMeasure.getDisplayName(), CrossTabTotalStyle );	
 			}
 		}
-/*
-		ReportField measure = reportFieldService.find(reportCrossTabFields.getReportCrossTabMeasure());
-		
-		String operation = reportCrossTabFields.getReportCrossTabOperation();
-		String valueClassName = getValueClassName(measure);
-		ColumnsGroupVariableOperation cgvo = null;
-		if (operation.compareToIgnoreCase("AVERAGE") == 0) cgvo = ColumnsGroupVariableOperation.AVERAGE;
-		if (operation.compareToIgnoreCase("SUM") == 0) cgvo = ColumnsGroupVariableOperation.SUM;
-		if (operation.compareToIgnoreCase("HIGHEST") == 0) cgvo = ColumnsGroupVariableOperation.HIGHEST;
-		if (operation.compareToIgnoreCase("LOWEST") ==0) cgvo = ColumnsGroupVariableOperation.LOWEST;
-		if (operation.compareToIgnoreCase("COUNT") ==0) cgvo = ColumnsGroupVariableOperation.COUNT;
-		if (cgvo == null) cgvo = ColumnsGroupVariableOperation.COUNT;
-		cb.addMeasure(measure.getColumnName(), valueClassName, cgvo, measure.getDisplayName(), detailStyle );
-*/
 
 		//
 		//Add rows to the builder
@@ -435,6 +428,10 @@ public class ReportGenerator {
 				.setHeaderWidth(100).setHeight(20)
 				.setTitle(fRow.getDisplayName())
 				.setShowTotals(true)
+				.setTotalStyle(CrossTabTotalStyle)
+				.setHeaderStyle(CrossTabColRowHeaderStyle)
+				.setTotalHeaderStyle(CrossTabColRowHeaderStyle)
+				.setTotalStyle(CrossTabColRowHeaderTotalStyle)
 				.build();
 				cb.addRow(row);	
 			}
@@ -453,8 +450,12 @@ public class ReportGenerator {
 				.setHeaderHeight(60).setWidth(80)
 				.setTitle(fCol.getDisplayName())
 				.setShowTotals(true)
+				.setTotalStyle(CrossTabTotalStyle)
+				.setHeaderStyle(CrossTabColRowHeaderStyle)
+				.setTotalHeaderStyle(CrossTabColRowHeaderStyle)
+				.setTotalStyle(CrossTabColRowHeaderTotalStyle)
 				.build();
-				cb.addColumn(col);		
+				cb.addColumn(col);	
 			}
 		}
 
@@ -474,7 +475,21 @@ public class ReportGenerator {
 		}
 		return valueClassName;
 	}
-
+	
+	public String getPattern(ReportField reportField) {
+		String pattern = new String();
+		switch (reportField.getFieldType()) {
+		case NONE:   	pattern ="";	 		break;
+		case STRING:   	pattern ="";			break;
+		case INTEGER:   pattern ="";	 		break;
+		case DOUBLE:   	pattern ="";	 		break;
+		case DATE:   	pattern ="MM/dd/yyyy";	break;
+		case MONEY:   	pattern ="$ #,##0.00";	break;
+		case BOOLEAN:   pattern ="";	
+		}
+		return pattern;
+	}
+	
 	private List<ReportField> getSelectedReportFields(ReportWizard wiz, ReportFieldService reportFieldService) {
 		Iterator<ReportSelectedField> itReportSelectedFields = wiz.getReportSelectedFields().iterator();
 
@@ -506,21 +521,14 @@ public class ReportGenerator {
 		String pattern = null;
 		while (itFields.hasNext()){
 			ReportField f = (ReportField) itFields.next();
-			switch (f.getFieldType()) {
-			case NONE:   	valueClassName = String.class.getName(); pattern ="";	 		break;
-			case STRING:   	valueClassName = String.class.getName(); pattern ="";			break;
-			case INTEGER:   valueClassName = Long.class.getName(); 	 pattern ="";	 		break;
-			case DOUBLE:   	valueClassName = String.class.getName(); pattern ="";	 		break;
-			case DATE:   	valueClassName = Date.class.getName();   pattern ="MM/dd/yyyy";	break;
-			case MONEY:   	valueClassName = Float.class.getName();  pattern ="$ 0.00";		break;
-			case BOOLEAN:   valueClassName = Boolean.class.getName();pattern ="";	
-			}
+			valueClassName = getValueClassName(f);
+			pattern = getPattern(f);
+		
 			AbstractColumn column = ColumnBuilder.getInstance()
 			.setColumnProperty(f.getColumnName(), valueClassName )
 			.setTitle(f.getDisplayName())
-			//.setStyle(detailStyle)
 			.setPattern(pattern)
-			.setHeaderStyle(headerStyle)
+			//.setHeaderStyle(headerStyle)
 			.build();
 			column.setName(f.getColumnName());
 			columnsBuilt.add(column);
