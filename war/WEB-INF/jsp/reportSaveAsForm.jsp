@@ -123,7 +123,7 @@ else if(e.which) // Netscape/Firefox/Opera
 
   // if the user has hit the return key then fire the click event on the submit button
   if (keynum == 13) {
-  	jQuery("#save").click();
+//  	jQuery("#save").click();
   	return false;
 	}
 
