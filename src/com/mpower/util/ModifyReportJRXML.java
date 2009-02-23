@@ -49,6 +49,25 @@ public class ModifyReportJRXML {
 
     }
 
+    /**
+     * Removes the scripletHandling class that Dynamic Jasper adds in
+     * v 3.0.4, JasperServer is not aware of this class and it causes
+     * an error:
+     * java.lang.ClassNotFoundException: ar.com.fdvs.dj.core.DJDefaultScriptlet
+     * @throws IOException 
+     * @throws SAXException 
+     * @throws ParserConfigurationException 
+     * 
+     */
+    public void removeDJDefaultScriptlet(String fileName) throws ParserConfigurationException, SAXException, IOException{
+    	Document document = loadXMLDocument(fileName);
+    	Node variable;
+    	Element jasperReport = (Element) document.getElementsByTagName("jasperReport").item(0);
+    	jasperReport.removeAttribute("scriptletClass");
+    	saveXMLtoFile(fileName, document);
+    	
+    	
+    }
 
     /**
 	 * Adds the grand totals to the report.

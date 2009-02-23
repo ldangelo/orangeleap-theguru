@@ -6,7 +6,6 @@ import java.util.List;
 import org.apache.commons.collections.FactoryUtils;
 import org.apache.commons.collections.list.LazyList;
 
-import ar.com.fdvs.dj.domain.ColumnsGroupVariableOperation;
 
 public class ReportCrossTabFields implements java.io.Serializable {
 	

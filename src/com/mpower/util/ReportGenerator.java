@@ -1,12 +1,6 @@
 package com.mpower.util;
 
-import java.awt.Color;
 import java.io.File;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -21,25 +15,21 @@ import com.jaspersoft.jasperserver.api.metadata.xml.domain.impl.ResourceDescript
 import com.jaspersoft.jasperserver.irplugin.JServer;
 import com.mpower.domain.ReportChartSettings;
 import com.mpower.domain.ReportCrossTabFields;
-import com.mpower.domain.ReportDatabaseType;
 import com.mpower.domain.ReportField;
 import com.mpower.domain.ReportFieldType;
 import com.mpower.domain.ReportFilter;
 import com.mpower.domain.ReportGroupByField;
-import com.mpower.domain.ReportLayout;
 import com.mpower.domain.ReportSelectedField;
-import com.mpower.domain.ReportStandardFilter;
 import com.mpower.domain.ReportWizard;
 import com.mpower.service.ReportCustomFilterDefinitionService;
 import com.mpower.service.ReportFieldService;
 
 import ar.com.fdvs.dj.core.DJConstants;
-import ar.com.fdvs.dj.domain.ColumnsGroupVariableOperation;
+import ar.com.fdvs.dj.domain.DJCalculation;
 import ar.com.fdvs.dj.domain.DJChart;
 import ar.com.fdvs.dj.domain.DJChartOptions;
 import ar.com.fdvs.dj.domain.DJCrosstab;
 import ar.com.fdvs.dj.domain.DJCrosstabColumn;
-import ar.com.fdvs.dj.domain.DJCrosstabMeasure;
 import ar.com.fdvs.dj.domain.DJCrosstabRow;
 import ar.com.fdvs.dj.domain.DynamicReport;
 import ar.com.fdvs.dj.domain.Style;
@@ -49,19 +39,14 @@ import ar.com.fdvs.dj.domain.builders.ColumnBuilderException;
 import ar.com.fdvs.dj.domain.builders.CrosstabBuilder;
 import ar.com.fdvs.dj.domain.builders.CrosstabColumnBuilder;
 import ar.com.fdvs.dj.domain.builders.CrosstabRowBuilder;
-import ar.com.fdvs.dj.domain.builders.DJChartBuilder;
 import ar.com.fdvs.dj.domain.builders.FastReportBuilder;
-import ar.com.fdvs.dj.domain.builders.GroupBuilder;
 import ar.com.fdvs.dj.domain.constants.Border;
 import ar.com.fdvs.dj.domain.constants.Font;
 import ar.com.fdvs.dj.domain.constants.GroupLayout;
-import ar.com.fdvs.dj.domain.constants.Page;
 import ar.com.fdvs.dj.domain.constants.VerticalAlign;
-import ar.com.fdvs.dj.domain.entities.ColumnsGroup;
-import ar.com.fdvs.dj.domain.entities.ColumnsGroupVariable;
+import ar.com.fdvs.dj.domain.entities.DJGroup;
 import ar.com.fdvs.dj.domain.entities.columns.AbstractColumn;
 import ar.com.fdvs.dj.domain.entities.columns.PropertyColumn;
-import ar.com.fdvs.dj.util.SortUtils;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -182,11 +167,11 @@ public class ReportGenerator {
 				//
 				//Groups
 				//
-				List<ColumnsGroup> groupBy = new LinkedList<ColumnsGroup>();
+				List<DJGroup> groupBy = new LinkedList<DJGroup>();
 				groupBy = buildGroups(builtColumns, reportFieldsOrderedList, wiz);	//Build groups
 				Iterator itGroupsBuilt = groupBy.iterator();  //Add Groups
 				while (itGroupsBuilt.hasNext()){
-					ColumnsGroup group = (ColumnsGroup) itGroupsBuilt.next();
+					DJGroup group = (DJGroup) itGroupsBuilt.next();
 					drb.addGroup(group);
 				}
 
@@ -389,7 +374,7 @@ public class ReportGenerator {
 		//
 		//Add a Measure to the builder(can only have one)
 		String operation = reportCrossTabFields.getReportCrossTabOperation();
-		ColumnsGroupVariableOperation cgvo = null;
+		DJCalculation cgvo = null;
 		
 		
 		List<ReportGroupByField> reportCrossTabMeasure =	reportCrossTabFields.getReportCrossTabMeasure();
@@ -399,12 +384,12 @@ public class ReportGenerator {
 			if (ctMeasure != null && ctMeasure.getFieldId() != -1){
 				ReportField fMeasure = reportFieldService.find(ctMeasure.getFieldId());
 				valueClassName = getValueClassName(fMeasure);
-				if (operation.compareToIgnoreCase("AVERAGE") == 0) cgvo = ColumnsGroupVariableOperation.AVERAGE;
-				if (operation.compareToIgnoreCase("SUM") == 0) cgvo = ColumnsGroupVariableOperation.SUM;
-				if (operation.compareToIgnoreCase("HIGHEST") == 0) cgvo = ColumnsGroupVariableOperation.HIGHEST;
-				if (operation.compareToIgnoreCase("LOWEST") ==0) cgvo = ColumnsGroupVariableOperation.LOWEST;
-				if (operation.compareToIgnoreCase("COUNT") ==0) cgvo = ColumnsGroupVariableOperation.COUNT;
-				if (cgvo == null) cgvo = ColumnsGroupVariableOperation.COUNT;
+				if (operation.compareToIgnoreCase("AVERAGE") == 0) cgvo = DJCalculation.AVERAGE;
+				if (operation.compareToIgnoreCase("SUM") == 0) cgvo = DJCalculation.SUM;
+				if (operation.compareToIgnoreCase("HIGHEST") == 0) cgvo = DJCalculation.HIGHEST;
+				if (operation.compareToIgnoreCase("LOWEST") ==0) cgvo = DJCalculation.LOWEST;
+				if (operation.compareToIgnoreCase("COUNT") ==0) cgvo = DJCalculation.COUNT;
+				if (cgvo == null) cgvo = DJCalculation.COUNT;
 				
 				//set up style for measure to add the pattern/format for the different data types - money, dates, etc...
 				String pattern = getPattern(fMeasure);
@@ -536,8 +521,8 @@ public class ReportGenerator {
 		return columnsBuilt;
 	}
 
-	private List<ColumnsGroup> buildGroups(List<AbstractColumn> builtColumns, List<ReportField> reportFieldsOrderedList, ReportWizard wiz){
-		List<ColumnsGroup> groupsBuilt = new LinkedList<ColumnsGroup>();
+	private List<DJGroup> buildGroups(List<AbstractColumn> builtColumns, List<ReportField> reportFieldsOrderedList, ReportWizard wiz){
+		List<DJGroup> groupsBuilt = new LinkedList<DJGroup>();
 
 		//Iterate thru the list of columns and if isgroupbyfield add group
 		Iterator itbuiltColumns = builtColumns.iterator();
@@ -547,7 +532,7 @@ public class ReportGenerator {
 			ReportField reportField = wiz.getReportFieldByColumnName(column.getName().toString());
 
 			if  ( wiz.IsFieldGroupByField(reportField.getId())){
-				ColumnsGroup group = new ColumnsGroup();
+				DJGroup group = new DJGroup();
 				group.setColumnToGroupBy((PropertyColumn) column);
 				group.setLayout(GroupLayout.DEFAULT);
 
@@ -568,22 +553,22 @@ public class ReportGenerator {
 			if (((ReportField)reportFieldsOrderedList.get(index)).getIsSummarized()) {
 				if (((ReportField)reportFieldsOrderedList.get(index)).getAverage()) {
 					AbstractColumn col = ((AbstractColumn)builtColumns.get(index));
-					ColumnsGroupVariable cgv = new ColumnsGroupVariable(col, ColumnsGroupVariableOperation.AVERAGE);
+					DJGroupVariable cgv = new DJGroupVariable(col, DJCalculation.AVERAGE);
 					cgvList.add(cgv);
 				}//end if
 				if (((ReportField)reportFieldsOrderedList.get(index)).getPerformSummary()) {
 					AbstractColumn col = ((AbstractColumn)builtColumns.get(index));
-					ColumnsGroupVariable cgv = new ColumnsGroupVariable(col, ColumnsGroupVariableOperation.SUM);
+					DJGroupVariable cgv = new DJGroupVariable(col, DJCalculation.SUM);
 					cgvList.add(cgv);
 				}//end if
 				if (((ReportField)reportFieldsOrderedList.get(index)).getLargestValue()) {
 					AbstractColumn col = ((AbstractColumn)builtColumns.get(index));
-					ColumnsGroupVariable cgv = new ColumnsGroupVariable(col, ColumnsGroupVariableOperation.HIGHEST);
+					DJGroupVariable cgv = new DJGroupVariable(col, DJCalculation.HIGHEST);
 					cgvList.add(cgv);
 				}//end if
 				if (((ReportField)reportFieldsOrderedList.get(index)).getSmallestValue()) {
 					AbstractColumn col = ((AbstractColumn)builtColumns.get(index));
-					ColumnsGroupVariable cgv = new ColumnsGroupVariable(col, ColumnsGroupVariableOperation.LOWEST);
+					DJGroupVariable cgv = new DJGroupVariable(col, DJCalculation.LOWEST);
 					cgvList.add(cgv);
 				}//end if set cgv
 			}//end if summary field
@@ -592,7 +577,7 @@ public class ReportGenerator {
 	}
 	*/
 
-	private List<DJChart> buildCharts(List<ColumnsGroup> groupByColumnsBuilt, List<AbstractColumn> allColumns, ReportWizard wiz,ReportFieldService reportFieldService) throws ChartBuilderException{
+	private List<DJChart> buildCharts(List<DJGroup> groupByColumnsBuilt, List<AbstractColumn> allColumns, ReportWizard wiz,ReportFieldService reportFieldService) throws ChartBuilderException{
 		List<DJChart> chartsBuilt = new LinkedList<DJChart>();
 		List<ReportChartSettings> chartSettings = wiz.getReportChartSettings();
 		Iterator itChartSettings = chartSettings.iterator();
@@ -600,7 +585,7 @@ public class ReportGenerator {
 			ReportChartSettings rcs = (ReportChartSettings) itChartSettings.next();
 			if (rcs.getChartType().compareTo("-1") == 0) continue; 
 			ReportField rfx = reportFieldService.find(rcs.getFieldIdx());
-			ColumnsGroup cg = getReportColumnsGroup(rfx, groupByColumnsBuilt);
+			DJGroup cg = getReportDJGroup(rfx, groupByColumnsBuilt);
 			ReportField rfy = reportFieldService.find(rcs.getFieldIdy());
 			List<AbstractColumn> columns = getReportAbstractColumn(rfy, allColumns);
 
@@ -640,10 +625,10 @@ public class ReportGenerator {
 		return columns;
 	}
 
-	private ColumnsGroup getReportColumnsGroup(ReportField rfx, List<ColumnsGroup> groupByColumnsBuilt) {
+	private DJGroup getReportDJGroup(ReportField rfx, List<DJGroup> groupByColumnsBuilt) {
 		Iterator itGroupBy = groupByColumnsBuilt.iterator();
 		while (itGroupBy.hasNext()){
-			ColumnsGroup cg = (ColumnsGroup) itGroupBy.next();
+			DJGroup cg = (DJGroup) itGroupBy.next();
 			if (rfx.getColumnName().compareToIgnoreCase(cg.getColumnToGroupBy().getName()) == 0){
 				return cg;	
 			}
@@ -665,19 +650,19 @@ public class ReportGenerator {
 					AbstractColumn column = (AbstractColumn) itColumnsBuilt.next();
 					if (f.getColumnName() == column.getName()){
 						if (f.getPerformSummary()){
-							drb.addGlobalFooterVariable(column, ColumnsGroupVariableOperation.SUM).setGrandTotalLegend("Total");
+							drb.addGlobalFooterVariable(column, DJCalculation.SUM).setGrandTotalLegend("Total");
 							//break;
 						}
 						if (f.getAverage()){
-							drb.addGlobalFooterVariable(column, ColumnsGroupVariableOperation.AVERAGE).setGrandTotalLegend("Average");
+							drb.addGlobalFooterVariable(column, DJCalculation.AVERAGE).setGrandTotalLegend("Average");
 							//break;
 						}
 						if (f.getSmallestValue()){
-							drb.addGlobalFooterVariable(column, ColumnsGroupVariableOperation.LOWEST).setGrandTotalLegend("Min");
+							drb.addGlobalFooterVariable(column, DJCalculation.LOWEST).setGrandTotalLegend("Min");
 							//break;
 						}
 						if (f.getLargestValue()){
-							drb.addGlobalFooterVariable(column, ColumnsGroupVariableOperation.HIGHEST).setGrandTotalLegend("Max");
+							drb.addGlobalFooterVariable(column, DJCalculation.HIGHEST).setGrandTotalLegend("Max");
 							//break;
 						}
 					}//end if column name = field name
