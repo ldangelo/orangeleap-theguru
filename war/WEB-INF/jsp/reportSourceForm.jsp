@@ -40,6 +40,7 @@
 
 <form:form name="myform" method="post" commandName="reportsource">
 	<h1>Report Wizard</h1>
+	<jsp:include page="snippets/formerrors.jsp"/>
 	<h2>Select a primary data source</h2>
 	<hr width="100%" size=1 color="black">
 	<form:select path="srcId" multiple="false" onchange="updateSubSource()">

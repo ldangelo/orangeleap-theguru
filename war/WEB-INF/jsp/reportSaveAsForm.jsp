@@ -135,7 +135,7 @@ return true;
 <form:form name="myform" method="post" commandName="reportsource">
 <form:hidden path="username"/>
 <form:hidden path="password"/>
-
+	<jsp:include page="snippets/formerrors.jsp"/>
   <div class="columns" style="width: 100%">
     <div class="column" style="width: 30%">Report Name:      </div>
     <div class="column" ><form:input path="reportName" size="64" tabindex="1" onkeypress="return checkForReturn(event)"/></div>

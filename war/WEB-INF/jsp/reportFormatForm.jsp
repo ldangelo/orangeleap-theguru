@@ -6,6 +6,7 @@
 	<h1>Report Wizard</h1>
 	<h2>Select the report type</h2>
 	<hr width="100%" size=1 color="black">
+		<jsp:include page="snippets/formerrors.jsp"/>
 	<div class="columns">
 	<TABLE>
 		<TR>

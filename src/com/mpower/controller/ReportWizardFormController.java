@@ -275,10 +275,16 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 				//we want to allow the users logged in as a company to also see the default templates as well
 				if (wiz.getReportTemplateList() != null)
 					wiz.getReportTemplateList().clear();
+
 				if ( !(wiz.getCompany().compareToIgnoreCase("default") == 0))
 					wiz.setReportTemplateList(jasperServerService.list("/Reports/Default/templates"));
-				wiz.setReportTemplateList(jasperServerService.list("/Reports/" + wiz.getCompany() + "/templates"));
-				wiz.setReportTemplatePath(((ResourceDescriptor)wiz.getReportTemplateList().get(0)).getUriString());
+				else
+					wiz.setReportTemplateList(jasperServerService.list("/Reports/" + wiz.getCompany() + "/templates"));
+				
+				if (wiz.getReportTemplateList().size() > 0)
+					wiz.setReportTemplatePath(((ResourceDescriptor)wiz.getReportTemplateList().get(0)).getUriString());
+				else
+					errors.reject("Invalid Repository","Invalid Repository.  It appears your repository is not setup properly.  Please contact your system administrator.");
 			}
 			
 			refData.put("previousSubSourceId", previousDataSubSourceId);

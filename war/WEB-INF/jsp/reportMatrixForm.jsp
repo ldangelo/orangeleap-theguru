@@ -3,7 +3,7 @@
 
 <form method="post">
 <h1>Report Wizard</h1>
-
+	<jsp:include page="snippets/formerrors.jsp"/>
 <h2>Select the matrix report options</h2>
 <hr width="100%" size=1 color="black">
 <div class="columns">

@@ -7,7 +7,7 @@
 <h1>Report Wizard</h1>
 <h2>Select the fields to display</h2>
 <hr width="100%" size=1 color="black">
-
+	<jsp:include page="snippets/formerrors.jsp"/>
 <!-- Hidden table used for cloning rows -->
 <table id="report_fields_source" class="tablesorter" bgcolor=#E0E0E0 style="display:none">
 	<jsp:include page="/WEB-INF/jsp/reportColumnsFormSelectedField.jsp" />

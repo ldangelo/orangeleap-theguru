@@ -3,7 +3,7 @@
 <script type="text/javascript" src="js/mpower.reportfilters.js"></script>
 
 <form method="post">
-
+	<jsp:include page="snippets/formerrors.jsp"/>
 <!--  hidden tables cloned to add new filters -->
 <c:set var="filterIndex" scope="request" value="0"/>
 <jsp:include page="/WEB-INF/jsp/reportFilterFormStandardFilter.jsp" />
