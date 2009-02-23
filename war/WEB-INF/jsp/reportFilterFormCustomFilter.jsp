@@ -1,6 +1,6 @@
 <%@ include file="/WEB-INF/jsp/include.jsp"%>
 
-<TABLE id="report_custom_filters" class="tablesorter" style="display: none;width: 530px" bgcolor=#E0E0E0 >
+<TABLE id="report_custom_filters" class="tablesorter" style="display: none;width: 520px" bgcolor=#E0E0E0 >
 	<TR index="-1" ><TH>Custom filter criteria
 		<input type="hidden" value="2" objectname="reportFilters[INDEXREPLACEMENT].filterType" />
 	</TH></TR>
@@ -10,7 +10,7 @@
 				<c:when test="${(currentFilter == null || currentFilter.reportCustomFilter.customFilterId == 0)}">
 					<SELECT id="customFilterSelect"
 						name="customFilterSelect"
-						style="width:525px"
+						style="width:515px"
 						onchange="populateCustomFilterRow(this, document.getElementById('report_filters_add'));" >
 						<option value="0">Select a custom filter from the drop down list</option>
 						<optgroup label="Custom Filters">
