@@ -25,6 +25,7 @@ import com.mpower.service.ReportCustomFilterDefinitionService;
 import com.mpower.service.ReportFieldService;
 
 import ar.com.fdvs.dj.core.DJConstants;
+import ar.com.fdvs.dj.domain.ColumnProperty;
 import ar.com.fdvs.dj.domain.DJCalculation;
 import ar.com.fdvs.dj.domain.DJChart;
 import ar.com.fdvs.dj.domain.DJChartOptions;
@@ -594,11 +595,19 @@ public class ReportGenerator {
 			DJChartOptions options = new DJChartOptions();
 			
 			options.setPosition(DJChartOptions.POSITION_HEADER);
-			
 			options.setShowLabels(true);
 			chart.setOptions(options);
 			chart.setColumnsGroup(cg);
+			//if a string field and Record count is selected we need to change the value class to a number
+			//to avoid getting an error when the chart is created
+/*			for (Iterator iterator = columns.iterator(); iterator.hasNext();) {
+				AbstractColumn column = (AbstractColumn) iterator.next();
+				 
+				if (rcs.getOperation().compareTo("RecordCount") == 0)
+					((ColumnProperty) column).setValueClassName(Float.class.getName());
+			}*/
 			chart.setColumns(columns);
+			
 
 			//set chart type
 			if (rcs.getChartType().compareTo("Bar") == 0) chart.setType(DJChart.BAR_CHART);	

@@ -49,7 +49,6 @@ function fillCalcOptions(fieldSelectId) {
 			calculation.val(calculation.find('option:visible:first').val());
 		}		
 	}
-	
 }
 
 

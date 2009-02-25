@@ -204,7 +204,23 @@ function setOptionsEnabled(rowSelector) {
 			fieldRow.find('input[objectname$=max]').removeAttr('disabled');
 			fieldRow.find('input[objectname$=min]').removeAttr('disabled');
 	    }
-		$('#reportChartSettings\\[0\\]\\.fieldIdy').append(field.find('option:selected[fieldtype="MONEY"]').clone(true));		
+		$('#reportChartSettings\\[0\\]\\.fieldIdy').append(field.find('option:selected').clone(true));		
+	}
+}
+
+function fillChartCalcOptions(fieldSelectId) {
+	var fieldSelect = $(fieldSelectId);
+	var filterRow = fieldSelect.parent().parent();
+	var calculation =  $("[id$=operation]");
+	if (fieldSelect.find("option:selected").attr('fieldType') == "MONEY")
+		calculation.find("option[moneyonly=true]").show();
+	else
+	{
+		calculation.find("option[moneyonly=true]").hide();
+		if (calculation.find("option:selected").attr('moneyonly') == "true")
+		{
+			calculation.val(calculation.find('option:visible:first').val());
+		}		
 	}
 }
 
