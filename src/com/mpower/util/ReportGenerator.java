@@ -48,6 +48,7 @@ import ar.com.fdvs.dj.domain.constants.VerticalAlign;
 import ar.com.fdvs.dj.domain.entities.DJGroup;
 import ar.com.fdvs.dj.domain.entities.columns.AbstractColumn;
 import ar.com.fdvs.dj.domain.entities.columns.PropertyColumn;
+import ar.com.fdvs.dj.domain.entities.columns.SimpleColumn;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -547,37 +548,6 @@ public class ReportGenerator {
 		return groupsBuilt;
 	}	
 
-	/*
-	private ArrayList getColumnGroupVariables(ArrayList cgvList, List<AbstractColumn> builtColumns, List<ReportField> reportFieldsOrderedList, ReportWizard wiz) {
-		//set the summary info for the groups
-		for(int index=0; index < reportFieldsOrderedList.size(); index++) {
-			if (((ReportField)reportFieldsOrderedList.get(index)).getIsSummarized()) {
-				if (((ReportField)reportFieldsOrderedList.get(index)).getAverage()) {
-					AbstractColumn col = ((AbstractColumn)builtColumns.get(index));
-					DJGroupVariable cgv = new DJGroupVariable(col, DJCalculation.AVERAGE);
-					cgvList.add(cgv);
-				}//end if
-				if (((ReportField)reportFieldsOrderedList.get(index)).getPerformSummary()) {
-					AbstractColumn col = ((AbstractColumn)builtColumns.get(index));
-					DJGroupVariable cgv = new DJGroupVariable(col, DJCalculation.SUM);
-					cgvList.add(cgv);
-				}//end if
-				if (((ReportField)reportFieldsOrderedList.get(index)).getLargestValue()) {
-					AbstractColumn col = ((AbstractColumn)builtColumns.get(index));
-					DJGroupVariable cgv = new DJGroupVariable(col, DJCalculation.HIGHEST);
-					cgvList.add(cgv);
-				}//end if
-				if (((ReportField)reportFieldsOrderedList.get(index)).getSmallestValue()) {
-					AbstractColumn col = ((AbstractColumn)builtColumns.get(index));
-					DJGroupVariable cgv = new DJGroupVariable(col, DJCalculation.LOWEST);
-					cgvList.add(cgv);
-				}//end if set cgv
-			}//end if summary field
-		}//end for
-		return cgvList;
-	}
-	*/
-
 	private List<DJChart> buildCharts(List<DJGroup> groupByColumnsBuilt, List<AbstractColumn> allColumns, ReportWizard wiz,ReportFieldService reportFieldService) throws ChartBuilderException{
 		List<DJChart> chartsBuilt = new LinkedList<DJChart>();
 		List<ReportChartSettings> chartSettings = wiz.getReportChartSettings();
@@ -598,14 +568,6 @@ public class ReportGenerator {
 			options.setShowLabels(true);
 			chart.setOptions(options);
 			chart.setColumnsGroup(cg);
-			//if a string field and Record count is selected we need to change the value class to a number
-			//to avoid getting an error when the chart is created
-/*			for (Iterator iterator = columns.iterator(); iterator.hasNext();) {
-				AbstractColumn column = (AbstractColumn) iterator.next();
-				 
-				if (rcs.getOperation().compareTo("RecordCount") == 0)
-					((ColumnProperty) column).setValueClassName(Float.class.getName());
-			}*/
 			chart.setColumns(columns);
 			
 
