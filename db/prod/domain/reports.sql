@@ -1,3 +1,26 @@
+
+
+
+
+
+
+
+
+
+--  OLD VERSION OF reports.sql
+--  orangeLeapReports.sql now has views and field definitions for Orange Lep
+
+
+
+
+
+
+
+
+
+
+
+
 insert into REPORTDATASOURCE values(1,'People');
 insert into REPORTDATASOURCE values(2,'Gifts');
 
