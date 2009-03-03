@@ -2,7 +2,7 @@
  <%
         String contextPrefix = System.getProperty("contextPrefix");
         if (contextPrefix == null) contextPrefix = "";
-        String redirectURL = "/"+contextPrefix+"jasperserver";
+        String redirectURL = "../"+contextPrefix+"jasperserver/flow.html?_flowId=repositoryExplorerFlow";
         response.sendRedirect(redirectURL);
     %>
 
