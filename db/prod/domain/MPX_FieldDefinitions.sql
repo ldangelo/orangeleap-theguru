@@ -1,3 +1,55 @@
+
+INSERT INTO REPORTDATASOURCE VALUES (3,'MPX');
+
+
+-- Account has the specified code type
+INSERT INTO REPORTCUSTOMFILTERDEFINITION (REPORTCUSTOMFILTERDEFINITION_ID, DISPLAY_TEXT, SQL_TEXT, DISPLAY_HTML)
+SELECT 100, 'Codes - Account has a code type of [CODETYPE] with any code value',
+'EXISTS (SELECT * FROM ENTITYCODES WHERE ENTITYCODES.ENTITYID = [VIEWNAME].ENTITY_ENTITYID AND CODETYPE = ''{0}'')',
+'Codes - Account has a code type of <input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[0]" value="{0}" /> with any code value';
+
+-- Account has one of the specified codes
+INSERT INTO REPORTCUSTOMFILTERDEFINITION (REPORTCUSTOMFILTERDEFINITION_ID, DISPLAY_TEXT, SQL_TEXT, DISPLAY_HTML)
+SELECT 200, 'Codes - Account has a code type of [CODETYPE] <br>with any of the following code values : [CODEVALUE], [CODEVALUE], [CODEVALUE], [CODEVALUE], or [CODEVALUE]',
+'EXISTS (SELECT * FROM ENTITYCODES WHERE ENTITYCODES.ENTITYID = [VIEWNAME].ENTITY_ENTITYID AND CODETYPE = ''{0}'' AND CODEVALUE IN (''{1}'', ''{2}'', ''{3}'', ''{4}'', ''{5}''))',
+'Codes - Account has a code type of <input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[0]" value="{0}" /> with any of the following code values : <br/> <input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[1]" value="{1}" /> <input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[2]" value="{2}" /> <input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[3]" value="{3}" /> <BR> <input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[4]" value="{4}" /> <input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[5]"  value="{5}" > <input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[6]" value="{6}" />';
+
+-- Gift total in a particular year
+INSERT INTO REPORTCUSTOMFILTERDEFINITION (REPORTCUSTOMFILTERDEFINITION_ID, DISPLAY_TEXT, SQL_TEXT, DISPLAY_HTML)
+SELECT 300, 'Gift Totals - Account gave at least $[GIFTAMOUNT] in hard gifts in calendar year [GIFTYEAR]',
+'((SELECT SUM(AMT) FROM GIFTHEADER WHERE GIFTHEADER.ENTITYID = [VIEWNAME].ENTITY_ENTITYID AND YEAR(GDATE) = {1}) >= {0})',
+'Gift Totals - Account gave at least $<span class="criteriaWrapper"><input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[0]" value="{0}"style="width:75px" fieldtype="MONEY" /></span> in hard gifts in calendar year <input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[1]" value="{1}" style="width:75px" />';
+
+-- Gift total in date range
+INSERT INTO REPORTCUSTOMFILTERDEFINITION (REPORTCUSTOMFILTERDEFINITION_ID, DISPLAY_TEXT, SQL_TEXT, DISPLAY_HTML)
+SELECT 350, 'Gift Totals - Account gave at least $[GIFTAMOUNT] in hard gifts between [GIFTDATE] and [GIFTDATE]',
+'((SELECT SUM(AMT) FROM GIFTHEADER WHERE GIFTHEADER.ENTITYID = [VIEWNAME].ENTITY_ENTITYID AND GDATE BETWEEN {1} AND {2}) >= {0})',
+'Gift Totals - Account gave at least <span class="criteriaWrapper">$<input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[0]" value="{0}" style="width:100px" fieldtype="MONEY" /></span> in hard gifts <br>between <span class="criteriaWrapper"><input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[1]" fieldtype="DATE" value="{1}" style="width:110px"/></span> and <span class="criteriaWrapper"><input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[2]" fieldtype="DATE" value="{2}" style="width:110px"/></span>';
+
+INSERT INTO REPORTCUSTOMFILTERDEFINITION (REPORTCUSTOMFILTERDEFINITION_ID, DISPLAY_TEXT, SQL_TEXT, DISPLAY_HTML)
+SELECT 390, 'Pledge Codes - Account has an active or fulfilled pledge code of [PLEDGECODE]',
+'EXISTS (SELECT * FROM GIFTPLEDGE WHERE GIFTPLEDGE.ENTITYID = [VIEWNAME].ENTITY_ENTITYID AND PLDGCODE = ''{0}'' AND STATUS IN (''A'',''F''))',
+'Pledge Codes - Account has an active or fulfilled pledge code of <input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[0]" value="{0}" />';
+
+-- Account is in a segmentation
+INSERT INTO REPORTCUSTOMFILTERDEFINITION (REPORTCUSTOMFILTERDEFINITION_ID, DISPLAY_TEXT, SQL_TEXT, DISPLAY_HTML)
+SELECT 400, 'Segmentation - Account is in segmenation job number [JOBNUMBER] and group number [GROUPNUMBER]',
+'EXISTS (SELECT * FROM S{0}G{1} SEGTABLE WHERE SEGTABLE.ENTITYID = [VIEWNAME].ENTITY_ENTITYID)',
+'Segmentation - Account is in segmenation job number <input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[0]" value="{0}" /> <br> and group number <input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[1]" value="{1}" />';
+
+-- Account is in a merge job
+INSERT INTO REPORTCUSTOMFILTERDEFINITION (REPORTCUSTOMFILTERDEFINITION_ID, DISPLAY_TEXT, SQL_TEXT, DISPLAY_HTML)
+SELECT 500, 'Segmentation - Account is in merge job number [JOBNUMBER]',
+'EXISTS (SELECT * FROM M{0} SEGTABLE WHERE SEGTABLE.ENTITYID = [VIEWNAME].ENTITY_ENTITYID)',
+'Segmentation - Account is in merge job number <input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[0]" value="{0}" />';
+
+-- Zip Radius
+INSERT INTO REPORTCUSTOMFILTERDEFINITION (REPORTCUSTOMFILTERDEFINITION_ID, DISPLAY_TEXT, SQL_TEXT, DISPLAY_HTML)
+SELECT 600, 'Zip Radius - Account is within [ZIPRADIUS] miles of zip code [ZIPCODE]',
+'(CONVERT(VARCHAR(5), [VIEWNAME].ENTITY_POSTALCODE) IN (SELECT TOZIP.ZIPLOW AS POSTALCODE FROM ZIPCODES TOZIP CROSS JOIN (SELECT * FROM ZIPCODES FROMZIP WHERE FROMZIP.ZIPLOW = ''{1}'') FROMZIP WHERE SQRT(((69.1 * (TOZIP.LATITUDE - FROMZIP.LATITUDE)) * (69.1 * (TOZIP.LATITUDE - FROMZIP.LATITUDE))) + ((53 * (TOZIP.LONGITUDE - FROMZIP.LONGITUDE)) * (53 * (TOZIP.LONGITUDE - FROMZIP.LONGITUDE)))) <= {0}))',
+'Zip Radius - Account is within <input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[0]" style="width:75px" value="{0}" /> miles of zip code <input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[1]" style="width:100px" value="{1}" />';
+
+
 -- Insert REPORTDATASUBSOURCE
 INSERT REPORTDATASUBSOURCE
   (REPORTSUBSOURCE_ID, DATABASE_TYPE, DISPLAY_NAME, JASPER_DATASOURCE_NAME, REPORT_FORMAT_TYPE, VIEW_NAME, REPORTDATASOURCE_REPORTSOURCE_ID)
