@@ -8743,6 +8743,61 @@ SELECT 390000, 'Account - Account is marked as a major donor',
 'Account - Account is marked as a major donor';
 
 
+-- Address effective as of date
+INSERT INTO REPORTCUSTOMFILTERDEFINITION (REPORTCUSTOMFILTERDEFINITION_ID, DISPLAY_TEXT, SQL_TEXT, DISPLAY_HTML)
+SELECT 395000, 'Address - Address is effective as of [AS OF DATE]',
+'(STR_TO_DATE(''{0}'', ''%m/%d/%Y'') BETWEEN
+CASE
+  WHEN ADDRESS_ACTIVATION_STATUS = ''temporary'' THEN ADDRESS_TEMPORARY_START_DATE
+  WHEN ADDRESS_ACTIVATION_STATUS = ''seasonal'' THEN ADDRESS_SEASONAL_START_DATE
+  WHEN ADDRESS_ACTIVATION_STATUS = ''permanent'' AND ADDRESS_EFFECTIVE_DATE IS NOT NULL THEN ADDRESS_EFFECTIVE_DATE
+  ELSE STR_TO_DATE(''{0}'', ''%m/%d/%Y'')
+END
+AND
+CASE
+  WHEN ADDRESS_ACTIVATION_STATUS = ''temporary'' THEN ADDRESS_TEMPORARY_END_DATE
+  WHEN ADDRESS_ACTIVATION_STATUS = ''seasonal'' THEN ADDRESS_SEASONAL_END_DATE
+  ELSE STR_TO_DATE(''{0}'', ''%m/%d/%Y'')
+END)',
+'Address - Address is effective as of <span class="criteriaWrapper"><input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[0]" fieldtype="DATE" value="{0}" style="width:110px"/></span>';
+
+-- Email Address effective as of date
+INSERT INTO REPORTCUSTOMFILTERDEFINITION (REPORTCUSTOMFILTERDEFINITION_ID, DISPLAY_TEXT, SQL_TEXT, DISPLAY_HTML)
+SELECT 396000, 'Email Address - Email Address is effective as of [AS OF DATE]',
+'(STR_TO_DATE(''{0}'', ''%m/%d/%Y'') BETWEEN
+CASE
+  WHEN EMAIL_ACTIVATION_STATUS = ''temporary'' THEN EMAIL_TEMPORARY_START_DATE
+  WHEN EMAIL_ACTIVATION_STATUS = ''seasonal'' THEN EMAIL_SEASONAL_START_DATE
+  WHEN EMAIL_ACTIVATION_STATUS = ''permanent'' AND EMAIL_EFFECTIVE_DATE IS NOT NULL THEN EMAIL_EFFECTIVE_DATE
+  ELSE STR_TO_DATE(''{0}'', ''%m/%d/%Y'')
+END
+AND
+CASE
+  WHEN EMAIL_ACTIVATION_STATUS = ''temporary'' THEN EMAIL_TEMPORARY_END_DATE
+  WHEN EMAIL_ACTIVATION_STATUS = ''seasonal'' THEN EMAIL_SEASONAL_END_DATE
+  ELSE STR_TO_DATE(''{0}'', ''%m/%d/%Y'')
+END)',
+'Email Address - Email Address is effective as of <span class="criteriaWrapper"><input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[0]" fieldtype="DATE" value="{0}" style="width:110px"/></span>';
+
+
+INSERT INTO REPORTCUSTOMFILTERDEFINITION (REPORTCUSTOMFILTERDEFINITION_ID, DISPLAY_TEXT, SQL_TEXT, DISPLAY_HTML)
+SELECT 397000, 'Phone Number - Phone Number is effective as of [AS OF DATE]',
+'(STR_TO_DATE(''{0}'', ''%m/%d/%Y'') BETWEEN
+CASE
+  WHEN PHONE_ACTIVATION_STATUS = ''temporary'' THEN PHONE_TEMPORARY_START_DATE
+  WHEN PHONE_ACTIVATION_STATUS = ''seasonal'' THEN PHONE_SEASONAL_START_DATE
+  WHEN PHONE_ACTIVATION_STATUS = ''permanent'' AND PHONE_EFFECTIVE_DATE IS NOT NULL THEN PHONE_EFFECTIVE_DATE
+  ELSE STR_TO_DATE(''{0}'', ''%m/%d/%Y'')
+END
+AND
+CASE
+  WHEN PHONE_ACTIVATION_STATUS = ''temporary'' THEN PHONE_TEMPORARY_END_DATE
+  WHEN PHONE_ACTIVATION_STATUS = ''seasonal'' THEN PHONE_SEASONAL_END_DATE
+  ELSE STR_TO_DATE(''{0}'', ''%m/%d/%Y'')
+END)',
+'Phone Number - Phone Number is effective as of <span class="criteriaWrapper"><input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[0]" fieldtype="DATE" value="{0}" style="width:110px"/></span>';
+
+
 -- Account Gift Total - tied to ADDRESS_PERSON_ID
 INSERT INTO REPORTCUSTOMFILTERDEFINITION (REPORTCUSTOMFILTERDEFINITION_ID, DISPLAY_TEXT, SQL_TEXT, DISPLAY_HTML)
 SELECT 400000, 'Gift Totals - Account has given at least $[GIFTAMOUNT] in year [GIFTYEAR]',  
