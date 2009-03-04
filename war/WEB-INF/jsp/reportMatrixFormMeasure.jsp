@@ -34,15 +34,15 @@
 				 -->
 				<!-- options -->
 				<!-- <c:if test="${dateFieldSelected == null}"> style="display: none;" </c:if> > -->
-					<option label="Sum" value="SUM" moneyonly="true" 
+					<option label="Sum" value="SUM" numeric="true" string="false" date="false" boolean="false" none="false"
 						<c:if test="${calculation == 'SUM'}"> selected="true" </c:if> >Sum</option>
-					<option label="Average" value="AVERAGE" moneyonly="true" 
+					<option label="Average" value="AVERAGE" numeric="true" string="false" date="false" boolean="false" none="false"
 						<c:if test="${calculation == 'AVERAGE'}"> selected="true" </c:if> >Average</option>
-					<option label="Max" value="MAX" moneyonly="false" 
+					<option label="Max" value="MAX" numeric="true" string="true" date="true" boolean="false" none="false"
 						<c:if test="${calculation == 'MAX'}"> selected="true" </c:if> >Max</option>
-					<option label="Min" value="MIN" moneyonly="false"  
+					<option label="Min" value="MIN" numeric="true"  string="true" date="true" boolean="false" none="false"
 						<c:if test="${calculation == 'MIN'}"> selected="true" </c:if> >Min</option>
-					<option label="Count" value="COUNT" moneyonly="false"  
+					<option label="Count" value="COUNT" numeric="true"  string="false" boolean="false" none="false"
 						<c:if test="${calculation == 'COUNT'}"> selected="true" </c:if> >Count</option>
 			</SELECT></TD>
 <!--  

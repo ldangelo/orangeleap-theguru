@@ -386,17 +386,27 @@ public class ReportGenerator {
 			if (ctMeasure != null && ctMeasure.getFieldId() != -1){
 				ReportField fMeasure = reportFieldService.find(ctMeasure.getFieldId());
 				valueClassName = getValueClassName(fMeasure);
-				if (operation.compareToIgnoreCase("AVERAGE") == 0) cgvo = DJCalculation.AVERAGE;
-				if (operation.compareToIgnoreCase("SUM") == 0) cgvo = DJCalculation.SUM;
-				if (operation.compareToIgnoreCase("HIGHEST") == 0) cgvo = DJCalculation.HIGHEST;
-				if (operation.compareToIgnoreCase("LOWEST") ==0) cgvo = DJCalculation.LOWEST;
-				if (operation.compareToIgnoreCase("COUNT") ==0) cgvo = DJCalculation.COUNT;
+				if (ctMeasure.getCalculation().compareToIgnoreCase("AVERAGE") == 0) cgvo = DJCalculation.AVERAGE;
+				if (ctMeasure.getCalculation().compareToIgnoreCase("SUM") == 0) cgvo = DJCalculation.SUM;
+				if (ctMeasure.getCalculation().compareToIgnoreCase("HIGHEST") == 0) cgvo = DJCalculation.HIGHEST;
+				if (ctMeasure.getCalculation().compareToIgnoreCase("LOWEST") ==0) cgvo = DJCalculation.LOWEST;
+				if (ctMeasure.getCalculation().compareToIgnoreCase("COUNT") ==0) cgvo = DJCalculation.COUNT;
 				if (cgvo == null) cgvo = DJCalculation.COUNT;
 				
 				//set up style for measure to add the pattern/format for the different data types - money, dates, etc...
-				String pattern = getPattern(fMeasure);
-				CrossTabTotalStyle.setPattern(pattern);
-				CrossTabColRowHeaderTotalStyle.setPattern(pattern);
+				String pattern = null;
+				if ((cgvo == DJCalculation.AVERAGE || cgvo == DJCalculation.SUM) && fMeasure.getFieldType().toString().compareToIgnoreCase("MONEY") == 0){
+					pattern = getPattern(fMeasure);
+					CrossTabTotalStyle.setPattern(pattern);
+					CrossTabColRowHeaderTotalStyle.setPattern(pattern);
+				}
+				if ((cgvo == DJCalculation.HIGHEST || cgvo == DJCalculation.LOWEST) && fMeasure.getFieldType().toString().compareToIgnoreCase("DATE") == 0){
+					pattern = getPattern(fMeasure);
+					CrossTabTotalStyle.setPattern(pattern);
+					CrossTabColRowHeaderTotalStyle.setPattern(pattern);
+				}
+					
+				
 
 				cb.addMeasure(fMeasure.getColumnName(), valueClassName, cgvo, fMeasure.getDisplayName(), CrossTabTotalStyle );	
 			}
