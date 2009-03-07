@@ -6,6 +6,7 @@ package com.mpower.util;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -96,30 +97,32 @@ public class ModifyReportJRXML {
 
     	//iterate thru the fields to find the summary fields and create the variables
     	Iterator<?> itFields = getSelectedReportFieldsInOrder().iterator();
+    	Integer columnIndex = 0;
     	while (itFields.hasNext()){
     		ReportField f = (ReportField) itFields.next();
     		if (f.getIsSummarized()){
     			if (f.getPerformSummary()){
-    				variable =	buildVariableNode(f, "Sum", "global_column_0", document);
+    				variable =	buildVariableNode(f, "Sum", "global_column_0", document, columnIndex);
         			jasperReport.insertBefore(variable, node);
         		}
     			if (f.getAverage()){
-    				variable =	buildVariableNode(f, "Average", "global_column_0", document);
+    				variable =	buildVariableNode(f, "Average", "global_column_0", document, columnIndex);
         			jasperReport.insertBefore(variable, node);
     			}
     			if (f.getLargestValue()){
-    				variable =	buildVariableNode(f, "Highest", "global_column_0", document);
+    				variable =	buildVariableNode(f, "Highest", "global_column_0", document, columnIndex);
         			jasperReport.insertBefore(variable, node);
     			}
     			if (f.getSmallestValue()){
-    				variable =	buildVariableNode(f, "Lowest", "global_column_0", document);
+    				variable =	buildVariableNode(f, "Lowest", "global_column_0", document, columnIndex);
         			jasperReport.insertBefore(variable, node);
     			}
     			if (f.getRecordCount()){
-    				variable =	buildVariableNode(f, "Count", "global_column_0", document);
+    				variable =	buildVariableNode(f, "Count", "global_column_0", document, columnIndex);
         			jasperReport.insertBefore(variable, node);
     			}
     		}
+    		columnIndex++;
     	}
 
     	saveXMLtoFile(fileName, document);
@@ -157,8 +160,8 @@ public class ModifyReportJRXML {
     	//iterate thru the fields to find the summary fields and add the variables and footers
     	Iterator<?> itFields = getSelectedReportFieldsInOrder().iterator();
     	boolean addGroup = false;
-    	  List<String> groupsToAdd = new ArrayList<String>();
-
+    	List<String> groupsToAdd = new ArrayList<String>();
+    	Integer columnIndex = 0;
     	while (itFields.hasNext()){
     		ReportField f = (ReportField) itFields.next();
     		if (f.getIsSummarized()){
@@ -170,27 +173,27 @@ public class ModifyReportJRXML {
     	            	if (groupName != null && groupName != ""){
     	            		Node groupFooterNode = groupFooterNodes.item(i);
 	    	            	if (f.getPerformSummary()){
-			    				variable =	buildVariableNode(f, "Sum", groupName, document);
+			    				variable =	buildVariableNode(f, "Sum", groupName, document, columnIndex);
 			        			jasperReport.insertBefore(variable, node);
 			        			addGroup = true;
 			        		 }
 			    			if (f.getAverage()){
-			    				variable =	buildVariableNode(f, "Average", groupName, document);
+			    				variable =	buildVariableNode(f, "Average", groupName, document, columnIndex);
 			        			jasperReport.insertBefore(variable, node);
 			        			addGroup = true;
 			        		}
 			    			if (f.getLargestValue()){
-			    				variable =	buildVariableNode(f, "Highest", groupName, document);
+			    				variable =	buildVariableNode(f, "Highest", groupName, document, columnIndex);
 			        			jasperReport.insertBefore(variable, node);
 			        			addGroup = true;
 			        		}
 			    			if (f.getSmallestValue()){
-			    				variable =	buildVariableNode(f, "Lowest", groupName, document);
+			    				variable =	buildVariableNode(f, "Lowest", groupName, document, columnIndex);
 			        			jasperReport.insertBefore(variable, node);
 			        			addGroup = true;
 			        		}
 			    			if (f.getRecordCount()){
-			    				variable =	buildVariableNode(f, "Count", groupName, document);
+			    				variable =	buildVariableNode(f, "Count", groupName, document, columnIndex);
 			        			jasperReport.insertBefore(variable, node);
 			        			addGroup = true;
 			        		}
@@ -200,6 +203,7 @@ public class ModifyReportJRXML {
     	        	}
     			}
     		}
+    		columnIndex++;
     	}
 
 		for (int i=0;i<groupsCount;i++){
@@ -456,9 +460,10 @@ public class ModifyReportJRXML {
 	    	int xCalc = 0;
 			int widthCalc = 0;
 			int totalWidth = 0;
+			int columnIndex= 0;
 			//get the total width
 			Iterator<?> itTotalFieldWidth = getSelectedReportFieldsInOrder().iterator();
-	    	while (itTotalFieldWidth.hasNext()){
+			while (itTotalFieldWidth.hasNext()){
 	    		ReportField fWidth = (ReportField) itTotalFieldWidth.next();
 	    		int lastColumnX = fieldProperties.get(fWidth.getDisplayName());
 	    		int lastColumnWidth = fieldWidth.get(fWidth.getDisplayName());
@@ -485,13 +490,14 @@ public class ModifyReportJRXML {
 	    	if (resetGroup.compareToIgnoreCase("global_column_0") == 0){
 	    		x = 0;
 	    		width = totalWidth;
-	    		frame.appendChild(buildSummaryLabel("Grand Totals", document, 0, 0, width, rowHeight, false, null));
+	    		frame.appendChild(buildSummaryLabel("Grand Totals", document, 0, 0, width, rowHeight, false, null, 0));
 				frame.appendChild(addLine(document, 1,  rowHeight+1, totalWidth));
 				y += rowHeight*2+2;
 
 	    	}
 	    	else{
 		    	Iterator<?> itFieldsGroupLabel = getSelectedReportFieldsInOrder().iterator();
+		    	columnIndex = 0;
 		    	while (itFieldsGroupLabel.hasNext()){
 		    		ReportField fLabel = (ReportField) itFieldsGroupLabel.next();
 		    		if (reportWizard.IsFieldGroupByField(fLabel.getId())){
@@ -499,12 +505,13 @@ public class ModifyReportJRXML {
 		    			width = fieldWidth.get(fLabel.getDisplayName());
 		    			String groupColumn = resetGroup.substring(resetGroup.indexOf("-") + 1);
 		    			if (fLabel.getDisplayName().compareToIgnoreCase(groupColumn) == 0){
-		    				frame.appendChild(buildSummaryLabel(null, document, x, y, totalWidth - x, rowHeight, true, fLabel));
+		    				frame.appendChild(buildSummaryLabel(null, document, x, y, totalWidth - x, rowHeight, true, fLabel, columnIndex));
 		    				frame.appendChild(addLine(document, 1, y+rowHeight+1, totalWidth));
 			    			y += rowHeight*2+2;
 			    			break;
 			    		}
 		    		}
+		    		columnIndex++;
 		    	}
 	    	}
 
@@ -513,20 +520,22 @@ public class ModifyReportJRXML {
 	    	xCalc = 0;
 			widthCalc = 0;
 	    	Iterator<?> itFieldsSum = getSelectedReportFieldsInOrder().iterator();
+	    	columnIndex = 0;
 	    	while (itFieldsSum.hasNext()){
 	    		ReportField f = (ReportField) itFieldsSum.next();
 	    		if (f.getIsSummarized()){
 	    			if (f.getPerformSummary()){
 	    				xCalc = fieldProperties.get(f.getDisplayName());
 		    			widthCalc = fieldWidth.get(f.getDisplayName());
-		    			frame.appendChild(buildSummaryNodes(f, "Sum", resetGroup, document, xCalc, widthCalc, y, rowHeight));
+		    			frame.appendChild(buildSummaryNodes(f, "Sum", resetGroup, document, xCalc, widthCalc, y, rowHeight, columnIndex));
 	    				yFound = true;
 	    			}
 	    		}
+	    		columnIndex++;
 	    	}
 	    	if (yFound){
 	    		frame.appendChild(addLine(document, x, y-1,  totalWidth - x));
-	    		frame.appendChild(buildSummaryLabel("Sum", document, x, y-rowHeight-2, totalWidth - x, rowHeight, false, null));
+	    		frame.appendChild(buildSummaryLabel("Sum", document, x, y-rowHeight-2, totalWidth - x, rowHeight, false, null, columnIndex));
 	    		y += rowHeight*2+2;
     		}
 
@@ -535,20 +544,22 @@ public class ModifyReportJRXML {
 	    	xCalc = 0;
 			widthCalc = 0;
 	    	Iterator<?> itFieldsAvg = getSelectedReportFieldsInOrder().iterator();
+	    	columnIndex = 0;
 	    	while (itFieldsAvg.hasNext()){
 	    		ReportField f = (ReportField) itFieldsAvg.next();
 	    		if (f.getIsSummarized()){
 	    			if (f.getAverage()){
 	    				xCalc = fieldProperties.get(f.getDisplayName());
 		    			widthCalc = fieldWidth.get(f.getDisplayName());
-		    			frame.appendChild(buildSummaryNodes(f, "Average", resetGroup, document, xCalc, widthCalc, y, rowHeight));
+		    			frame.appendChild(buildSummaryNodes(f, "Average", resetGroup, document, xCalc, widthCalc, y, rowHeight, columnIndex));
 	    				yFound = true;
 	    			}
 	    		}
+	    		columnIndex++;
 	    	}
 	    	if (yFound){
 	    		frame.appendChild(addLine(document, x, y-1,  totalWidth - x));
-	    		frame.appendChild(buildSummaryLabel("Avg", document, x, y-rowHeight-2, totalWidth - x, rowHeight, false, null));
+	    		frame.appendChild(buildSummaryLabel("Avg", document, x, y-rowHeight-2, totalWidth - x, rowHeight, false, null, columnIndex));
 	    		y += rowHeight*2+2;
     		}
 
@@ -557,20 +568,22 @@ public class ModifyReportJRXML {
 	    	xCalc = 0;
 			widthCalc = 0;
 	    	Iterator<?> itFieldsMax = getSelectedReportFieldsInOrder().iterator();
+	    	columnIndex = 0;
 	    	while (itFieldsMax.hasNext()){
 	    		ReportField f = (ReportField) itFieldsMax.next();
 	    		if (f.getIsSummarized()){
 	    			if (f.getLargestValue()){
 	    				xCalc = fieldProperties.get(f.getDisplayName());
 		    			widthCalc = fieldWidth.get(f.getDisplayName());
-		    			frame.appendChild(buildSummaryNodes(f, "Highest", resetGroup, document, xCalc, widthCalc, y, rowHeight));
+		    			frame.appendChild(buildSummaryNodes(f, "Highest", resetGroup, document, xCalc, widthCalc, y, rowHeight, columnIndex));
 	    				yFound = true;
 	    			}
 	    		}
+	    		columnIndex++;
 	    	}
 	    	if (yFound){
 	    		frame.appendChild(addLine(document, x, y-1,  totalWidth - x));
-	    		frame.appendChild(buildSummaryLabel("Max", document, x, y-rowHeight-2, totalWidth - x, rowHeight, false, null));
+	    		frame.appendChild(buildSummaryLabel("Max", document, x, y-rowHeight-2, totalWidth - x, rowHeight, false, null, columnIndex));
 	    		y += rowHeight*2+2;
     		}
 
@@ -579,20 +592,22 @@ public class ModifyReportJRXML {
 	    	xCalc = 0;
 			widthCalc = 0;
 	    	Iterator<?> itFieldsMin = getSelectedReportFieldsInOrder().iterator();
+	    	columnIndex = 0;
 	    	while (itFieldsMin.hasNext()){
 	    		ReportField f = (ReportField) itFieldsMin.next();
 	    		if (f.getIsSummarized()){
 	    			if (f.getSmallestValue()){
 	    				xCalc = fieldProperties.get(f.getDisplayName());
 		    			widthCalc = fieldWidth.get(f.getDisplayName());
-		    			frame.appendChild(buildSummaryNodes(f, "Lowest", resetGroup, document, xCalc, widthCalc, y, rowHeight));
+		    			frame.appendChild(buildSummaryNodes(f, "Lowest", resetGroup, document, xCalc, widthCalc, y, rowHeight, columnIndex));
 	    				yFound = true;
 	    			}
 	    		}
+	    		columnIndex++;
 	    	}
 	    	if (yFound){
 	    		frame.appendChild(addLine(document, x, y-1,  totalWidth - x));
-	    		frame.appendChild(buildSummaryLabel("Min", document, x, y-rowHeight-2, totalWidth - x, rowHeight, false, null));
+	    		frame.appendChild(buildSummaryLabel("Min", document, x, y-rowHeight-2, totalWidth - x, rowHeight, false, null, columnIndex));
 	    		y += rowHeight*2+2;
     		}
 
@@ -601,20 +616,22 @@ public class ModifyReportJRXML {
 	    	xCalc = 0;
 			widthCalc = 0;
 	    	Iterator<?> itFieldsCount = getSelectedReportFieldsInOrder().iterator();
+	    	columnIndex = 0;
 	    	while (itFieldsCount.hasNext()){
 	    		ReportField f = (ReportField) itFieldsCount.next();
 	    		if (f.getIsSummarized()){
 	    			if (f.getRecordCount()){
 	    				xCalc = fieldProperties.get(f.getDisplayName());
 		    			widthCalc = fieldWidth.get(f.getDisplayName());
-		    			frame.appendChild(buildSummaryNodes(f, "Count", resetGroup, document, xCalc, widthCalc, y+1, rowHeight));
+		    			frame.appendChild(buildSummaryNodes(f, "Count", resetGroup, document, xCalc, widthCalc, y+1, rowHeight, columnIndex));
 	    				yFound = true;
 	    			}
 	    		}
+	    		columnIndex++;
 	    	}
 	    	if (yFound){
 	    		frame.appendChild(addLine(document, x, y-1,  totalWidth - x));//(xCalc + widthCalc)-x)
-	    		frame.appendChild(buildSummaryLabel("Count", document, x, y-rowHeight-2, totalWidth - x, rowHeight, false, null));
+	    		frame.appendChild(buildSummaryLabel("Count", document, x, y-rowHeight-2, totalWidth - x, rowHeight, false, null, columnIndex));
 	    		y += rowHeight*2+2;
     		}
 
@@ -677,11 +694,12 @@ public class ModifyReportJRXML {
 	/**
 	 * create child "textField" of "band" with attributes
 	 */
-	private Node buildSummaryNodes(ReportField f, String calc, String resetGroup, Document document, int x, int width, int y, int height) {
+	private Node buildSummaryNodes(ReportField f, String calc, String resetGroup, Document document, int x, int width, int y, int height, int columnIndex) {
 
 		String varName = null;
 		String valueClassName = null;
 		String pattern = null;
+		String columnName = f.getColumnName() + "_" + columnIndex;
 		//set the field data type
 		if (calc.compareToIgnoreCase("count") == 0){
 			valueClassName = Long.class.getName();
@@ -701,9 +719,9 @@ public class ModifyReportJRXML {
 
 
 		if (resetGroup.compareToIgnoreCase("global_column_0") == 0)
-			varName = "variable-footer_global_" + f.getColumnName()+ "_" + calc;
+			varName = "variable-footer_global_" + columnName + "_" + calc;
 		else
-			varName = "variable-footer_" + resetGroup + "_" + f.getColumnName() + "_" + calc;
+			varName = "variable-footer_" + resetGroup + "_" + columnName + "_" + calc;
 		Element textField = document.createElement("textField");
 		textField.setAttribute("isStretchWithOverflow", "true");
 		textField.setAttribute("evaluationTime", "Group");
@@ -739,7 +757,7 @@ public class ModifyReportJRXML {
 	/**
 	 * Adds the static text labels to the report.
 	 */
-	private Node buildSummaryLabel(String calc, Document document, int x, int y, int width, int height, Boolean groupHeaderFlag, ReportField f) {
+	private Node buildSummaryLabel(String calc, Document document, int x, int y, int width, int height, Boolean groupHeaderFlag, ReportField f, int columnIndex) {
 			Element textField2 = document.createElement("textField");
 
 			Element reportElement2 = document.createElement("reportElement");
@@ -769,7 +787,7 @@ public class ModifyReportJRXML {
 				case MONEY:   	valueClassName = Float.class.getName(); 	break;
 				case BOOLEAN:   valueClassName = Boolean.class.getName();
 				}
-				String groupColumn = f.getColumnName();
+				String groupColumn = f.getColumnName() + "_" + columnIndex;
 				textFieldExpression2.appendChild(document.createCDATASection("$F{" + groupColumn + "}"));
 				//reportElement2.setAttribute("style", "SummaryStyle");
 			}
@@ -792,9 +810,9 @@ public class ModifyReportJRXML {
 	 * @param document XML document.
 	 * @return Element
 	 */
-	private Node buildVariableNode(ReportField f, String calc, String resetGroup, Document document ) {
+	private Node buildVariableNode(ReportField f, String calc, String resetGroup, Document document, Integer columnIndex ) {
 		String varName = null;
-		String columnName = f.getColumnName();
+		String columnName = f.getColumnName() + "_" + columnIndex;
 		String valueClassName = null;
 		String initialize = "()";
 		//set the field data type

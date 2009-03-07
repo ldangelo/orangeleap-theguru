@@ -207,20 +207,20 @@ public class ReportQueryGenerator {
 		String selectClause = "";
 		Iterator<ReportSelectedField> itReportSelectedFields = getReportWizard().getReportSelectedFields().iterator();
 		boolean addComma = false;
-		List<Long> addedFields = new ArrayList<Long>();
+		Integer columnIndex = 0;
+		String columnName = null;
 		while (itReportSelectedFields.hasNext()) {
 			ReportSelectedField selectedField = (ReportSelectedField) itReportSelectedFields.next();
 			ReportField reportField = getReportFieldService().find(selectedField.getFieldId());
+			columnName = reportField.getColumnName() + "_" + columnIndex;
 			if (reportField == null || reportField.getId() == -1) continue;
-			if (addedFields.indexOf(reportField.getId()) == -1) {
 				if (addComma)
 					selectClause += ",";
 				else
 					addComma = true;					
-				selectClause += " " + reportField.getColumnName();
-				addedFields.add(reportField.getId());
+				selectClause += " " + reportField.getColumnName() + " as " + columnName;
+				columnIndex++;
 			}
-		}
 		return selectClause;
 	}
 
@@ -234,22 +234,41 @@ public class ReportQueryGenerator {
 	private String buildSelectFieldsForMatrix() {
 		String selectClause = "";
 		boolean addComma = false;
-		List<ReportGroupByField> rowFields = getReportWizard().getReportCrossTabFields().getReportCrossTabRows();
-		Iterator<ReportGroupByField> itRow = rowFields.iterator();
-		List<Long> addedFields = new ArrayList<Long>();
-		while (itRow.hasNext()){
-			ReportGroupByField fGroupBy = (ReportGroupByField) itRow.next();
-			if (fGroupBy != null && fGroupBy.getFieldId() != -1 ){
+		Integer columnIndex = 0;
+		String columnName = null;
+		
+		//These must be added in the same order as the ReportGenerator.CreateCrosstab() method
+		//Add the Measure
+		List<ReportGroupByField> colMeasure = getReportWizard().getReportCrossTabFields().getReportCrossTabMeasure();
+		Iterator<ReportGroupByField> itMeasure = colMeasure.iterator();
+		while (itMeasure.hasNext()){
+			ReportGroupByField fGroupBy = (ReportGroupByField) itMeasure.next();
+			if (fGroupBy != null && fGroupBy.getFieldId() != -1){
 				ReportField reportField = reportFieldService.find(fGroupBy.getFieldId());
-				if (addedFields.indexOf(reportField.getId()) == -1) {
+				columnName = reportField.getColumnName() + "_" + columnIndex;
 					if (addComma)
 						selectClause = selectClause + ",";
 					else
 						addComma = true;
-					selectClause = selectClause + " " + reportField.getColumnName();
-					addedFields.add(reportField.getId());					
+					selectClause = selectClause + " " + reportField.getColumnName() + " as " + columnName;
+					columnIndex++;
+			}
+		}
+		//Add the rows
+		List<ReportGroupByField> rowFields = getReportWizard().getReportCrossTabFields().getReportCrossTabRows();
+		Iterator<ReportGroupByField> itRow = rowFields.iterator();
+		while (itRow.hasNext()){
+			ReportGroupByField fGroupBy = (ReportGroupByField) itRow.next();
+			if (fGroupBy != null && fGroupBy.getFieldId() != -1 ){
+				ReportField reportField = reportFieldService.find(fGroupBy.getFieldId());
+				columnName = reportField.getColumnName() + "_" + columnIndex;
+					if (addComma)
+						selectClause = selectClause + ",";
+					else
+						addComma = true;
+					selectClause = selectClause + " " + reportField.getColumnName() + " as " + columnName;
+					columnIndex++;
 				}
-			}	
 		}
 		//Add Column Fields
 		List<ReportGroupByField> colFields = getReportWizard().getReportCrossTabFields().getReportCrossTabColumns();
@@ -258,44 +277,15 @@ public class ReportQueryGenerator {
 			ReportGroupByField fGroupBy = (ReportGroupByField) itCol.next();
 			if (fGroupBy != null && fGroupBy.getFieldId() != -1){
 				ReportField reportField = reportFieldService.find(fGroupBy.getFieldId());
-				if (addedFields.indexOf(reportField.getId()) == -1) {
+				columnName = reportField.getColumnName() + "_" + columnIndex;
 					if (addComma)
 						selectClause = selectClause + ",";
 					else
 						addComma = true;
-					selectClause = selectClause + " " + reportField.getColumnName();
-					addedFields.add(reportField.getId());					
+					selectClause = selectClause + " " + reportField.getColumnName() + " as " + columnName;
+					columnIndex++;
 				}
-			}
 		}
-		//Add the Measure
-		List<ReportGroupByField> colMeasure = getReportWizard().getReportCrossTabFields().getReportCrossTabMeasure();
-		Iterator<ReportGroupByField> itMeasure = colMeasure.iterator();
-		while (itMeasure.hasNext()){
-			ReportGroupByField fGroupBy = (ReportGroupByField) itMeasure.next();
-			if (fGroupBy != null && fGroupBy.getFieldId() != -1){
-				ReportField reportField = reportFieldService.find(fGroupBy.getFieldId());
-				if (addedFields.indexOf(reportField.getId()) == -1) {
-					if (addComma)
-						selectClause = selectClause + ",";
-					else
-						addComma = true;
-					selectClause = selectClause + " " + reportField.getColumnName();
-					addedFields.add(reportField.getId());					
-				}
-			}
-		}
-/*		
-		ReportField fMeasure = reportFieldService.find(getReportWizard().getReportCrossTabFields().getReportCrossTabMeasure());
-		if (fMeasure.getId() != -1 && selectClause.indexOf(fMeasure.getColumnName()) == -1)
-		{
-			if (addComma)
-				selectClause = selectClause + ",";
-			else
-				addComma = true;
-			selectClause = selectClause + " " + fMeasure.getColumnName();					
-		}
-*/		
 		return selectClause;
 
 	}

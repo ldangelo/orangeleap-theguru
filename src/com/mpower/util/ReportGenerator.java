@@ -68,6 +68,7 @@ public class ReportGenerator {
 	private String reportUnitDataSourceURI;
 	private Map params;
 	private Map inputControls;
+	private Integer columnIndex;
 
 	public ReportGenerator() {
 		params = new HashMap();
@@ -121,13 +122,18 @@ public class ReportGenerator {
 			ReportCustomFilterDefinitionService reportCustomFilterDefinitionService) throws Exception {
 		resetInputControls();
 		File templateFile = getTemplateFile(wiz);
+		columnIndex = 0;
 		initStyles();
 
+		
+		
+		//
+		//Build the main report
+		//
 		String reportTitle = wiz.getDataSubSource().getDisplayName() + " Custom Report";
 		if (wiz.getReportName() != null && wiz.getReportName().length() > 0)
 			reportTitle = wiz.getReportName();
-
-		//Build the main report
+		
 		FastReportBuilder drb = new FastReportBuilder();
 		Integer margin = new Integer(20);
 
@@ -141,105 +147,21 @@ public class ReportGenerator {
 		.setUseFullPageWidth(true)
 		.setWhenNoDataShowNoDataSection();
 		
-		//list used in for select statement of the query
-		List<ReportField> reportFieldsOrderedList = new LinkedList();
 		//
 		//Tabular and Summary Reports
+		//
 		if (wiz.getReportType().compareToIgnoreCase("matrix") != 0){
-			//Get a list of the selected report fields in order with the groupby fields(if any) at the beginning of the list
-			reportFieldsOrderedList = getSelectedReportFields(wiz, reportFieldService);
-
-			//Build the columns for the report 
-			List<AbstractColumn> builtColumns = buildColumns(reportFieldsOrderedList);
-
-			//Add the Columns if the report is a summary or tabular report 
-			if ( wiz.getReportType().compareToIgnoreCase("summary") == 0 || wiz.getReportType().compareToIgnoreCase("tabular") == 0 ){
-				Iterator itColumnsBuilt = builtColumns.iterator();
-				while (itColumnsBuilt.hasNext()){
-					AbstractColumn column = (AbstractColumn) itColumnsBuilt.next();
-					drb.addColumn(column);
-				}	
-			}//end Add columns
-
-
-			//
-			//Summary Report Only
-			//
-			if ( wiz.getReportType().compareToIgnoreCase("summary") == 0 ){
-				//
-				//Groups
-				//
-				List<DJGroup> groupBy = new LinkedList<DJGroup>();
-				groupBy = buildGroups(builtColumns, reportFieldsOrderedList, wiz);	//Build groups
-				Iterator itGroupsBuilt = groupBy.iterator();  //Add Groups
-				while (itGroupsBuilt.hasNext()){
-					DJGroup group = (DJGroup) itGroupsBuilt.next();
-					drb.addGroup(group);
-				}
-
-				//
-				//Charts
-				//
-				List<DJChart> chartGroups = buildCharts(groupBy, builtColumns, wiz, reportFieldService);  //Build charts
-				Iterator itChartsBuilt = chartGroups.iterator();  //Add Charts
-				while (itChartsBuilt.hasNext()){
-					DJChart chart = (DJChart) itChartsBuilt.next();
-					drb.addChart(chart);
-				}
-			}//end if Summary Report
-		}//end Tabular and Summary Reports
-
+			List<ReportField> reportFieldsOrderedList = getSelectedReportFields(wiz, reportFieldService);
+			drb = addColumnsAndGroups(reportFieldsOrderedList, wiz, drb, reportFieldService);
+		}
 
 		//
 		//Matrix Reports
-		//
-		//Build and Add the columns for the matrix fields
+		//		
 		if (wiz.getReportType().compareToIgnoreCase("matrix") == 0){
-			//List<ReportField> matrixFieldsList = new LinkedList();
-			//Add Row Fields
-			List<ReportGroupByField> rowFields = wiz.getReportCrossTabFields().getReportCrossTabRows();
-			Iterator itRow = rowFields.iterator();
-			while (itRow.hasNext()){
-				ReportGroupByField fGroupBy = (ReportGroupByField) itRow.next();
-				if (fGroupBy != null && fGroupBy.getFieldId() != -1 ){
-					ReportField f = reportFieldService.find(fGroupBy.getFieldId());
-					reportFieldsOrderedList.add(f);
-				}	
-			}
-			//Add Column Fields
-			List<ReportGroupByField> colFields = wiz.getReportCrossTabFields().getReportCrossTabColumns();
-			Iterator itCol = colFields.iterator();
-			while (itCol.hasNext()){
-				ReportGroupByField fGroupBy = (ReportGroupByField) itCol.next();
-				if (fGroupBy != null && fGroupBy.getFieldId() != -1){
-					ReportField f = reportFieldService.find(fGroupBy.getFieldId());
-					reportFieldsOrderedList.add(f);
-				}
-			}
-			//Add the Measure
-			//Add Column Fields
-			List<ReportGroupByField> measureFields = wiz.getReportCrossTabFields().getReportCrossTabMeasure();
-			Iterator itMeasure = measureFields.iterator();
-			while (itMeasure.hasNext()){
-				ReportGroupByField fGroupBy = (ReportGroupByField) itMeasure.next();
-				if (fGroupBy != null && fGroupBy.getFieldId() != -1){
-					ReportField f = reportFieldService.find(fGroupBy.getFieldId());
-					reportFieldsOrderedList.add(f);
-				}
-			}
-
-			List<AbstractColumn> builtMatrixColumns = buildColumns(reportFieldsOrderedList);
-			Iterator itMatrixColumnsBuilt = builtMatrixColumns.iterator();
-			while (itMatrixColumnsBuilt.hasNext()){
-				AbstractColumn column = (AbstractColumn) itMatrixColumnsBuilt.next();
-				drb.addColumn(column);
-			}	
-			//Create the Crosstab
-			DJCrosstab djcross = createCrosstab(wiz, reportFieldService);
-			//Add it to the report footer
+			DJCrosstab djcross = createCrosstab(wiz, reportFieldService, drb);
 			drb.addFooterCrosstab(djcross);
-		}//end Matrix Report
-
+		}
 
 		//
 		//Build query
@@ -335,7 +257,7 @@ public class ReportGenerator {
 	 * @param ReportFieldService reportFieldService
 	 * @return CrosstabBuilder cb
 	 */
-	private DJCrosstab createCrosstab(ReportWizard wiz, ReportFieldService reportFieldService) {
+	private DJCrosstab createCrosstab(ReportWizard wiz, ReportFieldService reportFieldService, FastReportBuilder drb) throws ColumnBuilderException {
 
 		//get the settings for the crosstab report
 		ReportCrossTabFields reportCrossTabFields = wiz.getReportCrossTabFields();
@@ -372,7 +294,8 @@ public class ReportGenerator {
 		.setCellBorder(Border.THIN);
 			
 		String valueClassName = null;
-			
+		
+		//These must be added in the same order as the ReportQueryGenerator.buildSelectFieldsForMatrix() method
 		//
 		//Add a Measure to the builder(can only have one)
 		String operation = reportCrossTabFields.getReportCrossTabOperation();
@@ -381,6 +304,7 @@ public class ReportGenerator {
 		
 		List<ReportGroupByField> reportCrossTabMeasure =	reportCrossTabFields.getReportCrossTabMeasure();
 		Iterator itCTMeasure  = reportCrossTabMeasure.iterator();
+		Integer columnIndex = 0;
 		while (itCTMeasure.hasNext()){
 			ReportGroupByField ctMeasure = (ReportGroupByField) itCTMeasure.next();
 			if (ctMeasure != null && ctMeasure.getFieldId() != -1){
@@ -405,11 +329,16 @@ public class ReportGenerator {
 					CrossTabTotalStyle.setPattern(pattern);
 					CrossTabColRowHeaderTotalStyle.setPattern(pattern);
 				}
-					
 				
-
-				cb.addMeasure(fMeasure.getColumnName(), valueClassName, cgvo, fMeasure.getDisplayName(), CrossTabTotalStyle );	
+				//add the measure column to the dynamic report builder 
+				AbstractColumn column = null;
+				column = buildColumn(fMeasure, columnIndex);
+				drb.addColumn(column);
+				
+				//now add the measure to the crosstab builder
+				cb.addMeasure(column.getName(), valueClassName, cgvo, fMeasure.getDisplayName(), CrossTabTotalStyle );	
 			}
+			columnIndex++;
 		}
 
 		//
@@ -421,15 +350,17 @@ public class ReportGenerator {
 			if (ctRow != null && ctRow.getFieldId() != -1){
 				ReportField fRow = reportFieldService.find(ctRow.getFieldId());
 				valueClassName = getValueClassName(fRow);
-				DJCrosstabRow row = new CrosstabRowBuilder().setProperty(fRow.getColumnName(),valueClassName)
-				.setHeaderWidth(100).setHeight(20)
-				.setTitle(fRow.getDisplayName())
-				.setShowTotals(true)
-				.setTotalStyle(CrossTabTotalStyle)
-				.setHeaderStyle(CrossTabColRowHeaderStyle)
-				.setTotalHeaderStyle(CrossTabColRowHeaderStyle)
-				.setTotalStyle(CrossTabColRowHeaderTotalStyle)
-				.build();
+				//add the row column to the dynamic report builder 
+				AbstractColumn column = null;
+				column = buildColumn(fRow, columnIndex);
+				drb.addColumn(column);
+				columnIndex++;
+				
+				//now add the row to the crosstab builder
+				DJCrosstabRow row = new CrosstabRowBuilder().setProperty(column.getName(),valueClassName)
+				.setHeaderWidth(100).setHeight(20).setTitle(fRow.getDisplayName()).setShowTotals(true)
+				.setTotalStyle(CrossTabTotalStyle).setHeaderStyle(CrossTabColRowHeaderStyle).setTotalHeaderStyle(CrossTabColRowHeaderStyle)
+				.setTotalStyle(CrossTabColRowHeaderTotalStyle).build();
 				cb.addRow(row);	
 			}
 		}
@@ -443,22 +374,23 @@ public class ReportGenerator {
 			if (ctCol != null && ctCol.getFieldId() != -1){
 				ReportField fCol = reportFieldService.find(ctCol.getFieldId());
 				valueClassName = getValueClassName(fCol);
-				DJCrosstabColumn col = new CrosstabColumnBuilder().setProperty(fCol.getColumnName(),valueClassName)
-				.setHeaderHeight(60).setWidth(80)
-				.setTitle(fCol.getDisplayName())
-				.setShowTotals(true)
-				.setTotalStyle(CrossTabTotalStyle)
-				.setHeaderStyle(CrossTabColRowHeaderStyle)
-				.setTotalHeaderStyle(CrossTabColRowHeaderStyle)
-				.setTotalStyle(CrossTabColRowHeaderTotalStyle)
-				.build();
+				//add the  column to the dynamic report builder 
+				AbstractColumn column = null;
+				column = buildColumn(fCol, columnIndex);
+				drb.addColumn(column);
+				columnIndex++;
+				
+				//now add the column to the crosstab builder
+				DJCrosstabColumn col = new CrosstabColumnBuilder().setProperty(column.getName(),valueClassName)
+				.setHeaderHeight(60).setWidth(80).setTitle(fCol.getDisplayName()).setShowTotals(true)
+				.setTotalStyle(CrossTabTotalStyle).setHeaderStyle(CrossTabColRowHeaderStyle).setTotalHeaderStyle(CrossTabColRowHeaderStyle)
+				.setTotalStyle(CrossTabColRowHeaderTotalStyle).build();
 				cb.addColumn(col);	
 			}
 		}
-
 		return cb.build();
 	}
-
+	
 	public String getValueClassName(ReportField reportField) {
 		String valueClassName = new String();
 		switch (reportField.getFieldType()) {
@@ -491,7 +423,7 @@ public class ReportGenerator {
 		Iterator<ReportSelectedField> itReportSelectedFields = wiz.getReportSelectedFields().iterator();
 
 		List<ReportField> selectedReportFieldsList = new LinkedList<ReportField>();
-
+		Integer columnIndex = 0;
 		while (itReportSelectedFields.hasNext()){
 			ReportSelectedField reportSelectedField = (ReportSelectedField) itReportSelectedFields.next();
 			if (reportSelectedField == null) continue;
@@ -504,45 +436,152 @@ public class ReportGenerator {
 			f.setPerformSummary(reportSelectedField.getSum());
 			f.setRecordCount(reportSelectedField.getCount());
 			f.setSelected(true);
-			
+			//f.setDynamicColumnName(f.getColumnName() + "_" + columnIndex.toString());
+			//columnIndex++;
 			selectedReportFieldsList.add(f);
 		}
 		
 		return selectedReportFieldsList; 
 	}
 	
-	private List<AbstractColumn> buildColumns(List<ReportField> fields)throws ColumnBuilderException{
+	private FastReportBuilder addColumnsAndGroups(List<ReportField> reportFieldsOrderedList, ReportWizard wiz, FastReportBuilder drb, ReportFieldService reportFieldService)throws ColumnBuilderException{
 		List<AbstractColumn> columnsBuilt = new LinkedList<AbstractColumn>();
-		Iterator itFields = fields.iterator();
-		String valueClassName = null;
-		String pattern = null;
+		Iterator itFields = reportFieldsOrderedList.iterator();
+		DJChart chart = null;
+		Boolean chartExists = false;
+		Integer columnIndex = 0;
+		
 		while (itFields.hasNext()){
 			ReportField f = (ReportField) itFields.next();
-			valueClassName = getValueClassName(f);
-			pattern = getPattern(f);
-		
-			AbstractColumn column = ColumnBuilder.getInstance()
-			.setColumnProperty(f.getColumnName(), valueClassName )
-			.setTitle(f.getDisplayName())
-			.setPattern(pattern)
-			//.setHeaderStyle(headerStyle)
-			.build();
-			column.setName(f.getColumnName());
-			columnsBuilt.add(column);
+			//Build and add the column
+			AbstractColumn column = buildColumn(f, columnIndex);
+			drb.addColumn(column);
+			//Build and add the group if it is a groupby field
+			DJGroup group = null;
+			if  ( wiz.IsFieldGroupByField(f.getId())){
+				group = buildGroup(column);
+				//groupsBuilt.add(group);
+				drb.addGroup(group);
+			}
+			//Set the chart criteria (don't build at this point as all criteria may not be set)
+			//is the column used in a chart?
+			Boolean chartColumn = isChartColumn(f, wiz, reportFieldService);
+			if (chartColumn){
+				if (!chartExists)
+					chart = new DJChart();
+				chart = setChartColumns(chart, column, group, f, reportFieldService, wiz);
+				chartExists = true;
+			}
+			columnIndex++;
 		}
-		return columnsBuilt;
+		
+		//add the chart if it exists
+		if (chartExists){
+			chart = setChartCriteria(chart, wiz);
+			drb.addChart(chart);
+		}
+		return drb;
+	}
+	
+	private DJChart setChartCriteria(DJChart chart, ReportWizard wiz) {
+		List<ReportChartSettings> chartSettings = wiz.getReportChartSettings();
+		Iterator itChartSettings = chartSettings.iterator();
+		while (itChartSettings.hasNext()){
+			ReportChartSettings rcs = (ReportChartSettings) itChartSettings.next();
+			if (rcs.getChartType().compareTo("-1") == 0) continue; 
+			DJChartOptions options = new DJChartOptions();
+			options.setPosition(DJChartOptions.POSITION_HEADER);
+			options.setShowLabels(true);
+			chart.setOptions(options);
+			//set chart type
+			if (rcs.getChartType().compareTo("Bar") == 0) chart.setType(DJChart.BAR_CHART);	
+			if (rcs.getChartType().compareTo("Pie") == 0) chart.setType(DJChart.PIE_CHART);
+
+			//set chart operation
+			if (rcs.getOperation().compareTo("RecordCount") == 0) chart.setOperation(DJChart.CALCULATION_COUNT);
+			if (rcs.getOperation().compareTo("Sum") == 0) chart.setOperation(DJChart.CALCULATION_SUM);
+		}
+		return chart;
 	}
 
-	private List<DJGroup> buildGroups(List<AbstractColumn> builtColumns, List<ReportField> reportFieldsOrderedList, ReportWizard wiz){
-		List<DJGroup> groupsBuilt = new LinkedList<DJGroup>();
+	private DJChart setChartColumns(DJChart chart, AbstractColumn column, DJGroup group, ReportField f, ReportFieldService reportFieldService, ReportWizard wiz) {
+		//DJChart chart;
+		List<ReportChartSettings> chartSettings = wiz.getReportChartSettings();
+		Iterator itChartSettings = chartSettings.iterator();
+		while (itChartSettings.hasNext()){
+			ReportChartSettings rcs = (ReportChartSettings) itChartSettings.next();
+			if (rcs.getChartType().compareTo("-1") == 0) continue; 
+			ReportField rfx = reportFieldService.find(rcs.getFieldIdx());
+			ReportField rfy = reportFieldService.find(rcs.getFieldIdy());
+			if (rfx.getId() == f.getId()){
+				chart.setColumnsGroup(group);
+			}
+			if (rfy.getId() == f.getId()){
+				List<AbstractColumn> columns = new LinkedList();
+				columns.add(column);
+				chart.setColumns(columns);	
+			}
+		}
+		return chart;
+	}
 
+	private Boolean isChartColumn(ReportField f, ReportWizard wiz, ReportFieldService reportFieldService) {
+		Boolean chartColumn = false;
+		//iterate thru the chart settings to see if this report
+		//field is a chart field
+		List<ReportChartSettings> chartSettings = wiz.getReportChartSettings();
+		Iterator itChartSettings = chartSettings.iterator();
+		while (itChartSettings.hasNext()){
+			ReportChartSettings rcs = (ReportChartSettings) itChartSettings.next();
+			if (rcs.getChartType().compareTo("-1") == 0) continue; 
+			ReportField rfx = reportFieldService.find(rcs.getFieldIdx());
+			ReportField rfy = reportFieldService.find(rcs.getFieldIdy());
+			if (rfx.getId() == f.getId() || rfy.getId() == f.getId())
+				chartColumn = true;
+		}
+		return chartColumn;
+	}
+
+	private DJGroup buildGroup(AbstractColumn column) {
+		DJGroup group = new DJGroup();
+		group.setColumnToGroupBy((PropertyColumn) column);
+		group.setLayout(GroupLayout.DEFAULT);
+		return group;
+	}
+
+	private AbstractColumn buildColumn(ReportField f, Integer columnIndex) {
+		String valueClassName = null;
+		String pattern = null;
+		valueClassName = getValueClassName(f);
+		pattern = getPattern(f);
+		String columnName = null;
+		columnName = f.getColumnName() + "_" + columnIndex;
+		
+		AbstractColumn column = null;
+		try {
+			column = ColumnBuilder.getInstance()
+			.setColumnProperty(columnName, valueClassName)
+			.setTitle(f.getDisplayName()).setPattern(pattern)
+			.build();
+			column.setName(columnName);
+		} catch (ColumnBuilderException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return column;
+	}
+/*
+	private List<DJGroup> buildGroups(List<AbstractColumn> builtColumns, List<ReportField> reportFieldsOrderedList, ){
+		List<DJGroup> groupsBuilt = new LinkedList<DJGroup>();
+		Integer columnIndex = 0;
+		String columnName = null;
 		//Iterate thru the list of columns and if isgroupbyfield add group
 		Iterator itbuiltColumns = builtColumns.iterator();
 		while (itbuiltColumns.hasNext()){
 			AbstractColumn column = (AbstractColumn) itbuiltColumns.next();
 
 			ReportField reportField = wiz.getReportFieldByColumnName(column.getName().toString());
-
+			columnName = reportField.getColumnName() + "_" + columnIndex;
 			if  ( wiz.IsFieldGroupByField(reportField.getId())){
 				DJGroup group = new DJGroup();
 				group.setColumnToGroupBy((PropertyColumn) column);
@@ -557,7 +596,8 @@ public class ReportGenerator {
 		}
 		return groupsBuilt;
 	}	
-
+*/
+/*	
 	private List<DJChart> buildCharts(List<DJGroup> groupByColumnsBuilt, List<AbstractColumn> allColumns, ReportWizard wiz,ReportFieldService reportFieldService) throws ChartBuilderException{
 		List<DJChart> chartsBuilt = new LinkedList<DJChart>();
 		List<ReportChartSettings> chartSettings = wiz.getReportChartSettings();
@@ -593,7 +633,7 @@ public class ReportGenerator {
 		}//end while itChartSettings
 		return chartsBuilt;
 	}		
-
+*/
 	private List<AbstractColumn> getReportAbstractColumn(ReportField rfy, List<AbstractColumn> allColumns) {
 		List<AbstractColumn> columns = new LinkedList<AbstractColumn>();
 		Iterator itCol = allColumns.iterator();
