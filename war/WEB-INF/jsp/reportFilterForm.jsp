@@ -2,7 +2,7 @@
 <%@ include file="/WEB-INF/jsp/include.jsp"%>
 <script type="text/javascript" src="js/mpower.reportfilters.js"></script>
 
-<form method="post">
+<form:form method="post" commandName="reportsource">
 	<jsp:include page="snippets/formerrors.jsp"/>
 <!--  hidden tables cloned to add new filters -->
 <c:set var="filterIndex" scope="request" value="0"/>
@@ -124,7 +124,8 @@
 	<br>
 	<br>
 </div>
-<jsp:include page="snippets/navbuttons.jsp" /></form>
+<jsp:include page="snippets/navbuttons.jsp" />
+</form:form>
 
 
 <c:if test="${showSqlQuery && sqlQuery != null && sqlQuery != ''}">
