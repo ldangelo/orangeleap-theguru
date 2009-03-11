@@ -2,17 +2,19 @@
 
 <script type="text/javascript" src="js/mpower.reportfields.js"></script>
 
-<form method="post">
 
+
+<form:form method="post" commandName="reportsource">
 <h1>Report Wizard</h1>
 <h2>Select the fields to display</h2>
 <hr width="100%" size=1 color="black">
 	<jsp:include page="snippets/formerrors.jsp"/>
+
+<div class = "content">
 <!-- Hidden table used for cloning rows -->
 <table id="report_fields_source" class="tablesorter" bgcolor=#E0E0E0 style="display:none">
 	<jsp:include page="/WEB-INF/jsp/reportColumnsFormSelectedField.jsp" />
 </table>
-
 <table>
 	<tr>
 		<th>Field Groups</th>
@@ -82,6 +84,7 @@
 	</td>
 	</tr>
 </table>
+</div>
 <div id="chartSettings" style="display: none;">
 	<br>
 	<br>
@@ -162,4 +165,5 @@
 </div>
 <br>
 <br>
-<jsp:include page="snippets/navbuttons.jsp" /></form>
+<jsp:include page="snippets/navbuttons.jsp" />
+</form:form>

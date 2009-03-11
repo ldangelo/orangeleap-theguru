@@ -27,6 +27,7 @@ import ar.com.fdvs.dj.core.layout.ClassicLayoutManager;
 import ar.com.fdvs.dj.domain.DynamicReport;
 
 import com.jaspersoft.jasperserver.api.metadata.xml.domain.impl.ResourceDescriptor;
+import com.mpower.controller.validator.SelectedFieldsValidator;
 import com.mpower.domain.ReportChartSettings;
 import com.mpower.domain.ReportDataSource;
 import com.mpower.domain.ReportDataSubSource;
@@ -72,6 +73,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 	private UserDetailsService userDetailsService;
 	
 	public ReportWizardFormController() {
+		
 	}
 
 	@Override
@@ -138,6 +140,21 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		return super.handleRequest(request, response);
 	}
 
+	@Override
+	protected void validatePage(Object command, Errors errors, int page)  
+    {  
+        SelectedFieldsValidator val = (SelectedFieldsValidator) this.getValidator();  
+  
+        switch(page)  
+        {  
+        case 2:  
+            val.validateReportWizard(command, errors);  
+        default:  
+            super.validatePage(command, errors, page);   
+        }  
+  
+    }  
+	
 	@Override
 	protected void postProcessPage(HttpServletRequest request, Object command,
 			Errors errors, int page) throws Exception {
