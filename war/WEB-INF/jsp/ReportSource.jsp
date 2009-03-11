@@ -16,7 +16,7 @@
 					if (contextPrefix == null) contextPrefix = "";
 					pageContext.setAttribute("contextPrefix",contextPrefix);
 					%>
-					<c:redirect url="../${contextPrefix}jasperserver" />
+					<c:redirect url="../${contextPrefix}jasperserver/flow.html?_flowId=repositoryExplorerFlow" />
 				</c:otherwise>
 			</c:choose>
 		</div>
