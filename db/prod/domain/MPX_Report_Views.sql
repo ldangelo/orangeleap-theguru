@@ -328,7 +328,7 @@ AS
 		MEDIAOUTLETS.FLAGSHIPID AS ORDER_MEDIAOUTLETS_FLAGSHIPID,
 		MEDIAOUTLETS.COMMERCIAL AS ORDER_MEDIAOUTLETS_COMMERCIAL,
 		MEDIAOUTLETS.TARGETROI AS ORDER_MEDIAOUTLETS_TARGETROI,
-		MEDIAOUTLETS.COVERAGEAREA AS ORDER_MEDIAOUTLETS_COVERAGEAREA,
+		dbo.mpx_MediaCoverageAreaSearch([MEDIAOUTLETS].MediaCode_Id, [MediaOutlets].Medium_Id, [MediaOutlets].DMA_Id, (Select [MediumTypes].CoverageType From MediumTypes Where [MediumTypes].Medium_Id = [MediaOutlets].Medium_Id), (Select [DMA].DMA_Name From DMA Where [DMA].DMA_Id = [MediaOutlets].DMA_Id), (Select [Metro].Metro_Name From Metro Where [Metro].Metro_Id = [MediaOutlets].DMA_Id)) AS ORDER_MEDIAOUTLETS_COVERAGEAREA,
 
 		-- Delivery method information
 		DELIVERYMETHODS.DELIVERY_METHOD AS ORDER_DELIVERYMETHODS_DELIVERY_METHOD,
@@ -778,7 +778,7 @@ AS
 		MEDIAOUTLETS.FLAGSHIPID AS GIFT_MEDIAOUTLETS_FLAGSHIPID,
 		MEDIAOUTLETS.COMMERCIAL AS GIFT_MEDIAOUTLETS_COMMERCIAL,
 		MEDIAOUTLETS.TARGETROI AS GIFT_MEDIAOUTLETS_TARGETROI,
-		MEDIAOUTLETS.COVERAGEAREA AS GIFT_MEDIAOUTLETS_COVERAGEAREA,
+		dbo.mpx_MediaCoverageAreaSearch([MEDIAOUTLETS].MediaCode_Id, [MediaOutlets].Medium_Id, [MediaOutlets].DMA_Id, (Select [MediumTypes].CoverageType From MediumTypes Where [MediumTypes].Medium_Id = [MediaOutlets].Medium_Id), (Select [DMA].DMA_Name From DMA Where [DMA].DMA_Id = [MediaOutlets].DMA_Id), (Select [Metro].Metro_Name From Metro Where [Metro].Metro_Id = [MediaOutlets].DMA_Id)) AS GIFT_MEDIAOUTLETS_COVERAGEAREA,
 
 		-- Delivery method information
 		DELIVERYMETHODS.DELIVERY_METHOD AS GIFT_DELIVERYMETHODS_DELIVERY_METHOD,
@@ -1489,7 +1489,7 @@ AS
 		MEDIAOUTLETS.FLAGSHIPID AS MEDIAOUTLETS_FLAGSHIPID,
 		MEDIAOUTLETS.COMMERCIAL AS MEDIAOUTLETS_COMMERCIAL,
 		MEDIAOUTLETS.TARGETROI AS MEDIAOUTLETS_TARGETROI,
-		MEDIAOUTLETS.COVERAGEAREA AS MEDIAOUTLETS_COVERAGEAREA,
+		dbo.mpx_MediaCoverageAreaSearch([MEDIAOUTLETS].MediaCode_Id, [MediaOutlets].Medium_Id, [MediaOutlets].DMA_Id, (Select [MediumTypes].CoverageType From MediumTypes Where [MediumTypes].Medium_Id = [MediaOutlets].Medium_Id), (Select [DMA].DMA_Name From DMA Where [DMA].DMA_Id = [MediaOutlets].DMA_Id), (Select [Metro].Metro_Name From Metro Where [Metro].Metro_Id = [MediaOutlets].DMA_Id)) AS MEDIAOUTLETS_COVERAGEAREA,
 
 		-- Delivery method information
 		DELIVERYMETHODS.DELIVERY_METHOD AS DELIVERYMETHODS_DELIVERY_METHOD,
@@ -2399,7 +2399,7 @@ AS
 		MEDIAOUTLETS.FLAGSHIPID AS MEDIAOUTLETS_FLAGSHIPID,
 		MEDIAOUTLETS.COMMERCIAL AS MEDIAOUTLETS_COMMERCIAL,
 		MEDIAOUTLETS.TARGETROI AS MEDIAOUTLETS_TARGETROI,
-		MEDIAOUTLETS.COVERAGEAREA AS MEDIAOUTLETS_COVERAGEAREA,
+		dbo.mpx_MediaCoverageAreaSearch([MEDIAOUTLETS].MediaCode_Id, [MediaOutlets].Medium_Id, [MediaOutlets].DMA_Id, (Select [MediumTypes].CoverageType From MediumTypes Where [MediumTypes].Medium_Id = [MediaOutlets].Medium_Id), (Select [DMA].DMA_Name From DMA Where [DMA].DMA_Id = [MediaOutlets].DMA_Id), (Select [Metro].Metro_Name From Metro Where [Metro].Metro_Id = [MediaOutlets].DMA_Id)) AS MEDIAOUTLETS_COVERAGEAREA,
 
 		-- Delivery method information
 		DELIVERYMETHODS.DELIVERY_METHOD AS DELIVERYMETHODS_DELIVERY_METHOD,
