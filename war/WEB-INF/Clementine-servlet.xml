@@ -8,17 +8,17 @@
        xmlns:dwr="http://www.directwebremoting.org/schema/spring-dwr"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
            http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
-	   http://www.directwebremoting.org/schema/spring-dwr 
-	   http://www.directwebremoting.org/schema/spring-dwr-2.0.xsd"> 
-	   
+	   http://www.directwebremoting.org/schema/spring-dwr
+	   http://www.directwebremoting.org/schema/spring-dwr-2.0.xsd">
+
    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="locations">
             <list>
 				<value>classpath:theguru.properties</value>
             </list>
         </property>
-    </bean>	   
-	
+    </bean>
+
 	 <bean id="mpxDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
 		<property name="driverClassName" value="${userdetails.jdbc.driverClassName}" />
 		<property name="url" value="${userdetails.jdbc.url}"/>
@@ -26,12 +26,12 @@
 		<property name="password" value="${userdetails.jdbc.password}"/>
  		<property name="maxActive"><value>100</value></property>
 		<property name="maxIdle"><value>30</value></property>
-		<property name="maxWait"><value>10000</value></property> 
+		<property name="maxWait"><value>10000</value></property>
  		<property name="validationQuery" value="SELECT 1"/>
 		<property name="testOnBorrow"><value>true</value></property>
-		<property name="testWhileIdle"><value>true</value></property>				
+		<property name="testWhileIdle"><value>true</value></property>
 	</bean>
-	
+
 	<bean id="jdbcAuthenticationDao" class="org.springframework.security.userdetails.jdbc.JdbcDaoImpl">
 		<property name="dataSource" ref="mpxDataSource"/>
 		<property name="usersByUsernameQuery">
@@ -48,7 +48,7 @@
 -->
 		<property name="URI" value="http://${jasper.host}:${jasper.port}/${contextPrefix}jasperserver/services/repository"/>
 		<dwr:remote javascript="JasperServerService"/>
-		
+
 	</bean>
 
 	<bean id="ReportSubSourceService" class="com.mpower.service.DWRReportSubSourceServiceImpl">
@@ -130,9 +130,19 @@
 			<value>RunReport</value>
 			<value>ReportRedirect</value>
 		</list>
-	</property>
+		</property>
+		<property name="validators">
+			<list>
+	            <ref bean="reportWizardValidator"/>
+	            <bean class="com.mpower.controller.validator.ReportWizardValidator">
+	            </bean>
+			</list>
+        </property>
+
     </bean>
 
+	<bean name="reportWizardValidator" class="com.mpower.controller.validator.ReportWizardValidator">
+	</bean>
 
 	<!-- Configures the Tiles layout system -->
 	<bean id="tilesConfigurer"
