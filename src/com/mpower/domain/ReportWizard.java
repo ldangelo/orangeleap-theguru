@@ -122,7 +122,7 @@ public class ReportWizard implements java.io.Serializable {
 		reportLayout = ReportLayout.PORTRAIT;
 		srcId = 0;
 		subSourceId = 0;
-		rowCount = -1;
+		rowCount = 100;
 		recordCount = false;
 		company = "Default";
 		previousPage = 0;
