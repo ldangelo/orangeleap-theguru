@@ -31,21 +31,19 @@
 				<c:if test="${(currentFilter != null) && (currentFilter.reportStandardFilter.comparison == 21)}"> selected="true" </c:if> >Previous FY</option>
 			<option label="Previous 2 FY" value="22" dateonly="true" 
 				<c:if test="${(currentFilter != null) && (currentFilter.reportStandardFilter.comparison == 22)}"> selected="true" </c:if> >Previous 2 FY</option>
-			<option label="2 FY Ago" value="23" dateonly="true"  
-				<c:if test="${(currentFilter != null) && (currentFilter.reportStandardFilter.comparison == 23)}"> selected="true" </c:if> >2 FY Ago</option>
+<!-- 		<option label="2 FY Ago" value="23" dateonly="true"  
+				<c:if test="${(currentFilter != null) && (currentFilter.reportStandardFilter.comparison == 23)}"> selected="true" </c:if> >2 FY Ago</option>-->
 			<option label="Current And Prvious FY" value="24" dateonly="true"  
 				<c:if test="${(currentFilter != null) && (currentFilter.reportStandardFilter.comparison == 24)}"> selected="true" </c:if> >Current And Previous FY</option>
-			<option label="Previous 2 FY" value="25" dateonly="true"  
-				<c:if test="${(currentFilter != null) && (currentFilter.reportStandardFilter.comparison == 25)}"> selected="true" </c:if> >Previous 2 FY</option>
 		</optgroup>
 		<optgroup label="Fiscal Quarter" dateonly="true" > 
-			<option label="Current" value="26" dateonly="true"  
+			<option label="Current FQ" value="26" dateonly="true"  
 				<c:if test="${(currentFilter != null) && (currentFilter.reportStandardFilter.comparison == 26)}"> selected="true" </c:if> >Current FQ</option>
-			<option label="Current and Next" value="27" dateonly="true"  
+			<option label="Current and Next FQ" value="27" dateonly="true"  
 				<c:if test="${(currentFilter != null) && (currentFilter.reportStandardFilter.comparison == 27)}"> selected="true" </c:if> >Current and Next FQ</option>
-			<option label="Current and Previous" value="28" dateonly="true"
+			<option label="Current and Previous FQ" value="28" dateonly="true"
 				<c:if test="${(currentFilter != null) && (currentFilter.reportStandardFilter.comparison == 28)}"> selected="true" </c:if> >Current and Previous FQ</option>
-			<option label="Previous" value="29" dateonly="true"  
+			<option label="Previous FQ" value="29" dateonly="true"  
 				<c:if test="${(currentFilter != null) && (currentFilter.reportStandardFilter.comparison == 29)}"> selected="true" </c:if> >Previous FQ</option>
 		</optgroup>
 		<optgroup label="Calendar Year" dateonly="true" > 
@@ -57,19 +55,19 @@
 				<c:if test="${(currentFilter != null) && (currentFilter.reportStandardFilter.comparison == 32)}"> selected="true" </c:if> >Current and Previous CY</option>
 		</optgroup>
 		<optgroup label="Calendar Month" dateonly="true" > 
-			<option label="Current" value="33" dateonly="true"
+			<option label="Current CM" value="33" dateonly="true"
 				<c:if test="${(currentFilter != null) && (currentFilter.reportStandardFilter.comparison == 33)}"> selected="true" </c:if> >Current CM</option>
-			<option label="Previous" value="34" dateonly="true"
+			<option label="Previous CM" value="34" dateonly="true"
 				<c:if test="${(currentFilter != null) && (currentFilter.reportStandardFilter.comparison == 34)}"> selected="true" </c:if> >Previous CM</option>
-			<option label="Current and Previous" value="35" dateonly="true"
+			<option label="Current and Previous CM" value="35" dateonly="true"
 				<c:if test="${(currentFilter != null) && (currentFilter.reportStandardFilter.comparison == 35)}"> selected="true" </c:if> >Current and Previous CM</option>
 		</optgroup>
 		<optgroup label="Calendar Week" dateonly="true" > 
-			<option label="Current" value="36" dateonly="true"
+			<option label="Current CW" value="36" dateonly="true"
 				<c:if test="${(currentFilter != null) && (currentFilter.reportStandardFilter.comparison == 36)}"> selected="true" </c:if> >Current CW</option>
-			<option label="Previous" value="37" dateonly="true"
+			<option label="Previous CW" value="37" dateonly="true"
 				<c:if test="${(currentFilter != null) && (currentFilter.reportStandardFilter.comparison == 37)}"> selected="true" </c:if> >Previous CW</option>
-			<option label="Current And Previous" value="38" dateonly="true"
+			<option label="Current And Previous CW" value="38" dateonly="true"
 				<c:if test="${(currentFilter != null) && (currentFilter.reportStandardFilter.comparison == 38)}"> selected="true" </c:if> >Current and Previous CW</option>
 		</optgroup>
 		<optgroup label="Calendar Day" dateonly="true" > 
