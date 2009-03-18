@@ -48,6 +48,9 @@ public class ReportWizard implements java.io.Serializable {
 	@Column(name="REPORTDATASOURCE_ID")
 	private long srcId;
 
+	@Column(name = "REPORTSUBSOURCEGROUP_ID")
+	private long subSourceGroupId;
+	
 	@Column(name = "REPORTSUBSOURCE_ID")
 	private long subSourceId;
 
@@ -55,11 +58,17 @@ public class ReportWizard implements java.io.Serializable {
 	private ReportDataSource src;
 
 	@Transient
+	private ReportDataSubSourceGroup subsourcegroup;
+
+	@Transient
 	private ReportDataSubSource subsource;
 
 	@Transient
 	private List<ReportDataSource> sources;
 
+	@Transient
+	private List<ReportDataSubSourceGroup> subsourcegroups;
+	
 	@Transient
 	private List<ReportDataSubSource> subsources;
 
@@ -121,6 +130,7 @@ public class ReportWizard implements java.io.Serializable {
 		reportType = "tabular";
 		reportLayout = ReportLayout.PORTRAIT;
 		srcId = 0;
+		subSourceGroupId = 0;
 		subSourceId = 0;
 		rowCount = 100;
 		recordCount = false;
@@ -494,5 +504,29 @@ public class ReportWizard implements java.io.Serializable {
 
 	public boolean getShowSqlQuery() {
 		return showSqlQuery;
+	}
+
+	public void setDataSubSourceGroupId(long subSourceGroupId) {
+		this.subSourceGroupId = subSourceGroupId;
+	}
+
+	public long getDataSubSourceGroupId() {
+		return subSourceGroupId;
+	}
+
+	public void setDataSubSourceGroup(ReportDataSubSourceGroup subsourcegroup) {
+		this.subsourcegroup = subsourcegroup;
+	}
+
+	public ReportDataSubSourceGroup getDataSubSourceGroup() {
+		return subsourcegroup;
+	}
+
+	public void setDataSubSourceGroups(List<ReportDataSubSourceGroup> subsourcegroups) {
+		this.subsourcegroups = subsourcegroups;
+	}
+
+	public List<ReportDataSubSourceGroup> getDataSubSourceGroups() {
+		return subsourcegroups;
 	}
 }

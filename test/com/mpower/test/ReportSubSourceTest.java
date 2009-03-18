@@ -38,7 +38,7 @@ public class ReportSubSourceTest extends BaseTest {
 	@Test(dependsOnMethods = "createReportSubSources")
 	public void listReportSubSource() {
 	
-		java.util.List<ReportDataSubSource> lrs = reportSubSourceService.readSubSourcesByReportSourceId(1L);
+		java.util.List<ReportDataSubSource> lrs = reportSubSourceService.readSubSourcesByReportSubSourceGroupId(1L);
 		assert lrs.size() >= 1;
 	}
 
@@ -53,7 +53,7 @@ public class ReportSubSourceTest extends BaseTest {
 	@Test(dependsOnMethods = "createReportSubSources")
 	void findReportSubSourceBySourceId()
 	{
-		java.util.List<ReportDataSubSource> lrdss = reportSubSourceService.readSubSourcesByReportSourceId(1L);
+		java.util.List<ReportDataSubSource> lrdss = reportSubSourceService.readSubSourcesByReportSubSourceGroupId(1L);
 	
 		assert lrdss != null;
 		

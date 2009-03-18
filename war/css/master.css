@@ -124,6 +124,14 @@ div.scroll {
    height: 300px;
 }
 
-select#subSourceId {
+select#subSourceGroupId {
    width: 400px;
+}
+
+select#subSourceId {
+   width: 375px;
+}
+
+select#dataSubSourceGroupId {
+   width: 375px;
 }

@@ -9,7 +9,7 @@ public interface ReportDataSubSourceDao {
 	public ReportDataSubSource findById(long Id);
 
 	public List<ReportDataSubSource> getAll();
-	public List<ReportDataSubSource> getAllByReportSourceId(Long id);
+	public List<ReportDataSubSource> getAllByReportSubSourceGroupId(Long id);
 	
 	public void save(ReportDataSubSource datasubsource);
 	public ReportDataSubSource copy(ReportDataSubSource datasubsource);

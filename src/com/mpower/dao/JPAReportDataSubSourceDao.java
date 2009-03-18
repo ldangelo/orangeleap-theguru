@@ -45,9 +45,10 @@ public class JPAReportDataSubSourceDao implements ReportDataSubSourceDao {
 
 	@SuppressWarnings("unchecked")
 
-	public List<ReportDataSubSource> getAllByReportSourceId(Long id) {
+	public List<ReportDataSubSource> getAllByReportSubSourceGroupId(Long id) {
 		Query q = em
-		.createQuery("select reportSubSource from ReportDataSubSource reportSubSource left join reportSubSource.reportDataSource as reportSource where reportSource.id = ?");
+		.createQuery("select reportSubSource from ReportDataSubSource reportSubSource left join reportSubSource.reportDataSubSourceGroup as reportSubSourceGroup where reportSubSourceGroup.id = ?");		
+		
 		q.setParameter(1, id);
 		List<ReportDataSubSource> lrds = q.getResultList();
 		

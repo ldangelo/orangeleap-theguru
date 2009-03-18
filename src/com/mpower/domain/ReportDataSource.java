@@ -38,15 +38,15 @@ public class ReportDataSource implements java.io.Serializable,
 	private String Name;
 
 	@OneToMany(mappedBy="reportDataSource",cascade=CascadeType.ALL)
-	@IndexColumn(name="REPORTSUBSOURCE_ID")
-	private List<ReportDataSubSource> subSource;
+	@IndexColumn(name="REPORTSUBSOURCEGROUP_ID")
+	private List<ReportDataSubSourceGroup> subSourceGroup;
 	
-	public List<ReportDataSubSource> getSubSource() {
-		return subSource;
+	public List<ReportDataSubSourceGroup> getSubSourceGroup() {
+		return subSourceGroup;
 	}
 
-	public void setSubSource(List<ReportDataSubSource> subSource) {
-		this.subSource = subSource;
+	public void setSubSourceGroup(List<ReportDataSubSourceGroup> subSourceGroup) {
+		this.subSourceGroup = subSourceGroup;
 	}
 
 	@Transient

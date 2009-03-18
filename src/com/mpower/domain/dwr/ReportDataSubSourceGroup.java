@@ -2,12 +2,12 @@ package com.mpower.domain.dwr;
 
 import java.lang.String;
 
-public class ReportDataSubSource {
+public class ReportDataSubSourceGroup {
 	private long id;
 	private String displayName;
 	private String description;
 
-	public ReportDataSubSource(com.mpower.domain.ReportDataSubSource rdss) {
+	public ReportDataSubSourceGroup(com.mpower.domain.ReportDataSubSourceGroup rdss) {
 		id = rdss.getId();
 		displayName = rdss.getDisplayName();
 		description = rdss.getDescription();

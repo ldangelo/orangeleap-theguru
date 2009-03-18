@@ -24,9 +24,9 @@ public class ReportSubSourceImpl implements ReportSubSourceService {
 	}
 
 
-	public List<ReportDataSubSource> readSubSourcesByReportSourceId(Long l) {
+	public List<ReportDataSubSource> readSubSourcesByReportSubSourceGroupId(Long l) {
 
-		return reportSubSourceDAO.getAllByReportSourceId(l);
+		return reportSubSourceDAO.getAllByReportSubSourceGroupId(l);
 	}
 
 

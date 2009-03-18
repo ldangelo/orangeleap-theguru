@@ -30,6 +30,7 @@ import com.jaspersoft.jasperserver.api.metadata.xml.domain.impl.ResourceDescript
 import com.mpower.controller.validator.ReportWizardValidator;
 import com.mpower.domain.ReportChartSettings;
 import com.mpower.domain.ReportDataSource;
+import com.mpower.domain.ReportDataSubSourceGroup;
 import com.mpower.domain.ReportDataSubSource;
 import com.mpower.domain.ReportField;
 import com.mpower.domain.ReportFieldGroup;
@@ -42,6 +43,7 @@ import com.mpower.service.ReportCustomFilterDefinitionService;
 import com.mpower.service.ReportFieldGroupService;
 import com.mpower.service.ReportFieldService;
 import com.mpower.service.ReportSourceService;
+import com.mpower.service.ReportSubSourceGroupService;
 import com.mpower.service.ReportSubSourceService;
 import com.mpower.service.ReportWizardService;
 import com.mpower.service.SessionService;
@@ -51,6 +53,7 @@ import com.mpower.util.ReportQueryGenerator;
 import com.mpower.view.DynamicReportView;
 
 public class ReportWizardFormController extends AbstractWizardFormController {
+	private ReportSubSourceGroupService  reportSubSourceGroupService;
 	private ReportSubSourceService  reportSubSourceService;
 
 	/** Logger for this class and subclasses */
@@ -69,6 +72,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 	private DataSource jdbcDataSource;
 	private String reportUnitDataSourceURI;
 	private ReportGenerator	reportGenerator;
+	private long previousDataSubSourceGroupId = -1;
 	private long previousDataSubSourceId = -1;
 	private UserDetailsService userDetailsService;
 
@@ -111,6 +115,10 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		return reportSourceService;
 	}
 
+	public ReportSubSourceGroupService getReportSubSourceGroupService() {
+		return reportSubSourceGroupService;
+	}
+	
 	public ReportSubSourceService getReportSubSourceService() {
 		return reportSubSourceService;
 	}
@@ -176,10 +184,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		{
 			previousDataSubSourceId = wiz.getSubSourceId();
 			wiz.setDataSource(reportSourceService.find(wiz.getSrcId()));
-			ReportDataSource rds = reportSourceService.find(wiz.getSrcId());
-			List<ReportDataSubSource> lrdss = reportSubSourceService.readSubSourcesByReportSourceId(rds.getId());
-			wiz.setDataSource(rds);
-			wiz.setDataSubSources(lrdss);
+			wiz.setDataSubSourceGroup(reportSubSourceGroupService.find(wiz.getDataSubSourceGroupId()));
 
 			ReportDataSubSource       rdss = reportSubSourceService.find( wiz.getSubSourceId());
 
@@ -292,6 +297,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 				refData.put("userFound", false);
 			} else {
 				refData.put("userFound", true);
+				refData.put("subSourceGroupId", wiz.getDataSubSourceGroupId());
 				refData.put("subSourceId", wiz.getSubSourceId());
 				reportGenerator.setReportUserName(userName);
 				reportGenerator.setReportPassword(password);
@@ -313,6 +319,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 					errors.reject("Invalid Repository","Invalid Repository.  It appears your repository is not setup properly.  Please contact your system administrator.");
 			}
 
+			refData.put("previousSubSourceGroupId", previousDataSubSourceGroupId);
 			refData.put("previousSubSourceId", previousDataSubSourceId);
 		}
 
@@ -540,6 +547,11 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		this.reportSourceService = reportSourceService;
 	}
 
+	public void setReportSubSourceGroupService(
+			ReportSubSourceGroupService reportSubSourceGroupService) {
+		this.reportSubSourceGroupService = reportSubSourceGroupService;
+	}
+	
 	public void setReportSubSourceService(
 			ReportSubSourceService reportSubSourceService) {
 		this.reportSubSourceService = reportSubSourceService;
@@ -593,5 +605,13 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 
 	public void setPreviousDataSubSourceId(long previousDataSubSourceId) {
 		this.previousDataSubSourceId = previousDataSubSourceId;
+	}
+
+	public void setPreviousDataSubSourceGroupId(long previousDataSubSourceGroupId) {
+		this.previousDataSubSourceGroupId = previousDataSubSourceGroupId;
+	}
+
+	public long getPreviousDataSubSourceGroupId() {
+		return previousDataSubSourceGroupId;
 	}
 }

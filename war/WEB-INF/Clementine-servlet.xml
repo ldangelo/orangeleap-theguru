@@ -51,12 +51,18 @@
 
 	</bean>
 
+	<bean id="ReportSubSourceGroupService" class="com.mpower.service.DWRReportSubSourceGroupServiceImpl">
+	  <property name="reportSubSourceGroup" ref="reportSubSourceGroupService"/>
+	  <dwr:remote javascript="ReportSubSourceGroupService"/>
+	</bean>
+
 	<bean id="ReportSubSourceService" class="com.mpower.service.DWRReportSubSourceServiceImpl">
 	  <property name="reportSubSource" ref="reportSubSourceService"/>
 	  <dwr:remote javascript="ReportSubSourceService"/>
 	</bean>
 	<dwr:configuration>
 	  <dwr:convert type="bean" class="com.jaspersoft.jasperserver.api.metadata.xml.domain.impl.ResourceDescriptor"/>
+	  <dwr:convert type="bean" class="com.mpower.domain.dwr.ReportDataSubSourceGroup"/>
 	  <dwr:convert type="bean" class="com.mpower.domain.dwr.ReportDataSubSource"/>
 	</dwr:configuration>
 
@@ -106,6 +112,7 @@
         <property name="commandName" value="reportsource"/>
         <property name="commandClass" value="com.mpower.domain.ReportWizard"/>
         <property name="reportSourceService" ref="reportSourceService"/>
+        <property name="reportSubSourceGroupService" ref="reportSubSourceGroupService"/>
         <property name="reportSubSourceService" ref="reportSubSourceService"/>
         <property name="reportFieldGroupService" ref="reportFieldGroupService"/>
 		<property name="jasperServerService" ref="JasperServerService"/>

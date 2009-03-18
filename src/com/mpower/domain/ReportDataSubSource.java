@@ -48,8 +48,8 @@ public class ReportDataSubSource implements java.io.Serializable,
 	private String viewName;
 
 	@ManyToOne( cascade=CascadeType.ALL)
-	@IndexColumn(name="REPORTSOURCE_ID")
-	private ReportDataSource reportDataSource;
+	@IndexColumn(name="REPORTDATASUBSOURCEGROUP_ID")
+	private ReportDataSubSourceGroup reportDataSubSourceGroup;
 	
 	@Enumerated
 	@Column(name = "REPORT_FORMAT_TYPE")
@@ -63,6 +63,9 @@ public class ReportDataSubSource implements java.io.Serializable,
 
 	@Column(name = "JASPER_DATASOURCE_NAME")
 	private String jasperDatasourceName;
+
+	@Column(name = "DESCRIPTION")
+	private String description;
 	
 	@ManyToMany(mappedBy="reportDataSubSource",cascade=CascadeType.ALL)
 	@IndexColumn(name="REPORTCUSTOMFILTERDEFINITION_ID")
@@ -72,7 +75,12 @@ public class ReportDataSubSource implements java.io.Serializable,
 	public ReportDataSubSource(ReportDataSubSource reportDataSubSource) {
 		displayName      = reportDataSubSource.displayName;
 		viewName         = reportDataSubSource.viewName;
-		reportDataSource = new ReportDataSource(reportDataSubSource.reportDataSource);
+		reportDataSubSourceGroup = new ReportDataSubSourceGroup(reportDataSubSource.reportDataSubSourceGroup);
+		description = reportDataSubSource.description;
+		databaseType = reportDataSubSource.databaseType;
+		jasperDatasourceName = reportDataSubSource.jasperDatasourceName;
+		reportCustomFilterDefinitions = reportDataSubSource.reportCustomFilterDefinitions;
+		reportType = reportDataSubSource.reportType;
 	}
 
 	public ReportDataSubSource() {
@@ -115,12 +123,12 @@ public class ReportDataSubSource implements java.io.Serializable,
 		return 0;
 	}
 
-	public ReportDataSource getReportDataSource() {
-		return reportDataSource;
+	public ReportDataSubSourceGroup getReportDataSubSourceGroup() {
+		return reportDataSubSourceGroup;
 	}
 
-	public void setReportDataSource(ReportDataSource reportDataSouce) {
-		this.reportDataSource = reportDataSouce;
+	public void setReportDataSubSourceGroup(ReportDataSubSourceGroup reportDataSubSourceGroup) {
+		this.reportDataSubSourceGroup = reportDataSubSourceGroup;
 	}
 
 	public void setDatabaseType(ReportDatabaseType databaseType) {
@@ -145,5 +153,13 @@ public class ReportDataSubSource implements java.io.Serializable,
 
 	public List<ReportCustomFilterDefinition> getReportCustomFilterDefinitions() {
 		return reportCustomFilterDefinitions;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public String getDescription() {
+		return description;
 	}
 }

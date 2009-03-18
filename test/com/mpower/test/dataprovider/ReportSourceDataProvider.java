@@ -6,6 +6,7 @@ import java.util.HashMap;
 import org.testng.annotations.DataProvider;
 
 import com.mpower.domain.ReportDataSource;
+import com.mpower.domain.ReportDataSubSourceGroup;
 import com.mpower.domain.ReportDataSubSource;
 import com.mpower.domain.ReportField;
 import com.mpower.domain.ReportFieldGroup;
@@ -16,17 +17,21 @@ public class ReportSourceDataProvider {
 	@DataProvider(name = "setupCreateReportSource")
 	public static Object[][] setupCreateReportSource() {
 		ReportDataSource               rs   = new ReportDataSource();
+		ReportDataSubSourceGroup          rssg   = new ReportDataSubSourceGroup();
 		ReportDataSubSource            rss  = new ReportDataSubSource();
 		ArrayList<ReportDataSubSource> lrss = new ArrayList<ReportDataSubSource>();
 		
 		rs.setName("People");
+		rssg.setDisplayName("People");
 		rss.setDisplayName("People");
 		rss.setViewName("vPeople");
+
+		rssg.setReportDataSource(rs);
 		
-		rss.setReportDataSource(rs);
+		rss.setReportDataSubSourceGroup(rssg);
 		lrss.add(rss);
 		
-		rs.setSubSource(lrss);
+		//rs.setSubSource(lrss);
 		ReportFieldGroup rfg = new ReportFieldGroup();
 
 		rfg.setName("Name");
@@ -56,7 +61,6 @@ public class ReportSourceDataProvider {
 		rfg.setFields(fields);
 		
 		rfg.setReportDataSubSource(lrss);
-		rss.setReportDataSource(rs);
 
 		return new Object[][] { new Object[] { rs } };
 	}
@@ -65,9 +69,11 @@ public class ReportSourceDataProvider {
 	@DataProvider(name = "setupCreateReportSubSource")
 	public static Object[][] setupCreateReportSubSource() {
 		ReportDataSource rs = new ReportDataSource();
+		ReportDataSubSourceGroup rssg = new ReportDataSubSourceGroup();
 		ReportDataSubSource rss = new ReportDataSubSource();
 
 		rs.setName("People");
+		rssg.setDisplayName("People");
 		rss.setDisplayName("People");
 		rss.setViewName("vPeople");
 
@@ -102,7 +108,8 @@ public class ReportSourceDataProvider {
 		rfg.setFields(fields);
 	
 		rfg.setReportDataSubSource(lrss);
-		rss.setReportDataSource(rs);
+		rssg.setReportDataSource(rs);
+		rss.setReportDataSubSourceGroup(rssg);
 
 		return new Object[][] { new Object[] { rs, rss } };
 	}
@@ -110,9 +117,11 @@ public class ReportSourceDataProvider {
 	@DataProvider(name = "setupReportFieldGroup")
 	public static Object[][] setupFieldGroup() {
 		ReportDataSource rs = new ReportDataSource();
+		ReportDataSubSourceGroup rssg = new ReportDataSubSourceGroup();
 		ReportDataSubSource rss = new ReportDataSubSource();
 
 		rs.setName("People");
+		rssg.setDisplayName("People");
 		rss.setDisplayName("People");
 		rss.setViewName("vPeople");
 
@@ -148,9 +157,10 @@ public class ReportSourceDataProvider {
 		rfg.setFields(fields);
 	
 		rfg.setReportDataSubSource(lrss);
-		rss.setReportDataSource(rs);
+		rssg.setReportDataSource(rs);
+		rss.setReportDataSubSourceGroup(rssg);
 
-		rs.setSubSource(lrss);
+		//rs.setSubSource(lrss);
 		
 		return new Object[][] { new Object[] { rs, rss, rfg } };
 	}
@@ -158,9 +168,11 @@ public class ReportSourceDataProvider {
 	@DataProvider(name = "setupReportField")
 	public static Object[][] setupField() {
 		ReportDataSource rs = new ReportDataSource();
+		ReportDataSubSourceGroup rssg = new ReportDataSubSourceGroup();
 		ReportDataSubSource rss = new ReportDataSubSource();
 
 		rs.setName("People");
+		rssg.setDisplayName("People");
 		rss.setDisplayName("People");
 		rss.setViewName("vPeople");
 
@@ -197,7 +209,8 @@ public class ReportSourceDataProvider {
 		rfg.setFields(fields);
 	
 		rfg.setReportDataSubSource(lrss);
-		rss.setReportDataSource(rs);
+		rssg.setReportDataSource(rs);
+		rss.setReportDataSubSourceGroup(rssg);
 
 		return new Object[][] { new Object[] { rs, rss, rfg, rf1 } };
 	}

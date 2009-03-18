@@ -13,8 +13,8 @@ public class DWRReportSubSourceServiceImpl implements DWRReportSubSourceService 
   // injected by spring
   private ReportSubSourceService reportSubSource;
 
-  public List<com.mpower.domain.dwr.ReportDataSubSource> readSubSourcesByReportSourceId(Long l) {
-    List<ReportDataSubSource> lrdss = reportSubSource.readSubSourcesByReportSourceId(l);
+  public List<com.mpower.domain.dwr.ReportDataSubSource> readSubSourcesByReportSubSourceGroupId(Long l) {
+    List<ReportDataSubSource> lrdss = reportSubSource.readSubSourcesByReportSubSourceGroupId(l);
     ArrayList<com.mpower.domain.dwr.ReportDataSubSource> dwrList = new ArrayList<com.mpower.domain.dwr.ReportDataSubSource>();
 
     for (Iterator it = lrdss.iterator(); it.hasNext();) {

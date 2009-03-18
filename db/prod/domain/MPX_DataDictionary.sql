@@ -6,6 +6,14 @@ Begin
 	  Description VarChar(100))
 End
 
+If Not Exists (Select * From Information_Schema.Columns Where Table_Name = 'DataDictionary' And Column_Name = 'SubSourceGroup')
+  Alter Table DataDictionary
+  Add SubSourceGroup VarChar(100)
+
+If Not Exists (Select * From Information_Schema.Columns Where Table_Name = 'DataDictionary' And Column_Name = 'LongDescription')
+  Alter Table DataDictionary
+  Add LongDescription VarChar(500)
+
 Truncate Table DataDictionary
 
 Insert DataDictionary (TableName, ColumnName, Description) Select 'AccountingSetup', NULL, 'Accounting Setup'
@@ -141,48 +149,48 @@ Insert DataDictionary (TableName, ColumnName, Description) Select 'Titles', NULL
 Insert DataDictionary (TableName, ColumnName, Description) Select 'UserRoles', NULL, 'MPower User Roles'
 Insert DataDictionary (TableName, ColumnName, Description) Select 'VersionInfo', NULL, 'Version Information'
 Insert DataDictionary (TableName, ColumnName, Description) Select 'VersionLog', NULL, 'Version Update Log'
-Insert DataDictionary (TableName, ColumnName, Description) Select 'VW_REPORT_BATCHES', NULL, 'Batches'
-Insert DataDictionary (TableName, ColumnName, Description) Select 'VW_REPORT_CREDITCARDTRANSACTIONHISTORY', NULL, 'Credit Card Transaction History'
-Insert DataDictionary (TableName, ColumnName, Description) Select 'VW_REPORT_GIFTS', NULL, 'Gift History'
-Insert DataDictionary (TableName, ColumnName, Description) Select 'VW_REPORT_MEDIAOUTLETS_PLACEMENTS', NULL, 'Media Outlets & Placements'
-Insert DataDictionary (TableName, ColumnName, Description) Select 'VW_REPORT_MEDIAPROGRAMS', NULL, 'Media Programs'
-Insert DataDictionary (TableName, ColumnName, Description) Select 'VW_REPORT_MOTIVATIONCODES', NULL, 'Motivation Codes'
-Insert DataDictionary (TableName, ColumnName, Description) Select 'VW_REPORT_MOTIVATIONGROUPS', NULL, 'Motivation Groups'
-Insert DataDictionary (TableName, ColumnName, Description) Select 'VW_REPORT_ORDERS', NULL, 'Order History'
-Insert DataDictionary (TableName, ColumnName, Description) Select 'VW_REPORT_PEOPLE', NULL, 'Accounts'
-Insert DataDictionary (TableName, ColumnName, Description) Select 'VW_REPORT_PEOPLE_ACH', NULL, 'Accounts & ACH Information'
-Insert DataDictionary (TableName, ColumnName, Description) Select 'VW_REPORT_PEOPLE_ADDRESSES', NULL, 'Accounts & Addresses'
-Insert DataDictionary (TableName, ColumnName, Description) Select 'VW_REPORT_PEOPLE_ARMONTHLYHISTORY', NULL, 'Accounts & AR Monthly Summaries'
-Insert DataDictionary (TableName, ColumnName, Description) Select 'VW_REPORT_PEOPLE_ARTRANSACTIONS', NULL, 'Accounts & AR Transaction History'
-Insert DataDictionary (TableName, ColumnName, Description) Select 'VW_REPORT_PEOPLE_CODES', NULL, 'Accounts & Codes'
-Insert DataDictionary (TableName, ColumnName, Description) Select 'VW_REPORT_PEOPLE_CORRESPOND', NULL, 'Accounts & Correspondence'
-Insert DataDictionary (TableName, ColumnName, Description) Select 'VW_REPORT_PEOPLE_CREDITCARDS', NULL, 'Accounts & Credit Cards'
-Insert DataDictionary (TableName, ColumnName, Description) Select 'VW_REPORT_PEOPLE_DATES', NULL, 'Accounts & Dates'
-Insert DataDictionary (TableName, ColumnName, Description) Select 'VW_REPORT_PEOPLE_EMAIL', NULL, 'Accounts & Email Addresses'
-Insert DataDictionary (TableName, ColumnName, Description) Select 'VW_REPORT_PEOPLE_ENTITYFINANCIALS', NULL, 'Accounts & Financial Profile Information'
-Insert DataDictionary (TableName, ColumnName, Description) Select 'VW_REPORT_PEOPLE_ENTITYRELATIONSHIPS', NULL, 'Accounts & Relationships'
-Insert DataDictionary (TableName, ColumnName, Description) Select 'VW_REPORT_PEOPLE_ENTITYSALUTATION', NULL, 'Accounts & Salutations'
-Insert DataDictionary (TableName, ColumnName, Description) Select 'VW_REPORT_PEOPLE_GIFTANNUAL', NULL, 'Accounts & Gift Annual Summaries'
-Insert DataDictionary (TableName, ColumnName, Description) Select 'VW_REPORT_PEOPLE_GIFTPICTURES', NULL, 'Accounts & Gift Pictures'
-Insert DataDictionary (TableName, ColumnName, Description) Select 'VW_REPORT_PEOPLE_GIFTS', NULL, 'Accounts & Gifts'
-Insert DataDictionary (TableName, ColumnName, Description) Select 'VW_REPORT_PEOPLE_GIFTSUMMARY', NULL, 'Accounts & Gift Summaries'
-Insert DataDictionary (TableName, ColumnName, Description) Select 'VW_REPORT_PEOPLE_NOTES', NULL, 'Accounts & Notes'
-Insert DataDictionary (TableName, ColumnName, Description) Select 'VW_REPORT_PEOPLE_ORDERANNUAL', NULL, 'Accounts & Order Annual Summaries'
-Insert DataDictionary (TableName, ColumnName, Description) Select 'VW_REPORT_PEOPLE_ORDERS', NULL, 'Accounts & Orders'
-Insert DataDictionary (TableName, ColumnName, Description) Select 'VW_REPORT_PEOPLE_ORDERSUMMARY', NULL, 'Accounts & Order Summaries'
-Insert DataDictionary (TableName, ColumnName, Description) Select 'VW_REPORT_PEOPLE_PHONE', NULL, 'Accounts & Phone Numbers'
-Insert DataDictionary (TableName, ColumnName, Description) Select 'VW_REPORT_PEOPLE_PLEDGE', NULL, 'Accounts & Pledges'
-Insert DataDictionary (TableName, ColumnName, Description) Select 'VW_REPORT_PEOPLE_SUBSCRIPTIONS', NULL, 'Accounts & Subscriptions'
-Insert DataDictionary (TableName, ColumnName, Description) Select 'VW_REPORT_PEOPLE_TRANSACTIONS', NULL, 'Accounts & Transactions'
-Insert DataDictionary (TableName, ColumnName, Description) Select 'VW_REPORT_PRODUCTACTIVITY', NULL, 'Products & Activity'
-Insert DataDictionary (TableName, ColumnName, Description) Select 'VW_REPORT_PRODUCTCOMPONENTS', NULL, 'BOM Products & Components'
-Insert DataDictionary (TableName, ColumnName, Description) Select 'VW_REPORT_PRODUCTHISTORY', NULL, 'Products & Monthly Activity Summaries'
-Insert DataDictionary (TableName, ColumnName, Description) Select 'VW_REPORT_PRODUCTLOCATIONS', NULL, 'Products & Locations '
-Insert DataDictionary (TableName, ColumnName, Description) Select 'VW_REPORT_PRODUCTS', NULL, 'Products'
-Insert DataDictionary (TableName, ColumnName, Description) Select 'VW_REPORT_PROJECTCODES', NULL, 'Project Codes'
-Insert DataDictionary (TableName, ColumnName, Description) Select 'VW_REPORT_PROJECTCODES_CATEGORIES', NULL, 'Project Codes & Categories'
-Insert DataDictionary (TableName, ColumnName, Description) Select 'VW_REPORT_RECURRINGBATCHES', NULL, 'Recurring Batches'
-Insert DataDictionary (TableName, ColumnName, Description) Select 'VW_REPORT_USERS', NULL, 'MPower Users'
+Insert DataDictionary (TableName, ColumnName, Description, SubSourceGroup, LongDescription) Select 'VW_REPORT_BATCHES', NULL, 'Batches', 'Transaction Information', 'Batch information'
+Insert DataDictionary (TableName, ColumnName, Description, SubSourceGroup, LongDescription) Select 'VW_REPORT_CREDITCARDTRANSACTIONHISTORY', NULL, 'Credit Card Transaction History', 'Transaction Information', 'Credit card payment requests and approval status information'
+Insert DataDictionary (TableName, ColumnName, Description, SubSourceGroup, LongDescription) Select 'VW_REPORT_GIFTS', NULL, 'Gift History', 'Transaction Information', 'Gifts (hard & soft) and their associated information'
+Insert DataDictionary (TableName, ColumnName, Description, SubSourceGroup, LongDescription) Select 'VW_REPORT_MEDIAOUTLETS_PLACEMENTS', NULL, 'Media Outlets & Placements', 'Media Information', 'Media outlets including associated placement and program information'
+Insert DataDictionary (TableName, ColumnName, Description, SubSourceGroup, LongDescription) Select 'VW_REPORT_MEDIAPROGRAMS', NULL, 'Media Programs', 'Media Information', ' Media programs including episode, air date, and premium information'
+Insert DataDictionary (TableName, ColumnName, Description, SubSourceGroup, LongDescription) Select 'VW_REPORT_MOTIVATIONCODES', NULL, 'Motivation Codes', 'Administrative', 'Motivation code information'
+Insert DataDictionary (TableName, ColumnName, Description, SubSourceGroup, LongDescription) Select 'VW_REPORT_MOTIVATIONGROUPS', NULL, 'Motivation Groups', 'Administrative', 'Motivation groups including associated motivation code information'
+Insert DataDictionary (TableName, ColumnName, Description, SubSourceGroup, LongDescription) Select 'VW_REPORT_ORDERS', NULL, 'Order History', 'Transaction Information', 'Orders and their associated information'
+Insert DataDictionary (TableName, ColumnName, Description, SubSourceGroup, LongDescription) Select 'VW_REPORT_PEOPLE', NULL, 'Accounts', 'Account Information', 'Account information'
+Insert DataDictionary (TableName, ColumnName, Description, SubSourceGroup, LongDescription) Select 'VW_REPORT_PEOPLE_ACH', NULL, 'Accounts & ACH Information', 'Accounts & Transaction Information', 'Accounts and ACH information'
+Insert DataDictionary (TableName, ColumnName, Description, SubSourceGroup, LongDescription) Select 'VW_REPORT_PEOPLE_ADDRESSES', NULL, 'Accounts & Addresses', 'Account Information', 'Accounts and address information'
+Insert DataDictionary (TableName, ColumnName, Description, SubSourceGroup, LongDescription) Select 'VW_REPORT_PEOPLE_ARMONTHLYHISTORY', NULL, 'Accounts & AR Monthly Summaries', 'Accounts & Transaction Information', 'Accounts and AR monthly summary information'
+Insert DataDictionary (TableName, ColumnName, Description, SubSourceGroup, LongDescription) Select 'VW_REPORT_PEOPLE_ARTRANSACTIONS', NULL, 'Accounts & AR Transaction History', 'Accounts & Transaction Information', 'Accounts and AR transaction (payments, amounts due, adjustments) information'
+Insert DataDictionary (TableName, ColumnName, Description, SubSourceGroup, LongDescription) Select 'VW_REPORT_PEOPLE_CODES', NULL, 'Accounts & Codes', 'Account Information', 'Accounts and code information'
+Insert DataDictionary (TableName, ColumnName, Description, SubSourceGroup, LongDescription) Select 'VW_REPORT_PEOPLE_CORRESPOND', NULL, 'Accounts & Correspondence', 'Account Information', 'Accounts and correspondence information'
+Insert DataDictionary (TableName, ColumnName, Description, SubSourceGroup, LongDescription) Select 'VW_REPORT_PEOPLE_CREDITCARDS', NULL, 'Accounts & Credit Cards', 'Accounts & Transaction Information', 'Accounts and credit card information'
+Insert DataDictionary (TableName, ColumnName, Description, SubSourceGroup, LongDescription) Select 'VW_REPORT_PEOPLE_DATES', NULL, 'Accounts & Dates', 'Account Information', 'Accounts and date information'
+Insert DataDictionary (TableName, ColumnName, Description, SubSourceGroup, LongDescription) Select 'VW_REPORT_PEOPLE_EMAIL', NULL, 'Accounts & Email Addresses', 'Account Information', 'Accounts and email address information'
+Insert DataDictionary (TableName, ColumnName, Description, SubSourceGroup, LongDescription) Select 'VW_REPORT_PEOPLE_ENTITYFINANCIALS', NULL, 'Accounts & Financial Profile Information', 'Account Information', 'Accounts and financial profile information'
+Insert DataDictionary (TableName, ColumnName, Description, SubSourceGroup, LongDescription) Select 'VW_REPORT_PEOPLE_ENTITYRELATIONSHIPS', NULL, 'Accounts & Relationships', 'Account Information', 'Accounts and relationship information'
+Insert DataDictionary (TableName, ColumnName, Description, SubSourceGroup, LongDescription) Select 'VW_REPORT_PEOPLE_ENTITYSALUTATION', NULL, 'Accounts & Salutations', 'Account Information', 'Accounts and salutation information'
+Insert DataDictionary (TableName, ColumnName, Description, SubSourceGroup, LongDescription) Select 'VW_REPORT_PEOPLE_GIFTANNUAL', NULL, 'Accounts & Gift Annual Summaries', 'Accounts & Transaction Information', 'Accounts and annual gift summary information'
+Insert DataDictionary (TableName, ColumnName, Description, SubSourceGroup, LongDescription) Select 'VW_REPORT_PEOPLE_GIFTPICTURES', NULL, 'Accounts & Gift Pictures', 'Accounts & Transaction Information', 'Accounts and gift pictures including associated information'
+Insert DataDictionary (TableName, ColumnName, Description, SubSourceGroup, LongDescription) Select 'VW_REPORT_PEOPLE_GIFTS', NULL, 'Accounts & Gifts', 'Accounts & Transaction Information', 'Accounts and gifts (hard & soft) including associated information'
+Insert DataDictionary (TableName, ColumnName, Description, SubSourceGroup, LongDescription) Select 'VW_REPORT_PEOPLE_GIFTSUMMARY', NULL, 'Accounts & Gift Summaries', 'Accounts & Transaction Information', 'Accounts and overall gift summary information'
+Insert DataDictionary (TableName, ColumnName, Description, SubSourceGroup, LongDescription) Select 'VW_REPORT_PEOPLE_NOTES', NULL, 'Accounts & Notes', 'Account Information', 'Accounts and note information'
+Insert DataDictionary (TableName, ColumnName, Description, SubSourceGroup, LongDescription) Select 'VW_REPORT_PEOPLE_ORDERANNUAL', NULL, 'Accounts & Order Annual Summaries', 'Accounts & Transaction Information', 'Accounts and annual order summary information'
+Insert DataDictionary (TableName, ColumnName, Description, SubSourceGroup, LongDescription) Select 'VW_REPORT_PEOPLE_ORDERS', NULL, 'Accounts & Orders', 'Accounts & Transaction Information', 'Accounts and orders including associated information'
+Insert DataDictionary (TableName, ColumnName, Description, SubSourceGroup, LongDescription) Select 'VW_REPORT_PEOPLE_ORDERSUMMARY', NULL, 'Accounts & Order Summaries', 'Accounts & Transaction Information', 'Accounts and overall order summary information'
+Insert DataDictionary (TableName, ColumnName, Description, SubSourceGroup, LongDescription) Select 'VW_REPORT_PEOPLE_PHONE', NULL, 'Accounts & Phone Numbers', 'Account Information', 'Accounts and phone numbers'
+Insert DataDictionary (TableName, ColumnName, Description, SubSourceGroup, LongDescription) Select 'VW_REPORT_PEOPLE_PLEDGE', NULL, 'Accounts & Pledges', 'Accounts & Transaction Information', 'Accounts and pledge information'
+Insert DataDictionary (TableName, ColumnName, Description, SubSourceGroup, LongDescription) Select 'VW_REPORT_PEOPLE_SUBSCRIPTIONS', NULL, 'Accounts & Subscriptions', 'Accounts & Transaction Information', 'Accounts and subscription information'
+Insert DataDictionary (TableName, ColumnName, Description, SubSourceGroup, LongDescription) Select 'VW_REPORT_PEOPLE_TRANSACTIONS', NULL, 'Accounts & Transactions', 'Accounts & Transaction Information', 'Accounts and transactions (orders, hard & soft gifts) including associated information'
+Insert DataDictionary (TableName, ColumnName, Description, SubSourceGroup, LongDescription) Select 'VW_REPORT_PRODUCTACTIVITY', NULL, 'Products & Activity', 'Inventory Information', 'Products and their associated activities'
+Insert DataDictionary (TableName, ColumnName, Description, SubSourceGroup, LongDescription) Select 'VW_REPORT_PRODUCTCOMPONENTS', NULL, 'BOM Products & Components', 'Inventory Information', 'BOM products and their component products'
+Insert DataDictionary (TableName, ColumnName, Description, SubSourceGroup, LongDescription) Select 'VW_REPORT_PRODUCTHISTORY', NULL, 'Products & Monthly Activity Summaries', 'Inventory Information', 'Products and monthly activity summary information'
+Insert DataDictionary (TableName, ColumnName, Description, SubSourceGroup, LongDescription) Select 'VW_REPORT_PRODUCTLOCATIONS', NULL, 'Products & Locations ', 'Inventory Information', 'Products and location information'
+Insert DataDictionary (TableName, ColumnName, Description, SubSourceGroup, LongDescription) Select 'VW_REPORT_PRODUCTS', NULL, 'Products', 'Inventory Information', 'Product information'
+Insert DataDictionary (TableName, ColumnName, Description, SubSourceGroup, LongDescription) Select 'VW_REPORT_PROJECTCODES', NULL, 'Project Codes', 'Administrative', 'Project code information'
+Insert DataDictionary (TableName, ColumnName, Description, SubSourceGroup, LongDescription) Select 'VW_REPORT_PROJECTCODES_CATEGORIES', NULL, 'Project Codes & Categories', 'Administrative', 'Project codes and associated category information'
+Insert DataDictionary (TableName, ColumnName, Description, SubSourceGroup, LongDescription) Select 'VW_REPORT_RECURRINGBATCHES', NULL, 'Recurring Batches', 'Accounts & Transaction Information', 'Recurring batches and associated information'
+Insert DataDictionary (TableName, ColumnName, Description, SubSourceGroup, LongDescription) Select 'VW_REPORT_USERS', NULL, 'MPX Users', 'Administrative', 'MPX User information'
 Insert DataDictionary (TableName, ColumnName, Description) Select 'ZIPCODES', NULL, 'Zip Codes'
 Insert DataDictionary (TableName, ColumnName, Description) Select 'AccountingSetup', 'Category', 'Category'
 Insert DataDictionary (TableName, ColumnName, Description) Select 'AccountingSetup', 'CC', 'Cost Center'
@@ -5273,3 +5281,7 @@ Insert DataDictionary (TableName, ColumnName, Description) Select 'ZIPCODES', 'T
 Insert DataDictionary (TableName, ColumnName, Description) Select 'ZIPCODES', 'ZipHigh', NULL
 Insert DataDictionary (TableName, ColumnName, Description) Select 'ZIPCODES', 'ZipId', NULL
 Insert DataDictionary (TableName, ColumnName, Description) Select 'ZIPCODES', 'ZipLow', NULL
+
+
+
+
