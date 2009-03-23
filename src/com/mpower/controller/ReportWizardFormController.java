@@ -19,6 +19,7 @@ import org.springframework.security.userdetails.UserDetailsService;
 import org.springframework.util.Assert;
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
+import org.springframework.validation.Validator;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractWizardFormController;
 
@@ -149,28 +150,17 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 	}
 
 	@Override
-	protected void validatePage(Object command, Errors errors, int page)
-    {
-
-		ReportWizardValidator val = (ReportWizardValidator) this.getValidator();
-
-        switch(page)
-        {
-        case 0:
-        	val.validateReportSource(command, errors);break;
-        case 1:
-        	val.validateReportFormat(command, errors);break;
-        case 2:
-            val.validateReportContent(command, errors);break;
-        case 3:
-        	val.validateReportCriteria(command, errors);break;
-        case 4:
-        	val.validateReportSave(command, errors);break;
-        default:
-            super.validatePage(command, errors, page);break;
-        }
-
-    }
+	 protected void validatePage(Object command, Errors errors, int page) {
+	        Validator[] validators = getValidators();
+	        for (int i=0; i<validators.length; i++) {
+	            Validator validator = validators[i];
+	            if (validator instanceof ReportWizardValidator) {
+	            	if (((ReportWizardValidator)validator).getPage() == page) {
+	                    validator.validate(command, errors);
+	                }
+	            }
+	        }
+	    }
 
 	@Override
 	protected void postProcessPage(HttpServletRequest request, Object command,

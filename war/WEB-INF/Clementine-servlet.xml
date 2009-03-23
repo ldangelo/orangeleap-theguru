@@ -140,15 +140,28 @@
 		</property>
 		<property name="validators">
 			<list>
-	            <ref bean="reportWizardValidator"/>
-	            <bean class="com.mpower.controller.validator.ReportWizardValidator">
-	            </bean>
-			</list>
+	            <ref bean="reportSourceValidator" />
+	            <ref bean="reportFormatValidator" />
+	            <ref bean="reportContentValidator" />
+	            <ref bean="reportCriteriaValidator" />
+	        </list>
         </property>
+	</bean>
 
-    </bean>
-
-	<bean name="reportWizardValidator" class="com.mpower.controller.validator.ReportWizardValidator">
+	<bean id ="reportSourceValidator" class="com.mpower.controller.validator.ReportSourceValidator">
+		<property name="page" value="0"/>
+	</bean>
+	
+	<bean id ="reportFormatValidator" class="com.mpower.controller.validator.ReportFormatValidator">
+		<property name="page" value="1"/>
+	</bean>
+	
+		<bean id ="reportContentValidator" class="com.mpower.controller.validator.ReportContentValidator">
+		<property name="page" value="2"/>
+	</bean>
+	
+	<bean id ="reportCriteriaValidator" class="com.mpower.controller.validator.ReportCriteriaValidator">
+		<property name="page" value="3"/>
 	</bean>
 
 	<!-- Configures the Tiles layout system -->
