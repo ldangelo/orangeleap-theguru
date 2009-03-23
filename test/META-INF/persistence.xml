@@ -6,7 +6,7 @@
 
 	<persistence-unit name="MPowerUnitTestPu" transaction-type="RESOURCE_LOCAL">
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
-        
+
 		<properties>
 			<property name="hibernate.hbm2ddl.auto" value="create"/>
 			<property name="hibernate.show_sql" value="true"/>
@@ -20,7 +20,7 @@
 	<persistence-unit name="MPowerDevPu" transaction-type="RESOURCE_LOCAL">
 		<!-- This is the test file!!!!! -->
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
-        
+
 		<properties>
 	        <property name="hibernate.hbm2ddl.auto" value="update"/>
 	        <property name="hibernate.show_sql" value="false"/>
@@ -30,7 +30,7 @@
 	        <property name="hibernate.connection.pool_size" value="1"/>
 	        <property name="hibernate.connection.username" value="mpower"/>
 	        <property name="hibernate.connection.password" value="mpower"/>
-	        <property name="hibernate.connection.url" value="jdbc:mysql://localhost:3306/mpoweropen"/>
+	        <property name="hibernate.connection.url" value="jdbc:mysql://localhost:3306/theguru"/>
 	        <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLInnoDBDialect"/>
 		</properties>
 

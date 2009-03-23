@@ -22,9 +22,9 @@
 
 
 	    <context:component-scan base-package="com.mpower" />
-    
+
 	<aop:aspectj-autoproxy/>
-	
+
 	<tx:annotation-driven proxy-target-class="true" transaction-manager="transactionManager"/>
     <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="locations">
@@ -33,11 +33,11 @@
            </list>
         </property>
     </bean>
-		 	
+
 	<bean id="entityManagerFactory"
 		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
 		<property name="dataSource" ref="dataSource" />
-		<property name="persistenceUnitName" value="MPowerOpenPu" />
+		<property name="persistenceUnitName" value="TheGuruPu" />
 		<property name="jpaVendorAdapter">
 			<bean
 				class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter" />
@@ -58,12 +58,12 @@
 		<property name="password" value="${jdbc.password}"/>
  		<property name="maxActive"><value>100</value></property>
 		<property name="maxIdle"><value>30</value></property>
-		<property name="maxWait"><value>10000</value></property> 
+		<property name="maxWait"><value>10000</value></property>
  		<property name="validationQuery" value="SELECT 1"/>
 		<property name="testOnBorrow"><value>true</value></property>
-		<property name="testWhileIdle"><value>true</value></property>		
+		<property name="testWhileIdle"><value>true</value></property>
 	</bean>
-	
+
 
 	<bean
 		class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor" />

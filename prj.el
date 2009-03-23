@@ -3,25 +3,25 @@
  ;; Set here default parameter for make program
  ;; '(jde-make-args "jar")
  ;; What should be put as java file header
- '(jde-gen-buffer-boilerplate 
-   (quote 
-    ("/*" 
+ '(jde-gen-buffer-boilerplate
+   (quote
+    ("/*"
      " * Clementine - opensource reporting wizard"
-     " * http://www.mpoweropen.com "
-     " * (C) 2008, MPower" 
-     " *" 
-     " * This library is free software; you can redistribute it and/or" 
-     " * modify it under the terms of the GNU Lesser General Public" 
-     " * License as published by the Free Software Foundation;" 
-     " * version 2.1 of the License." 
-     " *" 
-     " * This library is distributed in the hope that it will be useful," 
-     " * but WITHOUT ANY WARRANTY; without even the implied warranty of" 
-     " * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU" 
-     " * Lesser General Public License for more details." 
-     " *" 
+     " * http://www.orangeleap.com "
+     " * (C) 2009, Orange Leap"
+     " *"
+     " * This library is free software; you can redistribute it and/or"
+     " * modify it under the terms of the GNU Lesser General Public"
+     " * License as published by the Free Software Foundation;"
+     " * version 2.1 of the License."
+     " *"
+     " * This library is distributed in the hope that it will be useful,"
+     " * but WITHOUT ANY WARRANTY; without even the implied warranty of"
+     " * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU"
+     " * Lesser General Public License for more details."
+     " *"
      " */")))
- ;; Sometimes JDEE prints useful messages, but if everything works well 
+ ;; Sometimes JDEE prints useful messages, but if everything works well
  ;; you will be not using this.
  '(jde-log-max 5000)
  ;; Must be on to improve your coding: you write: "if " and JDEE generates
@@ -31,15 +31,15 @@
  '(jde-db-option-connect-socket (quote (nil "8000")))
 
  ;; Path to source files for automatic loading
- '(jde-sourcepath 
-   (quote 
+ '(jde-sourcepath
+   (quote
     (
      "~/Development/Clementine/src/"
      "/Users/ldangelo/Development/Clementine/lib/war/source/DynamicJasper-2.1.0-sources.jar"
      )))
  ;; Classpath for browsing files and generates code templates
- '(jde-global-classpath 
-   (quote 
+ '(jde-global-classpath
+   (quote
     (
      "~/Development/Clementine/src/"
      "~/Development/Clementine/lib/war/bin/DynamicJasper-2.1.0.jar"
@@ -117,8 +117,8 @@
      "/usr/local/tomcat/lib/tomcat-dbcp.jar"
      )))
 
- '(bsh-classpath 
-   (quote 
+ '(bsh-classpath
+   (quote
     (
      "~/Development/Clementine/src/"
      "~/Development/Clementine/build/stage/clementine.jar"
@@ -136,13 +136,13 @@
 
 ;;'(jde-ant-buildfile "/Users/ldangelo/Development/Clementine/build/build.xml")
 
- ;; For javadoc templates version tag can be customized 
+ ;; For javadoc templates version tag can be customized
  '(jde-javadoc-version-tag-template "\"* @version $Id: prj.el,v 1.4 2003/04/23 14:28:25 kobit Exp $\"")
 
  ;; Defines bracket placement style - now it is set according to SUN standards
  '(jde-gen-k&r t)
 
- ;; Do you prefer to have java.io.* imports or separate import for each 
+ ;; Do you prefer to have java.io.* imports or separate import for each
  ;; used class - now it is set for importing classes separately
  '(jde-import-auto-collapse-imports nil)
 
@@ -160,5 +160,5 @@
  ;; Only for CygWin users it improves path resolving
 ;; '(jde-cygwin-path-converter (quote (jde-cygwin-path-converter-cygpath)))
  ;; You can set different user name and e-mail address for each project
- '(user-mail-address "ldangelo@mpoweropen.com")
+ '(user-mail-address "ldangelo@orangeleap.com")
 )

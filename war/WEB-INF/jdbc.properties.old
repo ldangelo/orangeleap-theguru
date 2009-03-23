@@ -3,7 +3,7 @@
 # Targeted at system administrators, to avoid touching the context XML files.
 
 jdbc.driverClassName=org.gjt.mm.mysql.Driver
-jdbc.url=jdbc:mysql://localhost:3306/mpoweropen?create=true
+jdbc.url=jdbc:mysql://localhost:3306/theguru?create=true
 jdbc.username=mpower
 jdbc.password=mpower
 

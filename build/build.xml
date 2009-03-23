@@ -5,7 +5,7 @@
 	<property file="${basedir}/jasperserver/jasperserver.properties" />
 	<property name="lib.dir" value="${basedir}/lib" />
 	<property name="build.env" value="dev"/>
-	
+
 	<taskdef resource="net/sf/antcontrib/antcontrib.properties">
 		<classpath>
 			<pathelement location="${lib.dir}/test/bin/ant-contrib-1.0b3.jar" />
@@ -35,7 +35,6 @@
 	        <jvmarg value="-Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=n"/>
 	    	<jvmarg value="-Xms128m" />
 	    	<jvmarg value="-Xmx512m" />
-	    	<jvmarg value="-server"/>
 	    	<jvmarg value="-XX:PermSize=64m"/>
 	    	<jvmarg value="-XX:MaxPermSize=128m" />
 	    	<jvmarg value="-Dcom.sun.management.jmxremote"/>
@@ -55,7 +54,7 @@
 	<target name="6. Generate Java Docs" description="Generates Javadocs for the entire application.">
 		<ant antfile="${internal.build.file}" target="generate-javadocs" />
 	</target>
-	
+
 	<target name="7. Deploy and Start Tomcat" depends="3. Undeploy War, 2. Deploy War, 4. Start Tomcat - Debug Mode"/>
 
 	<target name="8. Redeploy and Restart Tomcat">
@@ -71,7 +70,8 @@
 	</target>
 
 	<target name="9. Load Data">
-	     <sql driver="${mysql.db.driver}"
+		<!-- The Guru Database-->
+		<sql driver="${mysql.db.driver}"
 	          url="${mysql.db.url}"
 	          userid="${mysql.db.user}"
 	          password="${mysql.db.pw}"
@@ -79,8 +79,8 @@
 	          classpath="${mysql.db.classpath}"
 	     	  delimiter="$$">
 	     	<transaction src="${basedir}/db/prod/domain/functions.sql"/>
-	     </sql>		
-		
+	     </sql>
+
 	     <sql driver="${mysql.db.driver}"
 	          url="${mysql.db.url}"
 	          userid="${mysql.db.user}"
@@ -91,7 +91,55 @@
 
 	     	<!-- Add development data -->
 	     	<transaction src="${basedir}/db/prod/domain/orangeLeapReports.sql"/>
-	     </sql>	
+	     </sql>
+
+		<!-- Orangeleap database-->
+		<sql driver="${orangeleap.mysql.db.driver}"
+			          url="${orangeleap.mysql.db.url}"
+			          userid="${orangeleap.mysql.db.user}"
+			          password="${orangeleap.mysql.db.pw}"
+			          encoding="UTF-8"
+			          classpath="${orangeleap.mysql.db.classpath}"
+					  delimiter="$$">
+					<!-- Add functions to orangeleap database-->
+					<transaction src="${basedir}/db/prod/domain/functions.sql"/>
+		</sql>
+
+		<sql driver="${orangeleap.mysql.db.driver}"
+			          url="${orangeleap.mysql.db.url}"
+			          userid="${orangeleap.mysql.db.user}"
+			          password="${orangeleap.mysql.db.pw}"
+			          encoding="UTF-8"
+					  classpath="${orangeleap.mysql.db.classpath}">
+					<!-- Add views to orangeleap database-->
+			     	<transaction src="${basedir}/db/prod/domain/orangeLeapReportViews.sql"/>
+		</sql>
+
+	</target>
+
+	<target name="Load OrangeLeap Data Only (Views and Functions)">
+		<!-- Orangeleap database-->
+		<sql driver="${orangeleap.mysql.db.driver}"
+			          url="${orangeleap.mysql.db.url}"
+			          userid="${orangeleap.mysql.db.user}"
+			          password="${orangeleap.mysql.db.pw}"
+			          encoding="UTF-8"
+			          classpath="${orangeleap.mysql.db.classpath}"
+					  delimiter="$$">
+					<!-- Add functions to orangeleap database-->
+					<transaction src="${basedir}/db/prod/domain/functions.sql"/>
+		</sql>
+
+		<sql driver="${orangeleap.mysql.db.driver}"
+			          url="${orangeleap.mysql.db.url}"
+			          userid="${orangeleap.mysql.db.user}"
+			          password="${orangeleap.mysql.db.pw}"
+			          encoding="UTF-8"
+					  classpath="${orangeleap.mysql.db.classpath}">
+					<!-- Add views to orangeleap database-->
+			     	<transaction src="${basedir}/db/prod/domain/orangeLeapReportViews.sql"/>
+		</sql>
+
 	</target>
 
 	<target name="10. Import JasperServer Repository">
@@ -100,7 +148,7 @@
 	    <arg value="/c"/>
 	    <arg value="js-import.bat" />
 	    <arg value="--input-zip"/>
-	    <arg value="${basedir}\jasperserver\repository.zip"/>  	
+	    <arg value="${basedir}\jasperserver\repository.zip"/>
 	  </exec>
 
 	  <exec dir="${jasperserver.bin}/scripts/" executable="./js-import.sh" os="Mac OS X,unix">
@@ -116,7 +164,7 @@
 	  	<arg value="js-export.bat" />
 	  	<arg value="--everything"/>
 	  	<arg value="--output-zip"/>
-	  	<arg value="${basedir}\jasperserver\repository.zip"/>  	
+	  	<arg value="${basedir}\jasperserver\repository.zip"/>
 	  </exec>
 
 	  <exec os="Mac OS X,unix" dir="${jasperserver.bin}/scripts/" executable="./js-export.sh">
@@ -124,10 +172,10 @@
 	    <arg value="--output-zip"/>
 	    <arg value="${basedir}/jasperserver/repository.zip"/>
 	  </exec>
-	</target>	
-	
+	</target>
+
 	<target name="javadoc"  description="Compiles the library API documentation.">
-		<mkdir dir="./dist/javadoc"/> 
+		<mkdir dir="./dist/javadoc"/>
 		<delete dir="./dist/javadoc/net"/>
 		<delete>
 			<fileset dir="./dist/javadoc" includes="**/*.*" />
@@ -150,13 +198,13 @@
 			</classpath>
 		</javadoc>
 	</target>
-	
+
 	<target name="app.synch" description="Synchs the XMHTML, JSP, JS, CSS, and Images of the project with a running application.">
 		<ant antfile="${internal.build.file}" target="app.synch" />
 	</target>
 
 	<target name="usage">
-		<echo>This is the build file for MPowerOpen</echo>
+		<echo>This is the build file for TheGuru</echo>
 		<echo>Use "Clean" to delete the temporary build directories in the project.</echo>
 		<echo>Use "Deploy Exploded War" to deploy the application as an exploded war</echo>
 		<echo>Use "Deploy War" to deploy the war unexploded</echo>

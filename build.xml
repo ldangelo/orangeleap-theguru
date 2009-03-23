@@ -5,13 +5,13 @@
 	<property file="${basedir}/jasperserver/jasperserver.properties" />
 	<property name="lib.dir" value="${basedir}/lib" />
 	<property name="build.env" value="dev"/>
-	
+
 	<taskdef resource="net/sf/antcontrib/antcontrib.properties">
 		<classpath>
 			<pathelement location="${lib.dir}/test/bin/ant-contrib-1.0b3.jar" />
 		</classpath>
 	</taskdef>
-	
+
 	<target name="version">
 		<exec executable="java">
 			<arg value="-version"/>
@@ -58,7 +58,7 @@
 	<target name="6. Generate Java Docs" description="Generates Javadocs for the entire application.">
 		<ant antfile="${internal.build.file}" target="generate-javadocs" />
 	</target>
-	
+
 	<target name="7. Deploy and Start Tomcat" depends="3. Undeploy War, 2. Deploy War, 4. Start Tomcat - Debug Mode"/>
 
 	<target name="8. Redeploy and Restart Tomcat">
@@ -86,7 +86,7 @@
 	     	<!-- Add development data -->
 	     	<transaction src="${basedir}/db/prod/domain/reports.sql"/>
 	     </sql>
-		
+
 	     <sql driver="${mysql.db.driver}"
 	          url="${mysql.db.url}"
 	          userid="${mysql.db.user}"
@@ -95,7 +95,7 @@
 	          classpath="${mysql.db.classpath}"
 	     	  delimiter="$$">
 	     	<transaction src="${basedir}/db/prod/domain/functions.sql"/>
-	     </sql>		
+	     </sql>
 	</target>
 
 	<target name="10. Import JasperServer Repository">
@@ -105,7 +105,7 @@
 	    <arg value="import.bat" />
 	    <arg value="-p"/>
 	  </exec>
-	  
+
 	  <exec dir="${jasperserver.bin}/scripts/" executable="./js-import.sh" os="Mac OS X,unix">
 	    <arg value="--input-zip"/>
 	    <arg value="${basedir}/jasperserver/repository.zip"/>
@@ -125,14 +125,14 @@
 	    <arg value="--output-zip"/>
 	    <arg value="${basedir}/jasperserver/repository.zip"/>
 	  </exec>
-	</target>	  
+	</target>
 
 	<target name="app.synch" description="Synchs the XMHTML, JSP, JS, CSS, and Images of the project with a running application.">
 		<ant antfile="${internal.build.file}" target="app.synch" />
 	</target>
 
 	<target name="usage">
-		<echo>This is the build file for MPowerOpen</echo>
+		<echo>This is the build file for TheGuru</echo>
 		<echo>Use "Clean" to delete the temporary build directories in the project.</echo>
 		<echo>Use "Deploy Exploded War" to deploy the application as an exploded war</echo>
 		<echo>Use "Deploy War" to deploy the war unexploded</echo>
