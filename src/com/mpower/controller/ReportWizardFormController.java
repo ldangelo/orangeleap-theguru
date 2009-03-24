@@ -173,6 +173,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		if ((wiz.getSubSourceId() != previousDataSubSourceId || wiz.getDataSource() == null) && wiz.getSubSourceId() != 0)
 		{
 			previousDataSubSourceId = wiz.getSubSourceId();
+			previousDataSubSourceGroupId = wiz.getDataSubSourceGroupId();
 			wiz.setDataSource(reportSourceService.find(wiz.getSrcId()));
 			wiz.setDataSubSourceGroup(reportSubSourceGroupService.find(wiz.getDataSubSourceGroupId()));
 
