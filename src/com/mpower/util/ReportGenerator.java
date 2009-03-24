@@ -13,6 +13,7 @@ import net.sf.jasperreports.engine.JasperPrint;
 
 import com.jaspersoft.jasperserver.api.metadata.xml.domain.impl.ResourceDescriptor;
 import com.jaspersoft.jasperserver.irplugin.JServer;
+import com.jaspersoft.jasperserver.irplugin.wsclient.WSClient;
 import com.mpower.domain.ReportChartSettings;
 import com.mpower.domain.ReportCrossTabFields;
 import com.mpower.domain.ReportField;
@@ -721,8 +722,20 @@ public class ReportGenerator {
 		rd.getChildren().add(jrxmlDescriptor);
 		rd.setResourceProperty(
 				ResourceDescriptor.PROP_RU_ALWAYS_PROPMT_CONTROLS, true);
-		ResourceDescriptor reportDescriptor = server.getWSClient()
-		.addOrModifyResource(rd, report);
+		// Check if the report already exists and delete it if it does
+		WSClient wsClient = server.getWSClient();
+		boolean reportExists = false;
+		
+		// wsClient.list(rd) throws an exception if the report does not exist
+		try {
+			List reportList = wsClient.list(rd);
+			reportExists = reportList.size() > 0;
+		} catch (Exception e) {
+			reportExists = false;
+		}
+		if (reportExists)
+			wsClient.delete(rd);
+		ResourceDescriptor reportDescriptor = wsClient.addOrModifyResource(rd, report);
 
 		//
 		// if there are parameters for this report then add the input controls

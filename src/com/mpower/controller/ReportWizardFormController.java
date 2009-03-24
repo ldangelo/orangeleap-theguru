@@ -223,13 +223,6 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		//
 		// if we are saving a report then redirect the user back to where they hit saveas from
 		if (request.getParameter("_target5") != null || request.getParameter("_target5.x") != null) {
-			try {
-				saveReport(wiz);
-			} catch (Exception e) {
-				logger.error(e.getLocalizedMessage());
-				errors.reject(e.getLocalizedMessage());
-			}
-
 			ReportWizard wiz = (ReportWizard) command;
 			return wiz.getPreviousPage();
 		}
