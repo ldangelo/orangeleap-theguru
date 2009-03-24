@@ -55,10 +55,10 @@ public class ModifyReportJRXML {
      * v 3.0.4, JasperServer is not aware of this class and it causes
      * an error:
      * java.lang.ClassNotFoundException: ar.com.fdvs.dj.core.DJDefaultScriptlet
-     * @throws IOException 
-     * @throws SAXException 
-     * @throws ParserConfigurationException 
-     * 
+     * @throws IOException
+     * @throws SAXException
+     * @throws ParserConfigurationException
+     *
      */
     public void removeDJDefaultScriptlet(String fileName) throws ParserConfigurationException, SAXException, IOException{
     	Document document = loadXMLDocument(fileName);
@@ -66,8 +66,8 @@ public class ModifyReportJRXML {
     	Element jasperReport = (Element) document.getElementsByTagName("jasperReport").item(0);
     	jasperReport.removeAttribute("scriptletClass");
     	saveXMLtoFile(fileName, document);
-    	
-    	
+
+
     }
 
     /**
@@ -343,7 +343,7 @@ public class ModifyReportJRXML {
 		Document document = documentBuilder.parse(new File(fileName));
 		return document;
 	}
-	
+
 	private String getClassName()
 	{
 		String thisClassName;
@@ -365,13 +365,13 @@ public class ModifyReportJRXML {
 
 		//Clean up the URL and make a String with absolute path name
 		localDirName = myURL.getPath();  //Strip path to URL object out
-		localDirName = myURL.getPath().replaceAll("%20", " ");  //change %20 chars to spaces  
+		localDirName = myURL.getPath().replaceAll("%20", " ");  //change %20 chars to spaces
 
 		//Get the current execution directory
 		localDirName = localDirName.substring(0,localDirName.lastIndexOf("clementine.jar"));  //clean off the file name
 
 		return localDirName;
-	}	 
+	}
 
 	private Element createGroup(Document document,
 			HashMap<String, Integer> fieldProperties,
@@ -699,7 +699,11 @@ public class ModifyReportJRXML {
 		String varName = null;
 		String valueClassName = null;
 		String pattern = null;
-		String columnName = f.getColumnName() + "_" + columnIndex;
+		String columnName = null;
+		if (f.getAliasName() == null || f.getAliasName().length() == 0)
+			columnName = f.getColumnName() + "_" + columnIndex;
+		else
+			columnName = f.getAliasName() + "_" + columnIndex;
 		//set the field data type
 		if (calc.compareToIgnoreCase("count") == 0){
 			valueClassName = Long.class.getName();
@@ -787,7 +791,13 @@ public class ModifyReportJRXML {
 				case MONEY:   	valueClassName = Float.class.getName(); 	break;
 				case BOOLEAN:   valueClassName = Boolean.class.getName();
 				}
-				String groupColumn = f.getColumnName() + "_" + columnIndex;
+
+				String groupColumn = null;
+				if (f.getAliasName() == null || f.getAliasName().length() == 0)
+					groupColumn = f.getColumnName() + "_" + columnIndex;
+				else
+					groupColumn = f.getAliasName() + "_" + columnIndex;
+
 				textFieldExpression2.appendChild(document.createCDATASection("$F{" + groupColumn + "}"));
 				//reportElement2.setAttribute("style", "SummaryStyle");
 			}
@@ -812,7 +822,11 @@ public class ModifyReportJRXML {
 	 */
 	private Node buildVariableNode(ReportField f, String calc, String resetGroup, Document document, Integer columnIndex ) {
 		String varName = null;
-		String columnName = f.getColumnName() + "_" + columnIndex;
+		String columnName = null;
+		if (f.getAliasName() == null || f.getAliasName().length() == 0)
+			columnName = f.getColumnName() + "_" + columnIndex;
+		else
+			columnName = f.getAliasName() + "_" + columnIndex;
 		String valueClassName = null;
 		String initialize = "()";
 		//set the field data type
