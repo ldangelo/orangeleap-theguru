@@ -212,7 +212,10 @@ public class ReportQueryGenerator {
 		while (itReportSelectedFields.hasNext()) {
 			ReportSelectedField selectedField = (ReportSelectedField) itReportSelectedFields.next();
 			ReportField reportField = getReportFieldService().find(selectedField.getFieldId());
-			columnName = reportField.getColumnName() + "_" + columnIndex;
+			if (reportField.getAliasName() == null || reportField.getAliasName().length() == 0)
+				columnName = reportField.getColumnName() + "_" + columnIndex;
+			else
+				columnName = reportField.getAliasName() + "_" + columnIndex;
 			if (reportField == null || reportField.getId() == -1) continue;
 				if (addComma)
 					selectClause += ",";

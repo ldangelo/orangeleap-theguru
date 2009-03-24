@@ -43,6 +43,9 @@ public class ReportField implements java.io.Serializable,
 	@Column(name = "COLUMN_NAME")
 	private String columnName;
 
+	@Column(name = "ALIAS_NAME")
+	private String aliasName;
+	
 	@Enumerated
 	@Column(name = "FIELD_TYPE")
 	private ReportFieldType type;
@@ -227,6 +230,14 @@ public class ReportField implements java.io.Serializable,
 			setIsSummarized(true);
 		else
 			setIsSummarized(false);
+	}
+
+	public void setAliasName(String aliasName) {
+		this.aliasName = aliasName;
+	}
+
+	public String getAliasName() {
+		return aliasName;
 	}
 	
 }

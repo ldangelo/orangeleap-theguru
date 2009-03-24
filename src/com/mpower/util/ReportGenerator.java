@@ -555,7 +555,11 @@ public class ReportGenerator {
 		valueClassName = getValueClassName(f);
 		pattern = getPattern(f);
 		String columnName = null;
-		columnName = f.getColumnName() + "_" + columnIndex;
+
+		if (f.getAliasName() == null || f.getAliasName().length() == 0)
+			columnName = f.getColumnName() + "_" + columnIndex;
+		else
+			columnName = f.getAliasName() + "_" + columnIndex;
 		
 		AbstractColumn column = null;
 		try {
