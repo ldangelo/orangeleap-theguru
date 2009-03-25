@@ -24,14 +24,14 @@ import org.hibernate.annotations.IndexColumn;
 public class ReportField implements java.io.Serializable,
 		Comparable<ReportField> {
 	/**
-	 * 
+	 *
 	 */
 	@Transient
 	private static final long serialVersionUID = -2871208732277362753L;
 
 	@Transient
 	long controlCount;
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "REPORTFIELD_ID")
@@ -45,7 +45,10 @@ public class ReportField implements java.io.Serializable,
 
 	@Column(name = "ALIAS_NAME")
 	private String aliasName;
-	
+
+	@Column(name = "PRIMARY_KEYS")
+	private String primaryKeys;
+
 	@Enumerated
 	@Column(name = "FIELD_TYPE")
 	private ReportFieldType type;
@@ -73,7 +76,7 @@ public class ReportField implements java.io.Serializable,
 
 	@Column(name = "SMALLEST_VALUE")
 	private Boolean smallestValue;
-	
+
 	@Column(name = "RECORD_COUNT")
 	private Boolean recordCount;
 
@@ -112,7 +115,7 @@ public class ReportField implements java.io.Serializable,
 		this.smallestValue = smallestValue;
 		determineIsSummarized();
 	}
-	
+
 	public Boolean getRecordCount() {
 		return recordCount;
 	}
@@ -160,7 +163,7 @@ public class ReportField implements java.io.Serializable,
 	public String getControlName() {
 		return columnName + controlCount++;
 	}
-	
+
 	public String getColumnName() {
 		return columnName;
 	}
@@ -239,5 +242,12 @@ public class ReportField implements java.io.Serializable,
 	public String getAliasName() {
 		return aliasName;
 	}
-	
+
+	public void setPrimaryKeys(String primaryKeys) {
+		this.primaryKeys = primaryKeys;
+	}
+
+	public String getPrimaryKeys() {
+		return primaryKeys;
+	}
 }

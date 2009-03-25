@@ -73,8 +73,6 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 	private DataSource jdbcDataSource;
 	private String reportUnitDataSourceURI;
 	private ReportGenerator	reportGenerator;
-	private long previousDataSubSourceGroupId = -1;
-	private long previousDataSubSourceId = -1;
 	private UserDetailsService userDetailsService;
 
 	public ReportWizardFormController() {
@@ -170,10 +168,10 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		ReportWizard wiz = (ReportWizard) command;
 
 		Assert.notNull(request, "Request must not be null");
-		if ((wiz.getSubSourceId() != previousDataSubSourceId || wiz.getDataSource() == null) && wiz.getSubSourceId() != 0)
+		if ((wiz.getSubSourceId() != wiz.getPreviousDataSubSourceId() || wiz.getDataSource() == null) && wiz.getSubSourceId() != 0)
 		{
-			previousDataSubSourceId = wiz.getSubSourceId();
-			previousDataSubSourceGroupId = wiz.getDataSubSourceGroupId();
+			wiz.setPreviousDataSubSourceId(wiz.getSubSourceId());
+			wiz.setPreviousDataSubSourceGroupId(wiz.getDataSubSourceGroupId());
 			wiz.setDataSource(reportSourceService.find(wiz.getSrcId()));
 			wiz.setDataSubSourceGroup(reportSubSourceGroupService.find(wiz.getDataSubSourceGroupId()));
 
@@ -303,8 +301,8 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 					errors.reject("Invalid Repository","Invalid Repository.  It appears your repository is not setup properly.  Please contact your system administrator.");
 			}
 
-			refData.put("previousSubSourceGroupId", previousDataSubSourceGroupId);
-			refData.put("previousSubSourceId", previousDataSubSourceId);
+			refData.put("previousSubSourceGroupId", wiz.getPreviousDataSubSourceGroupId());
+			refData.put("previousSubSourceId", wiz.getPreviousDataSubSourceId());
 		}
 
 		//
@@ -419,7 +417,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		    // add the summary info/totals to the report - DJ only allows one per column and we need to allow multiple so
 			// 		we are altering the XML directly to add the summary calculations to the jasper report,
 		    //		this also handles adding the calculations to the groups created by DJ.
-			if (wiz.HasSummaryFields() == true){
+			if (wiz.getReportType().compareToIgnoreCase("matrix") != 0 && wiz.HasSummaryFields() == true){
 				reportXMLModifier.AddGroupSummaryInfo(tempFile.getPath());
 			    reportXMLModifier.AddReportSummaryInfo(tempFile.getPath());
 			}
@@ -474,7 +472,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 	    // add the summary info/totals to the report - DJ only allows one per column and we need to allow multiple so
 		// 		we are altering the XML directly to add the summary calculations to the jasper report,
 	    //		this also handles adding the calculations to the groups created by DJ.
-		if (wiz.HasSummaryFields() == true){
+		if (wiz.getReportType().compareToIgnoreCase("matrix") != 0 && wiz.HasSummaryFields() == true){
 			reportXMLModifier.AddGroupSummaryInfo(tempFile.getPath());
 		    reportXMLModifier.AddReportSummaryInfo(tempFile.getPath());
 		   }
@@ -581,21 +579,5 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 
 	public void setUserDetailsService(UserDetailsService userDetailsService) {
 		this.userDetailsService = userDetailsService;
-	}
-
-	public long getPreviousDataSubSourceId() {
-		return previousDataSubSourceId;
-	}
-
-	public void setPreviousDataSubSourceId(long previousDataSubSourceId) {
-		this.previousDataSubSourceId = previousDataSubSourceId;
-	}
-
-	public void setPreviousDataSubSourceGroupId(long previousDataSubSourceGroupId) {
-		this.previousDataSubSourceGroupId = previousDataSubSourceGroupId;
-	}
-
-	public long getPreviousDataSubSourceGroupId() {
-		return previousDataSubSourceGroupId;
 	}
 }

@@ -45,12 +45,15 @@ public class ReportWizard implements java.io.Serializable {
 	@Column(name="ROW_COUNT")
 	private Integer rowCount;
 
+	@Column(name="UNIQUE_RECORDS")
+	private Boolean uniqueRecords;
+
 	@Column(name="REPORTDATASOURCE_ID")
 	private long srcId;
 
 	@Column(name = "REPORTSUBSOURCEGROUP_ID")
 	private long subSourceGroupId;
-	
+
 	@Column(name = "REPORTSUBSOURCE_ID")
 	private long subSourceId;
 
@@ -68,7 +71,7 @@ public class ReportWizard implements java.io.Serializable {
 
 	@Transient
 	private List<ReportDataSubSourceGroup> subsourcegroups;
-	
+
 	@Transient
 	private List<ReportDataSubSource> subsources;
 
@@ -93,20 +96,20 @@ public class ReportWizard implements java.io.Serializable {
 
 	@Transient
 	private List<ReportSelectedField> reportSelectedFields;
-	
+
     @Transient
     private String currentWizardStep;
-    
+
     @Transient
     private List  reportWizardSteps;
-	
+
 	@Column(name = "REPORT_TYPE")
 	private String reportType;
 	private ReportLayout reportLayout;
 	private Boolean recordCount;
 	private String reportPath;
 	private String reportTemplatePath;
-	private String reportTemplateJRXML;	
+	private String reportTemplateJRXML;
 
 	@Transient
 	private List   reportTemplateList;
@@ -122,9 +125,15 @@ public class ReportWizard implements java.io.Serializable {
 
 	@Transient
 	private Integer previousPage;
-	
+
 	@Transient
 	private boolean showSqlQuery;
+
+	@Transient
+	private long previousDataSubSourceGroupId = -1;
+
+	@Transient
+	private long previousDataSubSourceId = -1;
 
 	public ReportWizard() {
 		reportType = "tabular";
@@ -133,11 +142,12 @@ public class ReportWizard implements java.io.Serializable {
 		subSourceGroupId = 0;
 		subSourceId = 0;
 		rowCount = 100;
+		uniqueRecords = false;
 		recordCount = false;
 		company = "Default";
 		previousPage = 0;
 		showSqlQuery = false;
-		
+
 		//
 		// create a filter list decorated as a LazyList
 		reportFilters = LazyList.decorate(new ArrayList<ReportFilter>(),FactoryUtils.instantiateFactory(ReportFilter.class));
@@ -216,6 +226,10 @@ public class ReportWizard implements java.io.Serializable {
 		return rowCount;
 	}
 
+	public Boolean getUniqueRecords() {
+		return uniqueRecords;
+	}
+
 	public long getSrcId() {
 		return srcId;
 	}
@@ -226,7 +240,7 @@ public class ReportWizard implements java.io.Serializable {
 
 	public void setReportChartSettings(List<ReportChartSettings> reportChartSettings) {
 		this.reportChartSettings = reportChartSettings;
-	}	
+	}
 
 	public void setReportCrossTabFields(ReportCrossTabFields reportCrossTabFields) {
 		this.reportCrossTabFields = reportCrossTabFields;
@@ -295,11 +309,11 @@ public class ReportWizard implements java.io.Serializable {
 		boolean result = false;
 		List<ReportSelectedField> reportSelectedFields = getReportSelectedFields();
 		Iterator<ReportSelectedField> itReportSelectedFields = reportSelectedFields.iterator();
-		
+
 		if (itReportSelectedFields != null){
 			while (itReportSelectedFields.hasNext()) {
 				ReportSelectedField reportSelectedField = (ReportSelectedField) itReportSelectedFields.next();
-				if (reportSelectedField != null 
+				if (reportSelectedField != null
 					&& reportSelectedField.getFieldId() != -1
 					&& reportSelectedField.getGroupBy()) {
 					result = true;
@@ -307,11 +321,15 @@ public class ReportWizard implements java.io.Serializable {
 				}
 			}
 		}
-		return result;		
+		return result;
 	}
-	
+
 	public void setRowCount(Integer rowCount) {
 		this.rowCount = rowCount;
+	}
+
+	public void setUniqueRecords(Boolean uniqueRecords) {
+		this.uniqueRecords = uniqueRecords;
 	}
 
 	public void setSrcId(long srcId) {
@@ -327,7 +345,7 @@ public class ReportWizard implements java.io.Serializable {
 		reportSelectedFields.clear();
 		Iterator<ReportField> iteratorFields = fields.iterator();
 		while(iteratorFields.hasNext()) {
-			ReportField reportField = iteratorFields.next();				
+			ReportField reportField = iteratorFields.next();
 			if (reportField.getIsDefault()) {
 				ReportSelectedField reportSelectedField = new ReportSelectedField();
 				reportSelectedField.setAverage(reportField.getAverage());
@@ -341,7 +359,7 @@ public class ReportWizard implements java.io.Serializable {
 			}
 		}
 	}
-	
+
 	public Boolean IsFieldGroupByField(long fieldId) {
 		Boolean result = false;
 		if (reportSelectedFields != null)
@@ -373,7 +391,7 @@ public class ReportWizard implements java.io.Serializable {
     	}
     	return result;
     }
-	
+
 	public String getReportPath() {
 		return reportPath;
 	}
@@ -440,7 +458,7 @@ public class ReportWizard implements java.io.Serializable {
 	public String getReportTemplateJRXML() {
 		return reportTemplateJRXML;
 	}
-	
+
 	public String getReportTemplatePath() {
 		return reportTemplatePath;
 	}
@@ -459,7 +477,7 @@ public class ReportWizard implements java.io.Serializable {
 	public void setReportTemplateList(List l) {
 		if (reportTemplateList == null)
 			reportTemplateList = l;
-		else 
+		else
 			reportTemplateList.addAll(l);
 	}
 
@@ -528,5 +546,21 @@ public class ReportWizard implements java.io.Serializable {
 
 	public List<ReportDataSubSourceGroup> getDataSubSourceGroups() {
 		return subsourcegroups;
+	}
+
+	public void setPreviousDataSubSourceGroupId(long previousDataSubSourceGroupId) {
+		this.previousDataSubSourceGroupId = previousDataSubSourceGroupId;
+	}
+
+	public long getPreviousDataSubSourceGroupId() {
+		return previousDataSubSourceGroupId;
+	}
+
+	public void setPreviousDataSubSourceId(long previousDataSubSourceId) {
+		this.previousDataSubSourceId = previousDataSubSourceId;
+	}
+
+	public long getPreviousDataSubSourceId() {
+		return previousDataSubSourceId;
 	}
 }

@@ -31,27 +31,27 @@ public class ReportQueryGenerator {
 	private ReportWizard reportWizard;
 	private ReportFieldService reportFieldService;
 	private ReportCustomFilterDefinitionService reportCustomFilterDefinitionService;
-		
+
     /**
      * Constructor for the <tt>QueryGenerator</tt>.
      * @param reportWizard ReportWizard that contains the various report options.
      * @param reportFieldService ReportFieldService the QueryGenerator will use to retrieve field information from the database.
      */
-    public ReportQueryGenerator(ReportWizard reportWizard, ReportFieldService reportFieldService, 
+    public ReportQueryGenerator(ReportWizard reportWizard, ReportFieldService reportFieldService,
     		ReportCustomFilterDefinitionService reportCustomFilterDefinitionService) {
     	this.setReportWizard(reportWizard);
     	this.setReportFieldService(reportFieldService);
     	this.setReportCustomFilterDefinitionService(reportCustomFilterDefinitionService);
     }
-   
+
     public enum DatePart {
         YEAR ("YEAR", "yy"),
         QUARTER   ("QUARTER", "qq"),
         MONTH   ("MONTH", "mm"),
         WEEK    ("WEEK", "wk");
 
-        private final String mySQL;   
-        private final String SQL; 
+        private final String mySQL;
+        private final String SQL;
         DatePart(String mySQL, String SQL) {
             this.mySQL = mySQL;
             this.SQL = SQL;
@@ -63,7 +63,7 @@ public class ReportQueryGenerator {
 
    /*
     public class DatePart{
-    	
+
     	   public class SQLConstants {
 
     	    	static final String YEAR = "yy";
@@ -71,8 +71,8 @@ public class ReportQueryGenerator {
     	    	static final String MONTH = "mm";
     	    	static final String WEEK = "wk";
 
-    	    } 
-    	    
+    	    }
+
     	    public class mySQLConstants {
 
     	    	static final String YEAR = "YEAR";
@@ -80,11 +80,11 @@ public class ReportQueryGenerator {
     	    	static final String MONTH = "MONTH";
     	    	static final String WEEK = "WEEK";
 
-    	    } 
+    	    }
     	String YEAR;
   }
-   
-    
+
+
     public class SQLConstants {
 
     	static final String YEAR = "yy";
@@ -92,8 +92,8 @@ public class ReportQueryGenerator {
     	static final String MONTH = "mm";
     	static final String WEEK = "wk";
 
-    } 
-    
+    }
+
     public class mySQLConstants {
 
     	static final String YEAR = "YEAR";
@@ -101,7 +101,7 @@ public class ReportQueryGenerator {
     	static final String MONTH = "MONTH";
     	static final String WEEK = "WEEK";
 
-    } 
+    }
 */
 	/**
 	 * Sets the ReportWizard that contains the various report options.
@@ -116,7 +116,7 @@ public class ReportQueryGenerator {
 	 * @return
 	 */
 	public ReportWizard getReportWizard() {
-		return reportWizard; 
+		return reportWizard;
 	}
 
 	/**
@@ -127,7 +127,7 @@ public class ReportQueryGenerator {
 		this.reportFieldService = reportFieldService;
 	}
 
-	/** 
+	/**
 	 * Returns the ReportFieldService the QueryGenerator uses to retrieve field information.
 	 * @return ReportFieldService
 	 */
@@ -143,7 +143,7 @@ public class ReportQueryGenerator {
 		return reportCustomFilterDefinitionService;
 	}
 
-	/** 
+	/**
 	 * Returns the ReportCustomFilterDefinitionService the QueryGenerator uses to retrieve custom filter definition information.
 	 * @return ReportFieldService
 	 */
@@ -151,21 +151,21 @@ public class ReportQueryGenerator {
 			ReportCustomFilterDefinitionService reportCustomFilterDefinitionService) {
 		this.reportCustomFilterDefinitionService = reportCustomFilterDefinitionService;
 	}
-	
+
 	/**
 	 * Builds and returns a mySql or SQL Server query.
 	 * <P>
 	 * {@code} String query = getQueryString();
 	 * @return String
-	 * @throws ParseException 
-	 */			
+	 * @throws ParseException
+	 */
 	public String getQueryString() throws ParseException {
 		String query = buildSelectClause();
 		query += buildWhereClause();
 		query += buildOrderByClause();
 		if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.MYSQL
 				&& getReportWizard().getRowCount() > 0)
-			query += " LIMIT 0," + getReportWizard().getRowCount(); 
+			query += " LIMIT 0," + getReportWizard().getRowCount();
 		query += ";";
 		return query;
 	}
@@ -175,25 +175,25 @@ public class ReportQueryGenerator {
 	 * <P>
 	 * {@code} String selectClause = buildSelectClause();
 	 * @return String
-	 */		
+	 */
 	private String buildSelectClause() {
 		String selectClause = "SELECT";
 
 		selectClause += " DISTINCT";
-		
+
 		if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.SQLSERVER
 				&& getReportWizard().getRowCount() > 0)
-			selectClause += " TOP " + getReportWizard().getRowCount(); 
-		
+			selectClause += " TOP " + getReportWizard().getRowCount();
+
 		if (getReportWizard().getReportType().compareToIgnoreCase("matrix") == 0)
 		{
 			selectClause += buildSelectFieldsForMatrix();
 		} else {
 			selectClause += buildSelectFieldsForNonMatrix();
 		}
-		
-		selectClause = selectClause + System.getProperty("line.separator") + "FROM " + getReportWizard().getDataSubSource().getViewName();		
-		
+
+		selectClause = selectClause + System.getProperty("line.separator") + "FROM " + getReportWizard().getDataSubSource().getViewName();
+
 		return selectClause;
 	}
 
@@ -202,7 +202,7 @@ public class ReportQueryGenerator {
 	 * <P>
 	 * {@code} String selectClause += buildSelectFieldsForNonMatrix();
 	 * @return String
-	 */	
+	 */
 	private String buildSelectFieldsForNonMatrix() {
 		String selectClause = "";
 		Iterator<ReportSelectedField> itReportSelectedFields = getReportWizard().getReportSelectedFields().iterator();
@@ -220,9 +220,10 @@ public class ReportQueryGenerator {
 				if (addComma)
 					selectClause += ",";
 				else
-					addComma = true;					
+					addComma = true;
 				selectClause += " " + reportField.getColumnName() + " as " + columnName;
 				columnIndex++;
+				
 			}
 		return selectClause;
 	}
@@ -233,13 +234,13 @@ public class ReportQueryGenerator {
 	 * <P>
 	 * {@code} String selectClause += buildSelectFieldsForMatrix();
 	 * @return String
-	 */	
+	 */
 	private String buildSelectFieldsForMatrix() {
 		String selectClause = "";
 		boolean addComma = false;
 		Integer columnIndex = 0;
 		String columnName = null;
-		
+
 		//These must be added in the same order as the ReportGenerator.CreateCrosstab() method
 		//Add the Measure
 		List<ReportGroupByField> colMeasure = getReportWizard().getReportCrossTabFields().getReportCrossTabMeasure();
@@ -248,12 +249,20 @@ public class ReportQueryGenerator {
 			ReportGroupByField fGroupBy = (ReportGroupByField) itMeasure.next();
 			if (fGroupBy != null && fGroupBy.getFieldId() != -1){
 				ReportField reportField = reportFieldService.find(fGroupBy.getFieldId());
-				columnName = reportField.getColumnName() + "_" + columnIndex;
+				if (reportField.getAliasName() == null || reportField.getAliasName().length() == 0)
+					columnName = reportField.getColumnName() + "_" + columnIndex;
+				else
+					columnName = reportField.getAliasName() + "_" + columnIndex;
 					if (addComma)
 						selectClause = selectClause + ",";
 					else
 						addComma = true;
 					selectClause = selectClause + " " + reportField.getColumnName() + " as " + columnName;
+					//Add the primary_keys column to the select so that the DISTINCT in the select clause
+					//does not remove data that should be there.
+					if (reportField.getPrimaryKeys() != null){
+						selectClause = selectClause + ", " + reportField.getPrimaryKeys();
+					}
 					columnIndex++;
 			}
 		}
@@ -264,7 +273,10 @@ public class ReportQueryGenerator {
 			ReportGroupByField fGroupBy = (ReportGroupByField) itRow.next();
 			if (fGroupBy != null && fGroupBy.getFieldId() != -1 ){
 				ReportField reportField = reportFieldService.find(fGroupBy.getFieldId());
-				columnName = reportField.getColumnName() + "_" + columnIndex;
+				if (reportField.getAliasName() == null || reportField.getAliasName().length() == 0)
+					columnName = reportField.getColumnName() + "_" + columnIndex;
+				else
+					columnName = reportField.getAliasName() + "_" + columnIndex;
 					if (addComma)
 						selectClause = selectClause + ",";
 					else
@@ -280,7 +292,10 @@ public class ReportQueryGenerator {
 			ReportGroupByField fGroupBy = (ReportGroupByField) itCol.next();
 			if (fGroupBy != null && fGroupBy.getFieldId() != -1){
 				ReportField reportField = reportFieldService.find(fGroupBy.getFieldId());
-				columnName = reportField.getColumnName() + "_" + columnIndex;
+				if (reportField.getAliasName() == null || reportField.getAliasName().length() == 0)
+					columnName = reportField.getColumnName() + "_" + columnIndex;
+				else
+					columnName = reportField.getAliasName() + "_" + columnIndex;
 					if (addComma)
 						selectClause = selectClause + ",";
 					else
@@ -289,6 +304,8 @@ public class ReportQueryGenerator {
 					columnIndex++;
 				}
 		}
+
+
 		return selectClause;
 
 	}
@@ -298,8 +315,8 @@ public class ReportQueryGenerator {
 	 * <P>
 	 * {@code} String whereClause = buildWhereClause();
 	 * @return String
-	 * @throws ParseException 
-	 */	
+	 * @throws ParseException
+	 */
 	private String buildWhereClause() throws ParseException {
 		String whereClause = "";
 		// very first criteria doesn't need an and
@@ -315,7 +332,7 @@ public class ReportQueryGenerator {
 			if (filter == null) continue; // this is an empty filter
 			if (filter.getFilterType() == 1 && filter.getReportStandardFilter().getFieldId() == -1) continue; // this is an empty filter
 			if (filter.getFilterType() == 2 && filter.getReportCustomFilter().getCustomFilterId() <= 0) continue; // this is an empty filter
-			
+
 			if (addWhere) {
 				whereClause += System.getProperty("line.separator") + "WHERE";
 				addWhere = false;
@@ -324,9 +341,9 @@ public class ReportQueryGenerator {
 				if (filter.getOperator() == 0)
 					whereClause += " AND";
 				else if (filter.getOperator() == 1)
-					whereClause += " OR";				
+					whereClause += " OR";
 			}
-			
+
 			if (filter.getOperatorNot() == 1)
 				whereClause += " NOT";
 			if (filter.getFilterType() == 3) {
@@ -344,7 +361,7 @@ public class ReportQueryGenerator {
 				afterGroup = false;
 				whereClause += buildCustomFilterWhereClause(filter.getReportCustomFilter());
 			}
-		}	
+		}
 		if (!hasCriteria)
 			return "";
 		else
@@ -357,40 +374,40 @@ public class ReportQueryGenerator {
 	 * {@code} whereClause += buildStandardFilterWhereClause(false);
 	 * @param includeWhere Specifies whether the returned string should begin with a WHERE if true, or with an AND if false.
 	 * @return String
-	 * @throws ParseException 
-	 */	
+	 * @throws ParseException
+	 */
 	private String buildStandardFilterWhereClause(ReportStandardFilter reportStandardFilter, int index) throws ParseException {
-		String whereClause = " ("; 
+		String whereClause = " (";
 		ReportField rf = reportFieldService.find(reportStandardFilter.getFieldId());
 		String controlName = rf.getColumnName() + Integer.toString(index);
-		
+
 		switch(reportStandardFilter.getComparison()) {
-			case 1:	
+			case 1:
 				whereClause += getFieldNameForWhereClause(rf) + " =";
 				whereClause += buildPromptForCritiera(reportStandardFilter, controlName, rf);
 				break;
-			case 2:	
+			case 2:
 				whereClause += getFieldNameForWhereClause(rf) + " !=";
 				whereClause += buildPromptForCritiera(reportStandardFilter, controlName, rf);
 				break;
-			case 3:	
+			case 3:
 				whereClause += getFieldNameForWhereClause(rf) + " <";
 				whereClause += buildPromptForCritiera(reportStandardFilter, controlName, rf);
 				break;
-			case 4:	
+			case 4:
 				whereClause += getFieldNameForWhereClause(rf) + " >";
 				whereClause += buildPromptForCritiera(reportStandardFilter, controlName, rf);
 				break;
-			case 5:	
+			case 5:
 				whereClause += getFieldNameForWhereClause(rf) + " <=";
 				whereClause += buildPromptForCritiera(reportStandardFilter, controlName, rf);
 				break;
-			case 6:	
+			case 6:
 				whereClause += getFieldNameForWhereClause(rf) + " >=";
 				whereClause += buildPromptForCritiera(reportStandardFilter, controlName, rf);
 				break;
-			case 7: 
-				whereClause += getFieldNameForWhereClause(rf) + " LIKE";				
+			case 7:
+				whereClause += getFieldNameForWhereClause(rf) + " LIKE";
 				if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.MYSQL)
 					whereClause += " CONCAT(";
 				else if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.SQLSERVER)
@@ -400,20 +417,20 @@ public class ReportQueryGenerator {
 					whereClause += " , '%')";
 				else if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.SQLSERVER)
 					whereClause += " + '%'";
-				break; // starts with 
-			case 8: 
+				break; // starts with
+			case 8:
 				whereClause += getFieldNameForWhereClause(rf) + " LIKE";
 				if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.MYSQL)
 					whereClause += " CONCAT( '%',";
 				else if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.SQLSERVER)
-					whereClause += " '%' +"; 
+					whereClause += " '%' +";
 				whereClause += buildPromptForCritiera(reportStandardFilter, controlName, rf);
 				if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.MYSQL)
 					whereClause += " )";
 				else if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.SQLSERVER)
 					whereClause += "";
-				break; // ends with		
-			case 9: 
+				break; // ends with
+			case 9:
 				whereClause += getFieldNameForWhereClause(rf) + " LIKE";
 				if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.MYSQL)
 					whereClause += " CONCAT( '%',";
@@ -424,7 +441,7 @@ public class ReportQueryGenerator {
 					whereClause += "  , '%') ";
 				else if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.SQLSERVER)
 					whereClause += " + '%'";
-				break; // contains		
+				break; // contains
 			case 10:
 				whereClause += getFieldNameForWhereClause(rf) + " NOT LIKE";
 				if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.MYSQL)
@@ -435,11 +452,11 @@ public class ReportQueryGenerator {
 				if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.MYSQL)
 					whereClause += "  , '%')";
 				else if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.SQLSERVER)
-					whereClause += " + '%'";				
+					whereClause += " + '%'";
 				break; // does not contain
-			case 11:	
+			case 11:
 				whereClause += getFieldNameForWhereClause(rf) + " IS NOT NULL";
-				break;							
+				break;
 			// Duration filters
 			case 20: // Current FY
 				break;
@@ -469,7 +486,7 @@ public class ReportQueryGenerator {
 				break;
 			case 32: // Current and Previous Calendar Year
 				whereClause += "( " + getSqlCalendarDurationCriteriaFromCurrentDate(DatePart.YEAR, rf.getColumnName(), -1) +
-							   " OR " + 
+							   " OR " +
 							   getSqlCalendarDurationCriteriaFromCurrentDate(DatePart.YEAR, rf.getColumnName(), 0) + " )";
 				break;
 			case 33: // Current Calendar Month
@@ -480,7 +497,7 @@ public class ReportQueryGenerator {
 				break;
 			case 35: // Current and Previous Calendar Month
 				whereClause += "( " + getSqlCalendarDurationCriteriaFromCurrentDate(DatePart.MONTH, rf.getColumnName(), -1) +
-				   			   " OR " + 
+				   			   " OR " +
 				   			   getSqlCalendarDurationCriteriaFromCurrentDate(DatePart.MONTH, rf.getColumnName(), 0) + " )";
 				break;
 			case 36: // Current Calendar Week
@@ -491,9 +508,9 @@ public class ReportQueryGenerator {
 				break;
 			case 38: // Current and Previous Calendar Week
 				whereClause += "( " + getSqlCalendarDurationCriteriaFromCurrentDate(DatePart.WEEK, rf.getColumnName(), -1) +
-				   			   " OR " + 
+				   			   " OR " +
 				   			   getSqlCalendarDurationCriteriaFromCurrentDate(DatePart.WEEK, rf.getColumnName(), 0) + " )";
-				break; 
+				break;
 			case 39: // Today
 				whereClause += rf.getColumnName() + " = " + getSqlCriteriaDaysFromCurrentDate(0);
 				break;
@@ -502,7 +519,7 @@ public class ReportQueryGenerator {
 				break;
 			case 41: // Last 7
 				whereClause += rf.getColumnName() + " > " + getSqlCriteriaDaysFromCurrentDate(-7);
-				break;		
+				break;
 			case 42: // Last 30
 				whereClause += rf.getColumnName() + " > " + getSqlCriteriaDaysFromCurrentDate(-30);
 				break;
@@ -514,7 +531,7 @@ public class ReportQueryGenerator {
 				break;
 			case 45: // Last 120
 				whereClause += rf.getColumnName() + " > " + getSqlCriteriaDaysFromCurrentDate(-120);
-				break;					
+				break;
 		}
 		whereClause += ")";
 		return whereClause;
@@ -525,7 +542,7 @@ public class ReportQueryGenerator {
 	 * <P>
 	 * whereClause += buildCustomFilterWhereClause(filter.getReportCustomFilter());
 	 * @return String
-	 * @throws ParseException 
+	 * @throws ParseException
 	 */
 	private String buildPromptForCritiera(ReportStandardFilter filter, String controlName, ReportField rf) throws ParseException {
 		String whereClause = "";
@@ -533,7 +550,7 @@ public class ReportQueryGenerator {
 			if (filter.getPromptForCriteria()) {
 				whereClause += " $P{" + controlName + "} ";
 			} else {
-				whereClause += getFormattedDateString(filter.getCriteria()); 
+				whereClause += getFormattedDateString(filter.getCriteria());
 			}
 		} else	if(rf.getFieldType() == ReportFieldType.STRING) {
 			if (filter.getPromptForCriteria()) {
@@ -574,10 +591,10 @@ public class ReportQueryGenerator {
 	 * <P>
 	 * whereClause += buildCustomFilterWhereClause(filter.getReportCustomFilter());
 	 * @return String
-	 * @throws ParseException 
+	 * @throws ParseException
 	 */
 	private String buildCustomFilterWhereClause(ReportCustomFilter filter) throws ParseException {
-		String whereClause = " "; 
+		String whereClause = " ";
 		ReportCustomFilterDefinition reportCustomFilterDefinition = getReportCustomFilterDefinitionService().find(filter.getCustomFilterId());
 		if (reportCustomFilterDefinition != null) {
 			String filterString = reportCustomFilterDefinition.getSqlText();
@@ -596,7 +613,7 @@ public class ReportQueryGenerator {
 	/**
 	 * Attempts to parse the incoming date string using the default locale first, and then various
 	 * other date formats.  If it is able to parse the date, it will then return a string with the
-	 * date formatted for mySql and SQL Server. 
+	 * date formatted for mySql and SQL Server.
 	 * <P>
 	 * {@code} whereClause += getFormattedDateString(filter.getCriteria());
 	 * @param dateString The string containing the date to be parsed and formatted.
@@ -608,8 +625,8 @@ public class ReportQueryGenerator {
 		ParseException lastException = null;
 		Date whereDate = null;
 		SimpleDateFormat resultDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		
-		// First attempt to use the default locale to attempt to parse the date 
+
+		// First attempt to use the default locale to attempt to parse the date
 		try {
 			whereDate = DateFormat.getDateInstance(DateFormat.SHORT).parse(dateString);
 			result = " '" +  resultDateFormat.format(whereDate) + "'";
@@ -618,14 +635,14 @@ public class ReportQueryGenerator {
 		catch (ParseException exception) {
 			lastException = exception;
 		}
-			
+
 		ArrayList<String> dateFormatStrings = new ArrayList<String>();
 		// Add various date formats
 		dateFormatStrings.add("yyyy-MM-dd");
 		dateFormatStrings.add("yyyy/MM/dd");
 		dateFormatStrings.add("yyyy MM dd");
 		dateFormatStrings.add("yyyy.MM.dd");
-	 
+
 		dateFormatStrings.add("yyyy-MMM-dd");
 		dateFormatStrings.add("yyyy/MMM/dd");
 		dateFormatStrings.add("yyyy MMM dd");
@@ -635,37 +652,37 @@ public class ReportQueryGenerator {
 		dateFormatStrings.add("MM/dd/yyyy");
 		dateFormatStrings.add("MM dd yyyy");
 		dateFormatStrings.add("MM.dd.yyyy");
-		
+
 		dateFormatStrings.add("dd-MM-yyyy");
 		dateFormatStrings.add("dd/MM/yyyy");
 		dateFormatStrings.add("dd MM yyyy");
 		dateFormatStrings.add("dd.MM.yyyy");
-	 
+
 		dateFormatStrings.add("dd-MMM-yy");
 		dateFormatStrings.add("dd MMM yy");
 		dateFormatStrings.add("dd.MMM.yy");
 		dateFormatStrings.add("dd/MMM/yy");
-		
+
 		dateFormatStrings.add("yyyy-MM-dd hh:mm:ss");
 		dateFormatStrings.add("yyyy MM dd hh:mm:ss");
 		dateFormatStrings.add("yyyy.MM.dd hh:mm:ss");
 		dateFormatStrings.add("yyyy/MM/dd hh:mm:ss");
-	 
+
 		dateFormatStrings.add("yyyy-MMM-dd hh:mm:ss");
 		dateFormatStrings.add("yyyy MMM dd hh:mm:ss");
 		dateFormatStrings.add("yyyy.MMM.dd hh:mm:ss");
 		dateFormatStrings.add("yyyy/MMM/dd hh:mm:ss");
-		
+
 		dateFormatStrings.add("dd-MM-yyyy hh:mm:ss");
 		dateFormatStrings.add("dd MM yyyy hh:mm:ss");
 		dateFormatStrings.add("dd.MM.yyyy hh:mm:ss");
 		dateFormatStrings.add("dd/MM/yyyy hh:mm:ss");
-		
+
 		dateFormatStrings.add("dd-MMM-yyyy hh:mm:ss");
 		dateFormatStrings.add("dd/MMM/yyyy hh:mm:ss");
 		dateFormatStrings.add("dd MMM yyyy hh:mm:ss");
 		dateFormatStrings.add("dd.MMM.yyyy hh:mm:ss");
-		
+
 		for (String dateFormatString : dateFormatStrings) {
 	    	try {
 	    		SimpleDateFormat dateFormat = new SimpleDateFormat(dateFormatString);
@@ -678,14 +695,14 @@ public class ReportQueryGenerator {
 	  			lastException = exception;
 	  		}
 		}
-		
+
 		// If no date was parsed, throw the last parse exception
 		if (result.length() == 0 && lastException != null)
 			throw lastException;
-		
+
 		return result;
 	}
-	
+
 	/**
 	 * Returns a value for the field that will be used in the where clause.  For DateTime fields
 	 * this will return a string that will cause the time to be removed from the DateTime.  Other
@@ -696,10 +713,10 @@ public class ReportQueryGenerator {
 	 * @return String
 	 */
 	private String getFieldNameForWhereClause(ReportField reportField) {
-		String result = ""; 
+		String result = "";
 		if (reportField.getFieldType() == ReportFieldType.DATE) {
 			if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.MYSQL) {
-				result = "CAST(" + reportField.getColumnName() + " AS DATE)";	
+				result = "CAST(" + reportField.getColumnName() + " AS DATE)";
 			}
 			else if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.SQLSERVER) {
 				result = "DATEADD(DAY, DATEDIFF(DAY, 0, " + reportField.getColumnName() + "), 0)";
@@ -710,7 +727,7 @@ public class ReportQueryGenerator {
 		}
 		return result;
 	}
-	
+
 	/**
 	 * Builds and returns a string for either mySql or SQL Server that subtracts the specified number of days from the current date.
 	 * <P>
@@ -735,18 +752,18 @@ public class ReportQueryGenerator {
 	 * {@code} whereClause += getSqlCalendarDurationCriteriaFromCurrentDate(DatePart.YEAR, rf.getColumnName(), 0);
 	 * @param DatePart datePart (YEAR, MONTH, QUARTER, WEEK)
 	 * @param String columnName Name of column
-	 * @param int duration Number of weeks, months, etc. from the current date. 
+	 * @param int duration Number of weeks, months, etc. from the current date.
 	 * @return String
 	 */
 	private String getSqlCalendarDurationCriteriaFromCurrentDate(DatePart datePart, String columnName, int duration) {
 		String result = "";
 		if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.MYSQL) {
-			result = "( " + datePart.mySQL() + "(" + columnName + ") = " + datePart.mySQL() + "(CURDATE()) + " + Integer.toString(duration); 
+			result = "( " + datePart.mySQL() + "(" + columnName + ") = " + datePart.mySQL() + "(CURDATE()) + " + Integer.toString(duration);
 			if (datePart == DatePart.YEAR){
 				result += " AND YEAR(" + columnName + ") = (YEAR(CURDATE()) + " + Integer.toString(duration) + " ))";
 			}else{
 				result += " AND YEAR(" + columnName + ") = YEAR(CURDATE()) )";
-			}	
+			}
 		}
 		else if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.SQLSERVER) {
 			result = "( DATEPART(" + datePart.SQL() + ", " + columnName + ") = (DATEPART(" + datePart.SQL() + ", GETDATE()) + " + Integer.toString(duration) + ")";
@@ -758,7 +775,7 @@ public class ReportQueryGenerator {
 		}
 		return result;
 	}
-	
+
 	/**
 	 * Builds and returns the order by clause for a summary or matrix report.
 	 * <P>
@@ -769,13 +786,13 @@ public class ReportQueryGenerator {
 		// Add the order by clause
 		String orderBy = "";
 		if (getReportWizard().getReportType().compareTo("matrix") == 0) {
-			// Matrix Reports			
+			// Matrix Reports
 			orderBy = getOrderByClauseForMatrix();
 		} else {
-			// Tabular / Summary Reports			
+			// Tabular / Summary Reports
 			orderBy = getOrderByClauseForSummary();
 		}
-		return orderBy;			
+		return orderBy;
 	}
 
 	/**
@@ -790,12 +807,12 @@ public class ReportQueryGenerator {
 		ReportCrossTabFields rptCTList = getReportWizard().getReportCrossTabFields();
 		List<ReportGroupByField> ctRows = rptCTList.getReportCrossTabRows();
 		addComma = false;
-		List<Long> addedFields = new ArrayList<Long>();		
+		List<Long> addedFields = new ArrayList<Long>();
 		//order by rows first
 		Iterator<ReportGroupByField> itCtRows = ctRows.iterator();
 		while (itCtRows.hasNext()){
 			ReportGroupByField rowField = (ReportGroupByField) itCtRows.next();
-			if (rowField != null) {						
+			if (rowField != null) {
 				if (rowField.getFieldId() != -1){
 					ReportField rg = reportFieldService.find(rowField.getFieldId());
 					if (addedFields.indexOf(rg.getId()) == -1) {
@@ -804,9 +821,9 @@ public class ReportQueryGenerator {
 							addComma = true;
 						}
 						else
-							orderBy += ","; 
+							orderBy += ",";
 						orderBy += " " + rg.getColumnName();
-						addedFields.add(rg.getId());						
+						addedFields.add(rg.getId());
 						if (rowField.getSortOrder().compareTo("") != 0)
 							orderBy += " " + rowField.getSortOrder();
 						else
@@ -815,13 +832,13 @@ public class ReportQueryGenerator {
 				}
 			}
 		}
-		
+
 		//order by Columns last
 		List<ReportGroupByField> ctCols = rptCTList.getReportCrossTabColumns();
 		Iterator<ReportGroupByField> itCtCols = ctCols.iterator();
 		while (itCtCols.hasNext()){
 			ReportGroupByField colField = (ReportGroupByField) itCtCols.next();
-			if (colField != null) {						
+			if (colField != null) {
 				if (colField.getFieldId() != -1){
 					ReportField rg = reportFieldService.find(colField.getFieldId());
 					if (addedFields.indexOf(rg.getId()) == -1) {
@@ -830,9 +847,9 @@ public class ReportQueryGenerator {
 							addComma = true;
 						}
 						else
-							orderBy += ","; 
+							orderBy += ",";
 						orderBy += " " + rg.getColumnName();
-						addedFields.add(rg.getId());						
+						addedFields.add(rg.getId());
 						if (colField.getSortOrder().compareTo("") != 0)
 							orderBy += " " + colField.getSortOrder();
 						else
@@ -855,17 +872,17 @@ public class ReportQueryGenerator {
 		Boolean addComma = false;
 		List<ReportSelectedField> reportSelectedFields = getReportWizard().getReportSelectedFields();
 		Iterator<ReportSelectedField> itReportSelectedFields = reportSelectedFields.iterator();
-		List<Long> addedFields = new ArrayList<Long>();		
+		List<Long> addedFields = new ArrayList<Long>();
 		if (itReportSelectedFields != null){
 			addComma = false;
 			while (itReportSelectedFields.hasNext()) {
 				ReportSelectedField reportSelectedField = (ReportSelectedField) itReportSelectedFields.next();
-				if (reportSelectedField != null 
+				if (reportSelectedField != null
 					&& reportSelectedField.getFieldId() != -1) {
 					ReportField rg = reportFieldService.find(reportSelectedField.getFieldId());
-					if (addedFields.indexOf(rg.getId()) == -1					
+					if (addedFields.indexOf(rg.getId()) == -1
 							&& (reportSelectedField.getSortOrder().compareTo("") != 0
-									|| reportSelectedField.getGroupBy())) {					
+									|| reportSelectedField.getGroupBy())) {
 						if (!addComma) {
 							orderBy += System.getProperty("line.separator") + "ORDER BY";
 							addComma = true;
@@ -873,11 +890,11 @@ public class ReportQueryGenerator {
 						else
 							orderBy += ",";
 						orderBy += " " + rg.getColumnName();
-						addedFields.add(rg.getId());						
+						addedFields.add(rg.getId());
 						if (reportSelectedField.getSortOrder().compareTo("") != 0)
 							orderBy += " " + reportSelectedField.getSortOrder();
 						else
-							orderBy += " ASC";								
+							orderBy += " ASC";
 					}
 				}
 			}
