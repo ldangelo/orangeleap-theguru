@@ -266,3 +266,13 @@ a.hideText {
     line-height: 0;
     color: transparent;
 }
+table span.selectedFieldsTitleWrapper {
+	position:relative;
+	width:100%;
+}
+span > span.selectedFieldsTitleDistinctWrapper { 
+	position:absolute;
+	top: -5px; 
+	width: 100%;
+	left: 705px;
+}
