@@ -117,7 +117,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 	public ReportSubSourceGroupService getReportSubSourceGroupService() {
 		return reportSubSourceGroupService;
 	}
-	
+
 	public ReportSubSourceService getReportSubSourceService() {
 		return reportSubSourceService;
 	}
@@ -319,6 +319,10 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		if (page == 2) {
 			String reportType = wiz.getReportType();
 			refData.put("reportType", reportType);
+
+			Boolean reportUniqueRecords = wiz.getUniqueRecords();
+			refData.put("reportUniqueRecords", reportUniqueRecords);
+			wiz.setUniqueRecords(false);
 
 			ReportDataSubSource rdss = reportSubSourceService.find(wiz.getSubSourceId());
 			List<ReportFieldGroup>    lrfg = reportFieldGroupService.readFieldGroupBySubSourceId(rdss.getId());
@@ -533,7 +537,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 			ReportSubSourceGroupService reportSubSourceGroupService) {
 		this.reportSubSourceGroupService = reportSubSourceGroupService;
 	}
-	
+
 	public void setReportSubSourceService(
 			ReportSubSourceService reportSubSourceService) {
 		this.reportSubSourceService = reportSubSourceService;

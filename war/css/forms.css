@@ -65,10 +65,10 @@ form li.fieldGroup, form li.buttons {
 	display:block;
 }
 form li:after, .buttons:after{
-	content:"."; 
+	content:".";
 	display:block;
-	height:0; 
-	clear:both; 
+	height:0;
+	clear:both;
 	visibility:hidden;
 }
 
@@ -88,7 +88,7 @@ ul.width600 li.field50 {
 	margin-right:20px;
 }
 ul.width600 li.field100 {
-	width:490px;	
+	width:490px;
 }
 * html ul.width600 li.field33 {
 	margin-right:12px;
@@ -226,14 +226,14 @@ table span.criteriaWrapper {
 	position:relative;
 	width:100%;
 }
-div > a.dp-choose-date { 
+div > a.dp-choose-date {
 	position:absolute;
-	top: -3px; 
+	top: -3px;
 	left: 95px;
 }
-span > a.dp-choose-date { 
+span > a.dp-choose-date {
 	position:absolute;
-	top: -6px; 
+	top: -6px;
 	left: 95px;
 }
 input.customCriteria {
@@ -270,9 +270,9 @@ table span.selectedFieldsTitleWrapper {
 	position:relative;
 	width:100%;
 }
-span > span.selectedFieldsTitleDistinctWrapper { 
+span > span.selectedFieldsTitleDistinctWrapper {
 	position:absolute;
-	top: -5px; 
-	width: 100%;
-	left: 705px;
+	top: -5px;
+	width: 125px;
+	left: 660px;
 }

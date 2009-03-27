@@ -52,10 +52,18 @@
 	</tr>
 </table>
 <br>
+
 <table id="report_fields_selected" class="tablesorter" bgcolor=#E0E0E0>
-	<tr>
-		<th>Selected Fields</th>
-	</tr>
+	<th>
+		<span class="selectedFieldsTitleWrapper">Selected Fields
+			<span class="selectedFieldsTitleDistinctWrapper"><input id="uniqueRecords" name="uniqueRecords" value="true"  type="checkbox"
+							<c:if test="${(reportUniqueRecords == true)}">
+								checked="true"
+							</c:if>/>Unique Records </td>
+			</span>
+		</span>
+	</th>
+
 	<tr>
 		<td>
 		<table id="report_fields_add" index="0" class="tablesorter"	bgcolor=#E0E0E0>
@@ -67,11 +75,11 @@
 				<th align=center>Maximum</th>
 				<th align=center>Minimum</th>
 				<th align=center>Sum</th>
-				<th align=center>Average</th>				
+				<th align=center>Average</th>
 				<th align=center>Actions
 					<img class="deleteButton"
-						src="images/icons/deleteRow.png" style="cursor: pointer;" 
-						onclick="deleteAllFieldRows();"/> 
+						src="images/icons/deleteRow.png" style="cursor: pointer;"
+						onclick="deleteAllFieldRows();"/>
 				</th>
 			</tr>
         	<c:set var="fieldIndex" scope="request" value="0"/>
@@ -125,7 +133,7 @@
 					<c:if test="${reportChartSettings[0].location == 'footer'}">
 						selected="true"
 					</c:if>
-				>Footer</OPTION>	
+				>Footer</OPTION>
 			</SELECT></TD>
 			<TD><SELECT id="reportChartSettings[0].fieldIdx"
 				name="reportChartSettings[0].fieldIdx" >
@@ -137,7 +145,7 @@
 							</c:if>>${f.displayName}</option>
 						</c:if>
 					</c:forEach></SELECT></TD>
-	
+
 			<TD><SELECT id="reportChartSettings[0].fieldIdy"
 				name="reportChartSettings[0].fieldIdy"
 				onchange="fillChartCalcOptions(this); " >
@@ -149,7 +157,7 @@
 							</c:if>>${f.displayName}</option>
 						</c:if>
 					</c:forEach></SELECT></TD>
-	
+
 			<TD><SELECT id="reportChartSettings[0].operation"
 				name="reportChartSettings[0].operation">
 				<option label="Record Count" value="RecordCount" moneyonly="false"

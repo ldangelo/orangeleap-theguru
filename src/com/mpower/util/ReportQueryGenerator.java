@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -209,9 +210,11 @@ public class ReportQueryGenerator {
 		boolean addComma = false;
 		Integer columnIndex = 0;
 		String columnName = null;
+		HashMap<String, String> primaryKeys = new HashMap<String, String>();
 		while (itReportSelectedFields.hasNext()) {
 			ReportSelectedField selectedField = (ReportSelectedField) itReportSelectedFields.next();
 			ReportField reportField = getReportFieldService().find(selectedField.getFieldId());
+			primaryKeys.put(reportField.getPrimaryKeys(), reportField.getPrimaryKeys());
 			if (reportField.getAliasName() == null || reportField.getAliasName().length() == 0)
 				columnName = reportField.getColumnName() + "_" + columnIndex;
 			else
@@ -223,8 +226,20 @@ public class ReportQueryGenerator {
 					addComma = true;
 				selectClause += " " + reportField.getColumnName() + " as " + columnName;
 				columnIndex++;
-				
+
 			}
+		//Add all the primary_key fields so that the records are not accidentally eliminated
+		//by the DISTINCT in the select clause
+		if (!reportWizard.getUniqueRecords()){
+			if (primaryKeys.size() > 0){
+				Iterator itPrimaryKeys = primaryKeys.values().iterator();
+				while (itPrimaryKeys.hasNext()){
+					String pk = (String) itPrimaryKeys.next();
+					if (pk != null)
+						selectClause += " ," + pk;
+				}
+			}
+		}
 		return selectClause;
 	}
 
