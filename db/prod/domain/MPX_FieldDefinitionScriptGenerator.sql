@@ -56,7 +56,8 @@ PRINT ''
 PRINT 'SET @REPORTDATASOURCE_ID = LAST_INSERT_ID();'
 PRINT ''
 
-DECLARE @TABLENAME varchar(50), @SubSourceGroup VarChar(100), @PreviousSubSourceGroup VarChar(100), @SubSourceDescription VarChar(255)
+DECLARE @TABLENAME varchar(50), @SubSourceGroup VarChar(100), @PreviousSubSourceGroup VarChar(100), @SubSourceDescription VarChar(255), 
+	@PrimaryKey VarChar(255)
 Set @PreviousSubSourceGroup = ''
 Declare @CRLF as VarChar(50)
 Set @CRLF = Char(13) + Char(10)
@@ -159,6 +160,7 @@ Begin
 		END
 
 		SET @CURRENTFIELDNAME = ISNULL((SELECT DESCRIPTION FROM DATADICTIONARY WHERE TABLENAME = @TABLENAME AND COLUMNNAME = @FIELDNAME),'')
+		SET @PrimaryKey = ISNULL((SELECT PrimaryKey FROM DATADICTIONARY WHERE TABLENAME = @TABLENAME AND COLUMNNAME = @FIELDNAME),'')
 		IF (LEN(@CURRENTFIELDNAME) = 0)
 		BEGIN
 			FETCH NEXT FROM CSR INTO @FIELDNAME, @FIELDTYPE
@@ -191,10 +193,10 @@ Begin
 			PRINT @REPORTFIELDGROUP_REPORTDATASUBSOURCE
 			*/
 		END
-		
+
 		-- Insert REPORTFIELD
 		PRINT N'-- Insert ' + @CurrentFieldName
-		SET @INSERTREPORTFIELD = 'CALL INSERTREPORTFIELD(''' + @FIELDNAME + ''', ''' + @CurrentFieldName + ''', b''0'', ' +
+		SET @INSERTREPORTFIELD = 'CALL INSERTREPORTFIELD(''' + @PrimaryKey + ''',''' + @FIELDNAME + ''', ''' + @CurrentFieldName + ''', b''0'', ' +
 		CASE 
 			WHEN (@FIELDTYPE in ('varchar', 'nvarchar', 'char')) THEN  '1, '
 			WHEN (@FIELDTYPE in ('tinyint', 'int', 'bigint')) THEN  '2, '
