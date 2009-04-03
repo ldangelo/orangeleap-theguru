@@ -7,7 +7,7 @@
 	<TR index="-1" >
 		<TD>
 			<c:choose>
-				<c:when test="${(currentFilter == null || currentFilter.reportCustomFilter.customFilterId == 0)}">
+				<c:when test="${(currentFilter == null || currentFilter.reportCustomFilter.customFilterDefinitionId == 0)}">
 					<SELECT id="customFilterSelect"
 						name="customFilterSelect"
 						style="width:515px"
@@ -24,7 +24,7 @@
 				</c:when>
 				<c:otherwise>
 					${currentFilter.reportCustomFilter.populatedDisplayHtml}
-					<input type="hidden" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.customFilterId" value="${currentFilter.reportCustomFilter.customFilterId}" />
+					<input type="hidden" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.customFilterDefinitionId" value="${currentFilter.reportCustomFilter.customFilterDefinitionId}" />
 					<input type="hidden" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.displayHtml" value="${currentFilter.reportCustomFilter.displayHtml}" />
 				</c:otherwise>
 			</c:choose>

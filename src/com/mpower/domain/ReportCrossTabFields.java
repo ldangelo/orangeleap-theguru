@@ -3,18 +3,29 @@ package com.mpower.domain;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
 import org.apache.commons.collections.FactoryUtils;
 import org.apache.commons.collections.list.LazyList;
+import org.hibernate.annotations.IndexColumn;
 
-
+@Entity
+@Table(name = "REPORTCROSSTABFIELDS")
 public class ReportCrossTabFields implements java.io.Serializable {
 	
 	public ReportCrossTabFields() {
 		//this.reportCrossTabMeasure = -1;
 		this.reportCrossTabOperation = new String();
-		reportCrossTabMeasure = LazyList.decorate(new ArrayList<ReportGroupByField>(),FactoryUtils.instantiateFactory(ReportGroupByField.class));
-		reportCrossTabRows = LazyList.decorate(new ArrayList<ReportGroupByField>(),FactoryUtils.instantiateFactory(ReportGroupByField.class));
-		reportCrossTabColumns = LazyList.decorate(new ArrayList<ReportGroupByField>(),FactoryUtils.instantiateFactory(ReportGroupByField.class));
+		reportCrossTabMeasure = LazyList.decorate(new ArrayList<ReportCrossTabMeasure>(),FactoryUtils.instantiateFactory(ReportCrossTabMeasure.class));
+		reportCrossTabRows = LazyList.decorate(new ArrayList<ReportCrossTabRow>(),FactoryUtils.instantiateFactory(ReportCrossTabRow.class));
+		reportCrossTabColumns = LazyList.decorate(new ArrayList<ReportCrossTabColumn>(),FactoryUtils.instantiateFactory(ReportCrossTabColumn.class));
 	}
 	/**
 	 * 
@@ -23,13 +34,25 @@ public class ReportCrossTabFields implements java.io.Serializable {
 
 	//private long reportCrossTabMeasure;
 	
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "REPORTCROSSTABFIELDS_ID")
+	private long id;
+	
+	@Column(name = "OPERATION")
 	private String reportCrossTabOperation;
 	
-	private List<ReportGroupByField> reportCrossTabMeasure;
+	@OneToMany(cascade = CascadeType.ALL)
+	@IndexColumn(name="REPORTGROUPBYFIELD_ID")	
+	private List<ReportCrossTabMeasure> reportCrossTabMeasure;
 	
-	private List<ReportGroupByField> reportCrossTabRows;
+	@OneToMany(cascade = CascadeType.ALL)
+	@IndexColumn(name="REPORTGROUPBYFIELD_ID")	
+	private List<ReportCrossTabRow> reportCrossTabRows;
 	
-	private List<ReportGroupByField> reportCrossTabColumns;
+	@OneToMany(cascade = CascadeType.ALL)
+	@IndexColumn(name="REPORTGROUPBYFIELD_ID")	
+	private List<ReportCrossTabColumn> reportCrossTabColumns;
 	
 /*
 	public long getReportCrossTabMeasure() {
@@ -40,11 +63,11 @@ public class ReportCrossTabFields implements java.io.Serializable {
 		this.reportCrossTabMeasure = value;
 	}
 */
-	public List<ReportGroupByField> getReportCrossTabMeasure() {
+	public List<ReportCrossTabMeasure> getReportCrossTabMeasure() {
 		return reportCrossTabMeasure; 
 	}
 
-	public void setReportCrossTabMeasure(List<ReportGroupByField> value) {
+	public void setReportCrossTabMeasure(List<ReportCrossTabMeasure> value) {
 		this.reportCrossTabMeasure = value;
 	}
 	
@@ -56,19 +79,19 @@ public class ReportCrossTabFields implements java.io.Serializable {
 		this.reportCrossTabOperation = value;
 	}
 	
-	public List<ReportGroupByField> getReportCrossTabRows() {
+	public List<ReportCrossTabRow> getReportCrossTabRows() {
 		return reportCrossTabRows;
 	}
 
-	public void setReportCrossTabRows(List<ReportGroupByField> value) {
+	public void setReportCrossTabRows(List<ReportCrossTabRow> value) {
 		this.reportCrossTabRows = value;
 	}
 	
-	public List<ReportGroupByField> getReportCrossTabColumns() {
+	public List<ReportCrossTabColumn> getReportCrossTabColumns() {
 		return reportCrossTabColumns;
 	}
 
-	public void setReportCrossTabColumns(List<ReportGroupByField> value) {
+	public void setReportCrossTabColumns(List<ReportCrossTabColumn> value) {
 		this.reportCrossTabColumns = value;
 	}
 	

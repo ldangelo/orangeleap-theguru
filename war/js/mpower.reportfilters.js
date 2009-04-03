@@ -74,9 +74,9 @@ function populateCustomFilterRow(customFilterSelectId, selectedFiltersId) {
 
 	// Add hidden field for filter id
 	var newInput = $('<input type="hidden" />')
-		.attr('objectname', 'reportFilters[INDEXREPLACEMENT].reportCustomFilter.customFilterId')
-		.attr('name', 'reportFilters[' + customFiltersIndexValue + '].reportCustomFilter.customFilterId')
-		.attr('id', 'reportFilters[' + customFiltersIndexValue + '].reportCustomFilter.customFilterId')
+		.attr('objectname', 'reportFilters[INDEXREPLACEMENT].reportCustomFilter.customFilterDefinitionId')
+		.attr('name', 'reportFilters[' + customFiltersIndexValue + '].reportCustomFilter.customFilterDefinitionId')
+		.attr('id', 'reportFilters[' + customFiltersIndexValue + '].reportCustomFilter.customFilterDefinitionId')
 		.val(customFilterSelect.val());
 	cell.append(newInput);
 	

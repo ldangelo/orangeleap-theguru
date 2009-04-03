@@ -17,11 +17,13 @@ public class ReportWizardServiceImpl implements ReportWizardService {
 	@Resource(name = "reportWizardDao")
 	private ReportWizardDao reportWizardDAO;
 
-
 	public ReportWizard Find(Long id) {
 		return reportWizardDAO.find(id);
 	}
 
+	public ReportWizard FindByUri(String reportPath, String reportName) {
+		return reportWizardDAO.findByUri(reportPath, reportName);
+	}
 
 	public List<ReportWizard> getAll() {
 

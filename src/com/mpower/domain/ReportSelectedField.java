@@ -1,18 +1,47 @@
 package com.mpower.domain;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "REPORTSELECTEDFIELD")
 public class ReportSelectedField implements java.io.Serializable {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -8582013308660972485L;
-	
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "REPORTSELECTEDFIELD_ID")
+	private long id;
+
+	@Column(name = "FIELD_ID")
 	private long fieldId;
+	
+	@Column(name = "GROUP_BY")
 	private boolean groupBy;
+	
+	@Column(name = "SORT_ORDER")
 	private String sortOrder;
+	
+	@Column(name = "SUM")
 	private boolean sum;
+	
+	@Column(name = "AVERAGE")
 	private boolean average;
+	
+	@Column(name = "COUNT")
 	private boolean count;
+	
+	@Column(name = "MAX")
 	private boolean max;
+	
+	@Column(name = "MIN")
 	private boolean min;
 	
 	public void setFieldId(long fieldId) {
@@ -84,5 +113,13 @@ public class ReportSelectedField implements java.io.Serializable {
 			return true;
 		else
 			return false;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public long getId() {
+		return id;
 	}	
 }

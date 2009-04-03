@@ -19,12 +19,23 @@ import com.mpower.domain.ReportWizard;
 public class JPAReportWizardDao implements ReportWizardDao {
 	@PersistenceContext
 	private EntityManager em;
-	
 
 	public ReportWizard find(Long id) {
 		return em.find(ReportWizard.class,id);
 	}
 
+	public ReportWizard findByUri(String reportPath, String reportName) {
+		if (!reportPath.startsWith("/"))
+			reportPath = "/" + reportPath;
+		Query q = em.createQuery("select reportwizard from ReportWizard reportwizard where reportwizard.reportPath = :reportPath and reportwizard.reportSaveAsName = :reportSaveAsName");
+		q.setParameter("reportPath", reportPath);
+		q.setParameter("reportSaveAsName", reportName);
+		List<ReportWizard> reportWizardResultList = q.getResultList();
+		if (reportWizardResultList.size() == 0)
+			return null;
+		else
+			return reportWizardResultList.get(0);
+	}
 
 	public List<ReportWizard> getAll() {
 		Query q = em
@@ -46,9 +57,10 @@ public class JPAReportWizardDao implements ReportWizardDao {
 			em.merge(f);
 		}
 */		
-		em.persist(wiz);
-
-		
+		if (wiz.getId() != null)
+			em.merge(wiz);
+		else
+			em.persist(wiz);		
 	}
 
 }

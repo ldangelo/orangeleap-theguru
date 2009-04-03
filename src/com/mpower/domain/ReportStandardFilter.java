@@ -29,10 +29,10 @@ public class ReportStandardFilter implements java.io.Serializable {
 	@Column(name = "FILTER_COMPARISON")
 	Integer comparison;
 
-	@Transient
+	@Column(name = "PROMPT_FOR_CRITERIA")
 	private boolean promptForCriteria;
 
-	@Transient
+	@Column(name = "CRITERIA")
 	private String criteria;
 	
 	public ReportStandardFilter() {

@@ -15,11 +15,13 @@ import com.jaspersoft.jasperserver.api.metadata.xml.domain.impl.ResourceDescript
 import com.jaspersoft.jasperserver.irplugin.JServer;
 import com.jaspersoft.jasperserver.irplugin.wsclient.WSClient;
 import com.mpower.domain.ReportChartSettings;
+import com.mpower.domain.ReportCrossTabColumn;
 import com.mpower.domain.ReportCrossTabFields;
+import com.mpower.domain.ReportCrossTabMeasure;
+import com.mpower.domain.ReportCrossTabRow;
 import com.mpower.domain.ReportField;
 import com.mpower.domain.ReportFieldType;
 import com.mpower.domain.ReportFilter;
-import com.mpower.domain.ReportGroupByField;
 import com.mpower.domain.ReportSelectedField;
 import com.mpower.domain.ReportWizard;
 import com.mpower.service.ReportCustomFilterDefinitionService;
@@ -303,11 +305,11 @@ public class ReportGenerator {
 		DJCalculation cgvo = null;
 		
 		
-		List<ReportGroupByField> reportCrossTabMeasure =	reportCrossTabFields.getReportCrossTabMeasure();
+		List<ReportCrossTabMeasure> reportCrossTabMeasure = reportCrossTabFields.getReportCrossTabMeasure();
 		Iterator itCTMeasure  = reportCrossTabMeasure.iterator();
 		Integer columnIndex = 0;
 		while (itCTMeasure.hasNext()){
-			ReportGroupByField ctMeasure = (ReportGroupByField) itCTMeasure.next();
+			ReportCrossTabMeasure ctMeasure = (ReportCrossTabMeasure) itCTMeasure.next();
 			if (ctMeasure != null && ctMeasure.getFieldId() != -1){
 				ReportField fMeasure = reportFieldService.find(ctMeasure.getFieldId());
 				valueClassName = getValueClassName(fMeasure);
@@ -344,10 +346,10 @@ public class ReportGenerator {
 
 		//
 		//Add rows to the builder
-		List<ReportGroupByField> reportCrossTabRows =	reportCrossTabFields.getReportCrossTabRows();
+		List<ReportCrossTabRow> reportCrossTabRows =	reportCrossTabFields.getReportCrossTabRows();
 		Iterator itCTRows  = reportCrossTabRows.iterator();
 		while (itCTRows.hasNext()){
-			ReportGroupByField ctRow = (ReportGroupByField) itCTRows.next();
+			ReportCrossTabRow ctRow = (ReportCrossTabRow) itCTRows.next();
 			if (ctRow != null && ctRow.getFieldId() != -1){
 				ReportField fRow = reportFieldService.find(ctRow.getFieldId());
 				valueClassName = getValueClassName(fRow);
@@ -368,10 +370,10 @@ public class ReportGenerator {
 
 		//
 		//Add the columns to the builder
-		List<ReportGroupByField> reportCrossTabColumns =	reportCrossTabFields.getReportCrossTabColumns();
+		List<ReportCrossTabColumn> reportCrossTabColumns =	reportCrossTabFields.getReportCrossTabColumns();
 		Iterator itCTCols  = reportCrossTabColumns.iterator();
 		while (itCTCols.hasNext()){
-			ReportGroupByField ctCol = (ReportGroupByField) itCTCols.next();
+			ReportCrossTabColumn ctCol = (ReportCrossTabColumn) itCTCols.next();
 			if (ctCol != null && ctCol.getFieldId() != -1){
 				ReportField fCol = reportFieldService.find(ctCol.getFieldId());
 				valueClassName = getValueClassName(fCol);

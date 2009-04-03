@@ -1,11 +1,15 @@
 package com.mpower.domain;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+
+import org.hibernate.annotations.IndexColumn;
 
 @Entity
 @Table(name = "REPORTFILTER")
@@ -20,19 +24,21 @@ public class ReportFilter implements java.io.Serializable {
 	@Column(name = "REPORTFILTER_ID")
 	private long id;
 	
-	@Transient
+	@Column(name = "FILTER_TYPE")
 	private int filterType;	
 
-	@Transient
+	@Column(name = "OPERATOR")
 	private Integer operator;	
 
-	@Transient
+	@Column(name = "OPERATOR_NOT")
 	private Integer operatorNot;	
 	
-	@Transient
+	@OneToOne(cascade = CascadeType.ALL)
+	@IndexColumn(name="REPORTSTANDARDFILTER_ID")
 	private ReportStandardFilter reportStandardFilter;
 	
-	@Transient
+	@OneToOne(cascade = CascadeType.ALL)
+	@IndexColumn(name="REPORTCUSTOMFILTER_ID")
 	private ReportCustomFilter reportCustomFilter;
   
 	public ReportFilter() {

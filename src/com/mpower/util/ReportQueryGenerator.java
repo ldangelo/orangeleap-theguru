@@ -10,14 +10,16 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import com.mpower.domain.ReportCrossTabColumn;
 import com.mpower.domain.ReportCrossTabFields;
+import com.mpower.domain.ReportCrossTabMeasure;
+import com.mpower.domain.ReportCrossTabRow;
 import com.mpower.domain.ReportCustomFilter;
 import com.mpower.domain.ReportCustomFilterDefinition;
 import com.mpower.domain.ReportDatabaseType;
 import com.mpower.domain.ReportField;
 import com.mpower.domain.ReportFieldType;
 import com.mpower.domain.ReportFilter;
-import com.mpower.domain.ReportGroupByField;
 import com.mpower.domain.ReportSelectedField;
 import com.mpower.domain.ReportStandardFilter;
 import com.mpower.domain.ReportWizard;
@@ -258,10 +260,10 @@ public class ReportQueryGenerator {
 
 		//These must be added in the same order as the ReportGenerator.CreateCrosstab() method
 		//Add the Measure
-		List<ReportGroupByField> colMeasure = getReportWizard().getReportCrossTabFields().getReportCrossTabMeasure();
-		Iterator<ReportGroupByField> itMeasure = colMeasure.iterator();
+		List<ReportCrossTabMeasure> colMeasure = getReportWizard().getReportCrossTabFields().getReportCrossTabMeasure();
+		Iterator<ReportCrossTabMeasure> itMeasure = colMeasure.iterator();
 		while (itMeasure.hasNext()){
-			ReportGroupByField fGroupBy = (ReportGroupByField) itMeasure.next();
+			ReportCrossTabMeasure fGroupBy = (ReportCrossTabMeasure) itMeasure.next();
 			if (fGroupBy != null && fGroupBy.getFieldId() != -1){
 				ReportField reportField = reportFieldService.find(fGroupBy.getFieldId());
 				if (reportField.getAliasName() == null || reportField.getAliasName().length() == 0)
@@ -282,10 +284,10 @@ public class ReportQueryGenerator {
 			}
 		}
 		//Add the rows
-		List<ReportGroupByField> rowFields = getReportWizard().getReportCrossTabFields().getReportCrossTabRows();
-		Iterator<ReportGroupByField> itRow = rowFields.iterator();
+		List<ReportCrossTabRow> rowFields = getReportWizard().getReportCrossTabFields().getReportCrossTabRows();
+		Iterator<ReportCrossTabRow> itRow = rowFields.iterator();
 		while (itRow.hasNext()){
-			ReportGroupByField fGroupBy = (ReportGroupByField) itRow.next();
+			ReportCrossTabRow fGroupBy = (ReportCrossTabRow) itRow.next();
 			if (fGroupBy != null && fGroupBy.getFieldId() != -1 ){
 				ReportField reportField = reportFieldService.find(fGroupBy.getFieldId());
 				if (reportField.getAliasName() == null || reportField.getAliasName().length() == 0)
@@ -301,10 +303,10 @@ public class ReportQueryGenerator {
 				}
 		}
 		//Add Column Fields
-		List<ReportGroupByField> colFields = getReportWizard().getReportCrossTabFields().getReportCrossTabColumns();
-		Iterator<ReportGroupByField> itCol = colFields.iterator();
+		List<ReportCrossTabColumn> colFields = getReportWizard().getReportCrossTabFields().getReportCrossTabColumns();
+		Iterator<ReportCrossTabColumn> itCol = colFields.iterator();
 		while (itCol.hasNext()){
-			ReportGroupByField fGroupBy = (ReportGroupByField) itCol.next();
+			ReportCrossTabColumn fGroupBy = (ReportCrossTabColumn) itCol.next();
 			if (fGroupBy != null && fGroupBy.getFieldId() != -1){
 				ReportField reportField = reportFieldService.find(fGroupBy.getFieldId());
 				if (reportField.getAliasName() == null || reportField.getAliasName().length() == 0)
@@ -346,7 +348,7 @@ public class ReportQueryGenerator {
 			ReportFilter filter = (ReportFilter) itFilters.next();
 			if (filter == null) continue; // this is an empty filter
 			if (filter.getFilterType() == 1 && filter.getReportStandardFilter().getFieldId() == -1) continue; // this is an empty filter
-			if (filter.getFilterType() == 2 && filter.getReportCustomFilter().getCustomFilterId() <= 0) continue; // this is an empty filter
+			if (filter.getFilterType() == 2 && filter.getReportCustomFilter().getCustomFilterDefinitionId() <= 0) continue; // this is an empty filter
 
 			if (addWhere) {
 				whereClause += System.getProperty("line.separator") + "WHERE";
@@ -610,14 +612,14 @@ public class ReportQueryGenerator {
 	 */
 	private String buildCustomFilterWhereClause(ReportCustomFilter filter) throws ParseException {
 		String whereClause = " ";
-		ReportCustomFilterDefinition reportCustomFilterDefinition = getReportCustomFilterDefinitionService().find(filter.getCustomFilterId());
+		ReportCustomFilterDefinition reportCustomFilterDefinition = getReportCustomFilterDefinitionService().find(filter.getCustomFilterDefinitionId());
 		if (reportCustomFilterDefinition != null) {
 			String filterString = reportCustomFilterDefinition.getSqlText();
 			if (filterString.length() != 0) {
 				filterString = filterString.replace("[VIEWNAME]", getReportWizard().getDataSubSource().getViewName());
 				int criteriaSize = filter.getReportCustomFilterCriteria().size();
 				for (int index = 0; index < criteriaSize; index++) {
-					filterString = filterString.replace("{" + Integer.toString(index) + "}", filter.getReportCustomFilterCriteria().get(index));
+					filterString = filterString.replace("{" + Integer.toString(index) + "}", filter.getReportCustomFilterCriteria().get(index).getCriteria());
 				}
 				whereClause += filterString;
 			}
@@ -820,13 +822,13 @@ public class ReportQueryGenerator {
 		String orderBy = "";
 		Boolean addComma = false;
 		ReportCrossTabFields rptCTList = getReportWizard().getReportCrossTabFields();
-		List<ReportGroupByField> ctRows = rptCTList.getReportCrossTabRows();
+		List<ReportCrossTabRow> ctRows = rptCTList.getReportCrossTabRows();
 		addComma = false;
 		List<Long> addedFields = new ArrayList<Long>();
 		//order by rows first
-		Iterator<ReportGroupByField> itCtRows = ctRows.iterator();
+		Iterator<ReportCrossTabRow> itCtRows = ctRows.iterator();
 		while (itCtRows.hasNext()){
-			ReportGroupByField rowField = (ReportGroupByField) itCtRows.next();
+			ReportCrossTabRow rowField = (ReportCrossTabRow) itCtRows.next();
 			if (rowField != null) {
 				if (rowField.getFieldId() != -1){
 					ReportField rg = reportFieldService.find(rowField.getFieldId());
@@ -849,10 +851,10 @@ public class ReportQueryGenerator {
 		}
 
 		//order by Columns last
-		List<ReportGroupByField> ctCols = rptCTList.getReportCrossTabColumns();
-		Iterator<ReportGroupByField> itCtCols = ctCols.iterator();
+		List<ReportCrossTabColumn> ctCols = rptCTList.getReportCrossTabColumns();
+		Iterator<ReportCrossTabColumn> itCtCols = ctCols.iterator();
 		while (itCtCols.hasNext()){
-			ReportGroupByField colField = (ReportGroupByField) itCtCols.next();
+			ReportCrossTabColumn colField = (ReportCrossTabColumn) itCtCols.next();
 			if (colField != null) {
 				if (colField.getFieldId() != -1){
 					ReportField rg = reportFieldService.find(colField.getFieldId());

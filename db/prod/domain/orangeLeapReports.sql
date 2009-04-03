@@ -6935,7 +6935,7 @@ CASE
   WHEN ADDRESS_ACTIVATION_STATUS = ''seasonal'' THEN ADDRESS_SEASONAL_END_DATE
   ELSE STR_TO_DATE(''{0}'', ''%m/%d/%Y'')
 END)',
-'Address - Address is effective as of <span class="criteriaWrapper"><input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[0]" fieldtype="DATE" value="{0}" style="width:110px"/></span>';
+'Address - Address is effective as of <span class="criteriaWrapper"><input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[0].criteria" fieldtype="DATE" value="{0}" style="width:110px"/></span>';
 
 -- Email Address effective as of date
 INSERT INTO REPORTCUSTOMFILTERDEFINITION (REPORTCUSTOMFILTERDEFINITION_ID, DISPLAY_TEXT, SQL_TEXT, DISPLAY_HTML)
@@ -6953,7 +6953,7 @@ CASE
   WHEN EMAIL_ACTIVATION_STATUS = ''seasonal'' THEN EMAIL_SEASONAL_END_DATE
   ELSE STR_TO_DATE(''{0}'', ''%m/%d/%Y'')
 END)',
-'Email Address - Email Address is effective as of <span class="criteriaWrapper"><input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[0]" fieldtype="DATE" value="{0}" style="width:110px"/></span>';
+'Email Address - Email Address is effective as of <span class="criteriaWrapper"><input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[0].criteria" fieldtype="DATE" value="{0}" style="width:110px"/></span>';
 
 
 INSERT INTO REPORTCUSTOMFILTERDEFINITION (REPORTCUSTOMFILTERDEFINITION_ID, DISPLAY_TEXT, SQL_TEXT, DISPLAY_HTML)
@@ -6971,68 +6971,68 @@ CASE
   WHEN PHONE_ACTIVATION_STATUS = ''seasonal'' THEN PHONE_SEASONAL_END_DATE
   ELSE STR_TO_DATE(''{0}'', ''%m/%d/%Y'')
 END)',
-'Phone Number - Phone Number is effective as of <span class="criteriaWrapper"><input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[0]" fieldtype="DATE" value="{0}" style="width:110px"/></span>';
+'Phone Number - Phone Number is effective as of <span class="criteriaWrapper"><input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[0].criteria" fieldtype="DATE" value="{0}" style="width:110px"/></span>';
 
 
 -- Account Gift Total - tied to ADDRESS_CONSTITUENT_ID
 INSERT INTO REPORTCUSTOMFILTERDEFINITION (REPORTCUSTOMFILTERDEFINITION_ID, DISPLAY_TEXT, SQL_TEXT, DISPLAY_HTML)
 SELECT 400000, 'Gift Totals - Account has given at least $[GIFTAMOUNT] in year [GIFTYEAR]',
 '((SELECT SUM(AMOUNT) FROM GIFT GIFTLOOKUP WHERE GIFTLOOKUP.CONSTITUENT_ID = [VIEWNAME].ADDRESS_CONSTITUENT_ID AND YEAR(TRANSACTION_DATE) = {1}) >= {0})',
-'Gift Totals - Account has given at least $<input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[0]" value="{0}"/> in year <input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[1]" value="{1}"/>';
+'Gift Totals - Account has given at least $<input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[0].criteria" value="{0}"/> in year <input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[1].criteria" value="{1}"/>';
 
 -- Account Gift Total - tied to AUDIT_CONSTITUENT_ID
 INSERT INTO REPORTCUSTOMFILTERDEFINITION (REPORTCUSTOMFILTERDEFINITION_ID, DISPLAY_TEXT, SQL_TEXT, DISPLAY_HTML)
 SELECT 410000, 'Gift Totals - Account has given at least $[GIFTAMOUNT] in year [GIFTYEAR]',
 '((SELECT SUM(AMOUNT) FROM GIFT GIFTLOOKUP WHERE GIFTLOOKUP.CONSTITUENT_ID = [VIEWNAME].AUDIT_CONSTITUENT_ID AND YEAR(TRANSACTION_DATE) = {1}) >= {0})',
-'Gift Totals - Account has given at least $<input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[0]" value="{0}"/> in year <input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[1]" value="{1}"/>';
+'Gift Totals - Account has given at least $<input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[0].criteria" value="{0}"/> in year <input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[1].criteria" value="{1}"/>';
 
 -- Account Gift Total - tied to COMMITMENT_CONSTITUENT_ID
 INSERT INTO REPORTCUSTOMFILTERDEFINITION (REPORTCUSTOMFILTERDEFINITION_ID, DISPLAY_TEXT, SQL_TEXT, DISPLAY_HTML)
 SELECT 420000, 'Gift Totals - Account has given at least $[GIFTAMOUNT] in year [GIFTYEAR]',
 '((SELECT SUM(AMOUNT) FROM GIFT GIFTLOOKUP WHERE GIFTLOOKUP.CONSTITUENT_ID = [VIEWNAME].COMMITMENT_CONSTITUENT_ID AND YEAR(TRANSACTION_DATE) = {1}) >= {0})',
-'Gift Totals - Account has given at least $<input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[0]" value="{0}"/> in year <input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[1]" value="{1}"/>';
+'Gift Totals - Account has given at least $<input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[0].criteria" value="{0}"/> in year <input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[1].criteria" value="{1}"/>';
 
 -- Account Gift Total - tied to COMMUNICATION_HISTORY_CONSTITUENT_ID
 INSERT INTO REPORTCUSTOMFILTERDEFINITION (REPORTCUSTOMFILTERDEFINITION_ID, DISPLAY_TEXT, SQL_TEXT, DISPLAY_HTML)
 SELECT 430000, 'Gift Totals - Account has given at least $[GIFTAMOUNT] in year [GIFTYEAR]',
 '((SELECT SUM(AMOUNT) FROM GIFT GIFTLOOKUP WHERE GIFTLOOKUP.CONSTITUENT_ID = [VIEWNAME].COMMUNICATION_HISTORY_CONSTITUENT_ID AND YEAR(TRANSACTION_DATE) = {1}) >= {0})',
-'Gift Totals - Account has given at least $<input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[0]" value="{0}"/> in year <input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[1]" value="{1}"/>';
+'Gift Totals - Account has given at least $<input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[0].criteria" value="{0}"/> in year <input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[1].criteria" value="{1}"/>';
 
 -- Account Gift Total - tied to EMAIL_CONSTITUENT_ID
 INSERT INTO REPORTCUSTOMFILTERDEFINITION (REPORTCUSTOMFILTERDEFINITION_ID, DISPLAY_TEXT, SQL_TEXT, DISPLAY_HTML)
 SELECT 440000, 'Gift Totals - Account has given at least $[GIFTAMOUNT] in year [GIFTYEAR]',
 '((SELECT SUM(AMOUNT) FROM GIFT GIFTLOOKUP WHERE GIFTLOOKUP.CONSTITUENT_ID = [VIEWNAME].EMAIL_CONSTITUENT_ID AND YEAR(TRANSACTION_DATE) = {1}) >= {0})',
-'Gift Totals - Account has given at least $<input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[0]" value="{0}"/> in year <input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[1]" value="{1}"/>';
+'Gift Totals - Account has given at least $<input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[0].criteria" value="{0}"/> in year <input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[1].criteria" value="{1}"/>';
 
 -- Account Gift Total - tied to GIFT_CONSTITUENT_ID
 INSERT INTO REPORTCUSTOMFILTERDEFINITION (REPORTCUSTOMFILTERDEFINITION_ID, DISPLAY_TEXT, SQL_TEXT, DISPLAY_HTML)
 SELECT 450000, 'Gift Totals - Account has given at least $[GIFTAMOUNT] in year [GIFTYEAR]',
 '((SELECT SUM(AMOUNT) FROM GIFT GIFTLOOKUP WHERE GIFTLOOKUP.CONSTITUENT_ID = [VIEWNAME].GIFT_CONSTITUENT_ID AND YEAR(TRANSACTION_DATE) = {1}) >= {0})',
-'Gift Totals - Account has given at least $<input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[0]" value="{0}"/> in year <input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[1]" value="{1}"/>';
+'Gift Totals - Account has given at least $<input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[0].criteria" value="{0}"/> in year <input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[1].criteria" value="{1}"/>';
 
 -- Account Gift Total - tied to PAYMENT_HISTORY_CONSTITUENT_ID
 INSERT INTO REPORTCUSTOMFILTERDEFINITION (REPORTCUSTOMFILTERDEFINITION_ID, DISPLAY_TEXT, SQL_TEXT, DISPLAY_HTML)
 SELECT 460000, 'Gift Totals - Account has given at least $[GIFTAMOUNT] in year [GIFTYEAR]',
 '((SELECT SUM(AMOUNT) FROM GIFT GIFTLOOKUP WHERE GIFTLOOKUP.CONSTITUENT_ID = [VIEWNAME].PAYMENT_HISTORY_CONSTITUENT_ID AND YEAR(TRANSACTION_DATE) = {1}) >= {0})',
-'Gift Totals - Account has given at least $<input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[0]" value="{0}"/> in year <input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[1]" value="{1}"/>';
+'Gift Totals - Account has given at least $<input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[0].criteria" value="{0}"/> in year <input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[1].criteria" value="{1}"/>';
 
 -- Account Gift Total - tied to PAYMENT_SOURCE_CONSTITUENT_ID
 INSERT INTO REPORTCUSTOMFILTERDEFINITION (REPORTCUSTOMFILTERDEFINITION_ID, DISPLAY_TEXT, SQL_TEXT, DISPLAY_HTML)
 SELECT 470000, 'Gift Totals - Account has given at least $[GIFTAMOUNT] in year [GIFTYEAR]',
 '((SELECT SUM(AMOUNT) FROM GIFT GIFTLOOKUP WHERE GIFTLOOKUP.CONSTITUENT_ID = [VIEWNAME].PAYMENT_SOURCE_CONSTITUENT_ID AND YEAR(TRANSACTION_DATE) = {1}) >= {0})',
-'Gift Totals - Account has given at least $<input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[0]" value="{0}"/> in year <input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[1]" value="{1}"/>';
+'Gift Totals - Account has given at least $<input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[0].criteria" value="{0}"/> in year <input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[1].criteria" value="{1}"/>';
 
 -- Account Gift Total - tied to CONSTITUENT_CONSTITUENT_ID
 INSERT INTO REPORTCUSTOMFILTERDEFINITION (REPORTCUSTOMFILTERDEFINITION_ID, DISPLAY_TEXT, SQL_TEXT, DISPLAY_HTML)
 SELECT 480000, 'Gift Totals - Account has given at least $[GIFTAMOUNT] in year [GIFTYEAR]',
 '((SELECT SUM(AMOUNT) FROM GIFT GIFTLOOKUP WHERE GIFTLOOKUP.CONSTITUENT_ID = [VIEWNAME].CONSTITUENT_CONSTITUENT_ID AND YEAR(TRANSACTION_DATE) = {1}) >= {0})',
-'Gift Totals - Account has given at least $<input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[0]" value="{0}"/> in year <input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[1]" value="{1}"/>';
+'Gift Totals - Account has given at least $<input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[0].criteria" value="{0}"/> in year <input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[1].criteria" value="{1}"/>';
 
 -- Account Gift Total - tied to PHONE_CONSTITUENT_ID
 INSERT INTO REPORTCUSTOMFILTERDEFINITION (REPORTCUSTOMFILTERDEFINITION_ID, DISPLAY_TEXT, SQL_TEXT, DISPLAY_HTML)
 SELECT 490000, 'Gift Totals - Account has given at least $[GIFTAMOUNT] in year [GIFTYEAR]',
 '((SELECT SUM(AMOUNT) FROM GIFT GIFTLOOKUP WHERE GIFTLOOKUP.CONSTITUENT_ID = [VIEWNAME].PHONE_CONSTITUENT_ID AND YEAR(TRANSACTION_DATE) = {1}) >= {0})',
-'Gift Totals - Account has given at least $<input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[0]" value="{0}"/> in year <input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[1]" value="{1}"/>';
+'Gift Totals - Account has given at least $<input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[0].criteria" value="{0}"/> in year <input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[1].criteria" value="{1}"/>';
 
 
 

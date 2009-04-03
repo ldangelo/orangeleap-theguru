@@ -10,11 +10,13 @@ import java.util.StringTokenizer;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -27,7 +29,12 @@ import org.hibernate.annotations.IndexColumn;
 
 @Entity
 @Table(name = "REPORTWIZARD")
-public class ReportWizard implements java.io.Serializable {
+public class ReportWizard implements java.io.Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8234358850416908612L;
 
 	@Transient
 	protected final Log logger = LogFactory.getLog(getClass());
@@ -39,6 +46,10 @@ public class ReportWizard implements java.io.Serializable {
 
 	@Column(name = "REPORT_NAME")
 	private String reportName;
+	
+	@Column(name = "REPORT_SAVEASNAME")
+	private String reportSaveAsName;
+	
 	@Column(name = "REPORT_COMMENT")
 	private String reportComment;
 
@@ -57,13 +68,16 @@ public class ReportWizard implements java.io.Serializable {
 	@Column(name = "REPORTSUBSOURCE_ID")
 	private long subSourceId;
 
-	@Transient
+	@OneToOne()
+	@IndexColumn(name="REPORTSOURCE_ID")
 	private ReportDataSource src;
 
-	@Transient
+	@OneToOne()
+	@IndexColumn(name="REPORTSUBSOURCEGROUP_ID")
 	private ReportDataSubSourceGroup subsourcegroup;
 
-	@Transient
+	@OneToOne()
+	@IndexColumn(name="REPORTSUBSOURCE_ID")
 	private ReportDataSubSource subsource;
 
 	@Transient
@@ -75,26 +89,26 @@ public class ReportWizard implements java.io.Serializable {
 	@Transient
 	private List<ReportDataSubSource> subsources;
 
-	@ManyToMany()
-	@IndexColumn(name="REPORTFIELD_ID")
+	@Transient
 	private List<ReportField> fields;
 
-	@ManyToMany()
-	@IndexColumn(name="REPORTFIELDGROUP_ID")
-	@Column(name = "FIELDGROUPS")
+	@Transient
 	private List<ReportFieldGroup> fieldGroups;
 
 	@OneToMany(cascade = CascadeType.ALL)
 	@IndexColumn(name="REPORTFILTER_ID")
 	private List<ReportFilter> reportFilters;
 
-	@Transient
+	@ManyToMany(cascade = CascadeType.ALL)
+	@IndexColumn(name="REPORTCHARTSETTINGS_ID")
 	private List<ReportChartSettings> reportChartSettings;
 
-	@Transient
+	@OneToOne(cascade = CascadeType.ALL)
+	@IndexColumn(name="REPORTCROSSTABFIELDS_ID")
 	private ReportCrossTabFields reportCrossTabFields;
 
-	@Transient
+	@OneToMany(cascade = CascadeType.ALL)
+	@IndexColumn(name="REPORTSELECTEDFIELD_ID")
 	private List<ReportSelectedField> reportSelectedFields;
 
     @Transient
@@ -105,10 +119,20 @@ public class ReportWizard implements java.io.Serializable {
 
 	@Column(name = "REPORT_TYPE")
 	private String reportType;
+	
+	@Column(name = "REPORT_LAYOUT")
 	private ReportLayout reportLayout;
+	
+	@Column(name = "RECORDCOUNT")
 	private Boolean recordCount;
+	
+	@Column(name = "REPORT_PATH")
 	private String reportPath;
+	
+	@Column(name = "REPORT_TEMPLATE_PATH")
 	private String reportTemplatePath;
+	
+	@Column(name = "REPORT_TEMPLATE_JRXML")
 	private String reportTemplateJRXML;
 
 	@Transient
@@ -120,13 +144,13 @@ public class ReportWizard implements java.io.Serializable {
 	@Transient
 	private String password;
 
-	@Transient
+	@Column(name = "SITE_NAME")
 	private String company;
 
 	@Transient
 	private Integer previousPage;
 
-	@Transient
+	@Column(name="SHOWSQLQUERY")
 	private boolean showSqlQuery;
 
 	@Transient
@@ -563,4 +587,20 @@ public class ReportWizard implements java.io.Serializable {
 	public long getPreviousDataSubSourceId() {
 		return previousDataSubSourceId;
 	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public String getReportSaveAsName() {
+		reportSaveAsName = getDataSubSource().getDisplayName() + " Custom Report";
+		if (getReportName() != null && getReportName().length() > 0)
+			reportSaveAsName = getReportName();
+		reportSaveAsName = reportSaveAsName.replace(" ", "_").replace("'", "").replace("\"", "");		
+		return reportSaveAsName;		
+	}	
 }
