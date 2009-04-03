@@ -149,14 +149,8 @@
 			<TD><SELECT id="reportChartSettings[0].fieldIdy"
 				name="reportChartSettings[0].fieldIdy"
 				onchange="fillChartCalcOptions(this); " >
-				<c:forEach var="f" items="${reportSummarizedByFields}" varStatus="inner">
-						<c:if test="${f != null }">
-							<option label="${f.displayName}" value="${f.id}"
-							<c:if test="${reportChartSettings[0].fieldIdy == f.id}">
-								selected="true"
-							</c:if>>${f.displayName}</option>
-						</c:if>
-					</c:forEach></SELECT></TD>
+				<option label="Default Selected" value="${reportChartSettings[0].fieldIdy}" >Default</option>
+			</SELECT></TD>
 
 			<TD><SELECT id="reportChartSettings[0].operation"
 				name="reportChartSettings[0].operation">
