@@ -102,8 +102,8 @@ public class ReportGenerator {
 		//headerVariables = new Style("headerVariables");
 
 		titleStyle = new Style("titleStyle");
-		
-		
+
+
 	}
 
 	private File getTemplateFile(ReportWizard wiz) throws Exception {
@@ -121,22 +121,22 @@ public class ReportGenerator {
 		return templateFile;
 	}
 
-	public DynamicReport Generate(ReportWizard wiz,javax.sql.DataSource jdbcDataSource, ReportFieldService reportFieldService, 
+	public DynamicReport Generate(ReportWizard wiz,javax.sql.DataSource jdbcDataSource, ReportFieldService reportFieldService,
 			ReportCustomFilterDefinitionService reportCustomFilterDefinitionService) throws Exception {
 		resetInputControls();
 		File templateFile = getTemplateFile(wiz);
 		columnIndex = 0;
 		initStyles();
 
-		
-		
+
+
 		//
 		//Build the main report
 		//
 		String reportTitle = wiz.getDataSubSource().getDisplayName() + " Custom Report";
 		if (wiz.getReportName() != null && wiz.getReportName().length() > 0)
 			reportTitle = wiz.getReportName();
-		
+
 		FastReportBuilder drb = new FastReportBuilder();
 		Integer margin = new Integer(20);
 
@@ -149,7 +149,7 @@ public class ReportGenerator {
 		.setIgnorePagination(true)
 		.setUseFullPageWidth(true)
 		.setWhenNoDataShowNoDataSection();
-		
+
 		//
 		//Tabular and Summary Reports
 		//
@@ -160,7 +160,7 @@ public class ReportGenerator {
 
 		//
 		//Matrix Reports
-		//		
+		//
 		if (wiz.getReportType().compareToIgnoreCase("matrix") == 0){
 			DJCrosstab djcross = createCrosstab(wiz, reportFieldService, drb);
 			drb.addFooterCrosstab(djcross);
@@ -169,9 +169,9 @@ public class ReportGenerator {
 		//
 		//Build query
 		//
-		ReportQueryGenerator reportQueryGenerator = new ReportQueryGenerator(wiz, 
+		ReportQueryGenerator reportQueryGenerator = new ReportQueryGenerator(wiz,
 				reportFieldService, reportCustomFilterDefinitionService);
-		String query = reportQueryGenerator.getQueryString(); 
+		String query = reportQueryGenerator.getQueryString();
 
 		List<ReportFilter> filters = wiz.getReportFilters();
 		Iterator<ReportFilter> itFilter = filters.iterator();
@@ -198,7 +198,7 @@ public class ReportGenerator {
 				case 8:   	operatorDisplayName = " ends with ";				break;
 				case 9:   	operatorDisplayName = " contains ";
 				}
-				
+
 				InputControlParameters ic = new InputControlParameters();
 				ic.setLabel(rf.getDisplayName() + operatorDisplayName);
 				ic.setType(rf.getFieldType());
@@ -210,33 +210,33 @@ public class ReportGenerator {
 				if (filter.getReportStandardFilter().getPromptForCriteria()) {
 					params.put(controlName, "java.util.Date");
 					drb.addParameter(controlName, "java.util.Date");
-				}								
+				}
 			} else	if(rf.getFieldType() == ReportFieldType.STRING) {
 				if (filter.getReportStandardFilter().getPromptForCriteria()) {
 					params.put(controlName, "java.lang.String");
 					drb.addParameter(controlName, "java.lang.String");
-				}								
+				}
 			} else if(rf.getFieldType() == ReportFieldType.DOUBLE) {
 				if (filter.getReportStandardFilter().getPromptForCriteria()) {
 					params.put(controlName, "java.lang.Double");
 					drb.addParameter(controlName, "java.lang.Double");
-				}								
+				}
 			} else if(rf.getFieldType() == ReportFieldType.INTEGER) {
 				if (filter.getReportStandardFilter().getPromptForCriteria()) {
 					params.put(controlName, "java.lang.Integer");
 					drb.addParameter(controlName, "java.lang.Integer");
-				}								
+				}
 			} else if(rf.getFieldType() == ReportFieldType.MONEY) {
-				if (filter.getReportStandardFilter().getPromptForCriteria()) {					
+				if (filter.getReportStandardFilter().getPromptForCriteria()) {
 					params.put(controlName, "java.lang.Double");
 					drb.addParameter(controlName, "java.lang.Double");
-				}							
+				}
 			} else if(rf.getFieldType() == ReportFieldType.BOOLEAN) {
 				if (filter.getReportStandardFilter().getPromptForCriteria()) {
 					params.put(controlName, "java.lang.Boolean");
 					drb.addParameter(controlName, "java.lang.Boolean");
-				}								
-			} 
+				}
+			}
 		}
 
 		logger.info(query);
@@ -252,8 +252,8 @@ public class ReportGenerator {
 	 * Creates a crosstab Report using DynamicJasper.
 	 * <P>
 	 * The data must be sorted with the following criteria: row(1) , ..., row(n) , column(1) , ..., column(m)
-	 * where row(1) is the outer-most row, row(n)is the inner-most row 
-	 * and column(1) is the outer-most column, column(m) is the inner-most column 
+	 * where row(1) is the outer-most row, row(n)is the inner-most row
+	 * and column(1) is the outer-most column, column(m) is the inner-most column
 	 * <P>
 	 * {@code}DJCrosstab djcross = createCrosstab(wiz, reportFieldService);
 	 * @param ReportWizard wiz
@@ -266,28 +266,28 @@ public class ReportGenerator {
 		ReportCrossTabFields reportCrossTabFields = wiz.getReportCrossTabFields();
 
 		//Set up styling for matrix report
-		
+
 		Style CrossTabColRowHeaderStyle = Style.createBlankStyle("CrossTabColRowHeaderStyle");
 		CrossTabColRowHeaderStyle.setFont(Font.ARIAL_MEDIUM_BOLD);
 		CrossTabColRowHeaderStyle.setPaddingLeft(2);
 		CrossTabColRowHeaderStyle.setVerticalAlign(VerticalAlign.MIDDLE);
-		
+
 		Style CrossTabColRowHeaderTotalStyle = Style.createBlankStyle("CrossTabColRowHeaderTotalStyle");
 		CrossTabColRowHeaderTotalStyle.setFont(Font.ARIAL_MEDIUM_BOLD);
 		CrossTabColRowHeaderTotalStyle.setPaddingLeft(2);
 		CrossTabColRowHeaderTotalStyle.setVerticalAlign(VerticalAlign.MIDDLE);
-		
+
 		Style CrossTabTotalStyle = Style.createBlankStyle("CrossTabTotalStyle");
 		CrossTabTotalStyle.setFont(Font.ARIAL_MEDIUM);
 		CrossTabTotalStyle.setPaddingLeft(2);
 		CrossTabTotalStyle.setVerticalAlign(VerticalAlign.MIDDLE);
-		
+
 		//
 		//Create the crosstab builder
 		CrosstabBuilder cb = new CrosstabBuilder();
 		cb.setHeight(200)
 		.setWidth(500)
-		//The .setDatasource is not working correctly with JasperServer. We remove this generated code 
+		//The .setDatasource is not working correctly with JasperServer. We remove this generated code
 		//manually from the jrxml file before saving. (See the ReportFormWizardController removeCrossTabDataSubset.)
 		.setDatasource(null,DJConstants.DATA_SOURCE_ORIGIN_USE_REPORT_CONNECTION, DJConstants.DATA_SOURCE_TYPE_SQL_CONNECTION)
 		.setUseFullWidth(true)
@@ -295,16 +295,16 @@ public class ReportGenerator {
 		.setAutomaticTitle(true)
 		.setHeaderStyle(CrossTabColRowHeaderStyle)
 		.setCellBorder(Border.THIN);
-			
+
 		String valueClassName = null;
-		
+
 		//These must be added in the same order as the ReportQueryGenerator.buildSelectFieldsForMatrix() method
 		//
 		//Add a Measure to the builder(can only have one)
 		String operation = reportCrossTabFields.getReportCrossTabOperation();
 		DJCalculation cgvo = null;
-		
-		
+
+
 		List<ReportCrossTabMeasure> reportCrossTabMeasure = reportCrossTabFields.getReportCrossTabMeasure();
 		Iterator itCTMeasure  = reportCrossTabMeasure.iterator();
 		Integer columnIndex = 0;
@@ -319,7 +319,7 @@ public class ReportGenerator {
 				if (ctMeasure.getCalculation().compareToIgnoreCase("LOWEST") ==0) cgvo = DJCalculation.LOWEST;
 				if (ctMeasure.getCalculation().compareToIgnoreCase("COUNT") ==0) cgvo = DJCalculation.COUNT;
 				if (cgvo == null) cgvo = DJCalculation.COUNT;
-				
+
 				//set up style for measure to add the pattern/format for the different data types - money, dates, etc...
 				String pattern = null;
 				if ((cgvo == DJCalculation.AVERAGE || cgvo == DJCalculation.SUM) && fMeasure.getFieldType().toString().compareToIgnoreCase("MONEY") == 0){
@@ -332,14 +332,14 @@ public class ReportGenerator {
 					CrossTabTotalStyle.setPattern(pattern);
 					CrossTabColRowHeaderTotalStyle.setPattern(pattern);
 				}
-				
-				//add the measure column to the dynamic report builder 
+
+				//add the measure column to the dynamic report builder
 				AbstractColumn column = null;
 				column = buildColumn(fMeasure, columnIndex);
 				drb.addColumn(column);
-				
+
 				//now add the measure to the crosstab builder
-				cb.addMeasure(column.getName(), valueClassName, cgvo, fMeasure.getDisplayName(), CrossTabTotalStyle );	
+				cb.addMeasure(column.getName(), valueClassName, cgvo, fMeasure.getDisplayName(), CrossTabTotalStyle );
 			}
 			columnIndex++;
 		}
@@ -353,18 +353,18 @@ public class ReportGenerator {
 			if (ctRow != null && ctRow.getFieldId() != -1){
 				ReportField fRow = reportFieldService.find(ctRow.getFieldId());
 				valueClassName = getValueClassName(fRow);
-				//add the row column to the dynamic report builder 
+				//add the row column to the dynamic report builder
 				AbstractColumn column = null;
 				column = buildColumn(fRow, columnIndex);
 				drb.addColumn(column);
 				columnIndex++;
-				
+
 				//now add the row to the crosstab builder
 				DJCrosstabRow row = new CrosstabRowBuilder().setProperty(column.getName(),valueClassName)
 				.setHeaderWidth(100).setHeight(20).setTitle(fRow.getDisplayName()).setShowTotals(true)
 				.setTotalStyle(CrossTabTotalStyle).setHeaderStyle(CrossTabColRowHeaderStyle).setTotalHeaderStyle(CrossTabColRowHeaderStyle)
 				.setTotalStyle(CrossTabColRowHeaderTotalStyle).build();
-				cb.addRow(row);	
+				cb.addRow(row);
 			}
 		}
 
@@ -377,23 +377,23 @@ public class ReportGenerator {
 			if (ctCol != null && ctCol.getFieldId() != -1){
 				ReportField fCol = reportFieldService.find(ctCol.getFieldId());
 				valueClassName = getValueClassName(fCol);
-				//add the  column to the dynamic report builder 
+				//add the  column to the dynamic report builder
 				AbstractColumn column = null;
 				column = buildColumn(fCol, columnIndex);
 				drb.addColumn(column);
 				columnIndex++;
-				
+
 				//now add the column to the crosstab builder
 				DJCrosstabColumn col = new CrosstabColumnBuilder().setProperty(column.getName(),valueClassName)
 				.setHeaderHeight(60).setWidth(80).setTitle(fCol.getDisplayName()).setShowTotals(true)
 				.setTotalStyle(CrossTabTotalStyle).setHeaderStyle(CrossTabColRowHeaderStyle).setTotalHeaderStyle(CrossTabColRowHeaderStyle)
 				.setTotalStyle(CrossTabColRowHeaderTotalStyle).build();
-				cb.addColumn(col);	
+				cb.addColumn(col);
 			}
 		}
 		return cb.build();
 	}
-	
+
 	public String getValueClassName(ReportField reportField) {
 		String valueClassName = new String();
 		switch (reportField.getFieldType()) {
@@ -403,11 +403,11 @@ public class ReportGenerator {
 		case DOUBLE:   	valueClassName = String.class.getName();	break;
 		case DATE:   	valueClassName = Date.class.getName();  	break;
 		case MONEY:   	valueClassName = Float.class.getName(); 	break;
-		case BOOLEAN:   valueClassName = Boolean.class.getName();	
+		case BOOLEAN:   valueClassName = Boolean.class.getName();
 		}
 		return valueClassName;
 	}
-	
+
 	public String getPattern(ReportField reportField) {
 		String pattern = new String();
 		switch (reportField.getFieldType()) {
@@ -417,11 +417,11 @@ public class ReportGenerator {
 		case DOUBLE:   	pattern ="";	 		break;
 		case DATE:   	pattern ="MM/dd/yyyy";	break;
 		case MONEY:   	pattern ="$ #,##0.00";	break;
-		case BOOLEAN:   pattern ="";	
+		case BOOLEAN:   pattern ="";
 		}
 		return pattern;
 	}
-	
+
 	private List<ReportField> getSelectedReportFields(ReportWizard wiz, ReportFieldService reportFieldService) {
 		Iterator<ReportSelectedField> itReportSelectedFields = wiz.getReportSelectedFields().iterator();
 
@@ -432,28 +432,39 @@ public class ReportGenerator {
 			if (reportSelectedField == null) continue;
 			ReportField f = reportFieldService.find(reportSelectedField.getFieldId());
 			if (f == null || f.getId() == -1) continue;
-			f.setAverage(reportSelectedField.getAverage());
-			f.setIsSummarized(reportSelectedField.getIsSummarized());
-			f.setLargestValue(reportSelectedField.getMax());
-			f.setSmallestValue(reportSelectedField.getMin());
-			f.setPerformSummary(reportSelectedField.getSum());
-			f.setRecordCount(reportSelectedField.getCount());
-			f.setSelected(true);
+			ReportField newField = new ReportField();
+			newField.setId(f.getId());
+			newField.setAliasName(f.getAliasName());
+			newField.setCanBeSummarized(f.getCanBeSummarized());
+			newField.setColumnName(f.getColumnName());
+			newField.setDisplayName(f.getDisplayName());
+			newField.setFieldType(f.getFieldType());
+			newField.setIsDefault(f.getIsDefault());
+			newField.setPrimaryKeys(f.getPrimaryKeys());
+
+			newField.setAverage(reportSelectedField.getAverage());
+			newField.setIsSummarized(reportSelectedField.getIsSummarized());
+			newField.setLargestValue(reportSelectedField.getMax());
+			newField.setSmallestValue(reportSelectedField.getMin());
+			newField.setPerformSummary(reportSelectedField.getSum());
+			newField.setRecordCount(reportSelectedField.getCount());
+			newField.setGroupBy(reportSelectedField.getGroupBy());
+			newField.setSelected(true);
 			//f.setDynamicColumnName(f.getColumnName() + "_" + columnIndex.toString());
 			//columnIndex++;
-			selectedReportFieldsList.add(f);
+			selectedReportFieldsList.add(newField);
 		}
-		
-		return selectedReportFieldsList; 
+
+		return selectedReportFieldsList;
 	}
-	
+
 	private FastReportBuilder addColumnsAndGroups(List<ReportField> reportFieldsOrderedList, ReportWizard wiz, FastReportBuilder drb, ReportFieldService reportFieldService)throws ColumnBuilderException{
 		List<AbstractColumn> columnsBuilt = new LinkedList<AbstractColumn>();
 		Iterator itFields = reportFieldsOrderedList.iterator();
 		DJChart chart = null;
 		Boolean chartExists = false;
 		Integer columnIndex = 0;
-		
+
 		while (itFields.hasNext()){
 			ReportField f = (ReportField) itFields.next();
 			//Build and add the column
@@ -461,7 +472,7 @@ public class ReportGenerator {
 			drb.addColumn(column);
 			//Build and add the group if it is a groupby field
 			DJGroup group = null;
-			if  ( wiz.IsFieldGroupByField(f.getId())){
+			if  ( f.getGroupBy()){
 				group = buildGroup(column);
 				//groupsBuilt.add(group);
 				drb.addGroup(group);
@@ -477,7 +488,7 @@ public class ReportGenerator {
 			}
 			columnIndex++;
 		}
-		
+
 		//add the chart if it exists
 		if (chartExists){
 			chart = setChartCriteria(chart, wiz);
@@ -485,19 +496,21 @@ public class ReportGenerator {
 		}
 		return drb;
 	}
-	
+
 	private DJChart setChartCriteria(DJChart chart, ReportWizard wiz) {
 		List<ReportChartSettings> chartSettings = wiz.getReportChartSettings();
 		Iterator itChartSettings = chartSettings.iterator();
 		while (itChartSettings.hasNext()){
 			ReportChartSettings rcs = (ReportChartSettings) itChartSettings.next();
-			if (rcs.getChartType().compareTo("-1") == 0) continue; 
+			if (rcs.getChartType().compareTo("-1") == 0) continue;
 			DJChartOptions options = new DJChartOptions();
 			options.setPosition(DJChartOptions.POSITION_HEADER);
-			options.setShowLabels(true);
+			options.setShowLabels(false);
+			//options.setShowLabels(true);
 			chart.setOptions(options);
+
 			//set chart type
-			if (rcs.getChartType().compareTo("Bar") == 0) chart.setType(DJChart.BAR_CHART);	
+			if (rcs.getChartType().compareTo("Bar") == 0) chart.setType(DJChart.BAR_CHART);
 			if (rcs.getChartType().compareTo("Pie") == 0) chart.setType(DJChart.PIE_CHART);
 
 			//set chart operation
@@ -513,16 +526,20 @@ public class ReportGenerator {
 		Iterator itChartSettings = chartSettings.iterator();
 		while (itChartSettings.hasNext()){
 			ReportChartSettings rcs = (ReportChartSettings) itChartSettings.next();
-			if (rcs.getChartType().compareTo("-1") == 0) continue; 
+			if (rcs.getChartType().compareTo("-1") == 0) continue;
 			ReportField rfx = reportFieldService.find(rcs.getFieldIdx());
 			ReportField rfy = reportFieldService.find(rcs.getFieldIdy());
+
 			if (rfx.getId() == f.getId()){
-				chart.setColumnsGroup(group);
+				if (chart.getColumnsGroup() == null)
+					chart.setColumnsGroup(group);
 			}
 			if (rfy.getId() == f.getId()){
 				List<AbstractColumn> columns = new LinkedList();
-				columns.add(column);
-				chart.setColumns(columns);	
+				if (!(columns.indexOf(column) >= 0)){
+					columns.add(column);
+					chart.setColumns(columns);
+				}
 			}
 		}
 		return chart;
@@ -536,7 +553,7 @@ public class ReportGenerator {
 		Iterator itChartSettings = chartSettings.iterator();
 		while (itChartSettings.hasNext()){
 			ReportChartSettings rcs = (ReportChartSettings) itChartSettings.next();
-			if (rcs.getChartType().compareTo("-1") == 0) continue; 
+			if (rcs.getChartType().compareTo("-1") == 0) continue;
 			ReportField rfx = reportFieldService.find(rcs.getFieldIdx());
 			ReportField rfy = reportFieldService.find(rcs.getFieldIdy());
 			if (rfx.getId() == f.getId() || rfy.getId() == f.getId())
@@ -563,7 +580,7 @@ public class ReportGenerator {
 			columnName = f.getColumnName() + "_" + columnIndex;
 		else
 			columnName = f.getAliasName() + "_" + columnIndex;
-		
+
 		AbstractColumn column = null;
 		try {
 			column = ColumnBuilder.getInstance()
@@ -596,50 +613,50 @@ public class ReportGenerator {
 
 				//ArrayList cgvList = new ArrayList();
 				//group.setFooterVariables(getColumnGroupVariables(cgvList, builtColumns, reportFieldsOrderedList, wiz));
-				
+
 				//add the group
 				groupsBuilt.add(group);
 			}
 		}
 		return groupsBuilt;
-	}	
+	}
 */
-/*	
+/*
 	private List<DJChart> buildCharts(List<DJGroup> groupByColumnsBuilt, List<AbstractColumn> allColumns, ReportWizard wiz,ReportFieldService reportFieldService) throws ChartBuilderException{
 		List<DJChart> chartsBuilt = new LinkedList<DJChart>();
 		List<ReportChartSettings> chartSettings = wiz.getReportChartSettings();
 		Iterator itChartSettings = chartSettings.iterator();
 		while (itChartSettings.hasNext()){
 			ReportChartSettings rcs = (ReportChartSettings) itChartSettings.next();
-			if (rcs.getChartType().compareTo("-1") == 0) continue; 
+			if (rcs.getChartType().compareTo("-1") == 0) continue;
 			ReportField rfx = reportFieldService.find(rcs.getFieldIdx());
 			DJGroup cg = getReportDJGroup(rfx, groupByColumnsBuilt);
 			ReportField rfy = reportFieldService.find(rcs.getFieldIdy());
 			List<AbstractColumn> columns = getReportAbstractColumn(rfy, allColumns);
 
-			//DJChartBuilder cb = new DJChartBuilder(); 
+			//DJChartBuilder cb = new DJChartBuilder();
 			DJChart chart = new DJChart();
 			DJChartOptions options = new DJChartOptions();
-			
+
 			options.setPosition(DJChartOptions.POSITION_HEADER);
 			options.setShowLabels(true);
 			chart.setOptions(options);
 			chart.setColumnsGroup(cg);
 			chart.setColumns(columns);
-			
+
 
 			//set chart type
-			if (rcs.getChartType().compareTo("Bar") == 0) chart.setType(DJChart.BAR_CHART);	
+			if (rcs.getChartType().compareTo("Bar") == 0) chart.setType(DJChart.BAR_CHART);
 			if (rcs.getChartType().compareTo("Pie") == 0) chart.setType(DJChart.PIE_CHART);
 
 			//set chart operation
 			if (rcs.getOperation().compareTo("RecordCount") == 0) chart.setOperation(DJChart.CALCULATION_COUNT);
 			if (rcs.getOperation().compareTo("Sum") == 0) chart.setOperation(DJChart.CALCULATION_SUM);
 
-			chartsBuilt.add(chart);	
+			chartsBuilt.add(chart);
 		}//end while itChartSettings
 		return chartsBuilt;
-	}		
+	}
 */
 	private List<AbstractColumn> getReportAbstractColumn(ReportField rfy, List<AbstractColumn> allColumns) {
 		List<AbstractColumn> columns = new LinkedList<AbstractColumn>();
@@ -647,7 +664,7 @@ public class ReportGenerator {
 		while (itCol.hasNext()){
 			AbstractColumn column = (AbstractColumn) itCol.next();
 			if (rfy.getColumnName().compareToIgnoreCase(column.getName()) == 0){
-				columns.add(column);	
+				columns.add(column);
 			}
 		}
 		return columns;
@@ -658,7 +675,7 @@ public class ReportGenerator {
 		while (itGroupBy.hasNext()){
 			DJGroup cg = (DJGroup) itGroupBy.next();
 			if (rfx.getColumnName().compareToIgnoreCase(cg.getColumnToGroupBy().getName()) == 0){
-				return cg;	
+				return cg;
 			}
 		}
 		return null;
@@ -667,7 +684,7 @@ public class ReportGenerator {
 	/*
 	private FastReportBuilder AddGlobalFooterVariables(List<ReportField> fields, List<AbstractColumn> columnsBuilt, FastReportBuilder drb){
 
-		//Iterate thru each of the fields to see if it is summarized  
+		//Iterate thru each of the fields to see if it is summarized
 		Iterator itFields = fields.iterator();
 		while (itFields.hasNext()){
 			ReportField f = (ReportField) itFields.next();
@@ -700,8 +717,8 @@ public class ReportGenerator {
 		return drb;
 	}
 	*/
-	
-	private ResourceDescriptor putReportUnit(ResourceDescriptor rd,String name, String label, String desc, File report, Map params2, String jasperDatasourceName) throws Exception 
+
+	private ResourceDescriptor putReportUnit(ResourceDescriptor rd,String name, String label, String desc, File report, Map params2, String jasperDatasourceName) throws Exception
 	{
 		File resourceFile = null;
 
@@ -727,7 +744,7 @@ public class ReportGenerator {
 		// Check if the report already exists and delete it if it does
 		WSClient wsClient = server.getWSClient();
 		boolean reportExists = false;
-		
+
 		// wsClient.list(rd) throws an exception if the report does not exist
 		try {
 			List reportList = wsClient.list(rd);

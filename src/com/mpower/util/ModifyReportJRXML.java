@@ -23,6 +23,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import ar.com.fdvs.dj.domain.DJChart;
+
 import com.mpower.domain.ReportField;
 import com.mpower.domain.ReportSelectedField;
 import com.mpower.domain.ReportWizard;
@@ -96,7 +98,7 @@ public class ModifyReportJRXML {
     		jasperReport.insertBefore(groupElem, bkgNode);
 
     	//iterate thru the fields to find the summary fields and create the variables
-    	Iterator<?> itFields = getSelectedReportFieldsInOrder().iterator();
+    	Iterator<?> itFields = getSelectedReportFields().iterator();
     	Integer columnIndex = 0;
     	while (itFields.hasNext()){
     		ReportField f = (ReportField) itFields.next();
@@ -158,7 +160,7 @@ public class ModifyReportJRXML {
     	}
 
     	//iterate thru the fields to find the summary fields and add the variables and footers
-    	Iterator<?> itFields = getSelectedReportFieldsInOrder().iterator();
+    	Iterator<?> itFields = getSelectedReportFields().iterator();
     	boolean addGroup = false;
     	List<String> groupsToAdd = new ArrayList<String>();
     	Integer columnIndex = 0;
@@ -462,7 +464,7 @@ public class ModifyReportJRXML {
 			int totalWidth = 0;
 			int columnIndex= 0;
 			//get the total width
-			Iterator<?> itTotalFieldWidth = getSelectedReportFieldsInOrder().iterator();
+			Iterator<?> itTotalFieldWidth = getSelectedReportFields().iterator();
 			while (itTotalFieldWidth.hasNext()){
 	    		ReportField fWidth = (ReportField) itTotalFieldWidth.next();
 	    		int lastColumnX = fieldProperties.get(fWidth.getDisplayName());
@@ -496,11 +498,11 @@ public class ModifyReportJRXML {
 
 	    	}
 	    	else{
-		    	Iterator<?> itFieldsGroupLabel = getSelectedReportFieldsInOrder().iterator();
+		    	Iterator<?> itFieldsGroupLabel = getSelectedReportFields().iterator();
 		    	columnIndex = 0;
 		    	while (itFieldsGroupLabel.hasNext()){
 		    		ReportField fLabel = (ReportField) itFieldsGroupLabel.next();
-		    		if (reportWizard.IsFieldGroupByField(fLabel.getId())){
+		    		if (fLabel.getGroupBy()){//(reportWizard.IsFieldGroupByField(fLabel.getId())){
 		    			x = fieldProperties.get(fLabel.getDisplayName());
 		    			width = fieldWidth.get(fLabel.getDisplayName());
 		    			String groupColumn = resetGroup.substring(resetGroup.indexOf("-") + 1);
@@ -519,7 +521,7 @@ public class ModifyReportJRXML {
 	    	Boolean yFound = false;
 	    	xCalc = 0;
 			widthCalc = 0;
-	    	Iterator<?> itFieldsSum = getSelectedReportFieldsInOrder().iterator();
+	    	Iterator<?> itFieldsSum = getSelectedReportFields().iterator();
 	    	columnIndex = 0;
 	    	while (itFieldsSum.hasNext()){
 	    		ReportField f = (ReportField) itFieldsSum.next();
@@ -543,7 +545,7 @@ public class ModifyReportJRXML {
 	    	yFound = false;
 	    	xCalc = 0;
 			widthCalc = 0;
-	    	Iterator<?> itFieldsAvg = getSelectedReportFieldsInOrder().iterator();
+	    	Iterator<?> itFieldsAvg = getSelectedReportFields().iterator();
 	    	columnIndex = 0;
 	    	while (itFieldsAvg.hasNext()){
 	    		ReportField f = (ReportField) itFieldsAvg.next();
@@ -567,7 +569,7 @@ public class ModifyReportJRXML {
 	    	yFound = false;
 	    	xCalc = 0;
 			widthCalc = 0;
-	    	Iterator<?> itFieldsMax = getSelectedReportFieldsInOrder().iterator();
+	    	Iterator<?> itFieldsMax = getSelectedReportFields().iterator();
 	    	columnIndex = 0;
 	    	while (itFieldsMax.hasNext()){
 	    		ReportField f = (ReportField) itFieldsMax.next();
@@ -591,7 +593,7 @@ public class ModifyReportJRXML {
 	    	yFound = false;
 	    	xCalc = 0;
 			widthCalc = 0;
-	    	Iterator<?> itFieldsMin = getSelectedReportFieldsInOrder().iterator();
+	    	Iterator<?> itFieldsMin = getSelectedReportFields().iterator();
 	    	columnIndex = 0;
 	    	while (itFieldsMin.hasNext()){
 	    		ReportField f = (ReportField) itFieldsMin.next();
@@ -615,7 +617,7 @@ public class ModifyReportJRXML {
 	    	yFound = false;
 	    	xCalc = 0;
 			widthCalc = 0;
-	    	Iterator<?> itFieldsCount = getSelectedReportFieldsInOrder().iterator();
+	    	Iterator<?> itFieldsCount = getSelectedReportFields().iterator();
 	    	columnIndex = 0;
 	    	while (itFieldsCount.hasNext()){
 	    		ReportField f = (ReportField) itFieldsCount.next();
@@ -869,6 +871,34 @@ public class ModifyReportJRXML {
 		return variable;
 	}
 
+
+	/**
+	 * Fixes the "category series is null" and "key is null" for the pie and bar charts
+	 *
+	 * @param chartType The type of chart. Currently we only support Bar and Pie.
+	 * @param document The location you want to put the chart.  (header or footer)
+	 */
+	public void correctNullDataInChart(String chartType, Document document){
+		//
+		if (chartType.compareToIgnoreCase("bar") == 0){
+			//get the seriesExpression node
+			Node seriesExp = document.getElementsByTagName("seriesExpression").item(0);
+			String seriesExpField = seriesExp.getTextContent();
+			String newSeriesExp = "(( " + seriesExpField + " != null) ? " + seriesExpField + " : \"null\" )";
+			seriesExp.setTextContent(newSeriesExp);
+
+		}
+		else if (chartType.compareToIgnoreCase("pie") == 0){
+			//get the keyExpression node
+			Node keyExp = document.getElementsByTagName("keyExpression").item(0);
+			String keyExpField = keyExp.getTextContent();
+			String newkeyExp = "(( " + keyExpField + " != null) ? " + keyExpField + " : \"null\" )";
+			keyExp.setTextContent(newkeyExp);
+
+		}
+	}
+
+
 	/**
 	 * Removes the chart from the group created by dynamic jasper and
 	 * puts it in the title or lastPageFooter section of the report.
@@ -878,6 +908,8 @@ public class ModifyReportJRXML {
 	 * @param location The location you want to put the chart.  (header or footer)
 	 */
 	public void moveChartFromGroup(String fileName, String chartType, String location) throws ParserConfigurationException, SAXException, IOException{
+
+
 		//Find the chart node copy it
 		String chart = null;
 		if (chartType.compareToIgnoreCase("bar") == 0)
@@ -888,6 +920,11 @@ public class ModifyReportJRXML {
 			chart = null;
 		if (chart != null){
 			Document document = loadXMLDocument(fileName);
+
+			//correct the "category series is null" and "key is null" errors
+			//before moving chart
+			correctNullDataInChart(chartType, document);
+
 			Node chartNode = document.getElementsByTagName(chart).item(0);
 			if (chartNode != null){
 				Element chartElement = (Element) chartNode;
@@ -981,25 +1018,38 @@ public class ModifyReportJRXML {
         }
     }
 
-	private List<ReportField> getSelectedReportFieldsInOrder() {
+	private List<ReportField> getSelectedReportFields() {
 		Iterator<ReportSelectedField> itReportSelectedFields = reportWizard.getReportSelectedFields().iterator();
 
 		List<ReportField> selectedReportFieldsList = new LinkedList<ReportField>();
-
+		Integer columnIndex = 0;
 		while (itReportSelectedFields.hasNext()){
 			ReportSelectedField reportSelectedField = (ReportSelectedField) itReportSelectedFields.next();
 			if (reportSelectedField == null) continue;
 			ReportField f = reportFieldService.find(reportSelectedField.getFieldId());
 			if (f == null || f.getId() == -1) continue;
-			f.setAverage(reportSelectedField.getAverage());
-			f.setIsSummarized(reportSelectedField.getIsSummarized());
-			f.setLargestValue(reportSelectedField.getMax());
-			f.setSmallestValue(reportSelectedField.getMin());
-			f.setPerformSummary(reportSelectedField.getSum());
-			f.setSelected(true);
-			selectedReportFieldsList.add(f);
-		}
+			ReportField newField = new ReportField();
+			newField.setId(f.getId());
+			newField.setAliasName(f.getAliasName());
+			newField.setCanBeSummarized(f.getCanBeSummarized());
+			newField.setColumnName(f.getColumnName());
+			newField.setDisplayName(f.getDisplayName());
+			newField.setFieldType(f.getFieldType());
+			newField.setIsDefault(f.getIsDefault());
+			newField.setPrimaryKeys(f.getPrimaryKeys());
 
+			newField.setAverage(reportSelectedField.getAverage());
+			newField.setIsSummarized(reportSelectedField.getIsSummarized());
+			newField.setLargestValue(reportSelectedField.getMax());
+			newField.setSmallestValue(reportSelectedField.getMin());
+			newField.setPerformSummary(reportSelectedField.getSum());
+			newField.setRecordCount(reportSelectedField.getCount());
+			newField.setGroupBy(reportSelectedField.getGroupBy());
+			newField.setSelected(true);
+			//f.setDynamicColumnName(f.getColumnName() + "_" + columnIndex.toString());
+			//columnIndex++;
+			selectedReportFieldsList.add(newField);
+		}
 		return selectedReportFieldsList;
 	}
 

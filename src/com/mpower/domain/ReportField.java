@@ -32,6 +32,9 @@ public class ReportField implements java.io.Serializable,
 	@Transient
 	long controlCount;
 
+	@Transient
+	boolean groupBy;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "REPORTFIELD_ID")
@@ -79,6 +82,8 @@ public class ReportField implements java.io.Serializable,
 
 	@Column(name = "RECORD_COUNT")
 	private Boolean recordCount;
+
+
 
 	public Boolean getPerformSummary() {
 		return performSummary;
@@ -180,6 +185,10 @@ public class ReportField implements java.io.Serializable,
 		return id;
 	}
 
+	public void setId(Long value) {
+		id = value;
+	}
+
 	public Boolean getIsDefault() {
 		return isDefault;
 	}
@@ -229,7 +238,11 @@ public class ReportField implements java.io.Serializable,
 	}
 
 	public void determineIsSummarized() {
-		if (average || performSummary || largestValue || smallestValue || (recordCount != null && recordCount))
+		if ((average != null && average) 
+		|| (performSummary != null && performSummary)
+		|| (largestValue != null && largestValue)
+		|| (smallestValue != null && smallestValue)
+		|| (recordCount != null && recordCount))
 			setIsSummarized(true);
 		else
 			setIsSummarized(false);
@@ -249,5 +262,13 @@ public class ReportField implements java.io.Serializable,
 
 	public String getPrimaryKeys() {
 		return primaryKeys;
+	}
+
+	public boolean getGroupBy(){
+		return groupBy;
+	}
+
+	public void setGroupBy(boolean groupBy){
+		this.groupBy = groupBy;
 	}
 }
