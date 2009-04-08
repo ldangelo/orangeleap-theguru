@@ -174,7 +174,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		{
 			wiz.setPreviousDataSubSourceId(wiz.getSubSourceId());
 			wiz.setPreviousDataSubSourceGroupId(wiz.getDataSubSourceGroupId());
-			
+
 			LoadWizardLookupTables(wiz);
 
 			// once the data source and sub-source have been selected, select the default fields
@@ -221,7 +221,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		return new ModelAndView(getSuccessView(),"reportsouce",wiz);
 
 	}
-	
+
 	private void LoadWizardLookupTables(ReportWizard wiz) {
 		wiz.setDataSource(reportSourceService.find(wiz.getSrcId()));
 		wiz.setDataSubSourceGroup(reportSubSourceGroupService.find(wiz.getDataSubSourceGroupId()));
@@ -276,7 +276,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 	    	newReportFilter.getReportCustomFilter().getReportCustomFilterCriteria().addAll(reportFilter.getReportCustomFilter().getReportCustomFilterCriteria());
 	    	emptyWizard.getReportFilters().add(newReportFilter);
 	    }
-		
+
 		emptyWizard.setReportLayout(savedWizard.getReportLayout());
 		emptyWizard.setReportName(savedWizard.getReportName());
 		emptyWizard.setReportPath(savedWizard.getReportPath());
@@ -290,7 +290,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		emptyWizard.setSubSourceId(savedWizard.getSubSourceId());
 		emptyWizard.setUniqueRecords(savedWizard.getUniqueRecords());
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	protected Map referenceData(HttpServletRequest request, Object command,
@@ -321,9 +321,9 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 					wiz.setPreviousDataSubSourceGroupId(wiz.getDataSubSourceGroupId());
 					wiz.setPreviousDataSubSourceId(wiz.getSubSourceId());
 					LoadWizardLookupTables(wiz);
-				}				
+				}
 			}
-			
+
 			// if no user or password is in the request, see if the user has already been
 			// populated on the wiz.  Going to the second page and then back to the first could cause that.
 			String userName = request.getParameter("username");
@@ -651,5 +651,12 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 
 	public void setUserDetailsService(UserDetailsService userDetailsService) {
 		this.userDetailsService = userDetailsService;
+	}
+
+	@Override
+	protected ModelAndView processCancel(HttpServletRequest request,
+			HttpServletResponse response, Object command, BindException errors)
+			throws Exception {
+		return new ModelAndView(getSuccessView(),"reportsouce",wiz);
 	}
 }

@@ -13,7 +13,7 @@
 
 <td align="Right" width=360>
 <input type="hidden" id="previousPage" name="previousPage" value="${page}"/>
-<input type="image" src="images/cancel_off.gif" value="Cancel" name="_finish" ALT="Cancel" onmouseover="this.src = 'images/cancel_on.gif';" onmouseout="this.src = 'images/cancel_off.gif';">
+<input type="image" src="images/cancel_off.gif" value="Cancel" name="_cancel" ALT="Cancel" onmouseover="this.src = 'images/cancel_on.gif';" onmouseout="this.src = 'images/cancel_off.gif';">
 
 <c:if test="${page > 0}">
 <input type="image" src="images/back_off.gif" value="Back" ALT="Back" name="_target${previouspage}" onmouseover="this.src = 'images/back_on.gif';" onmouseout="this.src = 'images/back_off.gif';">
