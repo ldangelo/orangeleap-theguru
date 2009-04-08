@@ -79,7 +79,7 @@ function preventInvalidReportNameCharacters() {
 	var reportName = jQuery('#reportName'); 
 	reportName.one("keydown",function(event){
 		preventInvalidReportNameCharacters();
-		if (event.keyCode == 222) // quotes
+		if (event.keyCode == 220) // backslash
 			return false;
 	});
 }
@@ -88,7 +88,7 @@ function removeInvalidReportNameCharacters() {
 	var reportName = jQuery('#reportName');
 	reportName.one("change",function(event){
 		removeInvalidReportNameCharacters();
-		reportName.val(reportName.val().replace('\'', '').replace('\"', ''));
+		reportName.val(reportName.val().replace('\\', ''));
 	});
 }
 
