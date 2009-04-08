@@ -313,15 +313,25 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 
 			String reportUri = request.getParameter("reporturi");
 			if (reportUri != null && reportUri.length() > 0) {
-				String reportPath = reportUri.substring(0, reportUri.lastIndexOf('/'));
-				String reportName = reportUri.substring(reportUri.lastIndexOf('/') + 1, reportUri.length());
-				ReportWizard tempWiz = reportWizardService.FindByUri(reportPath, reportName);
-				if (tempWiz != null) {
-					PopulateWizardFromSavedReport(wiz, tempWiz);
-					wiz.setPreviousDataSubSourceGroupId(wiz.getDataSubSourceGroupId());
-					wiz.setPreviousDataSubSourceId(wiz.getSubSourceId());
-					LoadWizardLookupTables(wiz);
-				}
+				long reportId = -1;
+				try {
+					if (reportUri.contains("/THEGURU_"))
+						reportId = Long.parseLong(reportUri.substring(reportUri.lastIndexOf("/THEGURU_") + 9));
+					if (reportId != -1) {
+						ReportWizard tempWiz = reportWizardService.Find(reportId);
+						if (tempWiz != null) {
+							PopulateWizardFromSavedReport(wiz, tempWiz);
+							wiz.setPreviousDataSubSourceGroupId(wiz.getDataSubSourceGroupId());
+							wiz.setPreviousDataSubSourceId(wiz.getSubSourceId());
+							wiz.setReportPath(reportUri.substring(0, reportUri.indexOf("/THEGURU_")));
+							LoadWizardLookupTables(wiz);
+						} else {
+							errors.reject("1", "Unable to load report " + reportUri + ".  You may continue to create a new report, or cancel to return to the report list.");	
+						}
+					}
+				} catch (Exception exception) {
+					errors.reject("1", "Unable to load report " + reportUri + ".  You may continue to create a new report, or cancel to return to the report list.  " + exception.getMessage());
+				}									
 			}
 
 			// if no user or password is in the request, see if the user has already been
@@ -519,7 +529,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 	}
 
 	protected void saveReport(ReportWizard wiz) throws Exception {
-
+		reportWizardService.save(wiz);
 		//
 		// First we must generate a jrxml file
 		//
@@ -573,7 +583,6 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 
 		// delete the temporary file
 		tempFile.delete();
-		reportWizardService.save(wiz);
 	}
 
 	public void setDynamicView(DynamicReportView dynamicView) {
