@@ -68,8 +68,10 @@ function updateTree(results) {
 	    JasperServerService.list(results[rs].uriString,updateTree);
 	}
     }
-	if (reportPath != null && reportPath != '' && jQuery('#treeview').dynatree("getTree").selectKey(reportPath) != null)
-		jQuery('#treeview').dynatree("getTree").selectKey(reportPath).activate();   
+	if (reportPath != null && reportPath != '' && jQuery('#treeview').dynatree("getTree").selectKey(reportPath) != null) {
+		jQuery('#treeview').dynatree("getTree").selectKey(reportPath).activate();
+		updateReports(jQuery('#treeview').dynatree("getTree").selectKey(reportPath));		   
+	}
     
   }
 

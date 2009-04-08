@@ -597,10 +597,14 @@ public class ReportWizard implements java.io.Serializable{
 	}
 
 	public String getReportSaveAsName() {
-		reportSaveAsName = getDataSubSource().getDisplayName() + " Custom Report";
-		if (getReportName() != null && getReportName().length() > 0)
-			reportSaveAsName = getReportName();
-		reportSaveAsName = reportSaveAsName.replace(" ", "_").replace("'", "").replace("\"", "");		
+		if (getId() != null) {
+			reportSaveAsName = "THEGURU_" + getId().toString();
+		} else {
+			reportSaveAsName = getDataSubSource().getDisplayName() + " Custom Report";
+			if (getReportName() != null && getReportName().length() > 0)
+				reportSaveAsName = getReportName();
+			reportSaveAsName = reportSaveAsName.replace(" ", "_").replace("'", "").replace("\"", "");
+		}
 		return reportSaveAsName;		
 	}	
 }
