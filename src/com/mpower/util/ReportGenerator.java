@@ -9,7 +9,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import net.sf.jasperreports.engine.JRExpression;
 import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.design.JRDesignExpression;
 
 import com.jaspersoft.jasperserver.api.metadata.xml.domain.impl.ResourceDescriptor;
 import com.jaspersoft.jasperserver.irplugin.JServer;
@@ -505,17 +507,57 @@ public class ReportGenerator {
 			if (rcs.getChartType().compareTo("-1") == 0) continue;
 			DJChartOptions options = new DJChartOptions();
 			options.setPosition(DJChartOptions.POSITION_HEADER);
-			options.setShowLabels(false);
-			//options.setShowLabels(true);
-			chart.setOptions(options);
+			options.setShowLabels(true);
+
 
 			//set chart type
-			if (rcs.getChartType().compareTo("Bar") == 0) chart.setType(DJChart.BAR_CHART);
-			if (rcs.getChartType().compareTo("Pie") == 0) chart.setType(DJChart.PIE_CHART);
+			if (rcs.getChartType().compareTo("Bar") == 0){
+				chart.setType(DJChart.BAR_CHART);
+
+				//Add the x axis label
+				String xAxisLabel = null;
+				if  (chart.getColumnsGroup().getColumnToGroupBy().getName() != null){
+					xAxisLabel = "\"" + chart.getColumnsGroup().getColumnToGroupBy().getTitle().toString() + "\"";
+				}
+
+				if (xAxisLabel != null){
+					JRDesignExpression categoryAxisLabelExpression = new JRDesignExpression();
+					categoryAxisLabelExpression.setValueClass(String.class);
+					categoryAxisLabelExpression.setText(xAxisLabel);
+					options.setCategoryAxisLabelExpression(categoryAxisLabelExpression);
+				}
+
+				//Add the y axis label
+				String yAxisLabel = null;
+				String calc = "";
+				if (rcs.getOperation().toString().compareToIgnoreCase("recordCount") == 0)
+					calc = "Count";
+				else if (rcs.getOperation().toString().compareToIgnoreCase("sum") == 0)
+					calc = "Sum";
+
+				if  (chart.getColumnsGroup().getColumnToGroupBy().getName() != null){
+					yAxisLabel = "\"" + chart.getColumnsGroup().getColumnToGroupBy().getTitle().toString() + " " + calc + "\"";
+				}else
+					yAxisLabel = rcs.getOperation().toString();
+
+				if (yAxisLabel != null){
+					JRDesignExpression valueAxisLabelExpression = new JRDesignExpression();
+					valueAxisLabelExpression.setValueClass(String.class);
+					valueAxisLabelExpression.setText(yAxisLabel);
+					options.setValueAxisLabelExpression(valueAxisLabelExpression);
+				}
+
+			}
+
+			if (rcs.getChartType().compareTo("Pie") == 0) {
+				chart.setType(DJChart.PIE_CHART);
+			}
 
 			//set chart operation
 			if (rcs.getOperation().compareTo("RecordCount") == 0) chart.setOperation(DJChart.CALCULATION_COUNT);
 			if (rcs.getOperation().compareTo("Sum") == 0) chart.setOperation(DJChart.CALCULATION_SUM);
+
+			chart.setOptions(options);
 		}
 		return chart;
 	}
