@@ -15,11 +15,12 @@
 			<pathelement location="${compile.lib.dir}/mysql-connector-java-5.0.8-bin.jar"/>
 		</classpath>
 		
+		<!--
 		<exec dir="/opt/orangeleap" executable="su" spawn="true">
 			<arg line="- tomcat -c 'cd /opt/orangeleap;/opt/orangeleap/run.sh stop ${instance}'"/>
 	    </exec>
 		<sleep seconds="30" />
-		
+		-->
 		
 		
 		<!-- populate theguru schema -->
