@@ -35,9 +35,19 @@
 		          classpath="${compile.lib.dir}/mysql-connector-java-5.0.8-bin.jar"
  	              delimiter=";"
 	     	>
-		    <transaction src="${basedir}/db/loadData.sql"/>
-	    </sql>
+		    <transaction src="${basedir}/db/clearSchema.sql"/>
+    	 </sql>
 		
+	     <sql driver="${mysql.db.driver}"
+		          url="${mysql.db.url}"
+		          userid="${mysql.db.user}"
+		          password="${mysql.db.pw}"
+		          encoding="UTF-8"
+		          classpath="${compile.lib.dir}/mysql-connector-java-5.0.8-bin.jar"
+	              delimiter=";"
+	     	>
+		    <transaction src="${basedir}/db/loadData.sql"/>
+   	     </sql>
 		
 		
 		<!-- Tomcat -->
