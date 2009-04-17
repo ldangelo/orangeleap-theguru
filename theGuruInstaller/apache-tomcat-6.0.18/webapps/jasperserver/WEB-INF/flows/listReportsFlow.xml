@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+						http://www.springframework.org/schema/webflow/spring-webflow-1.0.xsd">
+
+	<start-state idref="listReports"/>
+
+	<view-state id="listReports" view="ListReports">
+		<entry-actions>
+			<set attribute="prevForm" value="${'listReports'}" scope="flow"/>
+			<action bean="listReportsAction" method="listReports"/>
+		</entry-actions>
+		<transition on="selectReport" to="viewReportSubflow"/>
+		<transition on="ScheduleReport" to="reportJobs"/>
+		<transition on="runReportInBackground" to="runReportInBackground"/>
+		<transition on="goToPage" to="goToPage"/>
+		<!--  Handle back events from exception page -->
+		<transition on="back" to="listReports"/>
+	</view-state>
+
+	<action-state id="goToPage">
+		<action bean="listReportsAction"/>
+		<transition on="success" to="listReports"/>
+	</action-state>
+
+	<subflow-state id="viewReportSubflow" flow="viewReportFlow">
+		<attribute-mapper>
+			<input-mapper>
+				<mapping source="requestParameters.reportUnit" target="reportUnit"/>
+				<mapping source="${true}" target="inhibitRequestParsing"/>
+			</input-mapper>
+		</attribute-mapper>
+		<transition on="done" to="listReports"/>
+		<transition on="cancel" to="listReports"/>
+		<transition on="backToListOfReports" to="listReports"/>
+	</subflow-state>
+
+	<subflow-state id="reportJobs" flow="reportSchedulingFlow">
+		<attribute-mapper>
+			<input-mapper>
+				<mapping source="requestParameters.reportUnit" target="reportUnitURI"/>
+			</input-mapper>
+		</attribute-mapper>
+		<transition on="done" to="listReports"/>
+	</subflow-state>
+
+	<subflow-state id="runReportInBackground" flow="reportJobFlow">
+		<attribute-mapper>
+			<input-mapper>
+				<mapping source="${true}" target="isNewMode"/>
+				<mapping source="${true}" target="isRunNowMode"/>
+				<mapping source="requestParameters.reportUnit" target="reportUnitURI"/>
+			</input-mapper>
+		</attribute-mapper>
+		<transition on="cancel" to="listReports"/>
+		<transition on="saved" to="listReports"/>
+	</subflow-state>
+
+	<!-- exceptions handling -->
+	<decision-state id="backFromError">
+		<if test="${not (flowScope.prevForm == null or flowScope.prevForm == '')}" then="${flowScope.prevForm}" else="listReports"/>
+	</decision-state>
+	<view-state id="errorPage" view="JSErrorPage" />
+	<global-transitions>
+		<transition on="backFromErrorPage" to="backFromError"/>
+		<transition on-exception="java.lang.Throwable" to="errorPage"/>
+	</global-transitions>
+	<!-- end exceptions handling -->
+
+	<import resource="listReportsBeans.xml"/>
+</flow>

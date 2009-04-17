@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+						http://www.springframework.org/schema/webflow/spring-webflow-1.0.xsd">
+
+	<input-mapper>
+		<input-attribute name="masterFlow"/>
+		<input-attribute name="masterFlowStep"/>
+		<input-attribute name="dataResource"/>
+		<input-attribute name="queryLanguage"/>
+		<input-attribute name="parentFolder"/>
+	</input-mapper>
+
+	<start-state idref="initAction"/>
+
+	<action-state id="initAction">
+		<action bean="reportDataSourceAction"/>
+		<transition on="success" to="decideMode"/>
+	</action-state>
+
+	<decision-state id="decideMode">
+		<if test="${flowScope.dataResource.aloneNewMode}"
+		then="chooseType" />
+		<if test="${flowScope.dataResource.aloneEditMode}"
+		then="decideType"
+		else="chooseSource"/>
+	</decision-state>
+
+	<view-state id="chooseSource" view="reportDataSourceFlow/chooseSource">
+		<entry-actions>
+			<set attribute="prevForm" value="${'chooseSource'}" scope="flow"/>
+		</entry-actions>
+		<transition on="Back" to="back"/>
+		<transition on="Cancel" to="cancel"/>
+		<transition on="Next" to="decideSource">
+			<action bean="reportDataSourceAction" method="bindAndValidate">
+				<attribute name="validatorMethod" value="validateSource"/>
+			</action>
+		</transition>
+		<transition on="Finish" to="validateDataSource">
+			<action bean="reportDataSourceAction" method="bindAndValidate">
+				<attribute name="validatorMethod" value="validateSource"/>
+			</action>
+		</transition>
+		<transition on="Jump" to="jumpTo"/>
+	</view-state>
+
+	<decision-state id="decideSource">
+		<if test="${flowScope.dataResource.source==flowScope.constants.FieldChoiceNone}" then="saveNone"/>
+		<if test="${flowScope.dataResource.source==flowScope.constants.FieldChoiceLocal}"
+		then="chooseType"
+		else="saveLookup"/>
+	</decision-state>
+
+	<view-state id="chooseType" view="reportDataSourceFlow/chooseType">
+		<entry-actions>
+			<set attribute="prevForm" value="${'chooseType'}" scope="flow"/>
+			<action bean="reportDataSourceAction" method="prepareChooseType"/>
+		</entry-actions>
+		<transition on="Back" to="decideBackFromChooseType"/>
+		<transition on="Cancel" to="cancel"/>
+		<transition on="Next" to="handleTypeSelection">
+			<action bean="reportDataSourceAction" method="bindAndValidate">
+				<attribute name="validatorMethod" value="validateType"/> 
+			</action>
+		</transition>
+		<transition on="Finish" to="handleTypeSelectionFinish">
+			<action bean="reportDataSourceAction" method="bindAndValidate">
+				<attribute name="validatorMethod" value="validateType"/>
+			</action>
+		</transition>
+		<transition on="Jump" to="jumpTo"/>
+	</view-state>
+
+	<decision-state id="decideBackFromChooseType">
+		<if test="${flowScope.dataResource.standAloneMode}"
+		then="back"
+		else="chooseSource"/>
+	</decision-state>
+
+	<action-state id="handleTypeSelection">
+		<action bean="reportDataSourceAction"/>
+		<transition on="success" to="decideType"/>
+	</action-state>
+	
+	<action-state id="handleTypeSelectionFinish">
+		<action bean="reportDataSourceAction" method="handleTypeSelection"/>
+		<transition on="success" to="validateDataSource"/>
+	</action-state>
+	
+	<decision-state id="decideType">
+		<if test="${flowScope.dataResource.type==flowScope.constants.BeanDatasourceType}"
+			then="beanPropsForm"/>
+		<if test="${flowScope.dataResource.type==flowScope.constants.JNDIDatasourceType}"
+			then="jndiPropsForm"/>
+		<if test="${flowScope.dataResource.type==flowScope.constants.JDBCDatasourceType}"
+			then="jdbcPropsForm"
+			else="customPropsForm"/>
+	</decision-state>
+
+	<view-state id="jndiPropsForm" view="reportDataSourceFlow/jndiPropsForm">
+		<entry-actions>
+			<set attribute="prevForm" value="${'jndiPropsForm'}" scope="flow"/>
+			<action bean="reportDataSourceAction" method="preparePropsForm"/>
+		</entry-actions>
+		<transition on="Back" to="chooseType"/>
+		<transition on="Cancel" to="cancel"/>
+		<transition on="Next" to="done">
+			<action bean="reportDataSourceAction" method="bindAndValidate">
+				<attribute name="validatorMethod" value="jndiPropsForm"/>
+			</action>
+		</transition>
+		<transition on="Finish" to="validateDataSource">
+			<action bean="reportDataSourceAction" method="bindAndValidate">
+				<attribute name="validatorMethod" value="jndiPropsForm"/>
+			</action>
+		</transition>
+		<transition on="Save" to="saveDatasource">
+			<action bean="reportDataSourceAction" method="bindAndValidate">
+				<attribute name="validatorMethod" value="jndiPropsForm"/> 
+			</action>
+		</transition>
+		<transition on="Jump" to="jumpTo"/>
+		<transition on="testDataSource" to="testJndiDataSource">
+			<action bean="reportDataSourceAction" method="bindAndValidate">
+				<attribute name="validatorMethod" value="jndiPropsForm"/>
+			</action>
+		</transition>
+	</view-state>
+
+	<view-state id="jdbcPropsForm" view="reportDataSourceFlow/jdbcPropsForm">
+		<entry-actions>
+			<set attribute="prevForm" value="${'jdbcPropsForm'}" scope="flow"/>
+			<action bean="reportDataSourceAction" method="preparePropsForm"/>
+		</entry-actions>
+		<transition on="Back" to="chooseType"/>
+		<transition on="Cancel" to="cancel"/>
+		<transition on="Next" to="done">
+			<action bean="reportDataSourceAction" method="bindAndValidate">
+				<attribute name="validatorMethod" value="jdbcPropsForm"/> 
+			</action>
+		</transition>
+		<transition on="Finish" to="validateDataSource">
+			<action bean="reportDataSourceAction" method="bindAndValidate">
+				<attribute name="validatorMethod" value="jdbcPropsForm"/> 
+			</action>
+		</transition>
+		<transition on="Save" to="saveDatasource">
+			<action bean="reportDataSourceAction" method="bindAndValidate">
+				<attribute name="validatorMethod" value="jdbcPropsForm"/> 
+			</action>
+		</transition>
+		<transition on="Jump" to="jumpTo"/>
+		<transition on="testDataSource" to="testJdbcDataSource">
+			<action bean="reportDataSourceAction" method="bindAndValidate">
+				<attribute name="validatorMethod" value="jdbcPropsForm"/>
+			</action>			
+		</transition>
+	</view-state>
+
+	<view-state id="beanPropsForm" view="reportDataSourceFlow/beanPropsForm">
+		<entry-actions>
+			<set attribute="prevForm" value="${'beanPropsForm'}" scope="flow"/>
+		</entry-actions>
+		<transition on="Back" to="chooseType"/>
+		<transition on="Cancel" to="cancel"/>
+		<transition on="Next" to="done">
+			<action bean="reportDataSourceAction" method="bindAndValidate">
+				<attribute name="validatorMethod" value="beanPropsForm"/> 
+			</action>
+		</transition>
+		<transition on="Finish" to="validateDataSource">
+			<action bean="reportDataSourceAction" method="bindAndValidate">
+				<attribute name="validatorMethod" value="beanPropsForm"/> 
+			</action>
+		</transition>
+		<transition on="Save" to="saveDatasource">
+			<action bean="reportDataSourceAction" method="bindAndValidate">
+				<attribute name="validatorMethod" value="beanPropsForm"/> 
+			</action>
+		</transition>
+		<transition on="Jump" to="jumpTo"/>
+		<transition on="testDataSource" to="testBeanDataSource">
+			<action bean="reportDataSourceAction" method="bindAndValidate">
+				<attribute name="validatorMethod" value="beanPropsForm"/>
+			</action>
+		</transition>
+	</view-state>
+			
+	<view-state id="customPropsForm" view="reportDataSourceFlow/customPropsForm">
+		<entry-actions>
+			<set attribute="prevForm" value="${'customPropsForm'}" scope="flow"/>
+			<action bean="reportDataSourceAction" method="preparePropsForm"/>
+		</entry-actions>
+		<transition on="Back" to="chooseType"/>
+		<transition on="Cancel" to="cancel"/>
+		<transition on="Next" to="done">
+			<action bean="reportDataSourceAction" method="bindAndValidate">
+				<attribute name="validatorMethod" value="customPropsForm"/> 
+			</action>
+		</transition>
+		<transition on="Finish" to="validateDataSource">
+			<action bean="reportDataSourceAction" method="bindAndValidate">
+				<attribute name="validatorMethod" value="customPropsForm"/> 
+			</action>
+		</transition>
+		<transition on="Save" to="saveDatasource">
+			<action bean="reportDataSourceAction" method="bindAndValidate">
+				<attribute name="validatorMethod" value="customPropsForm"/> 
+			</action>
+		</transition>
+		<transition on="Jump" to="jumpTo"/>
+		<transition on="testDataSource" to="testBeanDataSource">
+			<action bean="reportDataSourceAction" method="bindAndValidate">
+				<attribute name="validatorMethod" value="customPropsForm"/>
+			</action>
+		</transition>
+	</view-state>
+	
+	<action-state id="testJdbcDataSource">
+		<action bean="reportDataSourceAction"/>
+		<transition on="success" to="jdbcPropsForm"/>
+	</action-state>
+
+	<action-state id="testJndiDataSource">
+		<action bean="reportDataSourceAction"/>
+		<transition on="success" to="jndiPropsForm"/>
+	</action-state>
+
+	<action-state id="testBeanDataSource">
+		<action bean="reportDataSourceAction"/>
+		<transition on="success" to="beanPropsForm"/>
+	</action-state>
+
+	<action-state id="saveDatasource">
+		<action bean="reportDataSourceAction"/>
+		<transition on="error" to="decideType"/>
+		<transition on="success" to="done"/>
+		<transition on="yes" to="backToRepositoryExplorer"/>
+	</action-state>
+	
+	<action-state id="saveLookup">
+		<action bean="reportDataSourceAction"/>
+		<transition on="success" to="done"/>
+	</action-state>
+	
+	<action-state id="saveNone">
+		<action bean="reportDataSourceAction"/>
+		<transition on="success" to="done"/>
+	</action-state>
+
+	<action-state id="validateDataSource">
+		<action bean="reportDataSourceAction"/>                                	
+		<transition on="chooseSource" to="chooseSource"/>
+		<transition on="chooseType" to="chooseType"/>
+		<transition on="jdbcPropsForm" to="jdbcPropsForm"/>
+		<transition on="jndiPropsForm" to="jndiPropsForm"/>
+		<transition on="beanPropsForm" to="beanPropsForm"/>
+		<transition on="customPropsForm" to="customPropsForm"/>
+		<transition on="success" to="finish"/>
+		<transition on="error" to="displayError"/>
+	</action-state>
+	
+	<end-state id="done">
+		<output-mapper>
+			<output-attribute name="dataResource"/>
+		</output-mapper>
+   	</end-state>
+   
+
+	<view-state id="backToRepositoryExplorer" view="flowRedirect:repositoryExplorerFlow?showFolder=${requestParameters.ParentFolderUri}"/>
+
+   	   	
+	<end-state id="finish">
+		<output-mapper>
+			<output-attribute name="dataResource"/>
+		</output-mapper>
+   	</end-state>
+   	
+   	<end-state id="jumpTo"/>
+   	<end-state id="back">
+		<output-mapper>
+			<output-attribute name="dataResource"/>
+		</output-mapper>
+   	</end-state>
+   	
+   	
+   	<end-state id="cancel" view="flowRedirect:repositoryExplorerFlow?showFolder=${requestParameters.ParentFolderUri}" >
+		<output-mapper>
+			<output-attribute name="dataResource"/>
+		</output-mapper>
+   	</end-state>
+   	
+   	<end-state id="displayError">
+		<output-mapper>
+			<output-attribute name="dataResource"/>
+		</output-mapper>
+   	</end-state>
+
+	<!-- exceptions handling -->
+	<decision-state id="backFromError">
+		<if test="${not (flowScope.prevForm == null or flowScope.prevForm == '')}" then="${flowScope.prevForm}" else="done"/>
+	</decision-state>
+	<view-state id="errorPage" view="JSErrorPage" />
+	<global-transitions>
+		<transition on="backFromErrorPage" to="backFromError"/>
+		<transition on-exception="java.lang.Throwable" to="errorPage"/>
+	</global-transitions>
+	<!-- end exceptions handling -->
+
+	<import resource="reportDataSourceBeans.xml"/>
+</flow>

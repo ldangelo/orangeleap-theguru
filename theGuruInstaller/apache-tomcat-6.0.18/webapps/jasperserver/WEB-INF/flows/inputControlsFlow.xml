@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+						http://www.springframework.org/schema/webflow/spring-webflow-1.0.xsd">
+						
+	<input-mapper>
+		<input-attribute name="masterFlow"/>
+		<input-attribute name="masterFlowStep"/>
+		<input-attribute name="control"/>
+		<input-attribute name="parentFolder"/>
+	</input-mapper>
+
+	<start-state idref="initControlDefinition"/>
+
+	<action-state id="initControlDefinition">
+		<action bean="inputControlsAction"/>
+		<transition on="success" to="controlNamingAndType"/>
+	</action-state>
+	
+	<view-state id="controlNamingAndType" view="inputControls/controlNamingAndType">
+		<entry-actions>
+			<set attribute="prevForm" value="${'controlNamingAndType'}" scope="flow"/>
+		</entry-actions>
+		<transition on="Next" to="prepareForControlType">
+			<action bean="inputControlsAction" method="bindAndValidate">
+				<attribute name="validatorMethod" value="validateControlNaming"/> 	
+			</action>
+		</transition>
+		<transition on="Back" to="back"/>
+		<transition on="Cancel" to="cancel"/>
+		<transition on="Jump" to="jumpTo"/>
+	</view-state>
+	
+	<action-state id="prepareForControlType">
+		<action bean="inputControlsAction"/>
+		<transition on="success" to="decideControlType"/>
+	</action-state>
+
+	<decision-state id="decideControlType">
+		<if test="${flowScope.control.inputControl.type==1}"	then="saveInputControl"/>
+		<if test="${flowScope.control.inputControl.type==2 || flowScope.control.inputControl.type==5}"
+			then="singleOrMultiValue"/>
+		<if test="${flowScope.control.inputControl.type==3 || flowScope.control.inputControl.type==6 || flowScope.control.inputControl.type == 8 || flowScope.control.inputControl.type == 10}"
+			then="listOfValues"/>
+		<if test="${flowScope.control.inputControl.type==4 || flowScope.control.inputControl.type==7 || flowScope.control.inputControl.type == 9 || flowScope.control.inputControl.type == 11}"
+			then="query"
+			else="controlNamingAndType"/>
+	</decision-state>
+
+
+	<!--  Data type -->
+
+	<view-state id="singleOrMultiValue" view="inputControls/singleOrMultiValue">
+		<entry-actions>
+			<set attribute="prevForm" value="${'singleOrMultiValue'}" scope="flow"/>
+		</entry-actions>
+		<transition on="Next" to="handleDataTypeControl"/>
+		<transition on="Back" to="controlNamingAndType"/>
+		<transition on="Cancel" to="cancel"/>
+	</view-state>
+
+	<action-state id="handleDataTypeControl">
+		<action bean="inputControlsAction"/>
+		<transition on="success" to="dataTypeSubflow"/>
+		<transition on="yes" to="saveInputControl"/>
+	</action-state>
+
+	<subflow-state id="dataTypeSubflow" flow="dataTypeFlow">
+		<attribute-mapper>
+			<input-mapper>
+				<mapping source="flowScope.masterFlow" target="masterFlow"/>
+				<mapping source="flowScope.dataType" target="dataType"/>
+			</input-mapper>
+		</attribute-mapper>
+		<transition on="saved" to="saveInputControl"/>
+		<transition on="cancel" to="cancel"/>
+		<transition on="back" to="prepareForControlType"/>
+	</subflow-state>
+
+
+	<!-- Query -->
+
+	<action-state id="query">
+		<action bean="inputControlsAction" method="prepareQuery"/>
+		<transition on="success" to="queryFlow"/>
+	</action-state>
+
+	<subflow-state id="queryFlow" flow="queryReferenceFlow">
+		<attribute-mapper>
+			<input-mapper>
+				<mapping source="flowScope.masterFlow" target="masterFlow"/>
+				<mapping source="flowScope.masterFlowStep" target="masterFlowStep"/>
+				<mapping source="requestScope.queryReference" target="queryReference"/>
+			</input-mapper>
+			<output-mapper>
+				<output-attribute name="queryReference"/>
+			</output-mapper>
+		</attribute-mapper>
+		<transition on="done" to="queryExtraData">
+			<action bean="inputControlsAction" method="setQueryReference"/>
+		</transition>
+		<transition on="back" to="controlNamingAndType"/>
+		<transition on="cancel" to="cancel"/>
+	</subflow-state>
+
+	<view-state id="queryExtraData" view="inputControls/queryExtraData">
+		<entry-actions>
+			<set attribute="prevForm" value="${'queryExtraData'}" scope="flow"/>
+		</entry-actions>
+		<transition on="back" to="query"/>
+		<transition on="cancel" to="cancel"/>
+		<transition on="save" to="saveInputControl">
+			<action bean="inputControlsAction" method="bindAndValidate">
+				<attribute name="validatorMethod" value="validateAddValueColumn"/>
+			</action>
+		</transition>
+		<transition on="removeItem" to="removeVisibleColumn"/>
+		<transition on="addItem" to="addVisibleColumn">
+			<action bean="inputControlsAction" method="bindAndValidate">
+				<attribute name="validatorMethod" value="validateAddVisibleColumn"/>
+			</action>
+		</transition>
+	</view-state>
+
+	<action-state id="addVisibleColumn">
+		<action bean="inputControlsAction"/>
+		<transition on="success" to="queryExtraData"/>
+	</action-state>
+
+	<action-state id="removeVisibleColumn">
+		<action bean="inputControlsAction"/>
+		<transition on="success" to="queryExtraData"/>
+	</action-state>
+
+
+	<!-- List of values -->
+
+	<action-state id="handleLovControl">
+		<action bean="inputControlsAction"/>
+		<transition on="success" to="listOfValuesSubflow"/>
+		<transition on="yes" to="saveInputControl"/>
+	</action-state>
+
+	<subflow-state id="listOfValuesSubflow" flow="listOfValuesFlow">
+		<attribute-mapper>
+			<input-mapper>
+				<mapping source="flowScope.masterFlow" target="masterFlow"/>
+				<mapping source="flowScope.listOfValuesDTO" target="listOfValuesDTO"/>
+			</input-mapper>
+		</attribute-mapper>
+		<transition on="saved" to="saveInputControl"/>
+		<transition on="cancel" to="cancel"/>
+		<transition on="back" to="prepareForControlType"/>
+	</subflow-state>
+
+	<view-state id="listOfValues" view="inputControls/listOfValues">
+		<entry-actions>
+			<set attribute="prevForm" value="${'listOfValues'}" scope="flow"/>
+		</entry-actions>
+		<transition on="Next" to="handleLovControl"/>
+		<transition on="Back" to="controlNamingAndType"/>
+		<transition on="Cancel" to="cancel"/>
+	</view-state>
+
+	<action-state id="saveInputControl">
+		<action bean="inputControlsAction"/>
+		<transition on="yes" to="backToRepo"/>
+		<transition on="success" to="done"/>
+		<transition on="error" to="controlNamingAndType"/>
+	</action-state>
+
+	<end-state id="done">
+		<output-mapper>
+			<output-attribute name="control"/>
+		</output-mapper>
+   	</end-state>
+
+   	<end-state id="back"/>
+
+   	<end-state id="cancel">
+		<output-mapper>
+			<output-attribute name="control"/>
+		</output-mapper>
+   	</end-state>
+   	<end-state id="displayError">
+		<output-mapper>
+			<output-attribute name="control"/>
+		</output-mapper>
+   	</end-state>
+	<end-state id="jumpTo"/>
+	
+	<view-state id="backToRepo" view="flowRedirect:repositoryExplorerFlow?showFolder=${requestParameters.ParentFolderUri}"/>
+	
+	<!-- exceptions handling -->
+	<decision-state id="backFromError">
+		<if test="${not (flowScope.prevForm == null or flowScope.prevForm == '')}" then="${flowScope.prevForm}" else="done"/>
+	</decision-state>
+	<view-state id="errorPage" view="JSErrorPage" />
+	<global-transitions>
+		<transition on="backFromErrorPage" to="backFromError"/>
+		<transition on-exception="java.lang.Throwable" to="errorPage"/>
+	</global-transitions>
+	<!-- end exceptions handling -->
+	
+	<import resource="inputControlsBeans.xml"/>
+</flow>

@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+						http://www.springframework.org/schema/webflow/spring-webflow-1.0.xsd">
+	
+	<start-state idref="initAction"/>
+	<action-state id="initAction">
+		<action bean="repoAdminAction"/>
+		<transition on="success" to="defaultView"/>
+	</action-state>
+
+	<view-state id="defaultView" view="repoAdmin/defaultView">
+		<entry-actions>
+			<set attribute="prevForm" value="${'defaultView'}" scope="flow"/>
+		</entry-actions>
+		<transition on="success" to="defaultView"/>
+		<transition on="Remove" to="remove"/>
+		<transition on="Add" to="chooseEditResource"/>
+		<transition on="Edit" to="chooseEditResource"/>
+		<transition on="ViewReport" to="viewReport"/>
+		<!--<transition on="ViewOlapModel" to="viewOlapModel"/>-->
+		<transition on="ScheduleReport" to="reportJobs"/>
+		<transition on="runReportInBackground" to="runReportInBackground"/>
+		<transition on="Assign" to="assignPermissions"/>
+		<transition on="goToPage" to="goToPage"/>
+	</view-state>
+
+	<action-state id="goToPage">
+		<action bean="repoAdminAction"/>
+		<transition on="success" to="initAction"/>
+	</action-state>
+
+	<action-state id="remove">
+		<action bean="repoAdminAction"/>
+		<transition on="success" to="initAction"/>
+		<transition on="error" to="displayError"/>
+		<transition on="no" to="displayRemoveError"/>
+	</action-state>
+
+	<decision-state id="chooseEditResource">
+		<if test="${requestParameters.resourceType == 'folder'}" then="editFolder"/>
+		<if test="${requestParameters.resourceType == 'com.jaspersoft.jasperserver.api.metadata.jasperreports.domain.ReportUnit'}" then="editReportUnit"/>
+		<if test="${requestParameters.resourceType == 'com.jaspersoft.jasperserver.api.metadata.common.domain.DataType'}" then="editDataType"/>
+		<if test="${requestParameters.resourceType == 'com.jaspersoft.jasperserver.api.metadata.common.domain.ListOfValues'}" then="editListOfValues"/>
+		<if test="${requestParameters.resourceType == 'com.jaspersoft.jasperserver.api.metadata.common.domain.InputControl'}" then="editInputControl"/>
+		<if test="${requestParameters.resourceType == 'com.jaspersoft.jasperserver.api.metadata.common.domain.FileResource'}" then="editFileResource"/>
+		<if test="${requestParameters.resourceType == 'com.jaspersoft.jasperserver.api.metadata.common.domain.Query'}" then="editQuery"/>
+		<if test="${requestParameters.resourceType == 'com.jaspersoft.jasperserver.api.metadata.jasperreports.domain.JdbcReportDataSource'}" then="editDataSource"/>
+		<if test="${requestParameters.resourceType == 'com.jaspersoft.jasperserver.api.metadata.jasperreports.domain.BeanReportDataSource'}" then="editDataSource"/>
+		<if test="${requestParameters.resourceType == 'com.jaspersoft.jasperserver.api.metadata.jasperreports.domain.CustomReportDataSource'}" then="editDataSource"/>
+		<if test="${requestParameters.resourceType == 'com.jaspersoft.jasperserver.api.metadata.olap.domain.OlapUnit'}" then="editOlapView"/>
+		<if test="${requestParameters.resourceType == 'com.jaspersoft.jasperserver.api.metadata.olap.domain.OlapClientConnection'}" then="editOlapClientConnection"/>
+		<if test="${requestParameters.resourceType == 'com.jaspersoft.jasperserver.api.metadata.olap.domain.MondrianConnection'}" then="editOlapClientConnection"/>
+		<if test="${requestParameters.resourceType == 'com.jaspersoft.ji.ja.security.domain.SecureMondrianConnection'}" then="editOlapClientConnection"/>
+		<if test="${requestParameters.resourceType == 'com.jaspersoft.jasperserver.api.metadata.olap.domain.XMLAConnection'}" then="editOlapClientConnection"/>
+		<if test="${requestParameters.resourceType == 'com.jaspersoft.jasperserver.api.metadata.olap.domain.MondrianXMLADefinition'}" then="editMondrianXmlaSource"/>
+		<if test="${requestParameters.resourceType == 'com.jaspersoft.jasperserver.api.metadata.jasperreports.domain.JndiJdbcReportDataSource'}" then="editDataSource"
+		else="initAction"/>
+	</decision-state>
+
+	<subflow-state id="editReportUnit" flow="reportUnitFlow">
+		<attribute-mapper>
+			<input-mapper>
+				<mapping source="flowScope.repositoryFolder" target="parentFolder"/>
+			</input-mapper>
+		</attribute-mapper>
+		<transition on="finishReport" to="initAction"/>
+		<transition on="cancel" to="initAction"/>
+	</subflow-state>
+
+	<subflow-state id="editOlapView" flow="olapUnitFlow">
+		<attribute-mapper>
+			<input-mapper>
+				<mapping source="flowScope.repositoryFolder" target="parentFolder"/>
+			</input-mapper>
+		</attribute-mapper>
+		<transition on="cancel" to="initAction"/>
+		<transition on="back" to="initAction"/>
+		<transition on="saved" to="initAction"/>
+		<transition on="displayError" to="displayError"/>
+	</subflow-state>
+
+	<subflow-state id="editOlapClientConnection" flow="olapClientConnectionFlow">
+		<attribute-mapper>
+			<input-mapper>
+				<mapping source="requestParameters.resource" target="currentOlapClientConnection"/>
+				<mapping source="flowScope.repositoryFolder" target="parentFolder"/>
+				<mapping source="requestParameters._eventId_Edit" target="isEdit"/>
+			</input-mapper>
+		</attribute-mapper>
+		<transition on="cancel" to="initAction"/>
+		<transition on="back" to="initAction"/>
+		<transition on="saved" to="initAction"/>
+		<transition on="displayError" to="displayError"/>
+	</subflow-state>
+
+	<subflow-state id="editMondrianXmlaSource" flow="mondrianXmlaSourceFlow">
+		<attribute-mapper>
+			<input-mapper>
+				<mapping source="requestParameters.resource" target="currentMondrianXmlaDefinition"/>
+				<mapping source="flowScope.repositoryFolder" target="parentFolder"/>
+				<mapping source="requestParameters._eventId_Edit" target="isEdit"/>
+			</input-mapper>
+		</attribute-mapper>
+		<transition on="cancel" to="initAction"/>
+		<transition on="back" to="initAction"/>
+		<transition on="saved" to="initAction"/>
+		<transition on="displayError" to="displayError"/>
+	</subflow-state>
+
+	<subflow-state id="editFolder" flow="editFolderFlow">
+		<attribute-mapper>
+			<input-mapper>
+				<mapping source="requestParameters.resource" target="currentFolder"/>
+				<mapping source="flowScope.repositoryFolder" target="parentFolder"/>
+				<mapping source="requestParameters._eventId_Edit" target="isEdit"/>
+			</input-mapper>
+		</attribute-mapper>
+		<transition on="cancel" to="initAction"/>
+		<transition on="saved" to="initAction"/>
+	</subflow-state>
+
+	<subflow-state id="editFileResource" flow="fileResourceFlow">
+		<attribute-mapper>
+			<input-mapper>
+				<mapping source="flowScope.repositoryFolder" target="parentFolder"/>
+			</input-mapper>
+		</attribute-mapper>
+		<transition on="finish" to="initAction"/>
+		<transition on="cancel" to="initAction"/>
+	</subflow-state>
+
+	<subflow-state id="editDataType" flow="dataTypeFlow">
+		<attribute-mapper>
+			<input-mapper>
+				<mapping source="requestParameters.resource" target="currentDataType"/>
+				<mapping source="flowScope.repositoryFolder" target="parentFolder"/>
+				<mapping source="requestParameters._eventId_Edit" target="isEdit"/>
+			</input-mapper>
+		</attribute-mapper>
+		<transition on="cancel" to="initAction"/>
+		<transition on="back" to="initAction"/>
+		<transition on="saved" to="initAction"/>
+	</subflow-state>
+
+	<subflow-state id="editListOfValues" flow="listOfValuesFlow">
+		<attribute-mapper>
+			<input-mapper>
+				<mapping source="requestParameters.resource" target="listOfValues"/>
+				<mapping source="flowScope.repositoryFolder" target="parentFolder"/>
+				<mapping source="requestParameters._eventId_Edit" target="isEdit"/>
+			</input-mapper>
+		</attribute-mapper>
+		<transition on="cancel" to="initAction"/>
+		<transition on="saved" to="initAction"/>
+		<transition on="back" to="initAction"/>
+	</subflow-state>
+
+	<subflow-state id="editQuery" flow="queryFlow">
+		<attribute-mapper>
+			<input-mapper>
+				<mapping source="requestParameters.resource" target="currentQuery"/>
+				<mapping source="flowScope.repositoryFolder" target="parentFolder"/>
+				<mapping source="requestParameters._eventId_Edit" target="isEdit"/>
+			</input-mapper>
+		</attribute-mapper>
+		<transition on="cancel" to="initAction"/>
+		<transition on="saved" to="initAction"/>
+		<transition on="back" to="initAction"/>
+	</subflow-state>
+
+	<subflow-state id="editDataSource" flow="reportDataSourceFlow">
+		<attribute-mapper>
+			<input-mapper>
+				<mapping source="flowScope.repositoryFolder" target="parentFolder"/>
+			</input-mapper>
+		</attribute-mapper>
+		<transition on="done" to="initAction"/>
+		<transition on="done" to="initAction"/>
+		<transition on="cancel" to="initAction"/>
+		<transition on="back" to="initAction"/>
+		<transition on="displayError" to="initAction"/>
+	</subflow-state>
+
+	<subflow-state id="editInputControl" flow="inputControlsFlow">
+		<attribute-mapper>
+			<input-mapper>
+				<mapping source="flowScope.repositoryFolder" target="parentFolder"/>
+			</input-mapper>
+		</attribute-mapper>
+		<transition on="done" to="initAction"/>
+		<transition on="cancel" to="initAction"/>
+		<transition on="back" to="initAction"/>
+		<transition on="displayError" to="initAction"/>
+	</subflow-state>
+
+	<subflow-state id="viewReport" flow="viewReportFlow">
+		<attribute-mapper>
+			<input-mapper>
+				<mapping source="requestParameters.resource" target="reportUnit"/>
+				<mapping source="${true}" target="inhibitRequestParsing"/>
+			</input-mapper>
+		</attribute-mapper>
+		<transition on="done" to="initAction"/>
+		<transition on="cancel" to="initAction"/>
+	</subflow-state>
+<!--
+	<subflow-state id="viewOlapModel" flow="viewOlapModelFlow">
+		<attribute-mapper>
+			<input-mapping as="name" value="${requestParameters.resource}"/>
+		</attribute-mapper>
+		<transition on="done" to="initAction"/>
+		<transition on="cancel" to="initAction"/>
+		<transition on="displayError" to="initAction"/>
+	</subflow-state>
+-->
+	<view-state id="displayError" view="flowError">
+		<entry-actions>
+			<set attribute="prevForm" value="${'displayError'}" scope="flow"/>
+		</entry-actions>
+		<transition on="displayError" to="initAction"/>
+	</view-state>
+
+    <view-state id="displayRemoveError" view="flowRemoveError">
+    	<entry-actions>
+    		<set attribute="prevForm" value="${'displayRemoveError'}" scope="flow"/>
+    	</entry-actions>
+		<transition on="back" to="initAction"/>
+	</view-state>
+	
+	<subflow-state id="reportJobs" flow="reportSchedulingFlow">
+		<attribute-mapper>
+			<input-mapper>
+				<mapping source="requestParameters.resource" target="reportUnitURI"/>
+			</input-mapper>
+		</attribute-mapper>
+		<transition on="done" to="initAction"/>
+	</subflow-state>
+
+	<subflow-state id="runReportInBackground" flow="reportJobFlow">
+		<attribute-mapper>
+			<input-mapper>
+				<mapping source="${true}" target="isNewMode"/>
+				<mapping source="${true}" target="isRunNowMode"/>
+				<mapping source="requestParameters.resource" target="reportUnitURI"/>
+			</input-mapper>
+		</attribute-mapper>
+		<transition on="cancel" to="initAction"/>
+		<transition on="saved" to="initAction"/>
+	</subflow-state>
+
+	<subflow-state id="assignPermissions" flow="objectPermissionToRoleFlow">
+		<transition on="done" to="initAction"/>
+	</subflow-state>
+
+	<end-state id="cancel"/>
+	
+	<!-- exceptions handling -->
+	<decision-state id="backFromError">
+		<if test="${not (flowScope.prevForm == null or flowScope.prevForm == '')}" then="${flowScope.prevForm}" else="initAction"/>
+	</decision-state>
+	<view-state id="errorPage" view="JSErrorPage" />
+	<global-transitions>
+		<transition on="backFromErrorPage" to="backFromError"/>
+		<transition on-exception="java.lang.Throwable" to="errorPage"/>
+	</global-transitions>
+	<!-- end exceptions handling -->
+
+	<import resource="repoAdminBeans.xml"/>
+</flow>

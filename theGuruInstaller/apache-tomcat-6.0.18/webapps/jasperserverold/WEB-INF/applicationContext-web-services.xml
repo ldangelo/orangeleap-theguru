@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+       	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd">
+
+	<bean id="resourceHandlerRegistry" class="com.jaspersoft.jasperserver.ws.axis2.MapResourceHandlerRegistry">
+		<property name="typeHandlers">
+			<map>
+				<entry key="folder" value="com.jaspersoft.jasperserver.ws.axis2.repository.FolderHandler"/>
+				<entry key="reportUnit" value="com.jaspersoft.jasperserver.ws.axis2.repository.ReportUnitHandler"/>
+				<entry key="datasource" value="com.jaspersoft.jasperserver.ws.axis2.repository.DataSourceHandler"/>
+				<entry key="jdbc" value="com.jaspersoft.jasperserver.ws.axis2.repository.JdbcDataSourceHandler"/>
+				<entry key="jndi" value="com.jaspersoft.jasperserver.ws.axis2.repository.JndiJdbcDataSourceHandler"/>
+				<entry key="bean" value="com.jaspersoft.jasperserver.ws.axis2.repository.BeanDataSourceHandler"/>
+				<entry key="custom" value="com.jaspersoft.jasperserver.ws.axis2.repository.CustomDataSourceHandler"/>
+				<entry key="img" value="com.jaspersoft.jasperserver.ws.axis2.repository.FileResourceHandler"/>
+				<entry key="font" value="com.jaspersoft.jasperserver.ws.axis2.repository.FileResourceHandler"/>
+				<entry key="jrxml" value="com.jaspersoft.jasperserver.ws.axis2.repository.FileResourceHandler"/>
+				<entry key="jar" value="com.jaspersoft.jasperserver.ws.axis2.repository.FileResourceHandler"/>
+				<entry key="prop" value="com.jaspersoft.jasperserver.ws.axis2.repository.FileResourceHandler"/>
+				<entry key="jrtx" value="com.jaspersoft.jasperserver.ws.axis2.repository.FileResourceHandler"/>
+				<entry key="reference" value="com.jaspersoft.jasperserver.ws.axis2.repository.FileResourceHandler"/>
+				<entry key="inputControl" value="com.jaspersoft.jasperserver.ws.axis2.repository.InputControlHandler"/>
+				<entry key="dataType" value="com.jaspersoft.jasperserver.ws.axis2.repository.DataTypeHandler"/>
+				<entry key="olapXmlaCon" value="com.jaspersoft.jasperserver.ws.axis2.repository.XmlaConnectionHandler"/>
+				<entry key="olapMondrianCon" value="com.jaspersoft.jasperserver.ws.axis2.repository.MondrianConnectionHandler"/>
+				<entry key="xmlaConnection" value="com.jaspersoft.jasperserver.ws.axis2.repository.XmlaConnectionHandler"/>
+				<entry key="unknow" value="com.jaspersoft.jasperserver.ws.axis2.repository.UnknownResourceHandler"/>
+				<entry key="lov" value="com.jaspersoft.jasperserver.ws.axis2.repository.ListOfValuesHandler"/>
+				<entry key="query" value="com.jaspersoft.jasperserver.ws.axis2.repository.QueryHandler"/>
+				<entry key="contentResource" value="com.jaspersoft.jasperserver.ws.axis2.repository.ContentResourceHandler"/>
+			</map>
+		</property>
+	</bean>
+	
+    <bean id="addWSResourceHandler" class="com.jaspersoft.jasperserver.api.common.util.spring.GenericBeanUpdaterDefinition">
+    	<property name="order" value="10"/>
+    	<property name="beanName" value="resourceHandlerRegistry"/>
+    	<property name="propertyName" value="typeHandlers"/>
+    	<property name="operation" value="append"/>
+    </bean>
+
+	<bean id="reportSchedulerServiceAccessor" class="com.jaspersoft.jasperserver.ws.axis2.scheduling.BeanReportSchedulerAccessor">
+		<property name="schedulerService" ref="reportSchedulerService"/>
+	</bean>
+
+	<bean id="reportSchedulerServiceImpl" class="com.jaspersoft.jasperserver.ws.axis2.scheduling.ReportSchedulerServiceImpl">
+		<property name="scheduler" ref="reportSchedulingService"/>
+		<property name="beanTraslator" ref="reportJobBeanTraslator"/>
+	</bean>
+
+	<bean id="webServiceExceptionAdvice" class="com.jaspersoft.jasperserver.ws.axis2.util.WebServiceExceptionAdvice"/>
+
+	<bean id="reportSchedulerService" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<list>
+				<value>com.jaspersoft.jasperserver.ws.axis2.scheduling.ReportSchedulerService</value>
+			</list>
+		</property>
+		<property name="target" ref="reportSchedulerServiceImpl"/>
+		<property name="interceptorNames">
+			<list>
+				<value>webServiceExceptionAdvice</value>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="reportJobBeanTraslator" class="com.jaspersoft.jasperserver.ws.axis2.scheduling.ReportJobBeanTraslator">
+		<property name="engine" ref="engineService"/>
+		<property name="timezones" ref="userTimeZonesList"/>
+		<property name="constantMappings">
+			<map>
+				<entry key="outputFormat">
+					<map>
+						<entry>
+							<key>
+								<util:constant static-field="com.jaspersoft.jasperserver.api.engine.scheduling.domain.ReportJob.OUTPUT_FORMAT_PDF"/>
+							</key>
+							<value>PDF</value>
+						</entry>
+						<entry>
+							<key>
+								<util:constant static-field="com.jaspersoft.jasperserver.api.engine.scheduling.domain.ReportJob.OUTPUT_FORMAT_HTML"/>
+							</key>
+							<value>HTML</value>
+						</entry>
+						<entry>
+							<key>
+								<util:constant static-field="com.jaspersoft.jasperserver.api.engine.scheduling.domain.ReportJob.OUTPUT_FORMAT_XLS"/>
+							</key>
+							<value>XLS</value>
+						</entry>
+						<entry>
+							<key>
+								<util:constant static-field="com.jaspersoft.jasperserver.api.engine.scheduling.domain.ReportJob.OUTPUT_FORMAT_RTF"/>
+							</key>
+							<value>RTF</value>
+						</entry>
+						<entry>
+							<key>
+								<util:constant static-field="com.jaspersoft.jasperserver.api.engine.scheduling.domain.ReportJob.OUTPUT_FORMAT_CSV"/>
+							</key>
+							<value>CSV</value>
+						</entry>
+					</map>
+				</entry>
+				<entry key="intervalUnit">
+					<map>
+						<entry>
+							<key>
+								<util:constant static-field="com.jaspersoft.jasperserver.api.engine.scheduling.domain.ReportJobSimpleTrigger.INTERVAL_MINUTE"/>
+							</key>
+							<value>MINUTE</value>
+						</entry>
+						<entry>
+							<key>
+								<util:constant static-field="com.jaspersoft.jasperserver.api.engine.scheduling.domain.ReportJobSimpleTrigger.INTERVAL_HOUR"/>
+							</key>
+							<value>HOUR</value>
+						</entry>
+						<entry>
+							<key>
+								<util:constant static-field="com.jaspersoft.jasperserver.api.engine.scheduling.domain.ReportJobSimpleTrigger.INTERVAL_DAY"/>
+							</key>
+							<value>DAY</value>
+						</entry>
+						<entry>
+							<key>
+								<util:constant static-field="com.jaspersoft.jasperserver.api.engine.scheduling.domain.ReportJobSimpleTrigger.INTERVAL_WEEK"/>
+							</key>
+							<value>WEEK</value>
+						</entry>
+					</map>
+				</entry>
+				<entry key="calendarDaysType">
+					<map>
+						<entry>
+							<key>
+								<util:constant static-field="com.jaspersoft.jasperserver.api.engine.scheduling.domain.ReportJobCalendarTrigger.DAYS_TYPE_ALL"/>
+							</key>
+							<value>ALL</value>
+						</entry>
+						<entry>
+							<key>
+								<util:constant static-field="com.jaspersoft.jasperserver.api.engine.scheduling.domain.ReportJobCalendarTrigger.DAYS_TYPE_WEEK"/>
+							</key>
+							<value>WEEK</value>
+						</entry>
+						<entry>
+							<key>
+								<util:constant static-field="com.jaspersoft.jasperserver.api.engine.scheduling.domain.ReportJobCalendarTrigger.DAYS_TYPE_MONTH"/>
+							</key>
+							<value>MONTH</value>
+						</entry>
+					</map>
+				</entry>
+				<entry key="resultSendType">
+					<map>
+						<entry>
+							<key>
+								<util:constant static-field="com.jaspersoft.jasperserver.api.engine.scheduling.domain.ReportJobMailNotification.RESULT_SEND"/>
+							</key>
+							<value>SEND</value>
+						</entry>
+						<entry>
+							<key>
+								<util:constant static-field="com.jaspersoft.jasperserver.api.engine.scheduling.domain.ReportJobMailNotification.RESULT_SEND_ATTACHMENT"/>
+							</key>
+							<value>SEND_ATTACHMENT</value>
+						</entry>
+					</map>
+				</entry>
+				<entry key="runtimeJobState">
+					<map>
+						<entry>
+							<key>
+								<util:constant static-field="com.jaspersoft.jasperserver.api.engine.scheduling.domain.ReportJobRuntimeInformation.STATE_UNKNOWN"/>
+							</key>
+							<value>UNKNOWN</value>
+						</entry>
+						<entry>
+							<key>
+								<util:constant static-field="com.jaspersoft.jasperserver.api.engine.scheduling.domain.ReportJobRuntimeInformation.STATE_NORMAL"/>
+							</key>
+							<value>NORMAL</value>
+						</entry>
+						<entry>
+							<key>
+								<util:constant static-field="com.jaspersoft.jasperserver.api.engine.scheduling.domain.ReportJobRuntimeInformation.STATE_EXECUTING"/>
+							</key>
+							<value>EXECUTING</value>
+						</entry>
+						<entry>
+							<key>
+								<util:constant static-field="com.jaspersoft.jasperserver.api.engine.scheduling.domain.ReportJobRuntimeInformation.STATE_PAUSED"/>
+							</key>
+							<value>PAUSED</value>
+						</entry>
+						<entry>
+							<key>
+								<util:constant static-field="com.jaspersoft.jasperserver.api.engine.scheduling.domain.ReportJobRuntimeInformation.STATE_COMPLETE"/>
+							</key>
+							<value>COMPLETE</value>
+						</entry>
+						<entry>
+							<key>
+								<util:constant static-field="com.jaspersoft.jasperserver.api.engine.scheduling.domain.ReportJobRuntimeInformation.STATE_ERROR"/>
+							</key>
+							<value>ERROR</value>
+						</entry>
+					</map>
+				</entry>
+			</map>
+		</property>
+	</bean>
+
+	<bean id="wsMessageCodesResolver" class="org.springframework.validation.DefaultMessageCodesResolver"/>
+
+</beans>

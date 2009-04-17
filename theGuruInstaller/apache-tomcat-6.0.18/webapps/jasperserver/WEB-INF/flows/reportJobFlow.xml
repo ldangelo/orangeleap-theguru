@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+						http://www.springframework.org/schema/webflow/spring-webflow-1.0.xsd">
+
+	<input-mapper>
+		<input-attribute name="isNewMode"/>
+		<input-attribute name="isRunNowMode"/>
+		<input-attribute name="reportUnitURI"/>
+	</input-mapper>
+
+	<start-state idref="checkJob"/>
+	
+	<action-state id="checkJob">
+		<action bean="reportJobEditAction" method="setupForm"/>
+		<transition on="success" to="checkRunNow"/>
+		<transition on="notFound" to="jobNotFound"/>
+	</action-state>
+	
+	<decision-state id="checkRunNow">
+		<entry-actions>
+			<action bean="scheduleReportParametersAction" method="checkForParameters"/>
+		</entry-actions>
+		<if test="${flowScope.isRunNowMode}" then="setNowModeDefaults" else="jobDetails"/>
+	</decision-state>
+	
+	<action-state id="setNowModeDefaults">
+		<action bean="reportJobEditAction"/>
+		<transition on="success" to="triggerNext"/>
+	</action-state>
+	
+	<decision-state id="triggerNext">
+		<if test="${flowScope.hasReportParameters}" then="reportParameters" else="jobOutput"/>
+	</decision-state>
+	
+	<decision-state id="outputPrev">
+		<if test="${flowScope.hasReportParameters}" then="reportParameters" else="jobTrigger"/>
+	</decision-state>
+
+	<view-state id="jobDetails" view="reportScheduling/reportJobDetails">
+		<entry-actions>
+			<set attribute="prevForm" value="${'jobDetails'}" scope="flow"/>
+		</entry-actions>
+		<transition on="next" to="jobTrigger">
+			<action bean="reportJobEditAction" method="bindAndValidate">
+				<attribute name="validatorMethod" value="validateJobDetails"/>
+			</action>
+		</transition>
+		<transition on="jobTrigger" to="jobTrigger">
+			<action bean="reportJobEditAction" method="bind"/>
+		</transition>
+		<transition on="jobParameters" to="reportParameters">
+			<action bean="reportJobEditAction" method="bind"/>
+		</transition>
+		<transition on="jobOutput" to="jobOutput">
+			<action bean="reportJobEditAction" method="bind"/>
+		</transition>
+		<transition on="save" to="saveJob">
+			<action bean="reportJobEditAction" method="bindAndValidate">
+				<attribute name="validatorMethod" value="validateJobDetails"/>
+			</action>
+		</transition>
+	</view-state>
+
+	<view-state id="jobTrigger" view="reportScheduling/reportJobTrigger">
+		<entry-actions>
+			<set attribute="prevForm" value="${'jobTrigger'}" scope="flow"/>
+			<action bean="reportJobEditAction" method="setTriggerReferenceData"/>
+		</entry-actions>
+		<transition on="back" to="jobDetails">
+			<action bean="reportJobEditAction" method="bind"/>
+		</transition>
+		<transition on="next" to="triggerNext">
+			<action bean="reportJobEditAction" method="bindAndValidate">
+				<attribute name="validatorMethod" value="validateJobTrigger"/>
+			</action>
+		</transition>
+		<transition on="jobDetails" to="jobDetails">
+			<action bean="reportJobEditAction" method="bind"/>
+		</transition>
+		<transition on="jobParameters" to="reportParameters">
+			<action bean="reportJobEditAction" method="bind"/>
+		</transition>
+		<transition on="jobOutput" to="jobOutput">
+			<action bean="reportJobEditAction" method="bind"/>
+		</transition>
+		<transition on="save" to="saveJob">
+			<action bean="reportJobEditAction" method="bindAndValidate">
+				<attribute name="validatorMethod" value="validateJobTrigger"/>
+			</action>
+		</transition>
+		<transition on="noRecurrence" to="jobTrigger">
+			<action bean="reportJobEditAction" method="bind"/>
+			<action bean="reportJobEditAction" method="setTriggerRecurrenceNone"/>
+		</transition>
+		<transition on="simpleRecurrence" to="jobTrigger">
+			<action bean="reportJobEditAction" method="bind"/>
+			<action bean="reportJobEditAction" method="setTriggerRecurrenceSimple"/>
+		</transition>
+		<transition on="calendarRecurrence" to="jobTrigger">
+			<action bean="reportJobEditAction" method="bind"/>
+			<action bean="reportJobEditAction" method="setTriggerRecurrenceCalendar"/>
+		</transition>
+	</view-state>
+
+	<view-state id="reportParameters" view="reportScheduling/reportJobParameters">
+		<entry-actions>
+			<set attribute="prevForm" value="${'reportParameters'}" scope="flow"/>
+		</entry-actions>
+		<transition on="back" to="jobTrigger">
+			<action bean="scheduleReportParametersAction" method="setParameterValues"/>
+			<action bean="reportJobEditAction" method="setupForm"/>
+		</transition>
+		<transition on="next" to="jobOutput">
+			<action bean="scheduleReportParametersAction" method="setParameterValues"/>
+			<action bean="reportJobEditAction" method="setupForm"/>
+		</transition>
+		<transition on="save" to="saveJob">
+			<action bean="scheduleReportParametersAction" method="setParameterValues"/>
+		</transition>
+		<transition on="jobDetails" to="jobDetails">
+			<action bean="scheduleReportParametersAction" method="setParameterValues"/>
+			<action bean="reportJobEditAction" method="setupForm"/>
+		</transition>
+		<transition on="jobTrigger" to="jobTrigger">
+			<action bean="scheduleReportParametersAction" method="setParameterValues"/>
+			<action bean="reportJobEditAction" method="setupForm"/>
+		</transition>
+		<transition on="jobOutput" to="jobOutput">
+			<action bean="scheduleReportParametersAction" method="setParameterValues"/>
+			<action bean="reportJobEditAction" method="setupForm"/>
+		</transition>
+	</view-state>
+	
+	<view-state id="jobOutput" view="reportScheduling/reportJobOutput">
+		<entry-actions>
+			<set attribute="prevForm" value="${'jobOutput'}" scope="flow"/>
+			<action bean="reportJobEditAction" method="setOutputReferenceData"/>
+		</entry-actions>
+		<transition on="back" to="outputPrev">
+			<action bean="reportJobEditAction" method="bind"/>
+		</transition>
+		<transition on="jobDetails" to="jobDetails">
+			<action bean="reportJobEditAction" method="bind"/>
+		</transition>
+		<transition on="jobTrigger" to="jobTrigger">
+			<action bean="reportJobEditAction" method="bind"/>
+		</transition>
+		<transition on="jobParameters" to="reportParameters">
+			<action bean="reportJobEditAction" method="bind"/>
+		</transition>
+		<transition on="jobOutput" to="jobOutput">
+			<action bean="reportJobEditAction" method="bind"/>
+		</transition>
+		<transition on="save" to="saveJob">
+			<action bean="reportJobEditAction" method="bindAndValidate">
+				<attribute name="validatorMethod" value="validateJobOutput"/>
+			</action>
+		</transition>
+	</view-state>
+
+	<action-state id="saveJob">
+		<action bean="reportJobEditAction"/>
+		<transition on="success" to="saved"/>
+		<transition on="yes" to="backToRepository"/>
+		<transition on="notFound" to="jobNotFound"/>
+		<transition on="detailsError" to="jobDetails"/>
+		<transition on="triggerError" to="jobTrigger"/>
+		<transition on="outputError" to="jobOutput"/>
+	</action-state>
+
+   	<view-state id="cancel" view="flowRedirect:repositoryExplorerFlow?showFolder=${requestParameters.ParentFolderUri}"/>	
+   	<view-state id="backToRepository" view="flowRedirect:repositoryExplorerFlow?showFolder=${requestParameters.ParentFolderUri}"/>	
+   	<end-state id="saved" />
+   	<end-state id="jobNotFound">
+		<output-mapper>
+			<output-attribute name="errorMessage"/>
+			<output-attribute name="errorArguments"/>
+		</output-mapper>
+   	</end-state>
+
+	<!-- exceptions handling -->
+	<decision-state id="backFromError">
+		<if test="${not (flowScope.prevForm == null or flowScope.prevForm == '')}" then="${flowScope.prevForm}" else="saved"/>
+	</decision-state>
+	<view-state id="errorPage" view="JSErrorPage" />
+	<!-- end exceptions handling -->
+	
+	<global-transitions>
+		<transition on="cancel" to="cancel"/>
+		<transition on="save" to="saveJob"/>
+		<transition on="backFromErrorPage" to="backFromError"/>
+		<transition on-exception="java.lang.Throwable" to="errorPage"/>
+	</global-transitions>
+
+	<import resource="reportJobBeans.xml"/>
+
+</flow>

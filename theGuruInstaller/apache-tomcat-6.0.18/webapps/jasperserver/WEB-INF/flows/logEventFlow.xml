@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+						http://www.springframework.org/schema/webflow/spring-webflow-1.0.xsd">
+
+	<start-state idref="getEvents"/>
+
+	<action-state id="getEvents">
+		<action bean="logEventAction"/>
+		<transition on="success" to="eventList"/>
+	</action-state>
+
+	<action-state id="changeEventsType">
+		<action bean="logEventAction"/>
+		<transition on="success" to="getEvents"/>
+	</action-state>
+
+	<view-state id="eventList" view="logEvent/eventList">
+		<entry-actions>
+			<set attribute="prevForm" value="${'eventList'}" scope="flow"/>
+		</entry-actions>
+		<transition on="ViewEvent" to="viewEvent"/>
+		<transition on="delete" to="delete"/>
+		<transition on="markAsRead" to="markAsRead"/>
+		<transition on="markAsUnread" to="markAsUnread"/>
+		<transition on="changeEventsType" to="changeEventsType"/>
+	</view-state>
+
+	<action-state id="delete">
+		<action bean="logEventAction"/>
+		<transition on="success" to="getEvents"/>
+	</action-state>
+
+	<action-state id="markAsRead">
+		<action bean="logEventAction"/>
+		<transition on="success" to="getEvents"/>
+	</action-state>
+
+	<action-state id="markAsUnread">
+		<action bean="logEventAction"/>
+		<transition on="success" to="getEvents"/>
+	</action-state>
+
+	<view-state id="viewEvent" view="logEvent/viewEvent">
+		<entry-actions>
+			<set attribute="prevForm" value="${'viewEvent'}" scope="flow"/>
+			<action bean="logEventAction" method="setupViewForm"/>
+		</entry-actions>
+		<transition on="back" to="getEvents"/>
+	</view-state>
+	
+	<!-- exceptions handling -->
+	<decision-state id="backFromError">
+		<if test="${not (flowScope.prevForm == null or flowScope.prevForm == '')}" then="${flowScope.prevForm}" else="getEvents"/>
+	</decision-state>
+	<view-state id="errorPage" view="JSErrorPage" />
+	<global-transitions>
+		<transition on="backFromErrorPage" to="backFromError"/>
+		<transition on-exception="java.lang.Throwable" to="errorPage"/>
+	</global-transitions>
+	<!-- end exceptions handling -->
+
+	<import resource="logEventBeans.xml"/>
+	
+</flow>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+						http://www.springframework.org/schema/webflow/spring-webflow-1.0.xsd">
+						
+	<input-mapper>
+		<input-attribute name="currentMondrianXmlaDefinition"/>
+		<input-attribute name="parentFolder"/>
+		<input-attribute name="isEdit"/>
+	</input-mapper>
+
+	<start-state idref="editMondrianXmlaSource"/>
+
+	<view-state id="editMondrianXmlaSource" view="editMondrianXmlaSourceForm">
+		<entry-actions>
+			<set attribute="prevForm" value="${'editMondrianXmlaSource'}" scope="flow"/>
+			<action bean="editMondrianXmlaSourceAction" method="setupEditForm"/>
+		</entry-actions>
+		<transition on="save" to="saveMondrianXmlaSource">
+			<action bean="editMondrianXmlaSourceAction" method="bindAndValidate">
+				<attribute name="validatorMethod" value="validateNameLabelDesc"/> 
+			</action>
+		</transition>
+		<transition on="cancel" to="cancel"/>
+		<transition on="back" to="back"/>
+	</view-state>
+
+	<action-state id="saveMondrianXmlaSource">
+		<action bean="editMondrianXmlaSourceAction"/>
+		<transition on="success" to="saveMondrianXmlaSourceTest"/>
+		<transition on="error" to="editMondrianXmlaSource"/>
+	</action-state>
+	
+	<decision-state id="saveMondrianXmlaSourceTest">
+		<if test="${flowScope.mondrianXmlaSource.connectionInvalid}"
+		then="editMondrianXmlaSource"
+		else="saved"/>
+	</decision-state>
+
+	<end-state id="cancel"/>
+ 
+	<end-state id="back"/>
+
+	<view-state id="saved" view="flowRedirect:repositoryExplorerFlow?showFolder=${requestParameters.ParentFolderUri}"/>
+
+	<end-state id="displayError"/>
+	
+	<!-- exceptions handling -->
+	<decision-state id="backFromError">
+		<if test="${not (flowScope.prevForm == null or flowScope.prevForm == '')}" then="${flowScope.prevForm}" else="saved"/>
+	</decision-state>
+	<view-state id="errorPage" view="JSErrorPage" />
+	<global-transitions>
+		<transition on="backFromErrorPage" to="backFromError"/>
+		<transition on-exception="java.lang.Throwable" to="errorPage"/>
+	</global-transitions>
+	<!-- end exceptions handling -->
+
+	<import resource="mondrianXmlaSourceBeans.xml"/>
+
+</flow>

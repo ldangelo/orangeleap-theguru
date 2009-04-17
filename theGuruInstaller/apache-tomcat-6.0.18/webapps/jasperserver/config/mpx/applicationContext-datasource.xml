@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+       
+  <bean id="mpxDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+	<property name="jndiName" value="java:comp/env/jdbc/mpx"/>
+  </bean>
+  
+  
+  <bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+    <property name="jndiName" value="java:comp/env/${metadata.hibernate.dataSource.jndiName}"/>
+  </bean>
+ 
+  
+  <!-- Uncomment if JBoss + PostgreSQL. Also, comment out dataSource above. -->
+  <!--
+  <bean id="dsAdapter" destroy-method="destroy"
+      class="org.postgresql.ds.PGConnectionPoolDataSource">
+    <property name="serverName" value="${metadata.jdbc.serverName}"/>
+    <property name="databaseName" value="${metadata.jdbc.databaseName}"/>
+    <property name="portNumber" value="${metadata.jdbc.port}"/>
+    <property name="user" value="${metadata.jdbc.username}"/>
+    <property name="password" value="${metadata.jdbc.password}"/>
+  </bean>
+
+  <bean id="dataSource"
+      class="org.apache.commons.dbcp.datasources.SharedPoolDataSource">
+    <property name="connectionPoolDataSource">
+        <ref local="dsAdapter"></ref>
+    </property>
+    <property name="defaultAutoCommit" value="false"/>
+    <property name="maxActive" value="5"/>
+    <property name="maxIdle" value="4"/>
+    <property name="maxWait" value="10000"/>
+  </bean>
+  -->
+       
+</beans>       

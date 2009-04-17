@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+						http://www.springframework.org/schema/webflow/spring-webflow-1.0.xsd">
+
+	<start-state idref="loadPermissionsForRoles"/>
+	
+	<action-state id="loadPermissionsForRoles">
+		<action bean="objectPermissionAction"/>
+		<transition on="success" to="viewPermissions"/>
+	</action-state>
+
+	<view-state id="viewPermissions" view="objectPermission/objPermissionToRole">
+		<entry-actions>
+			<set attribute="prevForm" value="${'viewPermissions'}" scope="flow"/>
+		</entry-actions>
+		<transition on="setPermission" to="setRolePermission"/>
+		<transition on="viewEditRole" to="roleEditFlow"/>
+		<transition on="userPermissions" to="objectPermissionToUserFlow"/>
+		<transition on="goToPage" to="goToPage"/>
+		<transition on="goToPageAndSave" to="setRolePermission"/>
+		<transition on="back" to="setRolePermissionAndDone"/>
+		<transition on="cancel" to="backToRepositoryExplorerFlow"/>
+	</view-state>
+
+	<action-state id="goToPage">
+		<action bean="objectPermissionAction"/>
+		<transition on="success" to="loadPermissionsForRoles"/>
+	</action-state>
+
+	<action-state id="setRolePermission">
+		<action bean="objectPermissionAction"/>
+		<transition on="success" to="loadPermissionsForRoles"/>
+	</action-state>
+
+	<subflow-state id="roleEditFlow" flow="roleEditFlow">
+		<transition on="done" to="loadPermissionsForRoles"/>
+	</subflow-state>
+
+	<subflow-state id="objectPermissionToUserFlow" flow="objectPermissionToUserFlow">	
+		<transition on="done" to="loadPermissionsForRoles"/>
+	</subflow-state>
+
+	<action-state id="setRolePermissionAndDone">
+		<action bean="objectPermissionAction" method="setRolePermission"/>
+		<transition on="success" to="backToRepositoryExplorerFlow"/>
+	</action-state>
+	
+	<subflow-state id="repoAdminFlow" flow="repoAdminFlow">
+	</subflow-state>
+	
+	<view-state id="backToRepositoryExplorerFlow" view="flowRedirect:repositoryExplorerFlow?showFolder=${requestParameters.ParentFolderUri}" />
+
+	<end-state id="done"/>
+
+	<!-- exceptions handling -->
+	<decision-state id="backFromError">
+		<if test="${not (flowScope.prevForm == null or flowScope.prevForm == '')}" then="${flowScope.prevForm}" else="done"/>
+	</decision-state>
+	<view-state id="errorPage" view="JSErrorPage" />
+	<global-transitions>
+		<transition on="backFromErrorPage" to="backFromError"/>
+		<transition on-exception="java.lang.Throwable" to="errorPage"/>
+	</global-transitions>
+	<!-- end exceptions handling -->
+
+	<import resource="objectPermissionBeans.xml"/>
+
+</flow>

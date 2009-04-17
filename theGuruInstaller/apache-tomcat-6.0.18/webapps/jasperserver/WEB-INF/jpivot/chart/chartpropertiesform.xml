@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<xform style="manual">
+<table border="1" cellspacing="0" cellpadding="2">
+
+ <tr>
+  <th colspan="2" class="xform-title">
+   <table border="0" cellspacing="0" cellpadding="0" width="100%">
+    <tr>
+     <th align="left" class="xform-title">
+      fmt:jsp.wcf.chart.chartProperties
+     </th>
+     <td align="right" class="xform-close-button">
+      <imgButton src="wcf/form/cancel.png" action="revert" label="fmt:jsp.wcf.chart.close" hide="true" handler="com.tonbeller.wcf.form.ButtonHandler"/>
+     </td>
+    </tr>
+   </table>
+  </th>
+ </tr>
+
+ <tr>
+  <td>fmt:jsp.wcf.chart.chartType</td>
+  <td>
+   <listBox1 type="int" modelReference="chartType">
+	<listItem value="1" label="fmt:jsp.wcf.chart.verticalBar"/>
+	<listItem value="2" label="fmt:jsp.wcf.chart.verticalBar3D"/>
+	<listItem value="3" label="fmt:jsp.wcf.chart.horizontalBar"/>
+	<listItem value="4" label="fmt:jsp.wcf.chart.horizontalBar3D"/>
+	<listItem value="5" label="fmt:jsp.wcf.chart.stackedVerticalBar"/>
+	<listItem value="6" label="fmt:jsp.wcf.chart.stackedVerticalBar3D"/>
+	<listItem value="7" label="fmt:jsp.wcf.chart.stackedHorizontalBar"/>
+	<listItem value="8" label="fmt:jsp.wcf.chart.stackedHorizontalBar3D"/>
+	<listItem value="9" label="fmt:jsp.wcf.chart.verticalLine"/>
+	<listItem value="10" label="fmt:jsp.wcf.chart.horizontalLine"/>
+	<listItem value="11" label="fmt:jsp.wcf.chart.verticalArea"/>
+	<listItem value="12" label="fmt:jsp.wcf.chart.horizontalArea"/>
+	<listItem value="13" label="fmt:jsp.wcf.chart.verticalStackedArea"/>
+	<listItem value="14" label="fmt:jsp.wcf.chart.horizontalStackedArea"/>
+	<listItem value="15" label="fmt:jsp.wcf.chart.pieChartsByColumn"/>
+	<listItem value="16" label="fmt:jsp.wcf.chart.pieChartsByRow"/>
+   </listBox1>
+  </td>
+ </tr>
+
+ <tr>
+  <td>fmt:jsp.wcf.chart.enableDrillThrough</td>
+  <td>
+   <checkBox modelReference="drillThroughEnabled"/>
+  </td>
+ </tr>
+
+ <tr>
+  <td>fmt:jsp.wcf.chart.chartTitle</td>
+  <td>
+   <textField type="string" modelReference="chartTitle" size="30" title="fmt:jsp.wcf.chart.chartTitle.tooltips"/>
+  </td>
+ </tr>
+ <tr>
+  <td>fmt:jsp.wcf.chart.chartTitleFont</td>
+  <td>
+   <listBox1 type="string" modelReference="fontName" label="fmt:jsp.wcf.chart.chartTitleFont.label">
+  	<listItem value="SansSerif" label="fmt:jsp.wcf.chart.sansserif"/>
+	<listItem value="Serif" label="fmt:jsp.wcf.chart.serif"/>
+	<listItem value="Monospaced" label="fmt:jsp.wcf.chart.monospaced"/>
+   </listBox1>
+   <listBox1 type="int" modelReference="fontStyle" label="fmt:jsp.wcf.chart.chartTitleFont.label">
+  	<listItem value="0" label="fmt:jsp.wcf.chart.plain"/>
+	<listItem value="1" label="fmt:jsp.wcf.chart.bold"/>
+	<listItem value="2" label="fmt:jsp.wcf.chart.italic"/>
+	<listItem value="3" label="fmt:jsp.wcf.chart.boldItalic"/>
+   </listBox1>
+   <listBox1 type="int" modelReference="fontSize" label="fmt:jsp.wcf.chart.chartTitleFontSize.label">
+  	<listItem value="8" label="8"/>
+	<listItem value="10" label="10"/>
+	<listItem value="12" label="12"/>
+	<listItem value="14" label="14"/>
+	<listItem value="16" label="16"/>
+	<listItem value="18" label="18"/>
+	<listItem value="20" label="20"/>
+	<listItem value="22" label="22"/>
+	<listItem value="24" label="24"/>
+	<listItem value="26" label="26"/>
+	<listItem value="28" label="28"/>
+	<listItem value="30" label="30"/>
+	<listItem value="32" label="32"/>
+   </listBox1>
+  </td>
+ </tr>
+ 
+ <tr>
+  <td>fmt:jsp.wcf.chart.horizontalAxisLabel</td>
+  <td>
+   <textField type="string" modelReference="horizAxisLabel" size="30" title="fmt:jsp.wcf.chart.horizontalAxisLabel.tooltips"/>
+  </td>
+ </tr>
+ <tr>
+  <td>fmt:jsp.wcf.chart.verticalAxisLabel</td>
+  <td>
+   <textField type="string" modelReference="vertAxisLabel" size="30" title="fmt:jsp.wcf.chart.verticalAxisLabel.tooltips"/>
+  </td>
+ </tr>
+ <tr>
+  <td>fmt:jsp.wcf.chart.axesLabelFont</td>
+  <td>
+   <listBox1 type="string" modelReference="axisFontName">
+  	<listItem value="SansSerif" label="fmt:jsp.wcf.chart.sansserif"/>
+	<listItem value="Serif" label="fmt:jsp.wcf.chart.serif"/>
+	<listItem value="Monospaced" label="fmt:jsp.wcf.chart.monospaced"/>
+   </listBox1>
+   <listBox1 type="int" modelReference="axisFontStyle">
+  	<listItem value="0" label="fmt:jsp.wcf.chart.plain"/>
+	<listItem value="1" label="fmt:jsp.wcf.chart.bold"/>
+	<listItem value="2" label="fmt:jsp.wcf.chart.italic"/>
+	<listItem value="3" label="fmt:jsp.wcf.chart.boldItalic"/>
+   </listBox1>
+   <listBox1 type="int" modelReference="axisFontSize">
+  	<listItem value="8" label="8"/>
+	<listItem value="10" label="10"/>
+	<listItem value="12" label="12"/>
+	<listItem value="14" label="14"/>
+	<listItem value="16" label="16"/>
+	<listItem value="18" label="18"/>
+	<listItem value="20" label="20"/>
+	<listItem value="22" label="22"/>
+	<listItem value="24" label="24"/>
+	<listItem value="26" label="26"/>
+	<listItem value="28" label="28"/>
+	<listItem value="30" label="30"/>
+	<listItem value="32" label="32"/>
+   </listBox1>
+  </td>
+ </tr>
+ 
+ <tr>
+  <td>fmt:jsp.wcf.chart.axesTickLabelFont</td>
+  <td>
+   <listBox1 type="string" modelReference="axisTickFontName">
+  	<listItem value="SansSerif" label="fmt:jsp.wcf.chart.sansserif"/>
+	<listItem value="Serif" label="fmt:jsp.wcf.chart.serif"/>
+	<listItem value="Monospaced" label="fmt:jsp.wcf.chart.monospaced"/>
+   </listBox1>
+   <listBox1 type="int" modelReference="axisTickFontStyle">
+  	<listItem value="0" label="fmt:jsp.wcf.chart.plain"/>
+	<listItem value="1" label="fmt:jsp.wcf.chart.bold"/>
+	<listItem value="2" label="fmt:jsp.wcf.chart.italic"/>
+	<listItem value="3" label="fmt:jsp.wcf.chart.boldItalic"/>
+   </listBox1>
+   <listBox1 type="int" modelReference="axisTickFontSize">
+  	<listItem value="8" label="8"/>
+	<listItem value="10" label="10"/>
+	<listItem value="12" label="12"/>
+	<listItem value="14" label="14"/>
+	<listItem value="16" label="16"/>
+	<listItem value="18" label="18"/>
+	<listItem value="20" label="20"/>
+	<listItem value="22" label="22"/>
+	<listItem value="24" label="24"/>
+	<listItem value="26" label="26"/>
+	<listItem value="28" label="28"/>
+	<listItem value="30" label="30"/>
+	<listItem value="32" label="32"/>
+   </listBox1>
+   <listBox1 type="int" modelReference="tickLabelRotate">
+        <listItem value="0" label="0°"/>
+        <listItem value="30" label="30°"/>
+        <listItem value="45" label="45°"/>
+        <listItem value="90" label="90°"/>
+   </listBox1>
+  </td>
+ </tr>
+
+ <tr>
+  <td>fmt:jsp.wcf.chart.showLegend</td>
+  <td>
+   <checkBox modelReference="showLegend"/>
+   <listBox1 type="int" modelReference="legendPosition">
+  	<listItem value="1" label="fmt:jsp.wcf.chart.top"/>
+	<listItem value="3" label="fmt:jsp.wcf.chart.bottom"/>
+	<listItem value="0" label="fmt:jsp.wcf.chart.left"/>
+	<listItem value="2" label="fmt:jsp.wcf.chart.right"/>
+   </listBox1>
+  </td>
+ </tr>
+ <tr>
+  <td>fmt:jsp.wcf.chart.legendFont</td>
+  <td>
+   <listBox1 type="string" modelReference="legendFontName">
+  	<listItem value="SansSerif" label="fmt:jsp.wcf.chart.sansserif"/>
+	<listItem value="Serif" label="fmt:jsp.wcf.chart.serif"/>
+	<listItem value="Monospaced" label="fmt:jsp.wcf.chart.monospaced"/>
+   </listBox1>
+   <listBox1 type="int" modelReference="legendFontStyle">
+  	<listItem value="0" label="fmt:jsp.wcf.chart.plain"/>
+	<listItem value="1" label="fmt:jsp.wcf.chart.bold"/>
+	<listItem value="2" label="fmt:jsp.wcf.chart.italic"/>
+	<listItem value="3" label="fmt:jsp.wcf.chart.boldItalic"/>
+   </listBox1>
+   <listBox1 type="int" modelReference="legendFontSize">
+  	<listItem value="8" label="8"/>
+	<listItem value="10" label="10"/>
+	<listItem value="12" label="12"/>
+	<listItem value="14" label="14"/>
+	<listItem value="16" label="16"/>
+	<listItem value="18" label="18"/>
+	<listItem value="20" label="20"/>
+	<listItem value="22" label="22"/>
+	<listItem value="24" label="24"/>
+	<listItem value="26" label="26"/>
+	<listItem value="28" label="28"/>
+	<listItem value="30" label="30"/>
+	<listItem value="32" label="32"/>
+   </listBox1>
+  </td>
+ </tr>
+
+ <tr>
+  <td>fmt:jsp.wcf.chart.showSlicer</td>
+  <td>
+   <checkBox modelReference="showSlicer"/>
+   <listBox1 type="int" modelReference="slicerPosition" label="fmt:jsp.wcf.chart.slicerPosition">
+  	<listItem value="0" label="fmt:jsp.wcf.chart.top"/>
+	<listItem value="1" label="fmt:jsp.wcf.chart.bottom"/>
+	<listItem value="3" label="fmt:jsp.wcf.chart.left"/>
+	<listItem value="2" label="fmt:jsp.wcf.chart.right"/>
+   </listBox1>
+   <listBox1 type="int" modelReference="slicerAlignment" label="fmt:jsp.wcf.chart.slicerAlignment">
+	<listItem value="3" label="fmt:jsp.wcf.chart.left"/>
+	<listItem value="2" label="fmt:jsp.wcf.chart.right"/>
+	<listItem value="4" label="fmt:jsp.wcf.chart.center"/>
+   </listBox1>
+  </td>
+ </tr>
+ <tr>
+  <td>fmt:jsp.wcf.chart.slicerFont</td>
+  <td>
+   <listBox1 type="string" modelReference="slicerFontName">
+  	<listItem value="SansSerif" label="fmt:jsp.wcf.chart.sansserif"/>
+	<listItem value="Serif" label="fmt:jsp.wcf.chart.serif"/>
+	<listItem value="Monospaced" label="fmt:jsp.wcf.chart.monospaced"/>
+   </listBox1>
+   <listBox1 type="int" modelReference="slicerFontStyle">
+  	<listItem value="0" label="fmt:jsp.wcf.chart.plain"/>
+	<listItem value="1" label="fmt:jsp.wcf.chart.bold"/>
+	<listItem value="2" label="fmt:jsp.wcf.chart.italic"/>
+	<listItem value="3" label="fmt:jsp.wcf.chart.boldItalic"/>
+   </listBox1>
+   <listBox1 type="int" modelReference="slicerFontSize">
+  	<listItem value="8" label="8"/>
+	<listItem value="10" label="10"/>
+	<listItem value="12" label="12"/>
+	<listItem value="14" label="14"/>
+	<listItem value="16" label="16"/>
+	<listItem value="18" label="18"/>
+	<listItem value="20" label="20"/>
+	<listItem value="22" label="22"/>
+	<listItem value="24" label="24"/>
+	<listItem value="26" label="26"/>
+	<listItem value="28" label="28"/>
+	<listItem value="30" label="30"/>
+	<listItem value="32" label="32"/>
+   </listBox1>
+  </td>
+ </tr>
+
+ <tr>
+  <td>fmt:jsp.wcf.chart.chartHeight</td>
+  <td>
+   <textField type="posint" modelReference="chartHeight" size="5" title="fmt:jsp.wcf.chart.chartHeight.tooltips"/>
+   <span>&#160;&#160;&#160;</span><span>fmt:jsp.wcf.chart.chartWidth</span>
+   <textField type="posint" modelReference="chartWidth" size="5" title="fmt:jsp.wcf.chart.chartWidth.tooltips"/>
+  </td>
+ </tr>
+ 
+ <tr>
+  <td>fmt:jsp.wcf.chart.background</td>
+  <td>
+   <textField type="posint" modelReference="bgColorR" size="4" title="fmt:jsp.wcf.chart.backgroundRed.tooltips"/>
+   <textField type="posint" modelReference="bgColorG" size="4" title="fmt:jsp.wcf.chart.backgroundGreen.tooltips"/>
+   <textField type="posint" modelReference="bgColorB" size="4" title="fmt:jsp.wcf.chart.backgroundBlue.tooltips"/>
+  </td>
+ </tr>
+
+ <tr>
+  <td align="right" colspan="4">
+    <button action="validate" label="fmt:jsp.wcf.chart.ok" handler="com.tonbeller.wcf.form.ButtonHandler" hide="true"/>
+    <button action="revert" label="fmt:jsp.wcf.chart.cancel" handler="com.tonbeller.wcf.form.ButtonHandler" hide="true"/>
+  </td>
+ </tr>
+
+</table>
+
+</xform>

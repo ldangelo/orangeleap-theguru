@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+
+<!-- only display a menu item if the user has a role in the list -->
+<menu-item name="root">
+  <sub-items>
+    <menu-item name="menu.home" url="/home.html">
+      <roles>
+	<role>ROLE_USER</role>
+	<role>ROLE_ADMINISTRATOR</role>
+      </roles>
+    </menu-item>
+    <menu-item name="menu.repository">
+      <roles>
+	<role>ROLE_USER</role>
+	<role>ROLE_ADMINISTRATOR</role>
+      </roles>
+      <sub-items>
+        <menu-item name="menu.all" url="/flow.html" servletParams="_flowId=repositoryExplorerFlow">
+          <roles>
+  	    <role>ROLE_USER</role>
+  	    <role>ROLE_ADMINISTRATOR</role>
+          </roles>
+        </menu-item>
+        <menu-item name="menu.reports" url="/flow.html" servletParams="_flowId=listReportsFlow">
+          <roles>
+	    <role>ROLE_USER</role>
+  	    <role>ROLE_ADMINISTRATOR</role>
+          </roles>
+        </menu-item>
+        <!-- remember that special characters like ampersand must be replaced in XML -->
+        <menu-item name="menu.olap.views" url="/flow.html" servletParams="_flowId=olapViewListFlow">
+          <roles>
+	    <role>ROLE_USER</role>
+  	    <role>ROLE_ADMINISTRATOR</role>
+          </roles>
+        </menu-item>
+        <menu-item name="menu.events" url="/flow.html" servletParams="_flowId=logEventFlow">
+          <roles>
+	    <role>ROLE_USER</role>
+  	    <role>ROLE_ADMINISTRATOR</role>
+          </roles>
+        </menu-item>      
+      </sub-items>
+    </menu-item>
+    <!-- no URL attribute, so no link displayed in menu - in this case,
+	 only sub menu  -->
+    
+    <menu-item name="menu.administration">
+      <roles>
+	<role>ROLE_ADMINISTRATOR</role>
+      </roles>
+      
+      <!-- sub menu items. will not be displayed if the parent menu is not active -->
+
+      <sub-items>
+	<menu-item name="menu.users" url="/flow.html" servletParams="_flowId=userListFlow">
+	  <roles>
+	    <role>ROLE_ADMINISTRATOR</role>
+	  </roles>
+	</menu-item>
+	<menu-item name="menu.roles" url="/flow.html" servletParams="_flowId=roleListFlow">
+	  <roles>
+	    <role>ROLE_ADMINISTRATOR</role>
+	  </roles>
+	</menu-item>
+
+	<menu-item name="menu.mondrian.properties" url="/olap/properties.html">
+	  <roles>
+	    <role>ROLE_ADMINISTRATOR</role>
+	  </roles>
+	</menu-item>
+	<menu-item name="menu.flush.olap.cache" url="/olap/flush.html">
+	  <roles>
+	    <role>ROLE_ADMINISTRATOR</role>
+	  </roles>
+	</menu-item>
+
+      </sub-items>
+    </menu-item>
+    
+    <menu-item name="menu.logout" url="/exituser.html">
+      <roles>
+	<role>ROLE_USER</role>
+	<role>ROLE_ADMINISTRATOR</role>
+      </roles>
+    </menu-item>
+    
+  </sub-items>
+</menu-item>
+

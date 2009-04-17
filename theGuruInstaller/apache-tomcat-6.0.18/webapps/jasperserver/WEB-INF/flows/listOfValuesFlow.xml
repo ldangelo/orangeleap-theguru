@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+						http://www.springframework.org/schema/webflow/spring-webflow-1.0.xsd">
+
+	<input-mapper>
+		<input-attribute name="masterFlow"/>
+		<input-attribute name="listOfValuesDTO"/>
+		<input-attribute name="listOfValues"/>
+		<input-attribute name="parentFolder"/>
+		<input-attribute name="isEdit"/>
+	</input-mapper>
+
+	<start-state idref="lovEditForm"/>
+
+	<view-state id="lovEditForm" view="listOfValues/lovEditForm">
+		<entry-actions>
+			<set attribute="prevForm" value="${'lovEditForm'}" scope="flow"/>
+			<action bean="listOfValuesAction" method="setupEditForm"/>
+		</entry-actions>
+		<transition on="next" to="editLovItems">
+			<action bean="listOfValuesAction" method="bindAndValidate">
+				<attribute name="validatorMethod" value="validateResourceData"/>
+			</action>
+		</transition>
+		<transition on="cancel" to="cancel"/>
+		<transition on="back" to="back"/>
+	</view-state>
+
+	<view-state id="editLovItems" view="listOfValues/lovItemsEditForm">
+		<entry-actions>
+			<set attribute="prevForm" value="${'editLovItems'}" scope="flow"/>
+		</entry-actions>
+		<transition on="save" to="writeLov">
+			<action bean="listOfValuesAction" method="bindAndValidate">
+				<attribute name="validatorMethod" value="validateLovSave"/>
+			</action>
+		</transition>
+		<transition on="addItem" to="addLovItem">
+			<action bean="listOfValuesAction" method="bindAndValidate">
+				<attribute name="validatorMethod" value="validateAddValue"/>
+			</action>
+		</transition>
+		<transition on="removeItem" to="removeLovItem"/>
+		<transition on="back" to="lovEditForm"/>
+		<transition on="cancel" to="cancel"/>
+	</view-state>
+
+	<action-state id="addLovItem">
+		<action bean="listOfValuesAction"/>
+		<transition on="success" to="editLovItems"/>
+	</action-state>
+
+	<action-state id="removeLovItem">
+		<action bean="listOfValuesAction"/>
+		<transition on="success" to="editLovItems"/>
+	</action-state>
+
+	<action-state id="writeLov">
+		<action bean="listOfValuesAction"/>
+		<transition on="yes" to="backToRepositoryExplorer"/>
+		<transition on="success" to="saved"/>
+		<transition on="error" to="lovEditForm"/>
+	</action-state>
+
+	<end-state id="cancel"/>
+	<end-state id="saved"/>
+	<end-state id="back"/>
+	<view-state id="backToRepositoryExplorer" view="flowRedirect:repositoryExplorerFlow?showFolder=${requestParameters.ParentFolderUri}"/>
+
+	<!-- exceptions handling -->
+	<decision-state id="backFromError">
+		<if test="${not (flowScope.prevForm == null or flowScope.prevForm == '')}" then="${flowScope.prevForm}" else="saved"/>
+	</decision-state>
+	<view-state id="errorPage" view="JSErrorPage" />
+	<global-transitions>
+		<transition on="backFromErrorPage" to="backFromError"/>
+		<transition on-exception="java.lang.Throwable" to="errorPage"/>
+	</global-transitions>
+	<!-- end exceptions handling -->
+
+	<import resource="listOfValuesBeans.xml"/>
+
+</flow>

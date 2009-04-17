@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+						http://www.springframework.org/schema/webflow/spring-webflow-1.0.xsd">
+						
+	<start-state idref="editUser"/>
+
+	<action-state id="editUser">
+		<action bean="userAction"/>
+		<transition on="success" to="editUserView"/>
+	</action-state>
+
+	<view-state id="editUserView" view="userFlow/editUser">
+		<entry-actions>
+			<set attribute="prevForm" value="${'editUserView'}" scope="flow"/>
+		</entry-actions>
+		<transition on="save" to="saveUser">
+			<action bean="userAction" method="bindAndValidate"/>
+				<!--<attribute name="validatorMethod" value="validate"/>-->
+			<!--</action>-->
+		</transition>
+		<transition on="cancel" to="done"/>
+		<transition on="add" to="addRoles">
+			<action bean="userAction" method="bind"/>
+		</transition>
+		<transition on="remove" to="removeRoles">
+			<action bean="userAction" method="bind"/>
+		</transition>
+	</view-state>
+
+	<action-state id="addRoles">
+		<action bean="userAction"/>
+		<transition on="success" to="editUserView"/>
+	</action-state>
+
+	<action-state id="removeRoles">
+		<action bean="userAction"/>
+		<transition on="success" to="editUserView"/>
+	</action-state>
+
+	<action-state id="saveUser">
+		<action bean="userAction"/>
+		<transition on="success" to="done"/>
+	</action-state>
+
+	<end-state id="done"/>
+
+	<!-- exceptions handling -->
+	<decision-state id="backFromError">
+		<if test="${not (flowScope.prevForm == null or flowScope.prevForm == '')}" then="${flowScope.prevForm}" else="done"/>
+	</decision-state>
+	<view-state id="errorPage" view="JSErrorPage" />
+	<global-transitions>
+		<transition on="backFromErrorPage" to="backFromError"/>
+		<transition on-exception="java.lang.Throwable" to="errorPage"/>
+	</global-transitions>
+	<!-- end exceptions handling -->
+
+	<import resource="userBeans.xml"/>
+
+</flow>

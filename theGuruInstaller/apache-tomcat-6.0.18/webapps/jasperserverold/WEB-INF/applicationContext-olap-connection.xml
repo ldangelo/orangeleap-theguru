@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+  <bean id="olapConnectionService" 
+	class="com.jaspersoft.jasperserver.api.metadata.olap.service.impl.OlapConnectionServiceImpl">
+    <property name="repository" ref="repositoryService"/>
+    <property name="encodingProvider">
+      <ref bean="encodingProvider"/>
+    </property>
+  </bean>
+
+  <!-- add in SecureMondrianConnection to the resources configuration -->
+
+  <bean class="com.jaspersoft.jasperserver.api.common.util.spring.BeanPropertyListAppender" lazy-init="false">
+    <property name="order" value="10"/>
+    <property name="beanName" value="sessionFactory"/>
+    <property name="propertyName" value="mappingResources"/>
+    <property name="appended">
+      <list>
+	<value>/com/jaspersoft/jasperserver/api/metadata/common/service/impl/hibernate/persistent/RepoMondrianConnection.hbm.xml</value>
+	<value>/com/jaspersoft/jasperserver/api/metadata/common/service/impl/hibernate/persistent/RepoMondrianXMLADefinition.hbm.xml</value>
+      </list>
+    </property>
+  </bean>
+
+  <bean class="com.jaspersoft.jasperserver.api.common.util.spring.BeanPropertyMapAppender" lazy-init="false">
+    <property name="order" value="10"/>
+    <property name="beanName" value="mappingResourceFactory"/>
+    <property name="propertyName" value="implementationClassMappings"/>
+    <property name="appended">
+      <map>
+	<entry key="com.jaspersoft.jasperserver.api.metadata.olap.domain.MondrianConnection"
+	       value="com.jaspersoft.jasperserver.api.metadata.olap.domain.client.MondrianConnectionImpl"/>
+      </map>
+    </property>
+  </bean>
+
+  <bean class="com.jaspersoft.jasperserver.api.common.util.spring.BeanPropertyMapAppender" lazy-init="false">
+    <property name="order" value="10"/>
+    <property name="beanName" value="persistentMappings"/>
+    <property name="propertyName" value="implementationClassMappings"/>
+    <property name="appended">
+      <map>
+	<entry key="com.jaspersoft.jasperserver.api.metadata.olap.domain.MondrianConnection"
+	       value="com.jaspersoft.jasperserver.api.metadata.olap.domain.impl.hibernate.RepoMondrianConnection"/>
+	<entry key="com.jaspersoft.jasperserver.api.metadata.olap.domain.MondrianXMLADefinition"
+	       value="com.jaspersoft.jasperserver.api.metadata.olap.domain.impl.hibernate.RepoMondrianXMLADefinition"/> 
+      </map>
+    </property>
+  </bean>
+
+</beans>

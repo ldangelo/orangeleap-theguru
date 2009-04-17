@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+						http://www.springframework.org/schema/webflow/spring-webflow-1.0.xsd">
+	
+	<input-mapper>
+		<input-attribute name="reportUnit"/>
+		<input-attribute name="inhibitRequestParsing"/>
+		<input-attribute name="reportDepth"/>
+	</input-mapper>
+						
+	<start-state idref="checkForParams"/>
+	
+	<action-state id="checkForParams">
+		<action bean="viewReportAction"/>
+		<transition on="yes" to="showInputControls"/>
+		<transition on="no" to="verifyData">
+			<attribute name="requestParsed" value="true" type="java.lang.Boolean"/>
+		</transition>
+	</action-state>
+	
+	<decision-state id="showInputControls">
+		<if test="${flowScope.reportControlsLayout == 2 or not (flowScope.reportOutput == null or flowScope.reportOutput == '' or flowScope.reportOutput == 'html')}" then="fillParams"/>
+		<if test="${flowScope.reportControlsLayout == 1}" then="popupInputControlsDialog"/>
+		<if test="${flowScope.reportControlsLayout == 3}" then="showTopControls"/>
+	</decision-state>
+
+	<action-state id="popupInputControlsDialog">
+		<set attribute="popupInputControlsDialog" value="true" scope="request"/>
+		<transition to="viewReport"/>
+	</action-state>
+
+	<action-state id="showTopControls">
+		<set attribute="showOnlyTopControls" value="true" scope="request"/>
+		<transition to="viewReport"/>
+	</action-state>
+
+	<view-state id="fillParams" view="FillParams">
+		<entry-actions>
+			<set attribute="prevForm" value="${'fillParams'}" scope="flow"/>
+		</entry-actions>
+		<transition on="submit" to="verifyData">
+			<attribute name="requestParsed" value="false" type="java.lang.Boolean"/>
+		</transition>
+		<transition on="cancel" to="cancelParamsPage"/>
+		<transition on="back" to="done"/>
+		<transition on="resetToDefaults" to="resetParamsToDefaults"/>
+	</view-state>
+
+	<action-state id="resetParamsToDefaults">
+		<action bean="viewReportAction" method="resetInputsToDefaults"/>
+		<transition to="fillParams"/>
+	</action-state>
+
+	<decision-state id="cancelParamsPage">
+		<if test="${flowScope.jasperPrintName == null}"
+			then="cancel"
+			else="cancelParams"
+		/>
+	</decision-state>
+	
+	<action-state id="cancelParams">
+		<action bean="viewReportAction" method="revertToSavedInputs"/>
+		<transition to="viewReport"/>
+	</action-state>
+
+	<action-state id="verifyData">
+		<action bean="viewReportAction"/>
+		<transition on="success" to="reportOutput"/>
+		<transition on="error" to="fillParams"/>
+	</action-state>
+
+	<decision-state id="reportOutput">
+		<if test="${flowScope.reportOutput == null or flowScope.reportOutput == '' or flowScope.reportOutput == 'html'}" then="viewReport" else="exportOptions"/>
+	</decision-state>
+
+	<view-state id="viewReport" view="ViewReport">
+		<entry-actions>
+			<set attribute="prevForm" value="${'viewReport'}" scope="flow"/>
+			<action bean="viewReportAction" method="prepareReportView"/>
+		</entry-actions>
+		<transition on="back" to="fillParams"/>
+		<transition on="backFromErrorPage" to="viewReport"/>
+		<transition on="backToListOfReports" to="backToListOfReports"/>
+	</view-state>
+
+	<action-state id="resetParamsDialogToDefaults">
+		<action bean="viewReportAction" method="resetInputsToDefaults"/>
+		<transition to="inputControlsView"/>
+	</action-state>
+
+	<action-state id="setInputValues">
+		<action bean="viewReportAction"/>
+		<transition on="success" to="inputControlsView"/>
+	</action-state>
+
+	<action-state id="revertToSavedInputs">
+		<action bean="viewReportAction"/>
+		<transition on="success" to="inputControlsView"/>
+	</action-state>
+
+	<action-state id="toggleTopControls">
+		<action bean="viewReportAction"/>
+		<transition on="success" to="inputControlsView"/>
+	</action-state>
+
+	<decision-state id="inputControlsView">
+		<if test="${flowScope.reportControlsLayout == 3}" then="topInputControls" else="inputControlsDialog"/>
+	</decision-state>
+
+	<view-state id="inputControlsDialog" view="ViewReportControlsDialog">
+		<transition on="refreshReport" to="verifyData">
+			<attribute name="requestParsed" value="true" type="java.lang.Boolean"/>
+		</transition>
+	</view-state>
+
+	<view-state id="topInputControls" view="${flowScope.controlsDisplayView}">
+		<transition on="refreshReport" to="verifyData">
+			<attribute name="requestParsed" value="true" type="java.lang.Boolean"/>
+		</transition>
+	</view-state>
+
+	<action-state id="navigate">
+		<action bean="viewReportAction"/>
+		<transition on="success" to="viewReport"/>
+	</action-state>
+	
+	<action-state id="exportOptions">
+		<action bean="reportExporter" method="exportOptions"/>
+		<transition on="success" to="${flowScope.exportOption}"/>
+	</action-state>
+
+	<view-state id="exportParams" view="exporters/${flowScope.parameterDialogName}">
+		<entry-actions>
+			<set attribute="prevForm" value="${'exportParams'}" scope="flow"/>
+		</entry-actions>
+		<transition on="submit" to="export">
+			<action bean="reportExporter" method="bindAndValidate"/>
+		</transition>
+	</view-state>
+	
+	<view-state id="export">
+		<entry-actions>
+			<set attribute="prevForm" value="${'viewReport'}" scope="flow"/>
+			<action bean="reportExporter" method="export"/>
+		</entry-actions>
+		<transition on="success" to="done"/>
+	</view-state>
+
+	<subflow-state id="drillReport" flow="viewReportFlow">
+		<attribute-mapper>
+			<input-mapper>
+				<mapping source="requestParameters.reportUnit" target="reportUnit"/>
+				<mapping source="${false}" target="inhibitRequestParsing"/>
+				<mapping source="${flowScope.reportDepth + 1}" target="reportDepth"/>
+			</input-mapper>
+		</attribute-mapper>
+		<transition on="done" to="viewReport"/>
+		<transition on="cancel" to="viewReport"/>
+		<transition on="backToListOfReports" to="backToListOfReports"/>
+	</subflow-state>
+
+	<end-state id="done" view="flowRedirect:repositoryExplorerFlow?showFolder=${flowScope.ParentFolderUri}"/>
+	<end-state id="cancel"/>
+	<end-state id="backToListOfReports" view="flowRedirect:repositoryExplorerFlow?showFolder=${flowScope.ParentFolderUri}" />
+
+	<!-- exceptions handling -->
+	<decision-state id="backFromError">
+		<if test="${not (flowScope.prevForm == null or flowScope.prevForm == '')}" then="${flowScope.prevForm}" else="done"/>
+	</decision-state>
+	<view-state id="errorPage" view="JSErrorPage" />
+	<global-transitions>
+		<!-- global view transitions -->
+		<transition on="setInputValues" to="setInputValues"/>
+		<transition on="resetToDefaults" to="resetParamsDialogToDefaults"/>
+		<transition on="toggleTopControls" to="toggleTopControls"/>
+		<transition on="navigate" to="navigate"/>
+		<transition on="close" to="done"/>
+		<transition on="export" to="exportOptions"/>
+		<transition on="drillReport" to="drillReport"/>
+		<transition on="revertToSaved" to="revertToSavedInputs"/>
+		
+		<transition on="backFromErrorPage" to="backFromError"/>
+		<transition on-exception="java.lang.Throwable" to="errorPage"/>
+	</global-transitions>
+	<!-- end exceptions handling -->
+
+	<end-actions>
+		<action bean="viewReportAction" method="cleanSession"/>
+	</end-actions>
+
+	<import resource="viewReportBeans.xml"/>
+
+</flow>

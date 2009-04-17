@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+
+
+<hibernate-mapping>
+
+  <class table="tblUser" name="com.mpower.domain.MPXUser">
+
+    <id type="long" column="userId" name="userId">
+
+      <generator class="native"/>
+
+    </id>
+
+    <property name="userName" not-null="true" length="100" type="string" column="userName" unique="true"/>
+
+    <property name="fullName" not-null="true" length="100" type="string" column="fullName"/>
+
+    <property name="Email" length="100" type="string" column="Email"/>
+
+    <set table="tblMPXJasperUserRole" lazy="false" inverse="false" name="roles">
+
+      <key column="userId"/>
+
+      <many-to-many column="roleId" class="com.mpower.domain.MPXJasperRole"/>
+
+    </set>
+
+    <property name="password" length="100" type="string" column="password"/>
+	<property name="status" type="integer" column="status"/>
+	<property name="description" type="string" length="100" column="description"/>
+	<property name="BatchNumber" type="long" column="BatchNumber"/>
+	<property name="signature" type="string" length="100" column="signature"/>
+	<property name="searchLimit" type="integer" column="searchLimit"/>
+	<property name="lastBatchId" type="long" column="lastBatchId"/>
+	<property name="DefaultView" type="string" length="100" column="DefaultView"/>
+	<property name="customRestrictions" type="string" length="100" column="customRestrictions"/>
+	<property name="aggRestrictions" type="string" length="100" column="aggRestrictions"/>
+	<property name="securityTime" type="timestamp" column="securityTime"/>
+	<property name="DefaultCountry" type="string" length="50" column="DefaultCountry"/>
+	<property name="BatchSecurity" type="string" length="1" column="BatchSecurity"/>
+	<property name="lastAuthenticationTime" type="timestamp" column="lastAuthenticationTime"/>
+<!-- 
+    <property name="externallyDefined" type="boolean" column="externallyDefined"/>
+
+    <property name="enabled" type="boolean" column="enabled"/>
+
+    <property name="previousPasswordChangeTime" type="timestamp" column="previousPasswordChangeTime"/>
+ -->
+  </class>
+
+</hibernate-mapping>
+

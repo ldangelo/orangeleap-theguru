@@ -1,0 +1,63 @@
+.brdBtmRt {
+	BORDER-RIGHT: #ffffff 1px solid; BORDER-BOTTOM: #ffffff 1px solid
+}
+.textBox1 {
+	FONT-SIZE: 9px; COLOR: #666666; LINE-HEIGHT: 14px; FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif
+}
+.lightGrayBg {
+	BORDER-RIGHT: #ffffff 1px solid; PADDING-RIGHT: 10px; PADDING-LEFT: 10px; PADDING-BOTTOM: 10px; MARGIN: 10px; PADDING-TOP: 10px; BORDER-BOTTOM: #ffffff 1px solid; BACKGROUND-COLOR: #f9f8f2
+}
+.midGrayBg {
+	BORDER-RIGHT: #ffffff 1px solid; PADDING-RIGHT: 10px; PADDING-LEFT: 10px; PADDING-BOTTOM: 10px; MARGIN: 10px; PADDING-TOP: 10px; BORDER-BOTTOM: #ffffff 1px solid; BACKGROUND-COLOR: #f6f4ec
+}
+.textBox2 {
+	PADDING-RIGHT: 0px; PADDING-LEFT: 0px; FONT-SIZE: 9px; PADDING-BOTTOM: 5px; MARGIN: 0px 0px 2px; COLOR: #666666; LINE-HEIGHT: 11px; PADDING-TOP: 0px; FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif
+}
+.bullets1 {
+	PADDING-RIGHT: 3px; PADDING-LEFT: 1px; FONT-SIZE: 9px; PADDING-BOTTOM: 5px; COLOR: #666666; LINE-HEIGHT: 11px; PADDING-TOP: 0px; FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif
+}
+.blueLink {
+	PADDING-RIGHT: 0px; PADDING-LEFT: 0px; FONT-WEIGHT: bold; FONT-SIZE: 9px; PADDING-BOTTOM: 0px; MARGIN: 2px 0px 0px; COLOR: #003399; PADDING-TOP: 2px; FONT-STYLE: normal; FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif; TEXT-DECORATION: none
+}
+.blueLink:hover {
+	FONT-WEIGHT: bold; FONT-SIZE: 9px; COLOR: #999900; FONT-STYLE: normal; FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif; TEXT-DECORATION: none
+}
+.darkGrayBg {
+	BORDER-RIGHT: #ffffff 1px solid; PADDING-RIGHT: 10px; PADDING-LEFT: 10px; PADDING-BOTTOM: 10px; MARGIN: 10px; PADDING-TOP: 10px; BORDER-BOTTOM: #ffffff 1px solid; BACKGROUND-COLOR: #f3f1e6
+}
+.offerText {
+	FONT-WEIGHT: bold; FONT-SIZE: 13px; COLOR: #000033; FONT-STYLE: italic; FONT-FAMILY: Arial, Helvetica, sans-serif; TEXT-DECORATION: none
+}
+.offerText:hover {
+	FONT-WEIGHT: bold; FONT-SIZE: 13px; COLOR: #000033; FONT-STYLE: italic; FONT-FAMILY: Arial, Helvetica, sans-serif; TEXT-DECORATION: none
+}
+.offerGrayBg {
+	BORDER-RIGHT: #ffffff 1px solid; PADDING-RIGHT: 5px; PADDING-LEFT: 5px; PADDING-BOTTOM: 13px; MARGIN: 10px; PADDING-TOP: 13px; BORDER-BOTTOM: #ffffff 1px solid; BACKGROUND-COLOR: #c2c4b6
+}
+.offerGrayBg {
+	BORDER-RIGHT: #ffffff 1px solid; PADDING-RIGHT: 0px; PADDING-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-TOP: 0px; BORDER-BOTTOM: #ffffff 1px solid; BACKGROUND-COLOR: #c2c4b6
+}
+.blueTableHeaders {
+	BORDER-RIGHT: #ffffff 1px solid; PADDING-RIGHT: 1px; PADDING-LEFT: 10px; FONT-SIZE: 9px; PADDING-BOTTOM: 4px; COLOR: #ffffff; PADDING-TOP: 3px; BORDER-BOTTOM: #ffffff 1px solid; FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif; BACKGROUND-COLOR: #333366
+}
+.newsText {
+	PADDING-RIGHT: 1px; PADDING-LEFT: 1px; FONT-SIZE: 9px; PADDING-BOTTOM: 8px; COLOR: #666666; LINE-HEIGHT: 11px; PADDING-TOP: 0px; FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif; TEXT-DECORATION: none
+}
+.newsText:hover {
+	PADDING-RIGHT: 1px; PADDING-LEFT: 1px; FONT-SIZE: 9px; PADDING-BOTTOM: 8px; COLOR: #666666; LINE-HEIGHT: 11px; PADDING-TOP: 0px; FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif; TEXT-DECORATION: none
+}
+.topBlueStetch {
+	BORDER-RIGHT: #ffffff 1px solid; BORDER-BOTTOM: #ffffff 1px solid; BACKGROUND-COLOR: #6292b3
+}
+.midBlueStetch {
+	BORDER-RIGHT: #ffffff 1px solid; BORDER-BOTTOM: #ffffff 1px solid; BACKGROUND-COLOR: #4096d6
+}
+.btmBlueStetch {
+	BORDER-RIGHT: #ffffff 1px solid; BORDER-BOTTOM: #ffffff 1px solid; BACKGROUND-COLOR: #000033
+}
+.topGrayStretch {
+	BACKGROUND-COLOR: #f3f1e6
+}
+.error {
+	COLOR: RED;
+}

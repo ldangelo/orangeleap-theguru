@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+						http://www.springframework.org/schema/webflow/spring-webflow-1.0.xsd">
+
+	<start-state idref="initAction"/>
+
+	<action-state id="initAction">
+		<action bean="olapDataSourceAction"/>
+		<transition on="success" to="decideMode"/>
+	</action-state>
+
+	<decision-state id="decideMode">
+		<if test="${flowScope.dataResource.aloneNewMode}"
+		then="chooseType" />
+		<if test="${flowScope.dataResource.aloneEditMode}"
+		then="decideType"
+		else="chooseSource"/>
+	</decision-state>
+
+	<view-state id="chooseSource" view="olapDataSourceFlow/chooseSource">
+		<entry-actions>
+			<set attribute="prevForm" value="${'chooseSource'}" scope="flow"/>
+		</entry-actions>
+		<transition on="Next" to="decideSource">
+			<action bean="olapDataSourceAction" method="bindAndValidate">
+				<attribute name="validatorMethod" value="validateSource"/>
+			</action>
+		</transition>
+		<transition on="Save" to="decideSource">
+			<action bean="olapDataSourceAction" method="bindAndValidate">
+				<attribute name="validatorMethod" value="validateSource"/>
+			</action>
+		</transition>
+		<transition on="Back" to="back"/>
+		<transition on="Cancel" to="cancel"/>
+	</view-state>
+
+	<decision-state id="decideSource">
+		<if test="${flowScope.dataResource.source==flowScope.constants.FieldChoiceLocal}"
+		then="chooseType"
+		else="saveLookup"/>
+	</decision-state>
+
+	<view-state id="chooseType" view="olapDataSourceFlow/chooseType">
+		<entry-actions>
+			<set attribute="prevForm" value="${'chooseType'}" scope="flow"/>
+		</entry-actions>
+		<transition on="Next" to="handleTypeSelection">
+			<action bean="olapDataSourceAction" method="bindAndValidate">
+				<attribute name="validatorMethod" value="chooseType"/> 
+			</action>
+		</transition>
+		<transition on="Back" to="decideBackFromChooseType"/>
+		<transition on="Cancel" to="cancel"/>
+	</view-state>
+
+	<decision-state id="decideBackFromChooseType">
+		<if test="${flowScope.dataResource.standAloneMode}"
+		then="back"
+		else="chooseSource"/>
+	</decision-state>
+
+	<action-state id="handleTypeSelection">
+		<action bean="olapDataSourceAction"/>
+		<transition on="success" to="decideType"/>
+	</action-state>
+	
+	<decision-state id="decideType">
+		<if test="${flowScope.dataResource.type==flowScope.constants.JNDIDatasourceType}"
+		then="jndiPropsForm"
+		else="jdbcPropsForm"/>
+	</decision-state>
+
+	<view-state id="jndiPropsForm" view="olapDataSourceFlow/jndiPropsForm">
+		<entry-actions>
+			<set attribute="prevForm" value="${'jndiPropsForm'}" scope="flow"/>
+		</entry-actions>
+		<transition on="Next" to="finish">
+			<action bean="olapDataSourceAction" method="bindAndValidate">
+				<attribute name="validatorMethod" value="jndiPropsForm"/>
+			</action>
+		</transition>
+		<transition on="Save" to="saveDatasource">
+			<action bean="olapDataSourceAction" method="bindAndValidate">
+				<attribute name="validatorMethod" value="jndiPropsForm"/> 
+			</action>
+		</transition>
+		<transition on="Back" to="chooseType"/>
+		<transition on="Cancel" to="cancel"/>
+	</view-state>
+
+	<view-state id="jdbcPropsForm" view="olapDataSourceFlow/jdbcPropsForm">
+		<entry-actions>
+			<set attribute="prevForm" value="${'jdbcPropsForm'}" scope="flow"/>
+		</entry-actions>
+		<transition on="Next" to="finish">
+			<action bean="olapDataSourceAction" method="bindAndValidate">
+				<attribute name="validatorMethod" value="jdbcPropsForm"/> 
+			</action>
+		</transition>
+		<transition on="Back" to="chooseType"/>
+		<transition on="Cancel" to="cancel"/>
+		<transition on="Save" to="saveDatasource">
+			<action bean="olapDataSourceAction" method="bindAndValidate">
+				<attribute name="validatorMethod" value="jdbcPropsForm"/> 
+			</action>
+		</transition>
+	</view-state>
+			
+	<action-state id="saveDatasource">
+		<action bean="olapDataSourceAction"/>
+		<transition on="no" to="decideType"/>
+		<transition on="success" to="finish"/>
+	</action-state>
+	
+	<action-state id="saveLookup">
+		<action bean="olapDataSourceAction"/>
+		<transition on="success" to="finish"/>
+	</action-state>
+	
+	<end-state id="finish">
+		<output-mapper>
+			<output-attribute name="dataResource"/>
+		</output-mapper>
+   	</end-state>
+   	
+   	<end-state id="back">
+		<output-mapper>
+			<output-attribute name="dataResource"/>
+		</output-mapper>
+   	</end-state>
+   	
+   	<end-state id="cancel">
+		<output-mapper>
+			<output-attribute name="dataResource"/>
+		</output-mapper>
+   	</end-state>
+   	
+   	<end-state id="displayError">
+		<output-mapper>
+			<output-attribute name="dataResource"/>
+		</output-mapper>
+   	</end-state>
+
+	<!-- exceptions handling -->
+	<decision-state id="backFromError">
+		<if test="${not (flowScope.prevForm == null or flowScope.prevForm == '')}" then="${flowScope.prevForm}" else="finish"/>
+	</decision-state>
+	<view-state id="errorPage" view="JSErrorPage" />
+	<global-transitions>
+		<transition on="backFromErrorPage" to="backFromError"/>
+		<transition on-exception="java.lang.Throwable" to="errorPage"/>
+	</global-transitions>
+	<!-- end exceptions handling -->
+
+	<import resource="olapDataSourceBeans.xml"/>
+
+</flow>

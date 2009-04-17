@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+	<bean id="userAction" class="com.jaspersoft.jasperserver.war.action.UserAction">
+		<property name="userService">
+			<ref bean="userAuthorityService"/>
+		</property>
+		<property name="validator">
+			<ref bean="userValidator"/>
+		</property>
+		<property name="configuration">
+			<ref bean="configurationBean"/>
+		</property>
+	</bean>
+
+	<bean id="userValidator" class="com.jaspersoft.jasperserver.war.validation.CRUDUserValidator">
+		<property name="userService">
+			<ref bean="userAuthorityService"/>
+		</property>
+	</bean>
+	
+</beans>

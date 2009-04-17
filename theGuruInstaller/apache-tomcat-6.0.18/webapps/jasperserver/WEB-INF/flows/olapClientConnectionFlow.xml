@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+						http://www.springframework.org/schema/webflow/spring-webflow-1.0.xsd">
+
+	<input-mapper>
+		<input-attribute name="connectionWrapper"/>
+		<input-attribute name="currentOlapClientConnection"/>
+		<input-attribute name="parentFolder"/>
+		<input-attribute name="isEdit"/>
+	</input-mapper>
+
+	<start-state idref="initAction"/>
+
+	<action-state id="initAction">
+		<action bean="olapClientConnectionAction"/>
+		<transition on="success" to="testMode"/>
+	</action-state>
+
+	<decision-state id="testMode">
+		<if test="${flowScope.connectionWrapper.aloneNewMode}" then="chooseConnectionType"/>
+		<if test="${flowScope.connectionWrapper.subNewMode}" then="chooseConnectionType"
+		else="determineConnectionType"/>
+	</decision-state>
+
+	<!-- add new connection -->
+	<view-state id="chooseConnectionType" view="olapUnitFlow/chooseConnectionType">
+		<entry-actions>
+			<set attribute="prevForm" value="${'chooseConnectionType'}" scope="flow"/>
+		</entry-actions>
+		<transition on="Next" to="handleTypeSelection">
+			<action bean="olapClientConnectionAction" method="bindAndValidate">
+				<attribute name="validatorMethod" value="validateConnectionType"/> 
+			</action>
+		</transition>
+		<transition on="Back" to="back"/>
+		<transition on="Cancel" to="cancel"/>
+	</view-state>
+
+	<action-state id="handleTypeSelection">
+		<action bean="olapClientConnectionAction"/>
+		<transition on="success" to="decideType"/>
+		<transition on="error" to="displayError"/>
+	</action-state>
+
+	<decision-state id="decideType">
+		<if test="${flowScope.connectionWrapper.type==flowScope.constants.OlapMondrianConnectionType}"
+		then="createMondrianConnectionTest"/>
+		<if test="${flowScope.connectionWrapper.type==flowScope.constants.OlapXmlaConnectionType}"
+		then="createXmlaConnectionTest"
+		else="displayError"/>
+	</decision-state>
+
+	<!-- edit connection -->
+	<decision-state id="determineConnectionType">
+		<if test="${flowScope.connectionWrapper.type==flowScope.constants.OlapMondrianConnectionType}" 
+			then="createMondrianConnectionTest"/>
+		<if test="${flowScope.connectionWrapper.type==flowScope.constants.OlapXmlaConnectionType}" 
+			then="createXmlaConnectionTest"
+		else="displayError"/>
+	</decision-state>
+
+	<!-- mondrian connection -->
+	<decision-state id="createMondrianConnectionTest">
+		<if test="${flowScope.connectionWrapper.subflowMode}"
+			then="chooseMondrianSource"
+			else="createMondrianConnection"/>
+	</decision-state>
+
+	<!-- reuse existing connection -->
+	<view-state id="chooseMondrianSource" view="olapUnitFlow/chooseConnectionSource">
+		<entry-actions>
+			<set attribute="prevForm" value="${'chooseMondrianSource'}" scope="flow"/>
+		</entry-actions>
+		<transition on="Next" to="decideMondrianSource">
+			<action bean="olapClientConnectionAction" method="bindAndValidate">
+				<attribute name="validatorMethod" value="validateConnectionSource"/>
+			</action>
+		</transition>
+		<transition on="Back" to="backFromChooseConnectionSource"/>
+		<transition on="Cancel" to="cancel"/>
+	</view-state>
+
+	<decision-state id="decideMondrianSource">
+		<if test="${flowScope.connectionWrapper.source==flowScope.constants.FieldChoiceLocal}"
+		then="createMondrianConnection"
+		else="saveMondrianConnection"/>
+	</decision-state>
+
+	<!-- create new mondrian connection -->
+	<view-state id="createMondrianConnection" view="olapUnitFlow/connectionNamingForm">
+		<entry-actions>
+			<set attribute="prevForm" value="${'createMondrianConnection'}" scope="flow"/>
+		</entry-actions>
+		<transition on="Next" to="locateSchemaResource">
+			<action bean="olapClientConnectionAction" method="bindAndValidate">
+				<attribute name="validatorMethod" value="validateNameLabelDesc"/> 
+			</action>
+		</transition>
+		<transition on="Cancel" to="cancel"/>					
+		<transition on="Back" to="chooseConnectionTypeTest"/>
+	</view-state>
+
+	<decision-state id="chooseConnectionTypeTest">
+		<if test="${flowScope.connectionWrapper.subflowMode}" 
+		then="back"
+		else="chooseConnectionType"/>
+	</decision-state>
+
+	<!-- xmla connection -->
+	<decision-state id="createXmlaConnectionTest">
+		<if test="${flowScope.connectionWrapper.subflowMode}" 
+			then="chooseXmlaSource"
+			else="createXmlaConnection"/>
+	</decision-state>
+
+	<!-- reuse existing connection -->
+	<view-state id="chooseXmlaSource" view="olapUnitFlow/chooseConnectionSource">
+		<entry-actions>
+			<set attribute="prevForm" value="${'chooseXmlaSource'}" scope="flow"/>
+		</entry-actions>
+		<transition on="Next" to="decideXmlaSource">
+			<action bean="olapClientConnectionAction" method="bindAndValidate">
+				<attribute name="validatorMethod" value="validateConnectionSource"/>
+			</action>
+		</transition>
+		<transition on="Back" to="backFromChooseConnectionSource"/>
+		<transition on="Cancel" to="cancel"/>
+	</view-state>
+
+	<decision-state id="backFromChooseConnectionSource">
+		<if test="${flowScope.connectionWrapper.aloneNewMode}" then="chooseConnectionType"/>
+		<if test="${flowScope.connectionWrapper.subNewMode}" then="chooseConnectionType"
+			else="back"/>
+	</decision-state>
+
+	<decision-state id="decideXmlaSource">
+		<if test="${flowScope.connectionWrapper.source==flowScope.constants.FieldChoiceLocal}"
+		then="createXmlaConnection"
+		else="saveXmlaConnection"/>
+	</decision-state>
+
+	<!-- create new xmla connection -->
+	<view-state id="createXmlaConnection" view="olapUnitFlow/xmlaConnectionForm">
+		<entry-actions>
+			<set attribute="prevForm" value="${'createXmlaConnection'}" scope="flow"/>
+		</entry-actions>
+		<transition on="Next" to="validateOlapConnectionTest">
+			<action bean="olapClientConnectionAction" method="bindAndValidate">
+				<attribute name="validatorMethod" value="validateNameLabelDescAndXmlaSource"/> 
+			</action>
+		</transition>
+		<transition on="Cancel" to="cancel"/>					
+		<transition on="Back" to="backFromCreateXmlaConnection"/>
+	</view-state>
+
+	<decision-state id="backFromCreateXmlaConnection">
+		<if test="${flowScope.connectionWrapper.aloneNewMode}" 
+			then="chooseConnectionType"/>
+		<if test="${flowScope.connectionWrapper.subNewMode}" 
+			then="chooseConnectionType" 
+			else="back"/>
+	</decision-state>
+
+	<!-- mondrian schema resource -->
+	<action-state id="locateSchemaResource">
+		<action bean="olapClientConnectionAction"/>
+		<transition on="success" to="olapSchemaResourceSubFlow"/>
+	</action-state>
+
+	<subflow-state id="olapSchemaResourceSubFlow" flow="fileResourceFlow">
+		<attribute-mapper>
+			<input-mapper>
+				<mapping source="flowScope.fileResource" target="fileResource"/>
+			</input-mapper>
+			<output-mapper>
+				<output-attribute name="fileResource"/>
+			</output-mapper>
+		</attribute-mapper>
+		<transition on="finish" to="saveSchemaResource"/>
+		<transition on="cancel" to="cancel"/>
+		<transition on="back" to="createMondrianConnection"/>
+		<transition on="displayError" to="displayError"/>
+	</subflow-state>
+
+	<action-state id="saveSchemaResource">
+		<action bean="olapClientConnectionAction"/>
+		<transition on="success" to="locateDataSource"/>
+		<transition on="error" to="displayError"/>
+	</action-state>
+
+	<!-- datasource -->
+	<action-state id="locateDataSource">
+		<action bean="olapClientConnectionAction"/>
+		<transition on="success" to="dataSourceSubFlow"/>
+		<transition on="error" to="displayError"/>
+	</action-state>
+	
+	<subflow-state id="dataSourceSubFlow" flow="reportDataSourceFlow">
+		<attribute-mapper>
+			<input-mapper>
+				<mapping source="flowScope.dataResource" target="dataResource"/>
+			</input-mapper>
+			<output-mapper>
+				<output-attribute name="dataResource"/>
+			</output-mapper>
+		</attribute-mapper>
+		<transition on="done" to="saveDatasource"/>
+		<transition on="cancel" to="cancel"/>
+		<transition on="back" to="locateSchemaResource"/>
+		<transition on="displayError" to="displayError"/>
+	</subflow-state>
+
+	<action-state id="saveDatasource">
+		<action bean="olapClientConnectionAction"/>
+		<transition on="success" to="validateOlapConnectionTest"/>
+		<transition on="no" to="dataSourceSubFlow"/>
+		<transition on="error" to="displayError"/>
+	</action-state>
+
+	<decision-state id="validateOlapConnectionTest">
+		<if test="${flowScope.connectionWrapper.aloneNewMode}" then="validateOlapConnection"/>
+		<if test="${flowScope.connectionWrapper.aloneEditMode}" then="validateOlapConnection"
+		else="saveOlapConnection"/>
+	</decision-state>
+
+	<!-- validate connection -->
+	<action-state id="validateOlapConnection">
+		<action bean="olapClientConnectionAction"/>
+		<transition on="success" to="connectionValidationConfirmation"/>
+		<transition on="error" to="displayError"/>
+	</action-state>
+
+	<view-state id="connectionValidationConfirmation" view="olapUnitFlow/connectionValidationConfirmation">
+		<entry-actions>
+			<set attribute="prevForm" value="${'connectionValidationConfirmation'}" scope="flow"/>
+		</entry-actions>
+		<transition on="Save" to="saveOlapConnection">
+			<action bean="olapClientConnectionAction" method="bindAndValidate"/>
+		</transition>
+		<transition on="Back" to="backFromConnectionValidationConfirmation"/>
+		<transition on="Cancel" to="cancel"/>
+	</view-state>
+
+	<!-- save connection -->
+	<decision-state id="saveOlapConnection">
+		<if test="${flowScope.connectionWrapper.type==flowScope.constants.OlapMondrianConnectionType}"
+		then="saveMondrianConnection"/>
+		<if test="${flowScope.connectionWrapper.type==flowScope.constants.OlapXmlaConnectionType}"
+		then="saveXmlaConnection"
+		else="displayError"/>
+	</decision-state>
+
+	<action-state id="saveMondrianConnection">
+		<action bean="olapClientConnectionAction"/>
+		<transition on="yes" to="backToRepositoryExplorer"/>
+		<transition on="success" to="saved"/>
+		<transition on="error" to="displayError"/>
+	</action-state>
+
+	<action-state id="saveXmlaConnection">
+		<action bean="olapClientConnectionAction"/>
+		<transition on="yes" to="backToRepositoryExplorer"/>
+		<transition on="success" to="saved"/>
+		<transition on="error" to="displayError"/>
+	</action-state>
+
+	<decision-state id="backFromConnectionValidationConfirmation">
+		<if test="${flowScope.connectionWrapper.type==flowScope.constants.OlapMondrianConnectionType}" then="locateDataSource"/>
+		<if test="${flowScope.connectionWrapper.type==flowScope.constants.OlapXmlaConnectionType}" then="createXmlaConnection" else="displayError"/>
+	</decision-state>
+
+	<end-state id="displayError"/>
+
+	<end-state id="back"/>
+
+	<end-state id="cancel" view="flowRedirect:repositoryExplorerFlow?showFolder=${flowScope.ParentFolderUri}" />
+
+	<end-state id="saved">
+		<output-mapper>
+			<output-attribute name="connectionWrapper"/>
+		</output-mapper>
+   	</end-state>
+   	
+	<view-state id="backToRepositoryExplorer" view="flowRedirect:repositoryExplorerFlow?showFolder=${requestParameters.ParentFolderUri}"/>
+
+	<!-- exceptions handling -->
+	<decision-state id="backFromError">
+		<if test="${not (flowScope.prevForm == null or flowScope.prevForm == '')}" then="${flowScope.prevForm}" else="saved"/>
+	</decision-state>
+	<view-state id="errorPage" view="JSErrorPage" />
+	<global-transitions>
+		<transition on="backFromErrorPage" to="backFromError"/>
+		<transition on-exception="java.lang.Throwable" to="errorPage"/>
+	</global-transitions>
+	<!-- end exceptions handling -->
+
+	<import resource="olapClientConnectionBeans.xml"/>
+
+</flow>

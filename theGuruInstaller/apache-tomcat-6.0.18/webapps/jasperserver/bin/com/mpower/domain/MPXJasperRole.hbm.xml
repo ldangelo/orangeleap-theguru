@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+
+
+<hibernate-mapping>
+
+  <class table="tblMPXJasperRole" name="com.mpower.domain.MPXJasperRole">
+
+    <id type="long" column="roleId" name="roleId">
+
+      <generator class="native"/>
+
+    </id>
+
+    <property name="roleName" not-null="true" length="100" type="string" column="rolename" unique="true"/>
+
+    <property name="externallyDefined" type="boolean" column="externallyDefined"/>
+
+    <set table="tblMPXJasperUserRole" lazy="false" inverse="true" name="users">
+
+      <key column="roleId" />
+
+      <many-to-many column="userId" class="com.mpower.domain.MPXUser" />
+
+    </set>
+
+  </class>
+
+</hibernate-mapping>
+
