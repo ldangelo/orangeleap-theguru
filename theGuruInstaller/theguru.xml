@@ -59,9 +59,30 @@
                     <value>${databasename}</value>
                 </propertiesFileSet>
                 <propertiesFileSet>
+                    <explanation>Updating JDBC URL</explanation>
                     <file>${installdir}\apache-tomcat-6.0.18\lib\theguru.properties</file>
                     <key>userdetails.jdbc.url</key>
                     <value>jdbc:sqlserver://${servername};instanceName=${instancename};databaseName=${databasename};create=true</value>
+                    <ruleList>
+                        <compareTextLength>
+                            <length>0</length>
+                            <logic>does_not_equal</logic>
+                            <text>${instancename}</text>
+                        </compareTextLength>
+                    </ruleList>
+                </propertiesFileSet>
+                <propertiesFileSet>
+                    <explanation>Updating JDBC URL</explanation>
+                    <file>${installdir}\apache-tomcat-6.0.18\lib\theguru.properties</file>
+                    <key>userdetails.jdbc.url</key>
+                    <value>jdbc:sqlserver://${servername};databaseName=${databasename};create=true</value>
+                    <ruleList>
+                        <compareTextLength>
+                            <length>0</length>
+                            <logic>equals</logic>
+                            <text>${instancename}</text>
+                        </compareTextLength>
+                    </ruleList>
                 </propertiesFileSet>
                 <propertiesFileSet>
                     <file>${installdir}/apache-tomcat-6.0.18/lib/theguru.properties</file>
@@ -118,6 +139,32 @@
                     <key>jdbc.password</key>
                     <value>orangeleap</value>
                 </propertiesFileSet>
+                <propertiesFileSet>
+                    <explanation>Updating JDBC URL</explanation>
+                    <file>${installdir}\apache-tomcat-6.0.18\conf\catalina.properties</file>
+                    <key>userdetails.jdbc.url</key>
+                    <value>jdbc:sqlserver://${servername};instanceName=${instancename};databaseName=${databasename};create=true</value>
+                    <ruleList>
+                        <compareTextLength>
+                            <length>0</length>
+                            <logic>does_not_equal</logic>
+                            <text>${instancename}</text>
+                        </compareTextLength>
+                    </ruleList>
+                </propertiesFileSet>
+                <propertiesFileSet>
+                    <explanation>Updating JDBC URL</explanation>
+                    <file>${installdir}\apache-tomcat-6.0.18\conf\catalina.properties</file>
+                    <key>userdetails.jdbc.url</key>
+                    <value>jdbc:sqlserver://${servername};databaseName=${databasename};create=true</value>
+                    <ruleList>
+                        <compareTextLength>
+                            <length>0</length>
+                            <logic>equals</logic>
+                            <text>${instancename}</text>
+                        </compareTextLength>
+                    </ruleList>
+                </propertiesFileSet>
             </actionList>
         </actionGroup>
         <createWindowsService>
@@ -153,16 +200,51 @@
         <launchBrowser>
             <url>http://localhost:8080/jasperserver</url>
         </launchBrowser>
-		        <substitute>
+        <substitute>
             <abortOnError>0</abortOnError>
             <customErrorMessage>Error updating connection string.</customErrorMessage>
             <explanation>Update MPX Connection String</explanation>
             <files>${installdir}\Sql\20090415_02_UpdateMPXDataSource.sql</files>
             <type>exact</type>
+            <ruleList>
+                <compareTextLength>
+                    <length>0</length>
+                    <logic>does_not_equal</logic>
+                    <text>${instancename}</text>
+                </compareTextLength>
+            </ruleList>
             <substitutionList>
                 <substitution>
                     <pattern>MPXConnectionString</pattern>
                     <value>jdbc:sqlserver://${servername};instancename=${instancename};databaseName=${databasename}</value>
+                </substitution>
+                <substitution>
+                    <pattern>MPXUserName</pattern>
+                    <value>${sqlusername}</value>
+                </substitution>
+                <substitution>
+                    <pattern>MPXPassword</pattern>
+                    <value>${sqlpassword}</value>
+                </substitution>
+            </substitutionList>
+        </substitute>
+        <substitute>
+            <abortOnError>0</abortOnError>
+            <customErrorMessage>Error updating connection string.</customErrorMessage>
+            <explanation>Update MPX Connection String</explanation>
+            <files>${installdir}\Sql\20090415_02_UpdateMPXDataSource.sql</files>
+            <type>exact</type>
+            <ruleList>
+                <compareTextLength>
+                    <length>0</length>
+                    <logic>equals</logic>
+                    <text>${instancename}</text>
+                </compareTextLength>
+            </ruleList>
+            <substitutionList>
+                <substitution>
+                    <pattern>MPXConnectionString</pattern>
+                    <value>jdbc:sqlserver://${servername};databaseName=${databasename}</value>
                 </substitution>
                 <substitution>
                     <pattern>MPXUserName</pattern>
