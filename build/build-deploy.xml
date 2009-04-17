@@ -9,12 +9,9 @@
 
 	<property name="compile.lib.dir" value="${basedir}/lib/compile/bin"/>
 
+	
 	<target name="deploy" description="Deploy build output and populate database" >
 
-		<classpath>
-			<pathelement location="${compile.lib.dir}/mysql-connector-java-5.0.8-bin.jar"/>
-		</classpath>
-		
 		<!--
 		<exec dir="/opt/orangeleap" executable="su" spawn="true">
 			<arg line="- tomcat -c 'cd /opt/orangeleap;/opt/orangeleap/run.sh stop ${instance}'"/>
@@ -35,7 +32,7 @@
 		          userid="${mysql.db.user}"
 		          password="${mysql.db.pw}"
 		          encoding="UTF-8"
-		          classpath="${mysql.db.classpath}"
+		          classpath="${compile.lib.dir}/mysql-connector-java-5.0.8-bin.jar"
  	              delimiter=";"
 	     	>
 		    <transaction src="${basedir}/db/loadData.sql"/>
