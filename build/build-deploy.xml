@@ -7,10 +7,14 @@
 	
 	<property name="mysql.opts" value="autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=UTF8" />
 
+	<property name="compile.lib.dir" value="${basedir}/lib/compile/bin"/>
 
 	<target name="deploy" description="Deploy build output and populate database" >
 
-
+		<classpath>
+			<pathelement location="${compile.lib.dir}/mysql-connector-java-5.0.8-bin.jar"/>
+		</classpath>
+		
 		<exec dir="/opt/orangeleap" executable="su" spawn="true">
 			<arg line="- tomcat -c 'cd /opt/orangeleap;/opt/orangeleap/run.sh stop ${instance}'"/>
 	    </exec>
@@ -40,7 +44,7 @@
 		
 		<!-- Tomcat -->
 		
-		
+	<!--	
 		<delete dir="${target.tomcat.dir}/work" />
 		<mkdir dir="${target.tomcat.dir}/work" />
 		
@@ -69,7 +73,7 @@
 		<exec dir="/opt/orangeleap" executable="su" spawn="true">
 			<arg line="- tomcat -c 'cd /opt/orangeleap;/opt/orangeleap/run.sh start ${instance}'"/>
 	    </exec>
-		
+	-->	
 		
     </target> 
 	
