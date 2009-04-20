@@ -2,17 +2,50 @@
     <shortName>theguru</shortName>
     <fullName>The Guru</fullName>
     <version>1.0</version>
-    <installerFilename></installerFilename>
-    <leftImage>Images/guru_logo_tag_balls_Left2-1.png</leftImage>
-    <logoImage>Images/Installer_Top_Banner.PNG</logoImage>
-    <splashImage>Images/guru_logo_tag_balls2-1_Splash.PNG</splashImage>
-    <preInstallationActionList>
+    <leftImage>Images/TheGuru_Left.png</leftImage>
+    <logoImage>Images/TheGuru_Logo.png</logoImage>
+    <splashImage>Images/TheGuru_Splash.png</splashImage>
+    <readyToInstallActionList>
         <addEnvironmentVariable>
             <name>JAVA_HOME</name>
             <scope>system</scope>
             <value>C:\Program Files\Java\jdk1.6.0_10</value>
         </addEnvironmentVariable>
-    </preInstallationActionList>
+        <stopWindowsService>
+            <abortOnError>0</abortOnError>
+            <displayName>MySql</displayName>
+            <serviceName>MySql</serviceName>
+            <showMessageOnError>0</showMessageOnError>
+        </stopWindowsService>
+        <stopWindowsService>
+            <abortOnError>0</abortOnError>
+            <displayName>Apache Tomcat</displayName>
+            <serviceName>Tomcat6</serviceName>
+            <showMessageOnError>0</showMessageOnError>
+        </stopWindowsService>
+        <deleteWindowsService>
+            <abortOnError>0</abortOnError>
+            <displayName>MySql</displayName>
+            <serviceName>MySql</serviceName>
+            <ruleList>
+                <windowsServiceTest>
+                    <condition>exists</condition>
+                    <service>MySql</service>
+                </windowsServiceTest>
+            </ruleList>
+        </deleteWindowsService>
+        <deleteWindowsService>
+            <abortOnError>0</abortOnError>
+            <displayName>Apache Tomcat</displayName>
+            <serviceName>Tomcat6</serviceName>
+            <ruleList>
+                <windowsServiceTest>
+                    <condition>exists</condition>
+                    <service>Tomcat6</service>
+                </windowsServiceTest>
+            </ruleList>
+        </deleteWindowsService>
+    </readyToInstallActionList>
     <postInstallationActionList>
         <runProgram>
             <program>${installdir}\jdk-6u10-windows-i586-p.exe</program>
@@ -46,7 +79,7 @@
                 <propertiesFileSet>
                     <file>${installdir}\apache-tomcat-6.0.18\lib\theguru.properties</file>
                     <key>jdbc.sqlserver.servername</key>
-                    <value>${servername}</value>
+                    <value>${sqlservername}</value>
                 </propertiesFileSet>
                 <propertiesFileSet>
                     <file>${installdir}\apache-tomcat-6.0.18\lib\theguru.properties</file>
@@ -62,7 +95,7 @@
                     <explanation>Updating JDBC URL</explanation>
                     <file>${installdir}\apache-tomcat-6.0.18\lib\theguru.properties</file>
                     <key>userdetails.jdbc.url</key>
-                    <value>jdbc:sqlserver://${servername};instanceName=${instancename};databaseName=${databasename};create=true</value>
+                    <value>jdbc:sqlserver://${sqlservername};instanceName=${instancename};databaseName=${databasename};create=true</value>
                     <ruleList>
                         <compareTextLength>
                             <length>0</length>
@@ -75,7 +108,7 @@
                     <explanation>Updating JDBC URL</explanation>
                     <file>${installdir}\apache-tomcat-6.0.18\lib\theguru.properties</file>
                     <key>userdetails.jdbc.url</key>
-                    <value>jdbc:sqlserver://${servername};databaseName=${databasename};create=true</value>
+                    <value>jdbc:sqlserver://${sqlservername};databaseName=${databasename};create=true</value>
                     <ruleList>
                         <compareTextLength>
                             <length>0</length>
@@ -112,7 +145,7 @@
                 <propertiesFileSet>
                     <file>${installdir}\apache-tomcat-6.0.18\conf\catalina.properties</file>
                     <key>jdbc.sqlserver.servername</key>
-                    <value>${servername}</value>
+                    <value>${sqlservername}</value>
                 </propertiesFileSet>
                 <propertiesFileSet>
                     <file>${installdir}\apache-tomcat-6.0.18\conf\catalina.properties</file>
@@ -127,23 +160,23 @@
                 <propertiesFileSet>
                     <file>${installdir}\apache-tomcat-6.0.18\conf\catalina.properties</file>
                     <key>jdbc.url</key>
-                    <value>jdbc:mysql://localhost:3306/theguru?create=true</value>
+                    <value>jdbc:mysql://${mysqlservername}:${mysqlport}/${mysqldatabasename}?create=true</value>
                 </propertiesFileSet>
                 <propertiesFileSet>
                     <file>${installdir}\apache-tomcat-6.0.18\conf\catalina.properties</file>
                     <key>jdbc.username</key>
-                    <value>theguru</value>
+                    <value>${mysqlusername}</value>
                 </propertiesFileSet>
                 <propertiesFileSet>
                     <file>${installdir}\apache-tomcat-6.0.18\conf\catalina.properties</file>
                     <key>jdbc.password</key>
-                    <value>orangeleap</value>
+                    <value>${mysqlpassword}</value>
                 </propertiesFileSet>
                 <propertiesFileSet>
                     <explanation>Updating JDBC URL</explanation>
                     <file>${installdir}\apache-tomcat-6.0.18\conf\catalina.properties</file>
                     <key>userdetails.jdbc.url</key>
-                    <value>jdbc:sqlserver://${servername};instanceName=${instancename};databaseName=${databasename};create=true</value>
+                    <value>jdbc:sqlserver://${sqlservername};instanceName=${instancename};databaseName=${databasename};create=true</value>
                     <ruleList>
                         <compareTextLength>
                             <length>0</length>
@@ -156,7 +189,7 @@
                     <explanation>Updating JDBC URL</explanation>
                     <file>${installdir}\apache-tomcat-6.0.18\conf\catalina.properties</file>
                     <key>userdetails.jdbc.url</key>
-                    <value>jdbc:sqlserver://${servername};databaseName=${databasename};create=true</value>
+                    <value>jdbc:sqlserver://${sqlservername};databaseName=${databasename};create=true</value>
                     <ruleList>
                         <compareTextLength>
                             <length>0</length>
@@ -197,9 +230,6 @@
             <displayName>Apache Tomcat</displayName>
             <serviceName>Tomcat6</serviceName>
         </startWindowsService>
-        <launchBrowser>
-            <url>http://localhost:8080/jasperserver</url>
-        </launchBrowser>
         <substitute>
             <abortOnError>0</abortOnError>
             <customErrorMessage>Error updating connection string.</customErrorMessage>
@@ -216,7 +246,7 @@
             <substitutionList>
                 <substitution>
                     <pattern>MPXConnectionString</pattern>
-                    <value>jdbc:sqlserver://${servername};instancename=${instancename};databaseName=${databasename}</value>
+                    <value>jdbc:sqlserver://${sqlservername};instancename=${instancename};databaseName=${databasename}</value>
                 </substitution>
                 <substitution>
                     <pattern>MPXUserName</pattern>
@@ -244,7 +274,7 @@
             <substitutionList>
                 <substitution>
                     <pattern>MPXConnectionString</pattern>
-                    <value>jdbc:sqlserver://${servername};databaseName=${databasename}</value>
+                    <value>jdbc:sqlserver://${sqlservername};databaseName=${databasename}</value>
                 </substitution>
                 <substitution>
                     <pattern>MPXUserName</pattern>
@@ -258,8 +288,71 @@
         </substitute>
         <runProgram>
             <program>${installdir}\Sql\RunAllSql.bat</program>
-            <programArguments>${installdir.dos}</programArguments>
+            <programArguments>${installdir.dos} ${mysqlusername} ${mysqlpassword}</programArguments>
         </runProgram>
+        <waitForPort>
+            <port>8080</port>
+            <state>in_use</state>
+            <timeout></timeout>
+        </waitForPort>
+        <launchBrowser>
+            <url>http://localhost:8080/jasperserver</url>
+        </launchBrowser>
+        <actionGroup>
+            <explanation>TheGuru.Properties Modifications</explanation>
+            <actionList>
+                <propertiesFileSet>
+                    <file>${installdir}/theguru.properties</file>
+                    <key>sqlservername</key>
+                    <value>${sqlservername}</value>
+                </propertiesFileSet>
+                <propertiesFileSet>
+                    <file>${installdir}/theguru.properties</file>
+                    <key>sqlserverinstancename</key>
+                    <value>${instancename}</value>
+                </propertiesFileSet>
+                <propertiesFileSet>
+                    <file>${installdir}/theguru.properties</file>
+                    <key>sqlserverdatabasename</key>
+                    <value>${databasename}</value>
+                </propertiesFileSet>
+                <propertiesFileSet>
+                    <file>${installdir}/theguru.properties</file>
+                    <key>sqlserverusername</key>
+                    <value>${sqlusername}</value>
+                </propertiesFileSet>
+                <propertiesFileSet>
+                    <file>${installdir}/theguru.properties</file>
+                    <key>sqlserverpassword</key>
+                    <value>${sqlpassword}</value>
+                </propertiesFileSet>
+                <propertiesFileSet>
+                    <file>${installdir}/theguru.properties</file>
+                    <key>mysqlservername</key>
+                    <value>${mysqlservername}</value>
+                </propertiesFileSet>
+                <propertiesFileSet>
+                    <file>${installdir}/theguru.properties</file>
+                    <key>mysqlport</key>
+                    <value>${mysqlport}</value>
+                </propertiesFileSet>
+                <propertiesFileSet>
+                    <file>${installdir}/theguru.properties</file>
+                    <key>mysqldatabasename</key>
+                    <value>${mysqldatabasename}</value>
+                </propertiesFileSet>
+                <propertiesFileSet>
+                    <file>${installdir}/theguru.properties</file>
+                    <key>mysqlusername</key>
+                    <value>${mysqlusername}</value>
+                </propertiesFileSet>
+                <propertiesFileSet>
+                    <file>${installdir}/theguru.properties</file>
+                    <key>mysqlpassword</key>
+                    <value>${mysqlpassword}</value>
+                </propertiesFileSet>
+            </actionList>
+        </actionGroup>
     </postInstallationActionList>
     <enableRollback>1</enableRollback>
     <enableTimestamp>1</enableTimestamp>
@@ -283,16 +376,10 @@
                             <origin>apache-tomcat-6.0.18</origin>
                         </distributionDirectory>
                         <distributionDirectory>
-                            <origin>apps</origin>
-                        </distributionDirectory>
-                        <distributionDirectory>
                             <origin>MySQL Server 5.0</origin>
                         </distributionDirectory>
                         <distributionFile>
                             <origin>jdk-6u10-windows-i586-p.exe</origin>
-                        </distributionFile>
-                        <distributionFile>
-                            <origin>UpdateMPXDataSource.txt</origin>
                         </distributionFile>
                         <distributionDirectory>
                             <origin>Sql</origin>
@@ -362,13 +449,13 @@
         </directoryParameter>
         <parameterGroup>
             <name>parametergroup</name>
-            <title>Please enter the below information regarding your SQL Server</title>
+            <title>Please enter your MPX SQL Server information below</title>
             <explanation></explanation>
             <value></value>
             <default></default>
             <parameterList>
                 <stringParameter>
-                    <name>servername</name>
+                    <name>sqlservername</name>
                     <description>SQL Server Name</description>
                     <explanation></explanation>
                     <value></value>
@@ -410,6 +497,129 @@
                     <value></value>
                     <default></default>
                     <allowEmptyValue>1</allowEmptyValue>
+                    <descriptionRetype></descriptionRetype>
+                    <width>20</width>
+                </passwordParameter>
+            </parameterList>
+            <preShowPageActionList>
+                <actionGroup>
+                    <explanation>here</explanation>
+                    <actionList>
+                        <propertiesFileGet>
+                            <file>${installdir}/theguru.properties</file>
+                            <key>sqlservername</key>
+                            <variable>sqlservername</variable>
+                        </propertiesFileGet>
+                        <propertiesFileGet>
+                            <file>${installdir}/theguru.properties</file>
+                            <key>sqlserverinstancename</key>
+                            <variable>instancename</variable>
+                        </propertiesFileGet>
+                        <propertiesFileGet>
+                            <file>${installdir}/theguru.properties</file>
+                            <key>sqlserverdatabasename</key>
+                            <variable>databasename</variable>
+                        </propertiesFileGet>
+                        <propertiesFileGet>
+                            <file>${installdir}/theguru.properties</file>
+                            <key>sqlserverusername</key>
+                            <variable>sqlusername</variable>
+                        </propertiesFileGet>
+                        <propertiesFileGet>
+                            <file>${installdir}/theguru.properties</file>
+                            <key>sqlserverpassword</key>
+                            <variable>sqlpassword</variable>
+                        </propertiesFileGet>
+                        <propertiesFileGet>
+                            <file>${installdir}/theguru.properties</file>
+                            <key>mysqlservername</key>
+                            <variable>mysqlservername</variable>
+                        </propertiesFileGet>
+                        <propertiesFileGet>
+                            <file>${installdir}/theguru.properties</file>
+                            <key>mysqlport</key>
+                            <variable>mysqlport</variable>
+                        </propertiesFileGet>
+                        <propertiesFileGet>
+                            <file>${installdir}/theguru.properties</file>
+                            <key>mysqldatabasename</key>
+                            <variable>mysqldatabasename</variable>
+                        </propertiesFileGet>
+                        <propertiesFileGet>
+                            <file>${installdir}/theguru.properties</file>
+                            <key>mysqlusername</key>
+                            <variable>mysqlusername</variable>
+                        </propertiesFileGet>
+                        <propertiesFileGet>
+                            <file>${installdir}/theguru.properties</file>
+                            <key>mysqlpassword</key>
+                            <variable>mysqlpassword</variable>
+                        </propertiesFileGet>
+                    </actionList>
+                    <ruleList>
+                        <fileExists>
+                            <path>${installdir}/theguru.properties</path>
+                        </fileExists>
+                    </ruleList>
+                </actionGroup>
+            </preShowPageActionList>
+        </parameterGroup>
+        <parameterGroup>
+            <name>mySql</name>
+            <title>Please enter your mySql server information</title>
+            <explanation></explanation>
+            <value></value>
+            <default></default>
+            <ask>0</ask>
+            <parameterList>
+                <stringParameter>
+                    <name>mysqlservername</name>
+                    <description>mySql Server Name</description>
+                    <explanation></explanation>
+                    <value>localhost</value>
+                    <default>localhost</default>
+                    <allowEmptyValue>1</allowEmptyValue>
+                    <ask>0</ask>
+                    <width>40</width>
+                </stringParameter>
+                <stringParameter>
+                    <name>mysqlport</name>
+                    <description>mySql Port</description>
+                    <explanation></explanation>
+                    <value>3306</value>
+                    <default>3306</default>
+                    <allowEmptyValue>1</allowEmptyValue>
+                    <ask>0</ask>
+                    <width>40</width>
+                </stringParameter>
+                <stringParameter>
+                    <name>mysqldatabasename</name>
+                    <description>mySql Database Name</description>
+                    <explanation></explanation>
+                    <value>theguru</value>
+                    <default>theguru</default>
+                    <allowEmptyValue>1</allowEmptyValue>
+                    <ask>0</ask>
+                    <width>40</width>
+                </stringParameter>
+                <stringParameter>
+                    <name>mysqlusername</name>
+                    <description>mySql User Name</description>
+                    <explanation></explanation>
+                    <value>theguru</value>
+                    <default>theguru</default>
+                    <allowEmptyValue>1</allowEmptyValue>
+                    <ask>0</ask>
+                    <width>40</width>
+                </stringParameter>
+                <passwordParameter>
+                    <name>mysqlpassword</name>
+                    <description>mySql Server Password</description>
+                    <explanation></explanation>
+                    <value>orangeleap</value>
+                    <default>orangeleap</default>
+                    <allowEmptyValue>1</allowEmptyValue>
+                    <ask>0</ask>
                     <descriptionRetype></descriptionRetype>
                     <width>20</width>
                 </passwordParameter>
