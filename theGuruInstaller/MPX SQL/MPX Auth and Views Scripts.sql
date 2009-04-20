@@ -1,7 +1,7 @@
-//This script is used to populate all necessary information in your MPX database that the guru 
-//needs for authentication and reporting.
+/*This script is used to populate all necessary information in your MPX database that the guru 
+needs for authentication and reporting.*/
 
-//***********************************Creates Jasper Roles in MPX*****************************************************
+/***********************************Creates Jasper Roles in MPX*****************************************************/
 IF NOT EXISTS (SELECT * FROM SYSOBJECTS WHERE NAME = 'tblMPXJasperUserRole')
 BEGIN
   CREATE TABLE [dbo].[tblMPXJasperRole](
@@ -11,7 +11,7 @@ BEGIN
   ) ON [PRIMARY]
 END
 
-//************************************Creates Jasper User Roles in MPX***************************************************
+/************************************Creates Jasper User Roles in MPX***************************************************/
 IF NOT EXISTS (SELECT * FROM SYSOBJECTS WHERE NAME = 'tblMPXJasperUserRole')
 BEGIN
   CREATE TABLE [dbo].[tblMPXJasperUserRole](
@@ -20,14 +20,16 @@ BEGIN
   ) ON [PRIMARY]
 END
 
-//***************************************Populate User Roles in MPX*******************************************************
+/***************************************Populate User Roles in MPX*******************************************************/
 Insert tblMPXJasperRole
   (RoleName, ExternallyDefined)
 Select 'ROLE_ADMINISTRATOR', 0
+Where Not Exists (Select * From tblMPXJasperRole Where RoleName = 'ROLE_ADMINISTRATOR')
 
 Insert tblMPXJasperRole
   (RoleName, ExternallyDefined)
 Select 'ROLE_USER', 0
+Where Not Exists (Select * From tblMPXJasperRole Where RoleName = 'ROLE_USER')
 
 Insert tblMPXJasperUserRole
   (RoleId, UserId)
@@ -36,6 +38,7 @@ From tblUser
 Join UserRoles On tblUser.UserId = UserRoles.UserId
 Join Roles On UserRoles.RoleId = Roles.RoleId
 Where Roles.Name = 'sys admin'
+And Not Exists (Select * From tblMPXJasperUserRole Where tblMPXJasperUserRole.UserId = tblUser.UserId)
 
 Insert tblMPXJasperUserRole
   (RoleId, UserId)
@@ -44,21 +47,24 @@ From tblUser
 Join UserRoles On tblUser.UserId = UserRoles.UserId
 Join Roles On UserRoles.RoleId = Roles.RoleId
 Where Roles.Name = 'default'
+And Not Exists (Select * From tblMPXJasperUserRole Where tblMPXJasperUserRole.UserId = tblUser.UserId)
 
+/************************************Authorities********************************************************************/
+IF EXISTS (SELECT * FROM SYSOBJECTS WHERE NAME = 'AUTHORITIES')
+  DROP VIEW Authorities
 
-//************************************Authorities********************************************************************
-IF NOT EXISTS (SELECT * FROm SYSOBJECTS WHERE NAME = 'AUTHORITIES')
-BEGIN
-  CREATE VIEW [dbo].[Authorities]
-  AS
-    SELECT     dbo.tblUser.userName AS login, dbo.tblMPXJasperRole.roleName AS authority
-    FROM         dbo.tblUser INNER JOIN
-                      dbo.tblMPXJasperUserRole ON dbo.tblUser.userId = dbo.tblMPXJasperUserRole.userId FULL OUTER JOIN
-                      dbo.tblMPXJasperRole ON dbo.tblMPXJasperUserRole.roleId = dbo.tblMPXJasperRole.roleId
+GO
 
-END
+CREATE VIEW [dbo].[Authorities]
+AS
+SELECT     dbo.tblUser.userName AS login, dbo.tblMPXJasperRole.roleName AS authority
+FROM         dbo.tblUser INNER JOIN
+                  dbo.tblMPXJasperUserRole ON dbo.tblUser.userId = dbo.tblMPXJasperUserRole.userId FULL OUTER JOIN
+                  dbo.tblMPXJasperRole ON dbo.tblMPXJasperUserRole.roleId = dbo.tblMPXJasperRole.roleId
 
-//***************************************Views***********************************************************************
+GO
+
+/***************************************Views***********************************************************************/
 IF EXISTS (SELECT * FROM SYSOBJECTS WHERE NAME = 'VW_REPORT_GIFTHEADERCOMBINED' AND XTYPE = 'V')
   DROP VIEW VW_REPORT_GIFTHEADERCOMBINED
 
