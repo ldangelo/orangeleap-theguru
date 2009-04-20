@@ -204,7 +204,10 @@ public class ReportGenerator {
 				InputControlParameters ic = new InputControlParameters();
 				ic.setLabel(rf.getDisplayName() + operatorDisplayName);
 				ic.setType(rf.getFieldType());
-				ic.setFilter(filter.getOperator());
+
+				//Commented the below out as it was causing and extra Equals to be displayed
+				//when prompting for value CLEMENTINE-169
+				//ic.setFilter(filter.getOperator());
 				inputControls.put(controlName, ic);
 			}
 
