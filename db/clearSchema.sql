@@ -1,14 +1,9 @@
-drop schema IF EXISTS orangeleap;
-create schema orangeleap;
+-- This only clears the GURU schema
+-- The views in the orangeleap schema will be drop before they
+-- are recreated in orangeLeapReportViews.sql
 
 drop schema IF EXISTS theguru;
 create schema theguru;
 
-DROP schema IF EXISTS `company1`;
-create schema company1;
-DROP schema IF EXISTS `company2`;
-create schema company2;
-DROP schema IF EXISTS `company3`;
-create schema company3;
 
 

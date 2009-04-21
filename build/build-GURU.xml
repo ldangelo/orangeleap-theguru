@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="orangeleap" basedir=".." default="deploy">
+<project name="TheGuru" basedir=".." default="deploy">
 
 	<property name="build.output.dir" value="/root/.hudson/jobs/Clementine/workspace/tangerine/build/stage" />
-	<property name="target.tomcat.dir" value="/opt/orangeleap/instance_GURU" />
-	<property name="mysql.port" value="20006" />
+	<property name="target.tomcat.dir" value="/opt/orangeleap/instance_GURUDEV" />
+	<property name="mysql.port" value="40006" />
 	<property name="build.deploy.file" value="${basedir}/build/build-deploy.xml" />
-	<property name="instance" value="GURU" />
+	<property name="instance" value="GURUDEV" />
 
-	<target name="deploy" description="Deploy build output to GURU instance" >
+	<target name="deploy" description="Deploy build output to GURUDEV instance" >
 		<ant antfile="${build.deploy.file}" target="deploy" />
-    </target> 
-	
+    </target>
+
 </project>

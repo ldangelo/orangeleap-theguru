@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="orangeleap" basedir=".." default="deploy">
-	
+
 	<property file="${basedir}/build/build.properties" />
     <property file="${commonBuild.dir}/commonBuild.properties"/>
 	<!--<import file="${commonBuild.dir}/ivyBuild.xml"/>-->
-	
+
 	<property name="mysql.opts" value="autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=UTF8" />
 
 	<property name="compile.lib.dir" value="${basedir}/lib/compile/bin"/>
 
-	
+
 	<target name="deploy" description="Deploy build output and populate database" >
 
 		<!--
@@ -18,15 +18,15 @@
 	    </exec>
 		<sleep seconds="30" />
 		-->
-		
-		
+
+
 		<!-- populate theguru schema -->
-		
+
 		<property name="overrideUrl1" value="jdbc:mysql://localhost:${mysql.port}/theguru?${mysql.opts}" />
         <script language="javascript"> <![CDATA[
            self.getProject().setProperty("mysql.db.url", overrideUrl1);
         ]]> </script>
-		
+
 	     <sql driver="${mysql.db.driver}"
 		          url="${mysql.db.url}"
 		          userid="${mysql.db.user}"
@@ -37,7 +37,7 @@
 	     	>
 		    <transaction src="${basedir}/db/clearSchema.sql"/>
     	 </sql>
-		
+
 	     <sql driver="${mysql.db.driver}"
 		          url="${mysql.db.url}"
 		          userid="${mysql.db.user}"
@@ -46,16 +46,42 @@
 		          classpath="${compile.lib.dir}/mysql-connector-java-5.0.8-bin.jar"
 	              delimiter=";"
 	     	>
-		    <transaction src="${basedir}/db/loadData.sql"/>
+		    <transaction src="${basedir}/db/prod/domain/TheguruCreateAndLoadloadSchema.sql"/>
+	     	<transaction src="${basedir}/db/prod/domain/JasperserverCreateAndLoadloadSchema.sql"/>
    	     </sql>
-		
-		
+
+
+		<!-- Add the views to the Orangeleap schema-->
+
+		<sql driver="${orangeleap.mysql.db.driver}"
+			          url="${orangeleap.mysql.db.url}"
+			          userid="${orangeleap.mysql.db.user}"
+			          password="${orangeleap.mysql.db.pw}"
+			          encoding="UTF-8"
+			          classpath="${orangeleap.mysql.db.classpath}"
+					  delimiter="$$">
+					<!-- Add functions to orangeleap database-->
+					<transaction src="${basedir}/db/prod/domain/functions.sql"/>
+		</sql>
+
+		<sql driver="${orangeleap.mysql.db.driver}"
+			          url="${orangeleap.mysql.db.url}"
+			          userid="${orangeleap.mysql.db.user}"
+			          password="${orangeleap.mysql.db.pw}"
+			          encoding="UTF-8"
+					  classpath="${orangeleap.mysql.db.classpath}">
+					<!-- Add views to orangeleap database-->
+			     	<transaction src="${basedir}/db/prod/domain/orangeLeapReportViews.sql"/>
+		</sql>
+
+
+
 		<!-- Tomcat -->
-		
-	<!--	
+
+	<!--
 		<delete dir="${target.tomcat.dir}/work" />
 		<mkdir dir="${target.tomcat.dir}/work" />
-		
+
 		<delete dir="${target.tomcat.dir}/temp" />
 		<mkdir dir="${target.tomcat.dir}/temp" />
 
@@ -63,17 +89,17 @@
 			<arg line="-R tomcat.tomcat ${target.tomcat.dir}"/>
 		</exec>
 
-		
+
 		<delete dir="${target.tomcat.dir}/webapps/clementine" />
-		
+
 		<copy file="${build.output.dir}/clementine.war" todir="${target.tomcat.dir}/webapps" overwrite="true"  />
-		
+
 		<copy todir="${target.tomcat.dir}/drools/rules" overwrite="true"  >
 		    <fileset dir="${rules.build.output.dir}">
 		      <include name="**/*.pkg"/>
 		    </fileset>
 		</copy>
-		
+
 		<exec dir="/opt/orangeleap" executable="chown" >
 			<arg line="-R tomcat.tomcat ${target.tomcat.dir}/webapps"/>
 	    </exec>
@@ -81,8 +107,8 @@
 		<exec dir="/opt/orangeleap" executable="su" spawn="true">
 			<arg line="- tomcat -c 'cd /opt/orangeleap;/opt/orangeleap/run.sh start ${instance}'"/>
 	    </exec>
-	-->	
-		
-    </target> 
-	
+	-->
+
+    </target>
+
 </project>
