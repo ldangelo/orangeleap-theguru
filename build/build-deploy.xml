@@ -22,7 +22,7 @@
 
 		<!-- populate theguru schema -->
 
-		<property name="overrideUrl1" value="jdbc:mysql://localhost:${mysql.port}/theguru?${mysql.opts}" />
+		<property name="overrideUrl1" value="jdbc:mysql://${mysql.host}:${mysql.port}/theguru?${mysql.opts}" />
         <script language="javascript"> <![CDATA[
            self.getProject().setProperty("mysql.db.url", overrideUrl1);
         ]]> </script>
@@ -46,12 +46,29 @@
 		          classpath="${compile.lib.dir}/mysql-connector-java-5.0.8-bin.jar"
 	              delimiter=";"
 	     	>
-		    <transaction src="${basedir}/db/prod/domain/TheguruCreateAndLoadloadSchema.sql"/>
-	     	<transaction src="${basedir}/db/prod/domain/JasperserverCreateAndLoadloadSchema.sql"/>
+		    <transaction src="${basedir}/db/prod/domain/TheguruCreateAndLoadSchema-NoFunctions.sql"/>
+		    <transaction src="${basedir}/db/prod/domain/TheguruCreateFunctions-Part1.sql"/>
+	     	<transaction src="${basedir}/db/prod/domain/JasperserverCreateAndLoadSchema.sql"/>
    	     </sql>
+
+	     <sql driver="${mysql.db.driver}"
+		          url="${mysql.db.url}"
+		          userid="${mysql.db.user}"
+		          password="${mysql.db.pw}"
+		          encoding="UTF-8"
+		          classpath="${compile.lib.dir}/mysql-connector-java-5.0.8-bin.jar"
+	              delimiter="$$"
+	     	>
+	     	<transaction src="${basedir}/db/prod/domain/TheguruCreateFunctions-Part2.sql"/>
+  	     </sql>
 
 
 		<!-- Add the views to the Orangeleap schema-->
+
+		<property name="overrideUrl2" value="jdbc:mysql://${mysql.host}:${mysql.port}/orangeleap?${mysql.opts}" />
+        <script language="javascript"> <![CDATA[
+           self.getProject().setProperty("orangeleap.mysql.db.url", overrideUrl2);
+        ]]> </script>
 
 		<sql driver="${orangeleap.mysql.db.driver}"
 			          url="${orangeleap.mysql.db.url}"

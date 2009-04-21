@@ -1,0 +1,17 @@
+use mysql;
+
+UPDATE user SET Password=PASSWORD('theguru') where USER='theguru';
+FLUSH PRIVILEGES;
+
+CREATE DATABASE IF NOT EXISTS orangeleap;
+CREATE DATABASE IF NOT EXISTS theguru;
+
+create user 'theguru'@'localhost' identified by 'theguru';
+GRANT ALL ON *.* TO 'theguru'@'localhost';
+create user 'theguru'@'%' identified by 'theguru';
+GRANT ALL ON *.* TO 'theguru'@'%';
+
+UPDATE user SET Password=PASSWORD('theguru') where USER='theguru';
+FLUSH PRIVILEGES;
+
+commit;
