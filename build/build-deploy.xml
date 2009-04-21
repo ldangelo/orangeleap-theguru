@@ -12,13 +12,11 @@
 
 	<target name="deploy" description="Deploy build output and populate database" >
 
-		<!--
+
 		<exec dir="/opt/orangeleap" executable="su" spawn="true">
 			<arg line="- tomcat -c 'cd /opt/orangeleap;/opt/orangeleap/run.sh stop ${instance}'"/>
 	    </exec>
 		<sleep seconds="30" />
-		-->
-
 
 		<!-- populate theguru schema -->
 
@@ -95,7 +93,7 @@
 
 		<!-- Tomcat -->
 
-	<!--
+
 		<delete dir="${target.tomcat.dir}/work" />
 		<mkdir dir="${target.tomcat.dir}/work" />
 
@@ -108,14 +106,10 @@
 
 
 		<delete dir="${target.tomcat.dir}/webapps/clementine" />
+		<delete dir="${target.tomcat.dir}/webapps/jasperserver" />
 
 		<copy file="${build.output.dir}/clementine.war" todir="${target.tomcat.dir}/webapps" overwrite="true"  />
-
-		<copy todir="${target.tomcat.dir}/drools/rules" overwrite="true"  >
-		    <fileset dir="${rules.build.output.dir}">
-		      <include name="**/*.pkg"/>
-		    </fileset>
-		</copy>
+		<copy file="${jasperserver.build.output.dir}/jasperserver.war" todir="${target.tomcat.dir}/webapps" overwrite="true"  />
 
 		<exec dir="/opt/orangeleap" executable="chown" >
 			<arg line="-R tomcat.tomcat ${target.tomcat.dir}/webapps"/>
@@ -124,7 +118,7 @@
 		<exec dir="/opt/orangeleap" executable="su" spawn="true">
 			<arg line="- tomcat -c 'cd /opt/orangeleap;/opt/orangeleap/run.sh start ${instance}'"/>
 	    </exec>
-	-->
+
 
     </target>
 
