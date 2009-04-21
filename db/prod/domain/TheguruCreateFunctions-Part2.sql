@@ -1,5 +1,5 @@
 -- DELIMITER $$
-
+use theguru$$
 --
 -- Definition of function `COUNTOFVALUES`
 --
