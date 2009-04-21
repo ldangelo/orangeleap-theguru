@@ -20,7 +20,7 @@
 
 		<!-- populate theguru schema -->
 
-		<property name="overrideUrl1" value="jdbc:mysql://${mysql.host}:${mysql.port}/theguru?${mysql.opts}" />
+		<property name="overrideUrl1" value="jdbc:mysql://${mysql.host}:${mysql.port}/?${mysql.opts}" />
         <script language="javascript"> <![CDATA[
            self.getProject().setProperty("mysql.db.url", overrideUrl1);
         ]]> </script>
