@@ -117,6 +117,69 @@
 
 	</target>
 
+	<target name="Beta Load Data">
+	     <sql driver="${mysql.db.driver}"
+		          url="${mysql.db.url}"
+		          userid="${mysql.db.user}"
+		          password="${mysql.db.pw}"
+		          encoding="UTF-8"
+	     		  classpath="${mysql.db.classpath}"
+	              delimiter=";"
+	     	>
+		    <transaction src="${basedir}/db/clearSchema.sql"/>
+   	 </sql>
+
+	     <sql driver="${mysql.db.driver}"
+		          url="${mysql.db.url}"
+		          userid="${mysql.db.user}"
+		          password="${mysql.db.pw}"
+		          encoding="UTF-8"
+   		  		  classpath="${mysql.db.classpath}"
+	              delimiter=";"
+	     	>
+		    <transaction src="${basedir}/db/prod/domain/TheguruCreateAndLoadSchema-NoFunctions.sql"/>
+		    <transaction src="${basedir}/db/prod/domain/TheguruCreateFunctions-Part1.sql"/>
+	     	<transaction src="${basedir}/db/prod/domain/JasperserverCreateAndLoadSchema.sql"/>
+  	     </sql>
+
+	     <sql driver="${mysql.db.driver}"
+		          url="${mysql.db.url}"
+		          userid="${mysql.db.user}"
+		          password="${mysql.db.pw}"
+		          encoding="UTF-8"
+   		  		  classpath="${mysql.db.classpath}"
+	              delimiter="$$"
+	     	>
+	     	<transaction src="${basedir}/db/prod/domain/TheguruCreateFunctions-Part2.sql"/>
+ 	     </sql>
+
+
+		<!-- Add the views to the Orangeleap schema-->
+
+		<sql driver="${orangeleap.mysql.db.driver}"
+			          url="${orangeleap.mysql.db.url}"
+			          userid="${orangeleap.mysql.db.user}"
+			          password="${orangeleap.mysql.db.pw}"
+			          encoding="UTF-8"
+				      classpath="${orangeleap.mysql.db.classpath}"
+					  delimiter="$$">
+					<!-- Add functions to orangeleap database-->
+					<transaction src="${basedir}/db/prod/domain/functions.sql"/>
+		</sql>
+
+		<sql driver="${orangeleap.mysql.db.driver}"
+			          url="${orangeleap.mysql.db.url}"
+			          userid="${orangeleap.mysql.db.user}"
+			          password="${orangeleap.mysql.db.pw}"
+			          encoding="UTF-8"
+				      classpath="${orangeleap.mysql.db.classpath}">
+					<!-- Add views to orangeleap database-->
+			     	<transaction src="${basedir}/db/prod/domain/orangeLeapReportViews.sql"/>
+		</sql>
+
+
+	</target>
+
 	<target name="Load OrangeLeap Data Only (Views and Functions)">
 		<!-- Orangeleap database-->
 		<sql driver="${orangeleap.mysql.db.driver}"
