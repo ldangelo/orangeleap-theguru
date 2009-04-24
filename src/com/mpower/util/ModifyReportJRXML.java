@@ -876,21 +876,16 @@ public class ModifyReportJRXML {
 	 * Fixes the "category series is null" and "key is null" for the pie and bar charts
 	 *
 	 * @param chartType The type of chart. Currently we only support Bar and Pie.
-	 * @param document The location you want to put the chart.  (header or footer)
+	 * @param document The jrxml document.
 	 */
 
 	public void correctNullDataInChart(String chartType, Document document){
 		//
 		if (chartType.compareToIgnoreCase("bar") == 0){
-			//get the seriesExpression node
-			Node seriesExp = document.getElementsByTagName("seriesExpression").item(0);
-			String seriesExpField = seriesExp.getTextContent();
-			String newSeriesExp = "(( " + seriesExpField + " != null) ? " + seriesExpField + " : \"null\" )";
-			seriesExp.setTextContent(newSeriesExp);
-
-			//We need to blank out the categoryExpression as it is wrong
-			Node categoryExp = document.getElementsByTagName("seriesExpression").item(0);
-			String newcategoryExp = "\"\"";
+			//get the categoryExpression node
+			Node categoryExp = document.getElementsByTagName("categoryExpression").item(0);
+			String categoryExpField = categoryExp.getTextContent();
+			String newcategoryExp = "(( " + categoryExpField + " != null) ? " + categoryExpField + " : \"null\" )";
 			categoryExp.setTextContent(newcategoryExp);
 		}
 		else if (chartType.compareToIgnoreCase("pie") == 0){
@@ -899,19 +894,6 @@ public class ModifyReportJRXML {
 			String keyExpField = keyExp.getTextContent();
 			String newkeyExp = "(( " + keyExpField + " != null) ? " + keyExpField + " : \"null\" )";
 			keyExp.setTextContent(newkeyExp);
-
-			/*
-			//Add the label Expression for the pie chart
-			Element pieDataset
-			Node valueExp = document.getElementsByTagName("valueExpression").item(0);
-			Element labelExp = document.createElement("labelExpresssion");
-
-			//labelExp.i
-			String valueExpField = valueExp.getTextContent();
-			String newValueExp = "valueExpField" + ".toString()";
-			keyExp.setTextContent(newValueExp);
-			*/
-
 		}
 	}
 
