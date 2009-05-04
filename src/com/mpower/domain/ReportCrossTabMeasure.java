@@ -77,4 +77,12 @@ public class ReportCrossTabMeasure implements java.io.Serializable {
 	public void setCalculation(String value) {
 		this.calculation = value;
 	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public long getId() {
+		return id;
+	}
 }	

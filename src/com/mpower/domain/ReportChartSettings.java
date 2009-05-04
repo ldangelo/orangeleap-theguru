@@ -75,4 +75,12 @@ public class ReportChartSettings implements java.io.Serializable {
 	public String getLocation() {
 		return location;
 	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public long getId() {
+		return id;
+	}
 }

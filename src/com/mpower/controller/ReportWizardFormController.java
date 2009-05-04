@@ -33,6 +33,7 @@ import com.mpower.domain.ReportChartSettings;
 import com.mpower.domain.ReportCrossTabColumn;
 import com.mpower.domain.ReportCrossTabMeasure;
 import com.mpower.domain.ReportCrossTabRow;
+import com.mpower.domain.ReportCustomFilterCriteria;
 import com.mpower.domain.ReportDataSource;
 import com.mpower.domain.ReportDataSubSourceGroup;
 import com.mpower.domain.ReportDataSubSource;
@@ -245,9 +246,10 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		wiz.setFields(fields);
 	}
 
-	private void PopulateWizardFromSavedReport(ReportWizard emptyWizard, ReportWizard savedWizard) {
+	private void PopulateWizardFromSavedReport(ReportWizard emptyWizard, ReportWizard savedWizard, boolean copyIds) {
 		emptyWizard.setDataSubSourceGroupId(savedWizard.getDataSubSourceGroupId());
-		emptyWizard.setId(savedWizard.getId());
+		if (copyIds)
+			emptyWizard.setId(savedWizard.getId());
 		emptyWizard.setRecordCount(savedWizard.getRecordCount());
 		emptyWizard.getReportChartSettings().clear();
 		emptyWizard.getReportChartSettings().addAll(savedWizard.getReportChartSettings());
@@ -266,19 +268,35 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 	    	ReportFilter reportFilter = (ReportFilter)itReportFilters.next();
 	    	ReportFilter newReportFilter = new ReportFilter();
 	    	newReportFilter.setFilterType(reportFilter.getFilterType());
-	    	newReportFilter.setId(reportFilter.getId());
+	    	if (copyIds)
+	    		newReportFilter.setId(reportFilter.getId());
 	    	newReportFilter.setOperator(reportFilter.getOperator());
 	    	newReportFilter.setOperatorNot(reportFilter.getOperatorNot());
 	    	newReportFilter.setReportStandardFilter(reportFilter.getReportStandardFilter());
-	    	newReportFilter.getReportCustomFilter().setCustomFilterId(reportFilter.getReportCustomFilter().getCustomFilterId());
+	    	if (!copyIds)
+	    		newReportFilter.getReportStandardFilter().setId(0);
+	    	if (copyIds)
+	    		newReportFilter.getReportCustomFilter().setCustomFilterId(reportFilter.getReportCustomFilter().getCustomFilterId());
 	    	newReportFilter.getReportCustomFilter().setCustomFilterDefinitionId(reportFilter.getReportCustomFilter().getCustomFilterDefinitionId());
     		newReportFilter.getReportCustomFilter().setDisplayHtml(reportFilter.getReportCustomFilter().getDisplayHtml());
 	    	newReportFilter.getReportCustomFilter().getReportCustomFilterCriteria().addAll(reportFilter.getReportCustomFilter().getReportCustomFilterCriteria());
+
+	    	if (!copyIds) {
+	    		Iterator<ReportCustomFilterCriteria> itReportCustomFilterCriteria = newReportFilter.getReportCustomFilter().getReportCustomFilterCriteria().iterator();
+		    	while (itReportCustomFilterCriteria.hasNext()){
+		    		ReportCustomFilterCriteria reportCustomFilterCriteria = (ReportCustomFilterCriteria)itReportCustomFilterCriteria.next();
+		    		reportCustomFilterCriteria.setCustomFilterCriteriaId(0);
+		    	}
+	    	}
+
 	    	emptyWizard.getReportFilters().add(newReportFilter);
 	    }
 
 		emptyWizard.setReportLayout(savedWizard.getReportLayout());
-		emptyWizard.setReportName(savedWizard.getReportName());
+		if (copyIds)
+			emptyWizard.setReportName(savedWizard.getReportName());
+		else
+			emptyWizard.setReportName("Copy of " + savedWizard.getReportName());
 		emptyWizard.setReportPath(savedWizard.getReportPath());
 		emptyWizard.getReportSelectedFields().clear();
 		emptyWizard.getReportSelectedFields().addAll(savedWizard.getReportSelectedFields());
@@ -289,6 +307,40 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		emptyWizard.setSrcId(savedWizard.getSrcId());
 		emptyWizard.setSubSourceId(savedWizard.getSubSourceId());
 		emptyWizard.setUniqueRecords(savedWizard.getUniqueRecords());
+		
+
+		if (!copyIds)
+		{
+		    Iterator<ReportSelectedField> itReportFields = emptyWizard.getReportSelectedFields().iterator();
+		    while (itReportFields.hasNext()){
+		    	ReportSelectedField reportField = (ReportSelectedField)itReportFields.next();
+		    	reportField.setId(0);
+		    }
+		    
+		    Iterator<ReportChartSettings> itReportChartSettings = emptyWizard.getReportChartSettings().iterator();
+		    while (itReportChartSettings.hasNext()){
+		    	ReportChartSettings reportChartSetting = (ReportChartSettings)itReportChartSettings.next();
+		    	reportChartSetting.setId(0);
+		    }
+		    
+		    Iterator<ReportCrossTabColumn> itReportCrossTabColumn = emptyWizard.getReportCrossTabFields().getReportCrossTabColumns().iterator();
+		    while (itReportCrossTabColumn.hasNext()){
+		    	ReportCrossTabColumn reportCrossTabColumn = (ReportCrossTabColumn)itReportCrossTabColumn.next();
+		    	reportCrossTabColumn.setId(0);
+		    }
+		    
+		    Iterator<ReportCrossTabRow> itReportCrossTabRow = emptyWizard.getReportCrossTabFields().getReportCrossTabRows().iterator();
+		    while (itReportCrossTabRow.hasNext()){
+		    	ReportCrossTabRow reportCrossTabRow = (ReportCrossTabRow)itReportCrossTabRow.next();
+		    	reportCrossTabRow.setId(0);
+		    }
+		    
+		    Iterator<ReportCrossTabMeasure> itReportCrossTabMeasure = emptyWizard.getReportCrossTabFields().getReportCrossTabMeasure().iterator();
+		    while (itReportCrossTabMeasure.hasNext()){
+		    	ReportCrossTabMeasure reportCrossTabMeasure = (ReportCrossTabMeasure)itReportCrossTabMeasure.next();
+		    	reportCrossTabMeasure.setId(0);
+		    }	    
+		}		
 	}
 
 	@SuppressWarnings("unchecked")
@@ -306,78 +358,78 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 			wiz.setPreviousPage(page -1);
 
 		refData.put("previouspage", wiz.getPreviousPage());
+		
+		// Load info passed to the wizard
+		String reportUri = request.getParameter("reporturi");
+		if (reportUri != null && reportUri.length() > 0) {
+			long reportId = -1;
+			try {
+				if (reportUri.contains("/THEGURU_"))
+					reportId = Long.parseLong(reportUri.substring(reportUri.lastIndexOf("/THEGURU_") + 9));
+				if (reportId != -1) {
+					ReportWizard tempWiz = reportWizardService.Find(reportId);
+					if (tempWiz != null) {
+						PopulateWizardFromSavedReport(wiz, tempWiz, page != 9);
+						wiz.setPreviousDataSubSourceGroupId(wiz.getDataSubSourceGroupId());
+						wiz.setPreviousDataSubSourceId(wiz.getSubSourceId());
+						wiz.setReportPath(reportUri.substring(0, reportUri.indexOf("/THEGURU_")));
+						LoadWizardLookupTables(wiz);
+					} else {
+						errors.reject("1", "Unable to load report " + reportUri + ".  You may continue to create a new report, or cancel to return to the report list.");	
+					}
+				}
+			} catch (Exception exception) {
+				errors.reject("1", "Unable to load report " + reportUri + ".  You may continue to create a new report, or cancel to return to the report list.  " + exception.getMessage());
+			}									
+		}
+
+		// if no user or password is in the request, see if the user has already been
+		// populated on the wiz.  Going to the second page and then back to the first could cause that.
+		String userName = request.getParameter("username");
+		String password = request.getParameter("password");
+		if (userName == null || password == null) {
+			userName = wiz.getUsername();
+			password = wiz.getPassword();
+		} else {
+			UserDetails userDetails = userDetailsService.loadUserByUsername(userName);
+			wiz.setUsername(userName);
+			password = userDetails.getPassword();
+			wiz.setPassword(password);
+		}
+
+		// If there is no user from the request or the wiz, send back to jasper server
+		if (userName == null || password == null) {
+			refData.put("userFound", false);
+		} else {
+			refData.put("userFound", true);
+			refData.put("subSourceGroupId", wiz.getDataSubSourceGroupId());
+			refData.put("subSourceId", wiz.getSubSourceId());
+			reportGenerator.setReportUserName(userName);
+			reportGenerator.setReportPassword(password);
+
+			jasperServerService.setUserName(userName);
+			jasperServerService.setPassword(password);
+			//we want to allow the users logged in as a company to also see the default templates as well
+			if (wiz.getReportTemplateList() != null)
+				wiz.getReportTemplateList().clear();
+
+			if ( !(wiz.getCompany().compareToIgnoreCase("default") == 0))
+				wiz.setReportTemplateList(jasperServerService.list("/Reports/Default/templates"));
+			else
+				wiz.setReportTemplateList(jasperServerService.list("/Reports/" + wiz.getCompany() + "/templates"));
+
+			if (wiz.getReportTemplateJRXML() == null || wiz.getReportTemplateJRXML().length() == 0) {
+				if (wiz.getReportTemplateList().size() > 0)
+					wiz.setReportTemplatePath(((ResourceDescriptor)wiz.getReportTemplateList().get(0)).getUriString());
+				else
+					errors.reject("Invalid Repository","Invalid Repository.  It appears your repository is not setup properly.  Please contact your system administrator.");
+			}
+		}
+		
 		//
 		// Report Source
 		if (page == 0) {
 			reportGenerator.resetInputControls();
-
-			String reportUri = request.getParameter("reporturi");
-			if (reportUri != null && reportUri.length() > 0) {
-				long reportId = -1;
-				try {
-					if (reportUri.contains("/THEGURU_"))
-						reportId = Long.parseLong(reportUri.substring(reportUri.lastIndexOf("/THEGURU_") + 9));
-					if (reportId != -1) {
-						ReportWizard tempWiz = reportWizardService.Find(reportId);
-						if (tempWiz != null) {
-							PopulateWizardFromSavedReport(wiz, tempWiz);
-							wiz.setPreviousDataSubSourceGroupId(wiz.getDataSubSourceGroupId());
-							wiz.setPreviousDataSubSourceId(wiz.getSubSourceId());
-							wiz.setReportPath(reportUri.substring(0, reportUri.indexOf("/THEGURU_")));
-							LoadWizardLookupTables(wiz);
-						} else {
-							errors.reject("1", "Unable to load report " + reportUri + ".  You may continue to create a new report, or cancel to return to the report list.");	
-						}
-					}
-				} catch (Exception exception) {
-					errors.reject("1", "Unable to load report " + reportUri + ".  You may continue to create a new report, or cancel to return to the report list.  " + exception.getMessage());
-				}									
-			}
-
-			// if no user or password is in the request, see if the user has already been
-			// populated on the wiz.  Going to the second page and then back to the first could cause that.
-			String userName = request.getParameter("username");
-			String password = request.getParameter("password");
-			if (userName == null || password == null) {
-				userName = wiz.getUsername();
-				password = wiz.getPassword();
-			} else {
-
-
-				UserDetails userDetails = userDetailsService.loadUserByUsername(userName);
-				wiz.setUsername(userName);
-				password = userDetails.getPassword();
-				wiz.setPassword(password);
-			}
-
-			// If there is no user from the request or the wiz, send back to jasper server
-			if (userName == null || password == null) {
-				refData.put("userFound", false);
-			} else {
-				refData.put("userFound", true);
-				refData.put("subSourceGroupId", wiz.getDataSubSourceGroupId());
-				refData.put("subSourceId", wiz.getSubSourceId());
-				reportGenerator.setReportUserName(userName);
-				reportGenerator.setReportPassword(password);
-
-				jasperServerService.setUserName(userName);
-				jasperServerService.setPassword(password);
-				//we want to allow the users logged in as a company to also see the default templates as well
-				if (wiz.getReportTemplateList() != null)
-					wiz.getReportTemplateList().clear();
-
-				if ( !(wiz.getCompany().compareToIgnoreCase("default") == 0))
-					wiz.setReportTemplateList(jasperServerService.list("/Reports/Default/templates"));
-				else
-					wiz.setReportTemplateList(jasperServerService.list("/Reports/" + wiz.getCompany() + "/templates"));
-
-				if (wiz.getReportTemplateJRXML() == null || wiz.getReportTemplateJRXML().length() == 0) {
-					if (wiz.getReportTemplateList().size() > 0)
-						wiz.setReportTemplatePath(((ResourceDescriptor)wiz.getReportTemplateList().get(0)).getUriString());
-					else
-						errors.reject("Invalid Repository","Invalid Repository.  It appears your repository is not setup properly.  Please contact your system administrator.");
-				}
-			}
 
 			refData.put("previousSubSourceGroupId", wiz.getPreviousDataSubSourceGroupId());
 			refData.put("previousSubSourceId", wiz.getPreviousDataSubSourceId());
@@ -637,8 +689,14 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 			HttpServletResponse response, BindException errors)
 	throws Exception {
 
-		return showPage(request, errors, getInitialPage(request, errors
-				.getTarget()));
+		if (request.getParameter("_target9") != null || request.getParameter("_target9.x") != null) {
+			return showPage(request, errors, 9);			
+		}
+		else
+		{
+			return showPage(request, errors, getInitialPage(request, errors
+					.getTarget()));
+		}
 	}
 
 	public void setReportCustomFilterDefinitionService(
