@@ -94,6 +94,14 @@ public class ReportCrossTabFields implements java.io.Serializable {
 	public void setReportCrossTabColumns(List<ReportCrossTabColumn> value) {
 		this.reportCrossTabColumns = value;
 	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public long getId() {
+		return id;
+	}
 	
 	
 }

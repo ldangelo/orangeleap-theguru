@@ -254,6 +254,8 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		emptyWizard.getReportChartSettings().clear();
 		emptyWizard.getReportChartSettings().addAll(savedWizard.getReportChartSettings());
 		emptyWizard.setReportComment(savedWizard.getReportComment());
+		if (copyIds)
+			emptyWizard.getReportCrossTabFields().setId(savedWizard.getReportCrossTabFields().getId());
 		emptyWizard.getReportCrossTabFields().getReportCrossTabColumns().clear();
 		emptyWizard.getReportCrossTabFields().getReportCrossTabColumns().addAll(savedWizard.getReportCrossTabFields().getReportCrossTabColumns());
 		emptyWizard.getReportCrossTabFields().getReportCrossTabMeasure().clear();
@@ -307,7 +309,6 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		emptyWizard.setSrcId(savedWizard.getSrcId());
 		emptyWizard.setSubSourceId(savedWizard.getSubSourceId());
 		emptyWizard.setUniqueRecords(savedWizard.getUniqueRecords());
-		
 
 		if (!copyIds)
 		{
@@ -571,8 +572,8 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 			// save the report to the server
 			reportGenerator.put(ResourceDescriptor.TYPE_REPORTUNIT, tempFile.getName(), tempFile.getName(), tempFile.getName(), wiz.getTempFolderPath(), tempFile,reportGenerator.getParams(), wiz.getDataSubSource().getJasperDatasourceName());
 
-			wiz.setReportPath(wiz.getTempFolderPath() + "/" + tempFile.getName());
-			refData.put("reportPath", wiz.getReportPath());
+			String tempReportPath = wiz.getTempFolderPath() + "/" + tempFile.getName();
+			refData.put("reportPath", tempReportPath);
 
 			tempFile.delete();
 		}
