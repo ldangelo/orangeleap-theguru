@@ -887,6 +887,11 @@ public class ModifyReportJRXML {
 			String categoryExpField = categoryExp.getTextContent();
 			String newcategoryExp = "(( " + categoryExpField + " != null) ? " + categoryExpField + " : \"null\" )";
 			categoryExp.setTextContent(newcategoryExp);
+			//get the seriesExpression node
+			Node seriesExp = document.getElementsByTagName("seriesExpression").item(0);
+			String seriesExpField = seriesExp.getTextContent();
+			String newseriesExp = "(( " + seriesExpField + " != null) ? " + seriesExpField + " : \"null\" )";
+			seriesExp.setTextContent(newseriesExp);
 		}
 		else if (chartType.compareToIgnoreCase("pie") == 0){
 			//get the keyExpression node
