@@ -135,6 +135,7 @@
 			<value>ReportRedirect</value>
 			<value>RunSavedReport</value>
 			<value>RunReport</value>
+			<value>ReportSaveAsNewReport</value>			
 			<value>ReportRedirect</value>
 		</list>
 		</property>
