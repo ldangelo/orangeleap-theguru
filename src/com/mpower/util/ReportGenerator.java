@@ -92,10 +92,10 @@ public class ReportGenerator {
 	private void startServer() {
 		if (server == null) {
 			server = new JServer();
-			server.setUsername(reportUserName);
-			server.setPassword(reportPassword);
-			server.setUrl(reportServicesURI);
 		}
+		server.setUsername(reportUserName);
+		server.setPassword(reportPassword);
+		server.setUrl(reportServicesURI);		
 	}
 
 	private void initStyles() {
