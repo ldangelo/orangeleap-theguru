@@ -394,7 +394,6 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		} else {
 			UserDetails userDetails = userDetailsService.loadUserByUsername(userName);
 			wiz.setUsername(userName);
-			password = userDetails.getPassword();
 			wiz.setPassword(password);
 		}
 
