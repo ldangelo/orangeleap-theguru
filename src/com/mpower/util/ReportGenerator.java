@@ -537,9 +537,9 @@ public class ReportGenerator {
 					calc = "Count";
 				else if (rcs.getOperation().toString().compareToIgnoreCase("sum") == 0)
 					calc = "Sum";
-
-				if  (chart.getColumnsGroup().getColumnToGroupBy().getName() != null){
-					yAxisLabel = "\"" + chart.getColumnsGroup().getColumnToGroupBy().getTitle().toString() + " " + calc + "\"";
+				AbstractColumn yAxisColumn = (AbstractColumn) chart.getColumns().get(0);
+				if  (yAxisColumn != null){
+					yAxisLabel = "\"" + yAxisColumn.getTitle().toString() + " " + calc + "\"";
 				}else
 					yAxisLabel = rcs.getOperation().toString();
 
