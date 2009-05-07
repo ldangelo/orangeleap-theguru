@@ -95,7 +95,7 @@ public class ReportGenerator {
 		}
 		server.setUsername(reportUserName);
 		server.setPassword(reportPassword);
-		server.setUrl(reportServicesURI);		
+		server.setUrl(reportServicesURI);
 	}
 
 	private void initStyles() {
@@ -165,6 +165,7 @@ public class ReportGenerator {
 		//
 		if (wiz.getReportType().compareToIgnoreCase("matrix") == 0){
 			DJCrosstab djcross = createCrosstab(wiz, reportFieldService, drb);
+			djcross.getDatasource().setPreSorted(true);
 			drb.addFooterCrosstab(djcross);
 		}
 
