@@ -529,25 +529,25 @@ public class ReportQueryGenerator {
 				   			   getSqlCalendarDurationCriteriaFromCurrentDate(DatePart.WEEK, rf.getColumnName(), 0) + " )";
 				break;
 			case 39: // Today
-				whereClause += rf.getColumnName() + " = " + getSqlCriteriaDaysFromCurrentDate(0);
+				whereClause += "CAST(" + rf.getColumnName() +" AS DATE) " + " = " + getSqlCriteriaDaysFromCurrentDate(0);
 				break;
 			case 40: // Yesterday
-				whereClause += rf.getColumnName() + " = " + getSqlCriteriaDaysFromCurrentDate(-1);
+				whereClause += "CAST(" + rf.getColumnName() +" AS DATE) " + " = " + getSqlCriteriaDaysFromCurrentDate(-1);
 				break;
 			case 41: // Last 7
-				whereClause += rf.getColumnName() + " > " + getSqlCriteriaDaysFromCurrentDate(-7);
+				whereClause += "CAST(" + rf.getColumnName() +" AS DATE) " +  " > " + getSqlCriteriaDaysFromCurrentDate(-7);
 				break;
 			case 42: // Last 30
-				whereClause += rf.getColumnName() + " > " + getSqlCriteriaDaysFromCurrentDate(-30);
+				whereClause += "CAST(" + rf.getColumnName() +" AS DATE) " +  " > " + getSqlCriteriaDaysFromCurrentDate(-30);
 				break;
 			case 43: // Last 60
-				whereClause += rf.getColumnName() + " > " + getSqlCriteriaDaysFromCurrentDate(-60);
+				whereClause += "CAST(" + rf.getColumnName() +" AS DATE) " +  " > " + getSqlCriteriaDaysFromCurrentDate(-60);
 				break;
 			case 44: // Last 90
-				whereClause += rf.getColumnName() + " > " + getSqlCriteriaDaysFromCurrentDate(-90);
+				whereClause += "CAST(" + rf.getColumnName() +" AS DATE) " +  " > " + getSqlCriteriaDaysFromCurrentDate(-90);
 				break;
 			case 45: // Last 120
-				whereClause += rf.getColumnName() + " > " + getSqlCriteriaDaysFromCurrentDate(-120);
+				whereClause += "CAST(" + rf.getColumnName() +" AS DATE) " +  " > " + getSqlCriteriaDaysFromCurrentDate(-120);
 				break;
 		}
 		whereClause += ")";
