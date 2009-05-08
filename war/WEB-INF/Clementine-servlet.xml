@@ -91,7 +91,7 @@
 	    	<property name="reportGenerator" ref="reportGenerator"/>
 	</bean>
 
-	<bean id="reportGenerator" class="com.mpower.util.ReportGenerator">
+	<bean id="reportGenerator" class="com.mpower.util.ReportGenerator" scope="prototype">
 		<property name="reportServicesURI" value="http://${jasper.host}:${jasper.port}/${contextPrefix}jasperserver/services/repository"/>
 		<property name="reportUserName" value="jasperadmin"/>
 		<property name="reportPassword" value="jasperadmin"/>
@@ -108,6 +108,16 @@
 		<property name="reportWizardService" ref="reportWizardService"/>
 	</bean>
 
+	<bean name="ReportWizard" class="com.mpower.domain.ReportWizard" scope="prototype">
+		<property name="reportGenerator" ref="reportGenerator"/>
+		<property name="reportType" value="tabular"/>
+		<property name="srcId" value="0"/>
+		<property name="dataSubSourceGroupId" value="0"/>
+		<property name="subSourceId" value="0"/>
+		<property name="rowCount" value="100"/>
+		<property name="uniqueRecords" value="false"/>
+	</bean>
+
     <bean name="/ReportWizard.htm" class="com.mpower.controller.ReportWizardFormController">
         <property name="commandName" value="reportsource"/>
         <property name="commandClass" value="com.mpower.domain.ReportWizard"/>
@@ -121,7 +131,6 @@
 		<property name="reportCustomFilterDefinitionService" ref="reportCustomFilterDefinitionService"/>
 		<property name="reportUnitDataSourceURI" value="/datasources/ReportWizardJdbcDS"/>
         <property name="dynamicView" ref="dynamicReport"/>
-        <property name="reportGenerator" ref="reportGenerator"/>
     	<property name="jdbcDataSource" ref="dataSource"/>
     	<property name="userDetailsService" ref="jdbcAuthenticationDao"/>
 	<property name="pages">

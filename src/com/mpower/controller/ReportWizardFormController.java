@@ -20,6 +20,8 @@ import org.springframework.util.Assert;
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractWizardFormController;
 
@@ -75,7 +77,6 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 	private SessionService          sessionService;
 	private DataSource jdbcDataSource;
 	private String reportUnitDataSourceURI;
-	private ReportGenerator	reportGenerator;
 	private UserDetailsService userDetailsService;
 
 	public ReportWizardFormController() {
@@ -86,7 +87,8 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 	protected Object formBackingObject(HttpServletRequest request)
 	throws ServletException {
 		logger.info("**** in formBackingObject");
-		wiz = new ReportWizard();
+		WebApplicationContext applicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(this.getServletContext());
+		wiz = (ReportWizard)applicationContext.getBean("ReportWizard");
 		wiz.setDataSources(reportSourceService.readSources());
 
 		logger.info("Count " + wiz.getDataSources().size());
@@ -107,10 +109,6 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 
 	public ReportFieldService getReportFieldService() {
 		return reportFieldService;
-	}
-
-	public ReportGenerator getReportGenerator() {
-		return reportGenerator;
 	}
 
 	public ReportSourceService getReportSourceService() {
@@ -404,8 +402,8 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 			refData.put("userFound", true);
 			refData.put("subSourceGroupId", wiz.getDataSubSourceGroupId());
 			refData.put("subSourceId", wiz.getSubSourceId());
-			reportGenerator.setReportUserName(userName);
-			reportGenerator.setReportPassword(password);
+			wiz.getReportGenerator().setReportUserName(userName);
+			wiz.getReportGenerator().setReportPassword(password);
 
 			jasperServerService.setUserName(userName);
 			jasperServerService.setPassword(password);
@@ -429,7 +427,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		//
 		// Report Source
 		if (page == 0) {
-			reportGenerator.resetInputControls();
+			wiz.getReportGenerator().resetInputControls();
 
 			refData.put("previousSubSourceGroupId", wiz.getPreviousDataSubSourceGroupId());
 			refData.put("previousSubSourceId", wiz.getPreviousDataSubSourceId());
@@ -525,7 +523,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 
 //		 	 SuppressWarnings("unused")
 
-			DynamicReport dr = reportGenerator.Generate(wiz, jdbcDataSource, reportFieldService, reportCustomFilterDefinitionService);
+			DynamicReport dr = wiz.getReportGenerator().Generate(wiz, jdbcDataSource, reportFieldService, reportCustomFilterDefinitionService);
 			//String query = dr.getQuery().getText();
 
 			//
@@ -535,7 +533,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 
 			File tempFile = File.createTempFile("wiz", ".jrxml");
 			logger.info("Temp File: " + tempFile);
-			DynamicJasperHelper.generateJRXML(dr,new ClassicLayoutManager(), reportGenerator.getParams(), null, tempFile.getPath());
+			DynamicJasperHelper.generateJRXML(dr,new ClassicLayoutManager(), wiz.getReportGenerator().getParams(), null, tempFile.getPath());
 
 		    //
 		    // modify the jrxml
@@ -569,7 +567,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 
 			//
 			// save the report to the server
-			reportGenerator.put(ResourceDescriptor.TYPE_REPORTUNIT, tempFile.getName(), tempFile.getName(), tempFile.getName(), wiz.getTempFolderPath(), tempFile,reportGenerator.getParams(), wiz.getDataSubSource().getJasperDatasourceName());
+		    wiz.getReportGenerator().put(ResourceDescriptor.TYPE_REPORTUNIT, tempFile.getName(), tempFile.getName(), tempFile.getName(), wiz.getTempFolderPath(), tempFile, wiz.getReportGenerator().getParams(), wiz.getDataSubSource().getJasperDatasourceName());
 
 			String tempReportPath = wiz.getTempFolderPath() + "/" + tempFile.getName();
 			refData.put("reportPath", tempReportPath);
@@ -586,11 +584,11 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		// First we must generate a jrxml file
 		//
 
-		DynamicReport dr = reportGenerator.Generate(wiz, jdbcDataSource, reportFieldService, reportCustomFilterDefinitionService);
+		DynamicReport dr = wiz.getReportGenerator().Generate(wiz, jdbcDataSource, reportFieldService, reportCustomFilterDefinitionService);
 
 		File tempFile = File.createTempFile("wiz", ".jrxml");
 		logger.info("Temp File: " + tempFile);
-		DynamicJasperHelper.generateJRXML(dr,new ClassicLayoutManager(), reportGenerator.getParams(), null, tempFile.getPath());
+		DynamicJasperHelper.generateJRXML(dr,new ClassicLayoutManager(), wiz.getReportGenerator().getParams(), null, tempFile.getPath());
 
 		//
 	    // modify the jrxml
@@ -628,9 +626,9 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		String reportTitle = wiz.getDataSubSource().getDisplayName() + " Custom Report";
 		if (wiz.getReportName() != null && wiz.getReportName().length() > 0)
 			reportTitle = wiz.getReportName();
-		reportGenerator.put(ResourceDescriptor.TYPE_REPORTUNIT, wiz.getReportSaveAsName(), reportTitle, reportComment,wiz.getReportPath(),tempFile, reportGenerator.getParams(), wiz.getDataSubSource().getJasperDatasourceName());
+		wiz.getReportGenerator().put(ResourceDescriptor.TYPE_REPORTUNIT, wiz.getReportSaveAsName(), reportTitle, reportComment,wiz.getReportPath(),tempFile, wiz.getReportGenerator().getParams(), wiz.getDataSubSource().getJasperDatasourceName());
 
-		//    		reportGenerator.put(ResourceDescriptor.TYPE_REPORTUNIT, reportTitle.replace(" ", "_"), reportTitle, reportComment, wiz.getReportPath(),tempFile, reportGenerator.getParams());
+		//    		wiz.getReportGenerator().put(ResourceDescriptor.TYPE_REPORTUNIT, reportTitle.replace(" ", "_"), reportTitle, reportComment, wiz.getReportPath(),tempFile, wiz.getReportGenerator().getParams());
 
 
 		// delete the temporary file
@@ -652,10 +650,6 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 
 	public void setReportFieldService(ReportFieldService reportFieldService) {
 		this.reportFieldService = reportFieldService;
-	}
-
-	public void setReportGenerator(ReportGenerator reportGenerator) {
-		this.reportGenerator = reportGenerator;
 	}
 
 	public void setReportSourceService(ReportSourceService reportSourceService) {
@@ -724,6 +718,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 	protected ModelAndView processCancel(HttpServletRequest request,
 			HttpServletResponse response, Object command, BindException errors)
 			throws Exception {
-		return new ModelAndView(getSuccessView(),"reportsouce",wiz);
+		command = null;
+		return new ModelAndView(getSuccessView());
 	}
 }

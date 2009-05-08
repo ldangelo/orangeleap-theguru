@@ -27,6 +27,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.annotations.IndexColumn;
 
+import com.mpower.util.ReportGenerator;
+
 @Entity
 @Table(name = "REPORTWIZARD")
 public class ReportWizard implements java.io.Serializable{
@@ -158,20 +160,24 @@ public class ReportWizard implements java.io.Serializable{
 
 	@Transient
 	private long previousDataSubSourceId = -1;
+	
+	@Transient
+	private ReportGenerator	reportGenerator;	
 
 	public ReportWizard() {
-		reportType = "tabular";
 		reportLayout = ReportLayout.PORTRAIT;
+		company = "Default";
+		showSqlQuery = false;
+		recordCount = false;
+		previousPage = 0;
+		
+/*		reportType = "tabular";		
 		srcId = 0;
 		subSourceGroupId = 0;
 		subSourceId = 0;
 		rowCount = 100;
 		uniqueRecords = false;
-		recordCount = false;
-		company = "Default";
-		previousPage = 0;
-		showSqlQuery = false;
-
+*/
 		//
 		// create a filter list decorated as a LazyList
 		reportFilters = LazyList.decorate(new ArrayList<ReportFilter>(),FactoryUtils.instantiateFactory(ReportFilter.class));
@@ -606,5 +612,13 @@ public class ReportWizard implements java.io.Serializable{
 			reportSaveAsName = reportSaveAsName.replace(" ", "_").replace("'", "").replace("\"", "");
 		}
 		return reportSaveAsName;		
+	}
+
+	public void setReportGenerator(ReportGenerator reportGenerator) {
+		this.reportGenerator = reportGenerator;
+	}
+
+	public ReportGenerator getReportGenerator() {
+		return reportGenerator;
 	}	
 }

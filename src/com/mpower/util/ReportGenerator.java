@@ -58,7 +58,7 @@ import ar.com.fdvs.dj.domain.entities.columns.SimpleColumn;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-public class ReportGenerator {
+public class ReportGenerator implements java.io.Serializable {
 	protected final Log logger = LogFactory.getLog(getClass());
 
 	//private Style headerStyle;**
