@@ -165,7 +165,6 @@ public class ReportGenerator implements java.io.Serializable {
 		//
 		if (wiz.getReportType().compareToIgnoreCase("matrix") == 0){
 			DJCrosstab djcross = createCrosstab(wiz, reportFieldService, drb);
-			djcross.getDatasource().setPreSorted(true);
 			drb.addFooterCrosstab(djcross);
 		}
 
@@ -369,7 +368,9 @@ public class ReportGenerator implements java.io.Serializable {
 				DJCrosstabRow row = new CrosstabRowBuilder().setProperty(column.getName(),valueClassName)
 				.setHeaderWidth(100).setHeight(20).setTitle(fRow.getDisplayName()).setShowTotals(true)
 				.setTotalStyle(CrossTabTotalStyle).setHeaderStyle(CrossTabColRowHeaderStyle).setTotalHeaderStyle(CrossTabColRowHeaderStyle)
-				.setTotalStyle(CrossTabColRowHeaderTotalStyle).build();
+				.setTotalStyle(CrossTabColRowHeaderTotalStyle)
+				.setSortOrder((ctRow.getSortOrder().compareToIgnoreCase("DESC") == 0) ? DJConstants.ORDER_DESCENDING : DJConstants.ORDER_ASCENDING)
+				.build();
 				cb.addRow(row);
 			}
 		}
@@ -393,7 +394,9 @@ public class ReportGenerator implements java.io.Serializable {
 				DJCrosstabColumn col = new CrosstabColumnBuilder().setProperty(column.getName(),valueClassName)
 				.setHeaderHeight(60).setWidth(80).setTitle(fCol.getDisplayName()).setShowTotals(true)
 				.setTotalStyle(CrossTabTotalStyle).setHeaderStyle(CrossTabColRowHeaderStyle).setTotalHeaderStyle(CrossTabColRowHeaderStyle)
-				.setTotalStyle(CrossTabColRowHeaderTotalStyle).build();
+				.setTotalStyle(CrossTabColRowHeaderTotalStyle)
+				.setSortOrder((ctCol.getSortOrder().compareToIgnoreCase("DESC") == 0) ? DJConstants.ORDER_DESCENDING : DJConstants.ORDER_ASCENDING)
+				.build();
 				cb.addColumn(col);
 			}
 		}
@@ -406,7 +409,7 @@ public class ReportGenerator implements java.io.Serializable {
 		case NONE:   	valueClassName = String.class.getName();	break;
 		case STRING:   	valueClassName = String.class.getName();	break;
 		case INTEGER:   valueClassName = Long.class.getName(); 		break;
-		case DOUBLE:   	valueClassName = String.class.getName();	break;
+		case DOUBLE:   	valueClassName = Double.class.getName();	break;
 		case DATE:   	valueClassName = Date.class.getName();  	break;
 		case MONEY:   	valueClassName = Float.class.getName(); 	break;
 		case BOOLEAN:   valueClassName = Boolean.class.getName();
