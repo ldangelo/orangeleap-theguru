@@ -885,12 +885,12 @@ public class ModifyReportJRXML {
 			//get the categoryExpression node
 			Node categoryExp = document.getElementsByTagName("categoryExpression").item(0);
 			String categoryExpField = categoryExp.getTextContent();
-			String newcategoryExp = "(( " + categoryExpField + " != null) ? " + categoryExpField + " : \"null\" )";
+			String newcategoryExp = "(( " + categoryExpField + " != null) ? " + categoryExpField + ".toString() : \"null\" )";
 			categoryExp.setTextContent(newcategoryExp);
 			//get the seriesExpression node
 			Node seriesExp = document.getElementsByTagName("seriesExpression").item(0);
 			String seriesExpField = seriesExp.getTextContent();
-			String newseriesExp = "(( " + seriesExpField + " != null) ? " + seriesExpField + " : \"null\" )";
+			String newseriesExp = "(( " + seriesExpField + " != null) ? " + seriesExpField + ".toString() : \"null\" )";
 			seriesExp.setTextContent(newseriesExp);
 		}
 		else if (chartType.compareToIgnoreCase("pie") == 0){
