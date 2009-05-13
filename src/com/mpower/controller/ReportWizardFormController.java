@@ -19,6 +19,7 @@ import org.springframework.security.userdetails.UserDetailsService;
 import org.springframework.util.Assert;
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
+import org.springframework.validation.ObjectError;
 import org.springframework.validation.Validator;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -30,6 +31,7 @@ import ar.com.fdvs.dj.core.layout.ClassicLayoutManager;
 import ar.com.fdvs.dj.domain.DynamicReport;
 
 import com.jaspersoft.jasperserver.api.metadata.xml.domain.impl.ResourceDescriptor;
+import com.mpower.controller.validator.ReportSaveValidator;
 import com.mpower.controller.validator.ReportWizardValidator;
 import com.mpower.domain.ReportChartSettings;
 import com.mpower.domain.ReportCrossTabColumn;
@@ -191,7 +193,19 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 			//
 			// We are saving this report to jasperserver
 			try {
-				saveReport(wiz);
+				ReportSaveValidator rsv = new ReportSaveValidator();
+				rsv.validate(wiz, errors);
+				Boolean saveValidationSuccess = true;
+				Iterator itErrors = errors.getAllErrors().iterator();
+				while (itErrors.hasNext()) {
+					ObjectError error = (ObjectError)itErrors.next();
+					if (error.getCode().contains("error.code")) {
+						saveValidationSuccess = false;
+						break;
+					}
+				}
+				if (saveValidationSuccess)
+					saveReport(wiz);
 			} catch (Exception e) {
 				logger.error(e.getLocalizedMessage());
 				errors.reject(e.getLocalizedMessage());
@@ -203,9 +217,22 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 	protected int getTargetPage(HttpServletRequest request, Object command, Errors errors, int currentPage) {
 		//
 		// if we are saving a report then redirect the user back to where they hit saveas from
-		if (request.getParameter("_target5") != null || request.getParameter("_target5.x") != null) {
+		if (request.getParameter("_target5") != null || request.getParameter("_target5.x") != null ) {
+			Boolean returnToSavePage = false;
+			Iterator itErrors = errors.getAllErrors().iterator();
+			while (itErrors.hasNext()) {
+				ObjectError error = (ObjectError)itErrors.next();
+				if (error.getCode().contains("error.code")) {
+					returnToSavePage = true;
+					break;
+				}
+			}
+
 			ReportWizard wiz = (ReportWizard) command;
-			return wiz.getPreviousPage();
+			if (returnToSavePage)
+				return currentPage;
+			else
+			    return wiz.getPreviousPage();
 		}
 
 		return super.getTargetPage(request, command, errors, currentPage);
@@ -315,31 +342,31 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		    	ReportSelectedField reportField = (ReportSelectedField)itReportFields.next();
 		    	reportField.setId(0);
 		    }
-		    
+
 		    Iterator<ReportChartSettings> itReportChartSettings = emptyWizard.getReportChartSettings().iterator();
 		    while (itReportChartSettings.hasNext()){
 		    	ReportChartSettings reportChartSetting = (ReportChartSettings)itReportChartSettings.next();
 		    	reportChartSetting.setId(0);
 		    }
-		    
+
 		    Iterator<ReportCrossTabColumn> itReportCrossTabColumn = emptyWizard.getReportCrossTabFields().getReportCrossTabColumns().iterator();
 		    while (itReportCrossTabColumn.hasNext()){
 		    	ReportCrossTabColumn reportCrossTabColumn = (ReportCrossTabColumn)itReportCrossTabColumn.next();
 		    	reportCrossTabColumn.setId(0);
 		    }
-		    
+
 		    Iterator<ReportCrossTabRow> itReportCrossTabRow = emptyWizard.getReportCrossTabFields().getReportCrossTabRows().iterator();
 		    while (itReportCrossTabRow.hasNext()){
 		    	ReportCrossTabRow reportCrossTabRow = (ReportCrossTabRow)itReportCrossTabRow.next();
 		    	reportCrossTabRow.setId(0);
 		    }
-		    
+
 		    Iterator<ReportCrossTabMeasure> itReportCrossTabMeasure = emptyWizard.getReportCrossTabFields().getReportCrossTabMeasure().iterator();
 		    while (itReportCrossTabMeasure.hasNext()){
 		    	ReportCrossTabMeasure reportCrossTabMeasure = (ReportCrossTabMeasure)itReportCrossTabMeasure.next();
 		    	reportCrossTabMeasure.setId(0);
-		    }	    
-		}		
+		    }
+		}
 	}
 
 	@SuppressWarnings("unchecked")
@@ -357,7 +384,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 			wiz.setPreviousPage(page -1);
 
 		refData.put("previouspage", wiz.getPreviousPage());
-		
+
 		// Load info passed to the wizard
 		String reportUri = request.getParameter("reporturi");
 		if (reportUri != null && reportUri.length() > 0) {
@@ -374,12 +401,12 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 						wiz.setReportPath(reportUri.substring(0, reportUri.indexOf("/THEGURU_")));
 						LoadWizardLookupTables(wiz);
 					} else {
-						errors.reject("1", "Unable to load report " + reportUri + ".  You may continue to create a new report, or cancel to return to the report list.");	
+						errors.reject("1", "Unable to load report " + reportUri + ".  You may continue to create a new report, or cancel to return to the report list.");
 					}
 				}
 			} catch (Exception exception) {
 				errors.reject("1", "Unable to load report " + reportUri + ".  You may continue to create a new report, or cancel to return to the report list.  " + exception.getMessage());
-			}									
+			}
 		}
 
 		// if no user or password is in the request, see if the user has already been
@@ -423,7 +450,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 					errors.reject("Invalid Repository","Invalid Repository.  It appears your repository is not setup properly.  Please contact your system administrator.");
 			}
 		}
-		
+
 		//
 		// Report Source
 		if (page == 0) {
@@ -684,7 +711,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 	throws Exception {
 
 		if (request.getParameter("_target9") != null || request.getParameter("_target9.x") != null) {
-			return showPage(request, errors, 9);			
+			return showPage(request, errors, 9);
 		}
 		else
 		{
