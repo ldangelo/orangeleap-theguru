@@ -1,6 +1,8 @@
 package com.mpower.util;
 
+import java.awt.Color;
 import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -9,7 +11,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import net.sf.jasperreports.engine.JRExpression;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.design.JRDesignExpression;
 
@@ -28,9 +33,9 @@ import com.mpower.domain.ReportSelectedField;
 import com.mpower.domain.ReportWizard;
 import com.mpower.service.ReportCustomFilterDefinitionService;
 import com.mpower.service.ReportFieldService;
+import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
 
 import ar.com.fdvs.dj.core.DJConstants;
-import ar.com.fdvs.dj.domain.ColumnProperty;
 import ar.com.fdvs.dj.domain.DJCalculation;
 import ar.com.fdvs.dj.domain.DJChart;
 import ar.com.fdvs.dj.domain.DJChartOptions;
@@ -39,7 +44,6 @@ import ar.com.fdvs.dj.domain.DJCrosstabColumn;
 import ar.com.fdvs.dj.domain.DJCrosstabRow;
 import ar.com.fdvs.dj.domain.DynamicReport;
 import ar.com.fdvs.dj.domain.Style;
-import ar.com.fdvs.dj.domain.builders.ChartBuilderException;
 import ar.com.fdvs.dj.domain.builders.ColumnBuilder;
 import ar.com.fdvs.dj.domain.builders.ColumnBuilderException;
 import ar.com.fdvs.dj.domain.builders.CrosstabBuilder;
@@ -49,14 +53,16 @@ import ar.com.fdvs.dj.domain.builders.FastReportBuilder;
 import ar.com.fdvs.dj.domain.constants.Border;
 import ar.com.fdvs.dj.domain.constants.Font;
 import ar.com.fdvs.dj.domain.constants.GroupLayout;
+import ar.com.fdvs.dj.domain.constants.HorizontalAlign;
 import ar.com.fdvs.dj.domain.constants.VerticalAlign;
 import ar.com.fdvs.dj.domain.entities.DJGroup;
 import ar.com.fdvs.dj.domain.entities.columns.AbstractColumn;
 import ar.com.fdvs.dj.domain.entities.columns.PropertyColumn;
-import ar.com.fdvs.dj.domain.entities.columns.SimpleColumn;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 public class ReportGenerator implements java.io.Serializable {
 	protected final Log logger = LogFactory.getLog(getClass());
@@ -120,7 +126,76 @@ public class ReportGenerator implements java.io.Serializable {
 		templateRD.setUriString(wiz.getReportTemplateJRXML());
 		ResourceDescriptor rd = server.getWSClient().get(templateRD, templateFile);
 
+		//check the template file to ensure the needed styles are there
+		initRequiredMissingTemplateStyles(templateFile);
+
 		return templateFile;
+	}
+
+	/**
+	 * Initializes the styles the report requires if they are missing from the template.
+	 * If they are in the template the styles from the template will be used.
+	 *
+	 */
+	private void initRequiredMissingTemplateStyles(File templateFile) throws ParserConfigurationException, SAXException, IOException {
+		Document document = loadXMLDocument(templateFile.getPath());
+		NodeList stylesNode = document.getElementsByTagName("style");
+		Boolean initdetail = true,	initheader = true, initheaderVariables = true, inittitleStyle = true, initimporteStyle = true, initoddRowStyle = true, initSummaryStyle = true, initSummaryStyleBlue = true;
+		for (int stylesIndex=0; stylesIndex<stylesNode.getLength(); stylesIndex++) {
+    	    if (stylesNode.item(stylesIndex).getAttributes().getNamedItem("name").getTextContent().equals("detail")) initdetail = false;
+    	    if (stylesNode.item(stylesIndex).getAttributes().getNamedItem("name").getTextContent().equals("header")) initheader = false;
+    	    if (stylesNode.item(stylesIndex).getAttributes().getNamedItem("name").getTextContent().equals("headerVariables")) initheaderVariables = false;
+    	    if (stylesNode.item(stylesIndex).getAttributes().getNamedItem("name").getTextContent().equals("titleStyle")) inittitleStyle = false;
+    	    if (stylesNode.item(stylesIndex).getAttributes().getNamedItem("name").getTextContent().equals("importeStyle")) initimporteStyle = false;
+    	    if (stylesNode.item(stylesIndex).getAttributes().getNamedItem("name").getTextContent().equals("oddRowStyle")) initoddRowStyle = false;
+    	    if (stylesNode.item(stylesIndex).getAttributes().getNamedItem("name").getTextContent().equals("SummaryStyle")) initSummaryStyle = false;
+    	    if (stylesNode.item(stylesIndex).getAttributes().getNamedItem("name").getTextContent().equals("SummaryStyleBlue")) initSummaryStyleBlue = false;
+    	}
+
+		//initialize the styles that were not found in the template
+		if (initdetail){
+			Style detail = Style.createBlankStyle("detail");
+			detail.setFont(Font.ARIAL_SMALL);
+			detail.setHorizontalAlign(HorizontalAlign.LEFT);
+		}
+		if (initheader){
+			Style header = Style.createBlankStyle("header");
+			header.setFont(Font.ARIAL_SMALL_BOLD);
+			header.setHorizontalAlign(HorizontalAlign.LEFT);
+			header.setBackgroundColor(Color.GRAY);
+		}
+		if (initheaderVariables){
+			Style headerVariables = Style.createBlankStyle("headerVariables");
+			headerVariables.setFont(Font.ARIAL_SMALL_BOLD);
+			headerVariables.setHorizontalAlign(HorizontalAlign.LEFT);
+		}
+		if (inittitleStyle){
+			Style titleStyle = Style.createBlankStyle("titleStyle");
+			titleStyle.setFont(Font.VERDANA_BIG_BOLD);
+			titleStyle.setHorizontalAlign(HorizontalAlign.LEFT);
+		}
+		if (initimporteStyle){
+			Style importeStyle = Style.createBlankStyle("importeStyle");
+			importeStyle.setHorizontalAlign(HorizontalAlign.RIGHT);
+		}
+		if (initoddRowStyle){
+			Style oddRowStyle = Style.createBlankStyle("oddRowStyle");
+			oddRowStyle.setBackgroundColor(Color.lightGray);
+		}
+		if (initSummaryStyle){
+			Style SummaryStyle = Style.createBlankStyle("SummaryStyle");
+			SummaryStyle.setFont(Font.ARIAL_SMALL);
+		}
+		if (initSummaryStyleBlue){
+			Style SummaryStyleBlue = Style.createBlankStyle("SummaryStyleBlue");
+			SummaryStyleBlue.setParentStyleName("SummaryStyle");
+			SummaryStyleBlue.setTextColor(Color.blue);
+			SummaryStyleBlue.setFont(Font.ARIAL_SMALL);
+			SummaryStyleBlue.setHorizontalAlign(HorizontalAlign.LEFT);
+		}
+
+		saveXMLtoFile(templateFile.getName(), document);
+
 	}
 
 	public DynamicReport Generate(ReportWizard wiz,javax.sql.DataSource jdbcDataSource, ReportFieldService reportFieldService,
@@ -971,5 +1046,66 @@ public class ReportGenerator implements java.io.Serializable {
 		params = new HashMap();
 		inputControls = new HashMap();
 
+	}
+	private Document loadXMLDocument(String fileName)
+	throws ParserConfigurationException, SAXException, IOException {
+		// Load the report xml document
+		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+		documentBuilderFactory.setNamespaceAware(false);
+		DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+		String localDTDFile = getLocalDirName() + "jasperreport.dtd";
+		LocalDTDResolver LocalDTDResolver
+		= new LocalDTDResolver(
+				"http://jasperreports.sourceforge.net/dtds/jasperreport.dtd",
+				new File(localDTDFile)
+		);
+
+		documentBuilder.setEntityResolver( LocalDTDResolver );
+
+		Document document = documentBuilder.parse(new File(fileName));
+		return document;
+	}
+
+	private String getLocalDirName()
+	{
+		String localDirName;
+
+		//Use that name to get a URL to the directory we are executing in
+		java.net.URL myURL = this.getClass().getResource(getClassName());  //Open a URL to the our .class file
+
+		//Clean up the URL and make a String with absolute path name
+		localDirName = myURL.getPath();  //Strip path to URL object out
+		localDirName = myURL.getPath().replaceAll("%20", " ");  //change %20 chars to spaces
+
+		//Get the current execution directory
+		localDirName = localDirName.substring(0,localDirName.lastIndexOf("clementine.jar"));  //clean off the file name
+
+		return localDirName;
+	}
+
+	private String getClassName()
+	{
+		String thisClassName;
+
+		//Build a string with executing class's name
+		thisClassName = this.getClass().getName();
+		thisClassName = thisClassName.substring(thisClassName.lastIndexOf(".") + 1,thisClassName.length());
+		thisClassName += ".class";  //this is the name of the bytecode file that is executing
+
+		return thisClassName;
+	}
+
+	/**
+	 * Normalizes and saves the modified XML document.
+	 * @param fileName
+	 * @param document
+	 * @throws IOException
+	 */
+	private void saveXMLtoFile(String fileName, Document document)
+			throws IOException {
+		document.normalize();
+    	XMLSerializer serializer = new XMLSerializer();
+    	serializer.setOutputCharStream(new java.io.FileWriter(fileName));
+    	serializer.serialize(document);
 	}
 }
