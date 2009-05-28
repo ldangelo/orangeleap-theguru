@@ -47,28 +47,28 @@
 </ul>
 <c:choose>
 <c:when test="${page == 0}">
-	 Step ${page+1} of ${maxpages+1}: Select report data source
+	 Step ${page+1} of 5: Select report data source
 </c:when>
 
 <c:when test="${page == 1}">
-	 Step ${page+1} of ${maxpages+1}: Select report format
+	 Step ${page+1} of 5: Select report format
 </c:when>
 
 <c:when test="${page == 2}">
-	 Step ${page+1} of ${maxpages+1}: Select report content
+	 Step ${page+1} of 5: Select report content
 </c:when>
 
 <c:when test="${page == 3}">
-	 Step ${page+1} of ${maxpages+1}: Select report criteria
+	 Step ${page+1} of 5: Select report criteria
 </c:when>
 
 <c:when test="${page == 4}">
-	 Step ${page+1} of ${maxpages+1}: Save report
+	 Step ${page+1} of 5: Save report
 </c:when>
 </c:choose>
 
 
-	
+
 		<div class="clearBoth"></div>
 	</div>
 	<div class="navRightCap"></div>
