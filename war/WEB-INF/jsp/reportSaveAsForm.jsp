@@ -11,11 +11,11 @@
       function(data) { return data.label; },
       function(data) { return data.description; }
   ];
-  
+
 function addReports(results) {
     //console.log ("results " + results);
-    dwr.util.removeAllRows("reports");    
-    
+    dwr.util.removeAllRows("reports");
+
     var reports = new Array();
     for (ds in results) {
 		if (results[ds].wsType == "reportUnit") {
@@ -30,7 +30,7 @@ function updateReports(dtnode) {
     var username = jQuery("#username").attr("value");
     var password = jQuery("#password").attr("value");
     //console.log("Updating reports " + dtnode);
-    
+
     //console.log("key = " + dtnode.data.key);
     jQuery("#reportPath").attr("value", dtnode.data.key);
 
@@ -41,26 +41,26 @@ function updateReports(dtnode) {
 
 function updateTree(results) {
     var reportPath = jQuery("#reportPath").val();
-	
+
     var childNode;
     //console.log(results);
     var username = jQuery("#username").attr("value");
     var password = jQuery("#password").attr("value");
-    
+
     for (rs in results)
     {
 	if (results[rs].wsType == "folder") {
-	    if (results[rs].parentFolder == "/") 
+	    if (results[rs].parentFolder == "/")
 		var rootNode = jQuery("#treeview").dynatree("getRoot");
 	    else
 		var rootNode = jQuery("#treeview").dynatree("getTree").getNodeByKey(results[rs].parentFolder);
-	    
+
 	    childNode = rootNode.append({
 		title: results[rs].label,
 		isFolder: true,
 		key: results[rs].uriString
 	    });
-	    
+
 	    //
 	    // updateTree childnode
 	    JasperServerService.setUserName(username);
@@ -70,13 +70,13 @@ function updateTree(results) {
     }
 	if (reportPath != null && reportPath != '' && jQuery('#treeview').dynatree("getTree").selectKey(reportPath) != null) {
 		jQuery('#treeview').dynatree("getTree").selectKey(reportPath).activate();
-		updateReports(jQuery('#treeview').dynatree("getTree").selectKey(reportPath));		   
+		updateReports(jQuery('#treeview').dynatree("getTree").selectKey(reportPath));
 	}
-    
+
   }
 
 function preventInvalidReportNameCharacters() {
-	var reportName = jQuery('#reportName'); 
+	var reportName = jQuery('#reportName');
 	reportName.one("keydown",function(event){
 		preventInvalidReportNameCharacters();
 		if (event.keyCode == 220) // backslash
@@ -96,17 +96,18 @@ jQuery(function() {
     var username = jQuery("#username").attr("value");
     var password = jQuery("#password").attr("value");
 
+    JasperServerService.setUserName(username);
+    JasperServerService.setPassword(password);
+
     jQuery("#treeview").dynatree({
 	imagePath: "skin/",
 	onFocus: function(dtnode) { updateReports(dtnode); }
     });
-    
-    JasperServerService.setUserName(username);
-    JasperServerService.setPassword(password);
-    JasperServerService.list("/",updateTree);
 
     preventInvalidReportNameCharacters();
     removeInvalidReportNameCharacters();
+
+    JasperServerService.list("/",updateTree);
 });
 
 function checkForReturn(e)
