@@ -15,13 +15,6 @@
 
 
 --
--- Create schema theguru
---
-
-CREATE DATABASE IF NOT EXISTS theguru;
-USE theguru;
-
---
 -- Definition of function `COUNTOFVALUES`
 --
 

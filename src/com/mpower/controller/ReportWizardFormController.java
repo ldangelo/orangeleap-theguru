@@ -6,14 +6,19 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.security.context.SecurityContext;
+import org.springframework.security.context.SecurityContextHolder;
+import org.springframework.security.providers.UsernamePasswordAuthenticationToken;
 import org.springframework.security.userdetails.UserDetails;
 import org.springframework.security.userdetails.UserDetailsService;
 import org.springframework.util.Assert;
@@ -33,6 +38,7 @@ import ar.com.fdvs.dj.domain.DynamicReport;
 import com.jaspersoft.jasperserver.api.metadata.xml.domain.impl.ResourceDescriptor;
 import com.mpower.controller.validator.ReportSaveValidator;
 import com.mpower.controller.validator.ReportWizardValidator;
+import com.mpower.domain.GuruSessionData;
 import com.mpower.domain.ReportChartSettings;
 import com.mpower.domain.ReportCrossTabColumn;
 import com.mpower.domain.ReportCrossTabMeasure;
@@ -58,6 +64,7 @@ import com.mpower.service.SessionService;
 import com.mpower.util.ModifyReportJRXML;
 import com.mpower.util.ReportGenerator;
 import com.mpower.util.ReportQueryGenerator;
+import com.mpower.util.SessionHelper;
 import com.mpower.view.DynamicReportView;
 
 public class ReportWizardFormController extends AbstractWizardFormController {
@@ -92,6 +99,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		WebApplicationContext applicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(this.getServletContext());
 		wiz = (ReportWizard)applicationContext.getBean("ReportWizard");
 		wiz.setDataSources(reportSourceService.readSources());
+		SessionHelper.tl_data.get().removeAttribute("GURUSESSIONDATA");
 
 		logger.info("Count " + wiz.getDataSources().size());
 		return wiz;
@@ -386,6 +394,22 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		refData.put("previouspage", wiz.getPreviousPage());
 
 		// Load info passed to the wizard
+		// if no user or password is in the request, see if the user has already been
+		// populated on the wiz.  Going to the second page and then back to the first could cause that.
+		String userName = request.getParameter("username");
+		String password = request.getParameter("password");
+		if (userName == null || password == null) {
+			userName = wiz.getUsername();
+			password = wiz.getPassword();
+		} else {
+			GuruSessionData sessiondata = SessionHelper.getGuruSessionData();
+			sessiondata.setUsername(userName);
+			sessiondata.setPassword(password);
+		    UserDetails userDetails = userDetailsService.loadUserByUsername(userName);
+			wiz.setUsername(userName);
+			wiz.setPassword(password);
+		}
+
 		String reportUri = request.getParameter("reporturi");
 		if (reportUri != null && reportUri.length() > 0) {
 			long reportId = -1;
@@ -407,19 +431,6 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 			} catch (Exception exception) {
 				errors.reject("1", "Unable to load report " + reportUri + ".  You may continue to create a new report, or cancel to return to the report list.  " + exception.getMessage());
 			}
-		}
-
-		// if no user or password is in the request, see if the user has already been
-		// populated on the wiz.  Going to the second page and then back to the first could cause that.
-		String userName = request.getParameter("username");
-		String password = request.getParameter("password");
-		if (userName == null || password == null) {
-			userName = wiz.getUsername();
-			password = wiz.getPassword();
-		} else {
-			UserDetails userDetails = userDetailsService.loadUserByUsername(userName);
-			wiz.setUsername(userName);
-			wiz.setPassword(password);
 		}
 
 		// If there is no user from the request or the wiz, send back to jasper server
