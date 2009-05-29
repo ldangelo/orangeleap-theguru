@@ -1,6 +1,5 @@
-Update jijdbcdatasource
+Update JIJdbcDatasource
 Set connectionUrl = '$jdbcurl$',
 username = '$username$',
 password = '$password$'
-Where id = (Select id from jiresource where jiresource.name = 'ReportWizardJdbcDS');
-
+Where id = (Select id from JIResource where JIResource.name = 'ReportWizardJdbcDS');
