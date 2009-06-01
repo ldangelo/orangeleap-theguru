@@ -715,7 +715,7 @@ public class ModifyReportJRXML {
 			case NONE:   	valueClassName = String.class.getName(); pattern ="";	 		break;
 			case STRING:   	valueClassName = String.class.getName(); pattern ="";			break;
 			case INTEGER:   valueClassName = Long.class.getName(); 	 pattern ="";	 		break;
-			case DOUBLE:   	valueClassName = String.class.getName(); pattern ="";	 		break;
+			case DOUBLE:   	valueClassName = Double.class.getName(); pattern ="";	 		break;
 			case DATE:   	valueClassName = Date.class.getName();   pattern ="MM/dd/yyyy";	break;
 			case MONEY:   	valueClassName = Float.class.getName();  pattern ="$ 0.00";		break;
 			case BOOLEAN:   valueClassName = Boolean.class.getName();pattern ="";
@@ -788,7 +788,7 @@ public class ModifyReportJRXML {
 				case NONE:   	valueClassName = String.class.getName();	break;
 				case STRING:   	valueClassName = String.class.getName();	break;
 				case INTEGER:   valueClassName = Long.class.getName(); 		break;
-				case DOUBLE:   	valueClassName = String.class.getName();	break;
+				case DOUBLE:   	valueClassName = Double.class.getName();	break;
 				case DATE:   	valueClassName = Date.class.getName();  	break;
 				case MONEY:   	valueClassName = Float.class.getName(); 	break;
 				case BOOLEAN:   valueClassName = Boolean.class.getName();
@@ -840,7 +840,7 @@ public class ModifyReportJRXML {
 			case NONE:   	valueClassName = String.class.getName(); break;
 			case STRING:   	valueClassName = String.class.getName(); break;
 			case INTEGER:   valueClassName = Long.class.getName(); 	 initialize = "(\"0\")"; break;
-			case DOUBLE:   	valueClassName = String.class.getName(); initialize = "(\"0\")"; break;
+			case DOUBLE:   	valueClassName = Double.class.getName(); initialize = "(\"0\")"; break;
 			case DATE:   	valueClassName = Date.class.getName();   break;
 			case MONEY:   	valueClassName = Float.class.getName();  initialize = "(\"0\")"; break;
 			case BOOLEAN:   valueClassName = Boolean.class.getName();
