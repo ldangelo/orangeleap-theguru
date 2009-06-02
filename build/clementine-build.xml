@@ -234,7 +234,7 @@
 			<path path="${basedir}/db/prod/domain/JasperDatasourceUpdate.sql"/>
 			<filterchain>
 				<replacetokens begintoken="$" endtoken="$">
-					<token key="jdbcurl" value="${orangeleap.mysql.db.url}"/>
+					<token key="jdbcurl" value="${localhost.mysql.db.url}"/>
 					<token key="username" value="${orangeleap.mysql.db.user}"/>
 					<token key="password" value="${orangeleap.mysql.db.pw}"/>
 			   </replacetokens>

@@ -121,7 +121,7 @@
 	<target name="9.1 Load Split Database Data" description="Deploy build output and populate database" >
 
 		<!-- clear and recreate schemas -->
-		<property name="overrideUrl1" value="jdbc:mysql://localhost:3306/?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=UTF8" />
+		<property name="overrideUrl1" value="jdbc:mysql://${mysql.db.host}:${mysql.db.port}/?autoReconnect=true&amp;useUnicode=true" />
         <script language="javascript"> <![CDATA[
            self.getProject().setProperty("mysql.db.url", overrideUrl1);
         ]]> </script>
@@ -139,15 +139,17 @@
 
 		<!-- populate theguru schema -->
 
-		<property name="overrideUrl2" value="jdbc:mysql://${mysql.db.host}:${mysql.db.port}/theguru?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=UTF8" />
+		<property name="overrideUrl2" value="jdbc:mysql://${mysql.db.host}:${mysql.db.port}/theguru?autoReconnect=true&amp;useUnicode=true" />
         <script language="javascript"> <![CDATA[
            self.getProject().setProperty("mysql.db.url", overrideUrl2);
         ]]> </script>
 
-		<property name="overrideUrl3" value="jdbc:mysql://${mysql.db.host}:${mysql.db.port}/orangeleap?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=UTF8" />
+		<property name="overrideUrl3" value="jdbc:mysql://${mysql.db.host}:${mysql.db.port}/orangeleap?autoReconnect=true&amp;useUnicode=true" />
         <script language="javascript"> <![CDATA[
            self.getProject().setProperty("orangeleap.mysql.db.url", overrideUrl3);
         ]]> </script>
+
+		<property name="localhost.mysql.db.url" value="jdbc:mysql://localhost:${mysql.db.port}/orangeleap?autoReconnect=true&amp;useUnicode=true" />
 
 		<property name="jasperserverCreateAndLoadSchema" value="JasperserverCreateAndLoadSchema_theguru.sql" />
 
@@ -156,16 +158,21 @@
 
 		<!-- populate company1theguru schema -->
 
-		<property name="overrideUrl4" value="jdbc:mysql://${mysql.db.host}:${mysql.db.port}/company1theguru?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=UTF8" />
+		<property name="overrideUrl4" value="jdbc:mysql://${mysql.db.host}:${mysql.db.port}/company1theguru?autoReconnect=true&amp;useUnicode=true" />
         <script language="javascript"> <![CDATA[
            self.getProject().setProperty("mysql.db.url", overrideUrl4);
         ]]> </script>
 
 		<!-- Add the views to the Orangeleap schema-->
 
-		<property name="overrideUrl5" value="jdbc:mysql://${mysql.db.host}:${mysql.db.port}/company1?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=UTF8" />
+		<property name="overrideUrl5" value="jdbc:mysql://${mysql.db.host}:${mysql.db.port}/company1?autoReconnect=true&amp;useUnicode=true" />
         <script language="javascript"> <![CDATA[
            self.getProject().setProperty("orangeleap.mysql.db.url", overrideUrl5);
+        ]]> </script>
+
+		<property name="overrideUrl5localhost" value="jdbc:mysql://localhost:${mysql.db.port}/company1?autoReconnect=true&amp;useUnicode=true" />
+        <script language="javascript"> <![CDATA[
+           self.getProject().setProperty("localhost.mysql.db.url", overrideUrl5localhost);
         ]]> </script>
 
 		<property name="overrideJasperserverCreateAndLoadSchema2" value="JasperserverCreateAndLoadSchema_company1.sql" />
@@ -178,7 +185,7 @@
 
 		<!-- populate company2theguru schema -->
 
-		<property name="overrideUrl6" value="jdbc:mysql://${mysql.db.host}:${mysql.db.port}/company2theguru?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=UTF8" />
+		<property name="overrideUrl6" value="jdbc:mysql://${mysql.db.host}:${mysql.db.port}/company2theguru?autoReconnect=true&amp;useUnicode=true" />
         <script language="javascript"> <![CDATA[
            self.getProject().setProperty("mysql.db.url", overrideUrl6);
         ]]> </script>
@@ -186,9 +193,14 @@
 
 		<!-- Add the views to the Orangeleap schema-->
 
-		<property name="overrideUrl7" value="jdbc:mysql://${mysql.db.host}:${mysql.db.port}/company2?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=UTF8" />
+		<property name="overrideUrl7" value="jdbc:mysql://${mysql.db.host}:${mysql.db.port}/company2?autoReconnect=true&amp;useUnicode=true" />
         <script language="javascript"> <![CDATA[
            self.getProject().setProperty("orangeleap.mysql.db.url", overrideUrl7);
+        ]]> </script>
+
+		<property name="overrideUrl7localhost" value="jdbc:mysql://localhost:${mysql.db.port}/company2?autoReconnect=true&amp;useUnicode=true" />
+        <script language="javascript"> <![CDATA[
+           self.getProject().setProperty("localhost.mysql.db.url", overrideUrl7localhost);
         ]]> </script>
 
 		<property name="overrideJasperserverCreateAndLoadSchema3" value="JasperserverCreateAndLoadSchema_company2.sql" />
@@ -201,7 +213,7 @@
 
 		<!-- populate company3theguru schema -->
 
-		<property name="overrideUrl8" value="jdbc:mysql://${mysql.db.host}:${mysql.db.port}/company3theguru?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=UTF8" />
+		<property name="overrideUrl8" value="jdbc:mysql://${mysql.db.host}:${mysql.db.port}/company3theguru?autoReconnect=true&amp;useUnicode=true" />
         <script language="javascript"> <![CDATA[
            self.getProject().setProperty("mysql.db.url", overrideUrl8);
         ]]> </script>
@@ -209,9 +221,14 @@
 
 		<!-- Add the views to the Orangeleap schema-->
 
-		<property name="overrideUrl9" value="jdbc:mysql://${mysql.db.host}:${mysql.db.port}/company3?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=UTF8" />
+		<property name="overrideUrl9" value="jdbc:mysql://${mysql.db.host}:${mysql.db.port}/company3?autoReconnect=true&amp;useUnicode=true" />
         <script language="javascript"> <![CDATA[
            self.getProject().setProperty("orangeleap.mysql.db.url", overrideUrl9);
+        ]]> </script>
+
+		<property name="overrideUrl9localhost" value="jdbc:mysql://localhost:${mysql.db.port}/company3?autoReconnect=true&amp;useUnicode=true" />
+        <script language="javascript"> <![CDATA[
+           self.getProject().setProperty("localhost.mysql.db.url", overrideUrl9localhost);
         ]]> </script>
 
 		<property name="overrideJasperserverCreateAndLoadSchema4" value="JasperserverCreateAndLoadSchema_company3.sql" />
@@ -224,7 +241,7 @@
 
 		<!-- populate demotheguru schema -->
 
-		<property name="overrideUrl10" value="jdbc:mysql://${mysql.db.host}:${mysql.db.port}/demotheguru?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=UTF8" />
+		<property name="overrideUrl10" value="jdbc:mysql://${mysql.db.host}:${mysql.db.port}/demotheguru?autoReconnect=true&amp;useUnicode=true" />
         <script language="javascript"> <![CDATA[
            self.getProject().setProperty("mysql.db.url", overrideUrl10);
         ]]> </script>
@@ -232,9 +249,14 @@
 
 		<!-- Add the views to the Orangeleap schema-->
 
-		<property name="overrideUrl11" value="jdbc:mysql://${mysql.db.host}:${mysql.db.port}/demo?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=UTF8" />
+		<property name="overrideUrl11" value="jdbc:mysql://${mysql.db.host}:${mysql.db.port}/demo?autoReconnect=true&amp;useUnicode=true" />
         <script language="javascript"> <![CDATA[
            self.getProject().setProperty("orangeleap.mysql.db.url", overrideUrl11);
+        ]]> </script>
+
+		<property name="overrideUrl11localhost" value="jdbc:mysql://localhost:${mysql.db.port}/demo?autoReconnect=true&amp;useUnicode=true" />
+        <script language="javascript"> <![CDATA[
+           self.getProject().setProperty("localhost.mysql.db.url", overrideUrl11localhost);
         ]]> </script>
 
 		<property name="overrideJasperserverCreateAndLoadSchema5" value="JasperserverCreateAndLoadSchema_demo.sql" />
@@ -247,7 +269,7 @@
 
 		<!-- populate sandboxtheguru schema -->
 
-		<property name="overrideUrl12" value="jdbc:mysql://${mysql.db.host}:${mysql.db.port}/sandboxtheguru?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=UTF8" />
+		<property name="overrideUrl12" value="jdbc:mysql://${mysql.db.host}:${mysql.db.port}/sandboxtheguru?autoReconnect=true&amp;useUnicode=true" />
         <script language="javascript"> <![CDATA[
            self.getProject().setProperty("mysql.db.url", overrideUrl12);
         ]]> </script>
@@ -255,9 +277,14 @@
 
 		<!-- Add the views to the Orangeleap schema-->
 
-		<property name="overrideUrl13" value="jdbc:mysql://${mysql.db.host}:${mysql.db.port}/sandbox?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=UTF8" />
+		<property name="overrideUrl13" value="jdbc:mysql://${mysql.db.host}:${mysql.db.port}/sandbox?autoReconnect=true&amp;useUnicode=true" />
         <script language="javascript"> <![CDATA[
            self.getProject().setProperty("orangeleap.mysql.db.url", overrideUrl13);
+        ]]> </script>
+
+		<property name="overrideUrl13localhost" value="jdbc:mysql://localhost:${mysql.db.port}/sandbox?autoReconnect=true&amp;useUnicode=true" />
+        <script language="javascript"> <![CDATA[
+           self.getProject().setProperty("localhost.mysql.db.url", overrideUrl13localhost);
         ]]> </script>
 
 		<property name="overrideJasperserverCreateAndLoadSchema6" value="JasperserverCreateAndLoadSchema_sandbox.sql" />
