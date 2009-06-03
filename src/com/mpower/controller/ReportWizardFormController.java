@@ -405,7 +405,10 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 			GuruSessionData sessiondata = SessionHelper.getGuruSessionData();
 			sessiondata.setUsername(userName);
 			sessiondata.setPassword(password);
-		    UserDetails userDetails = userDetailsService.loadUserByUsername(userName);
+			if (password.equals("/")) {
+				UserDetails userDetails = userDetailsService.loadUserByUsername(userName);
+				password = userDetails.getPassword();
+			}
 			wiz.setUsername(userName);
 			wiz.setPassword(password);
 		}
@@ -449,7 +452,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 			if (wiz.getReportTemplateList() != null)
 				wiz.getReportTemplateList().clear();
 
-			if ( !(wiz.getCompany().compareToIgnoreCase("default") == 0))
+			if ( (wiz.getCompany().compareToIgnoreCase("default") == 0))
 				wiz.setReportTemplateList(jasperServerService.list("/Reports/Default/templates"));
 			else
 				wiz.setReportTemplateList(jasperServerService.list("/Reports/" + wiz.getCompany() + "/templates"));
