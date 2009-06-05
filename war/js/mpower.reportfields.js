@@ -1,7 +1,9 @@
-$(document).ready(function() {	
+$(document).ready(function() {
 	/* This code block is your window.onload.  Please don't set window.onload directly. */
 
 	initializeFieldScreen();
+
+	checkForReturn('#fieldsDisplay');
 });
 
 function initializeFieldScreen() {
@@ -9,7 +11,7 @@ function initializeFieldScreen() {
 	updateDisplayedFields();
 	cleanUpFieldTable('#report_fields_add');
 	$('#report_fields_add').find("tr[index!=-1]").each(function() {
-		var row = $(this);		
+		var row = $(this);
 		row.find(".deleteButton").click(function(){
 				deleteFieldRow($(this).parent().parent());
 		});
@@ -18,13 +20,13 @@ function initializeFieldScreen() {
 		});
 		row.find(".moveDownButton").click(function(){
 			moveFieldRow($(this).parent().parent(), 1);
-		});		
-   	});	
+		});
+   	});
 }
 
 function updateDisplayedFields() {
 	var groupId = $('#fieldGroups').find("option:selected").attr('groupid');
-	var fields = $('#fields'); 
+	var fields = $('#fields');
 	var fieldsDisplay = $('#fieldsDisplay');
 	if (groupId == -1) {
 		fields.find('optgroup').attr('hidden', 'false');
@@ -79,7 +81,7 @@ function deleteAllFieldRows() {
 	$('#report_fields_add').find('tr[index!=-1]').fadeOut("fast",function(){
 		$(this).remove();
 	});
-	cleanUpFieldTable('#report_fields_add');	
+	cleanUpFieldTable('#report_fields_add');
 }
 
 function moveFieldRow(fieldRow, moveBy) {
@@ -94,18 +96,18 @@ function moveFieldRow(fieldRow, moveBy) {
 			if (parseInt(row.attr('index')) == newIndex) {
 				row.attr('index', index);
 				return false;
-			}			
+			}
 	   	});
 		fieldRow.attr('index', newIndex)
 	}
-	
+
 	sortFieldTable(fieldTable);
 }
 
 function sortFieldTable(fieldTableSelector) {
 	var fieldTable = $(fieldTableSelector);
 	var rows = fieldTable.find('tr[index!=-1]').get();
-	
+
     rows.sort(function(a, b) {
       var keyA = parseInt($(a).attr('index'));
       var groupA = $(a).find('input[objectname$=groupBy]').attr('checked') == true;
@@ -120,8 +122,8 @@ function sortFieldTable(fieldTableSelector) {
 
     $.each(rows, function(index, row) {
     	fieldTable.children('tbody').append(row);
-   	});	
-    
+   	});
+
     cleanUpFieldTable(fieldTable);
 }
 
@@ -139,7 +141,7 @@ function cleanUpFieldTable(fieldTableSelector) {
 	var groupCount = 0;
 	var beginGroup = false;
 	var firstRow = true;
-	
+
 	fieldTable.find("tr[index!=-1]").each(function() {
 		var fieldTableRow = $(this);
 		fieldTableRow.attr('index', index);
@@ -152,7 +154,7 @@ function cleanUpFieldTable(fieldTableSelector) {
 			var nameString = field.attr('objectname').replace(findExp, "["+index+"]");
 			field.attr('name',nameString);
 			var idString = field.attr('objectname').replace(findExp, "["+index+"]");
-			field.attr('id',idString);		
+			field.attr('id',idString);
 		});
 
 		fieldTableRow.find("select[objectname!='']").each(function(){
@@ -160,20 +162,20 @@ function cleanUpFieldTable(fieldTableSelector) {
 			var nameString = field.attr('objectname').replace(findExp, "["+index+"]");
 			field.attr('name',nameString);
 			var idString = field.attr('objectname').replace(findExp, "["+index+"]");
-			field.attr('id',idString);				
+			field.attr('id',idString);
 		});
 
 		setOptionsEnabled(fieldTableRow);
 
-		index++;	
+		index++;
    	});
-	
+
 	fieldTable.attr('index',index);
 
 	// reset the selected options
 	xAxisSelect.find('option[value=' + xAxisFieldId + ']').attr('selected', 'true');
 	yAxisSelect.find('option[value=' + yAxisFieldId + ']').attr('selected', 'true');
-	
+
 	// display the chart settings if any groups are selected
 	if (fieldTable.find('input[objectname$=groupBy][checked]').length > 0)
 		$('#chartSettings').fadeIn('fast');
@@ -183,7 +185,7 @@ function cleanUpFieldTable(fieldTableSelector) {
 
 function setOptionsEnabled(rowSelector) {
 	var fieldRow = $(rowSelector);
-	var field = fieldRow.find('select[objectname$=fieldId]'); 
+	var field = fieldRow.find('select[objectname$=fieldId]');
 	if (fieldRow.find('input[objectname$=groupBy]').attr('checked')) {
 		//fieldRow.find('input[objectname$=count]').attr('disabled', 'true');
 		if (field.find('option:selected').attr('fieldtype') != 'MONEY') {
@@ -196,7 +198,7 @@ function setOptionsEnabled(rowSelector) {
 		//fieldRow.find('input [objectname$=count]').removeAttr('disabled');
 		//fieldRow.find('input[objectname$=count]').attr('disabled','true');
 		fieldRow.find('input[objectname$=sum]').removeAttr('disabled');
-		fieldRow.find('input[objectname$=average]').removeAttr('disabled');		
+		fieldRow.find('input[objectname$=average]').removeAttr('disabled');
 		if (field.find('option:selected').attr('fieldtype') != 'MONEY') {
 			fieldRow.find('input[fieldtype=summary]').attr('disabled', 'true');
 			fieldRow.find('select[fieldtype=summary]').attr('disabled', 'true');
@@ -206,7 +208,7 @@ function setOptionsEnabled(rowSelector) {
 			fieldRow.find('input[objectname$=max]').removeAttr('disabled');
 			fieldRow.find('input[objectname$=min]').removeAttr('disabled');
 	    }
-		$('#reportChartSettings\\[0\\]\\.fieldIdy').append(field.find('option:selected').clone(true));		
+		$('#reportChartSettings\\[0\\]\\.fieldIdy').append(field.find('option:selected').clone(true));
 	}
 }
 
@@ -222,10 +224,20 @@ function fillChartCalcOptions(fieldSelectId) {
 		if (calculation.find("option:selected").attr('moneyonly') == "true")
 		{
 			calculation.val(calculation.find('option:visible:first').val());
-		}		
+		}
 	}
+}
+
+function checkForReturn(selector)
+{
+	$(selector).one("keypress",function(event){
+		if(event.keyCode == 13) { // ignore tab
+			addReportField(selector);
+		}
+		checkForReturn(selector);
+	});
 }
 
 jQuery.extend(jQuery.expr[':'], {
     Contains : "jQuery(a).text().toUpperCase().indexOf(m[3].toUpperCase())>=0"
- }); 
+ });

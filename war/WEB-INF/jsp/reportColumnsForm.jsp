@@ -35,7 +35,7 @@
 			<option groupid="-1">All Fields</option>
 		</select></td>
 		<td><select id="fields" size=10 style="width: 512px; display: none;"
-			ondblclick="addReportField(this);">
+			ondblclick="addReportField(this);" >
 			<c:forEach var="fgroup" items="${fieldGroups}" varStatus="outer">
 				<optgroup label="${fgroup.name}" fieldgroupid=${fgroup.id}>
 					<c:forEach var="f" items="${fgroup.fields}" varStatus="inner">
