@@ -572,7 +572,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 			//Connection connection = jdbcDataSource.getConnection();
 			//Statement statement = connection.createStatement();
 
-			File tempFile = File.createTempFile("wiz", ".jrxml");
+			File tempFile = TempFileUtil.createTempFile("wiz", ".jrxml");
 			logger.info("Temp File: " + tempFile);
 			DynamicJasperHelper.generateJRXML(dr,new ClassicLayoutManager(), wiz.getReportGenerator().getParams(), null, tempFile.getPath());
 
