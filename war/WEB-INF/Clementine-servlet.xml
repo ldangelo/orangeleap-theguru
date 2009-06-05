@@ -19,7 +19,12 @@
         </property>
     </bean>
 
-	 <bean id="mpxDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+	<bean id="mpxDataSource" class="com.mpower.util.TheGuruDataSource">
+		<property name="dataSource" ref="mpxDataSource-pooled" />
+		<property name="splitDatabases" value="${mysql.splitDatabases}" />
+	</bean>
+
+	 <bean id="mpxDataSource-pooled" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
 		<property name="driverClassName" value="${userdetails.jdbc.driverClassName}" />
 		<property name="url" value="${userdetails.jdbc.url}"/>
 		<property name="username" value="${userdetails.jdbc.username}"/>
@@ -144,7 +149,7 @@
 			<value>ReportRedirect</value>
 			<value>RunSavedReport</value>
 			<value>RunReport</value>
-			<value>ReportSaveAsNewReport</value>			
+			<value>ReportSaveAsNewReport</value>
 			<value>ReportRedirect</value>
 		</list>
 		</property>
@@ -161,15 +166,15 @@
 	<bean id ="reportSourceValidator" class="com.mpower.controller.validator.ReportSourceValidator">
 		<property name="page" value="0"/>
 	</bean>
-	
+
 	<bean id ="reportFormatValidator" class="com.mpower.controller.validator.ReportFormatValidator">
 		<property name="page" value="1"/>
 	</bean>
-	
+
 		<bean id ="reportContentValidator" class="com.mpower.controller.validator.ReportContentValidator">
 		<property name="page" value="2"/>
 	</bean>
-	
+
 	<bean id ="reportCriteriaValidator" class="com.mpower.controller.validator.ReportCriteriaValidator">
 		<property name="page" value="3"/>
 	</bean>
