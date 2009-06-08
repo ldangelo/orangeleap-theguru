@@ -897,7 +897,7 @@ public class ModifyReportJRXML {
 			//get the keyExpression node
 			Node keyExp = document.getElementsByTagName("keyExpression").item(0);
 			String keyExpField = keyExp.getTextContent();
-			String newkeyExp = "(( " + keyExpField + " != null) ? " + keyExpField + " : \"null\" )";
+			String newkeyExp = "(( " + keyExpField + " != null) ? " + keyExpField + ".toString()  : \"null\" )";
 			keyExp.setTextContent(newkeyExp);
 		}
 	}
