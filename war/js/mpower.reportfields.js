@@ -165,7 +165,7 @@ function cleanUpFieldTable(fieldTableSelector) {
 			field.attr('id',idString);
 		});
 
-		setOptionsEnabled(fieldTableRow);
+		setOptionsEnabled(fieldTableRow, index);
 
 		index++;
    	});
@@ -183,7 +183,7 @@ function cleanUpFieldTable(fieldTableSelector) {
 		$('#chartSettings').fadeOut('fast');
 }
 
-function setOptionsEnabled(rowSelector) {
+function setOptionsEnabled(rowSelector, index) {
 	var fieldRow = $(rowSelector);
 	var field = fieldRow.find('select[objectname$=fieldId]');
 	if (fieldRow.find('input[objectname$=groupBy]').attr('checked')) {
@@ -193,7 +193,8 @@ function setOptionsEnabled(rowSelector) {
 			fieldRow.find('input[objectname$=average]').attr('disabled', 'true');
 		}
 		// add the group by field to the x axis chart options
-		$('#reportChartSettings\\[0\\]\\.fieldIdx').append(field.find('option:selected').clone(true));
+		if(index ==0)
+			$('#reportChartSettings\\[0\\]\\.fieldIdx').append(field.find('option:selected').clone(true));
 	} else {
 		//fieldRow.find('input [objectname$=count]').removeAttr('disabled');
 		//fieldRow.find('input[objectname$=count]').attr('disabled','true');
