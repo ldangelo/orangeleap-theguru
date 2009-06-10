@@ -27,24 +27,12 @@
 	<tr>
 		<td><select id="fieldGroups" size=10 style="width: 260px"
 			onchange="updateDisplayedFields();">
-			<optgroup label="Field Groups">
-				<c:forEach var="fgroup" items="${fieldGroups}" varStatus="outer">
-					<option groupid=${fgroup.id}>${fgroup.name}</option>
-				</c:forEach>
-			</optgroup>
+			<optgroup label="Field Groups"><c:forEach var="fgroup" items="${fieldGroups}" varStatus="outer"><option groupid=${fgroup.id}>${fgroup.name}</option></c:forEach></optgroup>
 			<option groupid="-1">All Fields</option>
 		</select></td>
 		<td><select id="fields" size=10 style="width: 512px; display: none;"
 			ondblclick="addReportField(this);" >
-			<c:forEach var="fgroup" items="${fieldGroups}" varStatus="outer">
-				<optgroup label="${fgroup.name}" fieldgroupid=${fgroup.id}>
-					<c:forEach var="f" items="${fgroup.fields}" varStatus="inner">
-						<c:if test="${f != null}">
-							<option value=${f.id} fieldgroupid=${fgroup.id} fieldid=${f.id} fieldtype=${f.fieldType}>${f.displayName}</option>
-						</c:if>
-					</c:forEach>
-				</optgroup>
-			</c:forEach>
+			<c:forEach var="fgroup" items="${fieldGroups}" varStatus="outer"><optgroup label="${fgroup.name}" fieldgroupid=${fgroup.id}>	<c:forEach var="f" items="${fgroup.fields}" varStatus="inner"><c:if test="${f != null}"><option value=${f.id} fieldgroupid=${fgroup.id} fieldid=${f.id} fieldtype=${f.fieldType}>${f.displayName}</option></c:if></c:forEach></optgroup></c:forEach>
 		</select>
 		<select id="fieldsDisplay" size=10 style="width: 512px;"
 			ondblclick="addReportField(this);">
@@ -81,13 +69,8 @@
 						src="images/icons/deleteRow.png" style="cursor: pointer;"
 						onclick="deleteAllFieldRows();"/>
 				</th>
-			</tr>
-        	<c:set var="fieldIndex" scope="request" value="0"/>
-	    	<c:forEach var="field" items="${selectedFields}" varStatus="outer">
-				<c:set var="currentField" scope="request" value="${field}"/>
-				<jsp:include page="/WEB-INF/jsp/reportColumnsFormSelectedField.jsp" />
-				<c:set var="fieldIndex" scope="request" value="${fieldIndex + 1}"/>
-			</c:forEach>
+			</tr><c:set var="fieldIndex" scope="request" value="0"/>
+            <c:forEach var="field" items="${selectedFields}" varStatus="outer"><c:set var="currentField" scope="request" value="${field}"/><jsp:include page="/WEB-INF/jsp/reportColumnsFormSelectedField.jsp" /><c:set var="fieldIndex" scope="request" value="${fieldIndex + 1}"/></c:forEach>
 		</table>
 	</td>
 	</tr>
@@ -137,15 +120,8 @@
 			</SELECT></TD>
 			<TD><SELECT id="reportChartSettings[0].fieldIdx"
 				name="reportChartSettings[0].fieldIdx" >
-				<c:forEach var="f" items="${reportGroupByFields}" varStatus="inner">
-						<c:if test="${f != null }">
-							<option label="${f.displayName}" value="${f.id}"
-							<c:if test="${reportChartSettings[0].fieldIdx == f.id}">
-								selected="true"
-							</c:if>>${f.displayName}</option>
-						</c:if>
-					</c:forEach></SELECT></TD>
-
+				<c:forEach var="f" items="${reportGroupByFields}" varStatus="inner"><c:if test="${f != null }"><option label="${f.displayName}" value="${f.id}"<c:if test="${reportChartSettings[0].fieldIdx == f.id}">selected="true"</c:if>>${f.displayName}</option></c:if>
+				</c:forEach></SELECT></TD>
 			<TD><SELECT id="reportChartSettings[0].fieldIdy"
 				name="reportChartSettings[0].fieldIdy"
 				onchange="fillChartCalcOptions(this); " >
