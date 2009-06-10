@@ -36,26 +36,12 @@
 	<br>
  	<table id="report_filters_add" class="tablesorter" index="0" bgcolor=#E0E0E0 >
 		<tr index="-1" ><th>Selected Filters</th></tr>
-        <c:set var="filterIndex" scope="request" value="0"/>	
+        <c:set var="filterIndex" scope="request" value="0"/>
 	    <c:forEach var="filter" items="${selectedFilters}" varStatus="outer">
 			<c:set var="currentFilter" scope="request" value="${filter}"/>
 			<tr index="${filterIndex}">
 				<td><jsp:include page="/WEB-INF/jsp/reportFilterFormOperators.jsp" /></td>
-				<td>
-					<c:choose>
-						<c:when test='${filter.filterType == 1}'>
-							<jsp:include page="/WEB-INF/jsp/reportFilterFormStandardFilter.jsp" />
-						</c:when>
-						<c:when test='${filter.filterType == 2}'>
-							<jsp:include page="/WEB-INF/jsp/reportFilterFormCustomFilter.jsp" />
-						</c:when>
-						<c:when test='${filter.filterType == 3}'>
-							<jsp:include page="/WEB-INF/jsp/reportFilterFormBeginGroup.jsp" />
-						</c:when>
-						<c:when test='${filter.filterType == 4}'>
-							<jsp:include page="/WEB-INF/jsp/reportFilterFormEndGroup.jsp" />
-						</c:when>
-					</c:choose>
+				<td><c:choose><c:when test='${filter.filterType == 1}'><jsp:include page="/WEB-INF/jsp/reportFilterFormStandardFilter.jsp" /></c:when><c:when test='${filter.filterType == 2}'><jsp:include page="/WEB-INF/jsp/reportFilterFormCustomFilter.jsp" /></c:when><c:when test='${filter.filterType == 3}'><jsp:include page="/WEB-INF/jsp/reportFilterFormBeginGroup.jsp" /></c:when><c:when test='${filter.filterType == 4}'><jsp:include page="/WEB-INF/jsp/reportFilterFormEndGroup.jsp" /></c:when></c:choose>
 				</td>
 				<td><jsp:include page="/WEB-INF/jsp/reportFilterFormActions.jsp" /></td>
 			</tr>
@@ -71,37 +57,21 @@
 	</table>
 	<br>
 	<br>
-	<Table id="limit_row_count" class="tablesorter">	
+	<Table id="limit_row_count" class="tablesorter">
 		<h2>Limit Row Count</h2>
 		<hr width="100%" size=1 color="black">
 		<TR><TH>Limit the number of rows displayed in this report.</TH></TR>
 		<TR>
 			<TD>
 				<SELECT id="rowCountSelect" name="rowCountSelect" onchange="updateRowCountInput(this);">
-					<option value="-1"
-						<c:if test="${rowCount == -1}"> selected="true" </c:if>
-					>All</option>
-					<option value="10"
-						<c:if test="${rowCount == 10}"> selected="true" </c:if>
-					>10</option>
-					<option value="25"
-						<c:if test="${rowCount == 25}"> selected="true" </c:if>
-					>25</option>
-					<option value="50"
-						<c:if test="${rowCount == 50}"> selected="true" </c:if>
-					>50</option>
-					<option value="100"
-						<c:if test="${rowCount == 100}"> selected="true" </c:if>
-					>100</option>
-					<option value=""
-						<c:if test="${rowCount != -1 && rowCount != 10 && rowCount != 25 &&
-									rowCount != 50 && rowCount != 100}"> selected="true" </c:if>				
-					>Custom</option>
+					<option value="-1"<c:if test="${rowCount == -1}"> selected="true" </c:if>>All</option>
+					<option value="10"<c:if test="${rowCount == 10}"> selected="true" </c:if>>10</option>
+					<option value="25"<c:if test="${rowCount == 25}"> selected="true" </c:if>>25</option>
+					<option value="50"<c:if test="${rowCount == 50}"> selected="true" </c:if>>50</option>
+					<option value="100"<c:if test="${rowCount == 100}"> selected="true" </c:if>>100</option>
+					<option value=""<c:if test="${rowCount != -1 && rowCount != 10 && rowCount != 25 &&	rowCount != 50 && rowCount != 100}"> selected="true" </c:if>>Custom</option>
 				</SELECT>
-				<input id="rowCount" name="rowCount" value="${rowCount}"
-					<c:if test="${rowCount == -1 || rowCount == 10 || rowCount == 25 ||
-								rowCount == 50 || rowCount == 100}"> style="display:none" </c:if>
-				/>
+				<input id="rowCount" name="rowCount" value="${rowCount}"<c:if test="${rowCount == -1 || rowCount == 10 || rowCount == 25 ||	rowCount == 50 || rowCount == 100}"> style="display:none" </c:if>/>
 			</TD>
 		</TR>
 <!--		<TR>
