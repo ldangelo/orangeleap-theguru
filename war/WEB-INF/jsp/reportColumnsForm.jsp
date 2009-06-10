@@ -120,7 +120,7 @@
 			</SELECT></TD>
 			<TD><SELECT id="reportChartSettings[0].fieldIdx"
 				name="reportChartSettings[0].fieldIdx" >
-				<c:forEach var="f" items="${reportGroupByFields}" varStatus="inner"><c:if test="${f != null }"><option label="${f.displayName}" value="${f.id}"<c:if test="${reportChartSettings[0].fieldIdx == f.id}">selected="true"</c:if>>${f.displayName}</option></c:if>
+				<c:forEach var="f" items="${reportGroupByFields}" varStatus="inner"><c:if test="${f != null }"><option label="${f.displayName}" value="${f.id}"<c:if test="${reportChartSettings[0].fieldIdx == f.id}"> selected="true"</c:if>>${f.displayName}</option></c:if>
 				</c:forEach></SELECT></TD>
 			<TD><SELECT id="reportChartSettings[0].fieldIdy"
 				name="reportChartSettings[0].fieldIdy"

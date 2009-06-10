@@ -3,14 +3,14 @@
 	<td>
 		<select objectname="reportSelectedFields[INDEXREPLACEMENT].fieldId" style="width: 260px"
 			onchange="setOptionsEnabled($(this).parent().parent());">
-			<c:forEach var="fgroup" items="${fieldGroups}" varStatus="outer"><optgroup label="${fgroup.name}"><c:forEach var="f" items="${fgroup.fields}" varStatus="inner"><c:if test="${f != null}"><option value=${f.id} fieldgroup=${fgroup.id} fieldid=${f.id} fieldtype=${f.fieldType}<c:if test="${(currentField != null) && (currentField.fieldId == f.id)}">selected="true"</c:if>>${f.displayName}</option></c:if></c:forEach></optgroup></c:forEach>
+			<c:forEach var="fgroup" items="${fieldGroups}" varStatus="outer"><optgroup label="${fgroup.name}"><c:forEach var="f" items="${fgroup.fields}" varStatus="inner"><c:if test="${f != null}"><option value=${f.id} fieldgroup=${fgroup.id} fieldid=${f.id} fieldtype=${f.fieldType}<c:if test="${(currentField != null) && (currentField.fieldId == f.id)}"> selected="true"</c:if>>${f.displayName}</option></c:if></c:forEach></optgroup></c:forEach>
 		</select>
 	</td>
 	<td align=center>
 		<select objectname="reportSelectedFields[INDEXREPLACEMENT].sortOrder">
-			<option value=""<c:if test="${(currentField != null) && (currentField.sortOrder == '')}">selected="true"</c:if>>None</option>
-			<option value="ASC"<c:if test="${(currentField != null) && (currentField.sortOrder == 'ASC')}">selected="true"</c:if>>Asc</option>
-			<option value="DESC"<c:if test="${(currentField != null) && (currentField.sortOrder == 'DESC')}">selected="true"</c:if>>Desc</option>
+			<option value=""<c:if test="${(currentField != null) && (currentField.sortOrder == '')}"> selected="true"</c:if>>None</option>
+			<option value="ASC"<c:if test="${(currentField != null) && (currentField.sortOrder == 'ASC')}"> selected="true"</c:if>>Asc</option>
+			<option value="DESC"<c:if test="${(currentField != null) && (currentField.sortOrder == 'DESC')}"> selected="true"</c:if>>Desc</option>
 		</select>
 	</td>
 	<td align=center> <input value="true" onclick="sortFieldTable('#report_fields_add');" objectname="reportSelectedFields[INDEXREPLACEMENT].groupBy" type="checkbox"<c:if test="${(currentField != null) && (currentField.groupBy == true)}">checked="true"</c:if>/></td>

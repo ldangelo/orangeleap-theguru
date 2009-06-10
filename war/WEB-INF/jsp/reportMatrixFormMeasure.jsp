@@ -2,23 +2,23 @@
 
 <TR rowIndex="${measureIndex}">
 	<TD style="width: 360px">
-	<SELECT 
+	<SELECT
 		id="reportCrossTabFields.reportCrossTabMeasure[${measureIndex}].fieldId"
 		name="reportCrossTabFields.reportCrossTabMeasure[${measureIndex}].fieldId"
 		onchange="fillCalcOptions(this); "
 		style="width: 260px">
 		<option label="" value="-1" selected></option>
-		<c:forEach var="fgroup" items="${fieldGroups}" varStatus="outer"><optgroup label="${fgroup.name}"><c:forEach var="f" items="${fgroup.fields}" varStatus="inner"><c:if test="${f != null }"><option label="${f.displayName}" value="${f.id}" fieldType="${f.fieldType}"<c:if test="${fieldId != -1 && fieldId == f.id}">selected="true"</c:if>>${f.displayName}</option></c:if></c:forEach></optgroup></c:forEach>
+		<c:forEach var="fgroup" items="${fieldGroups}" varStatus="outer"><optgroup label="${fgroup.name}"><c:forEach var="f" items="${fgroup.fields}" varStatus="inner"><c:if test="${f != null }"><option label="${f.displayName}" value="${f.id}" fieldType="${f.fieldType}"<c:if test="${fieldId != -1 && fieldId == f.id}"> selected="true"</c:if>>${f.displayName}</option></c:if></c:forEach></optgroup></c:forEach>
 	</SELECT></TD>
 
 	<TD style="width:390px"><SELECT id="reportCrossTabFields.reportCrossTabMeasure[${measureIndex}].calculation"
 				name="reportCrossTabFields.reportCrossTabMeasure[${measureIndex}].calculation"
 				style="width:260px" >
-				<!-- <option value="SUM" <c:if test="${matrixOperation == 'SUM'}">selected="true"</c:if>>Sum</option>
-				<option value="AVERAGE" <c:if test="${matrixOperation == 'AVERAGE'}">selected="true"</c:if>>Average</option>
-				<option value="MAX" <c:if test="${matrixOperation == 'MAX'}">selected="true"</c:if>>Max</option>
-				<option value="MIN" <c:if test="${matrixOperation == 'MIN'}">selected="true"</c:if>>Min</option>
-				<option value="COUNT" <c:if test="${matrixOperation == 'COUNT'}">selected="true"</c:if>>Count</option>
+				<!-- <option value="SUM" <c:if test="${matrixOperation == 'SUM'}"> selected="true"</c:if>>Sum</option>
+				<option value="AVERAGE" <c:if test="${matrixOperation == 'AVERAGE'}"> selected="true"</c:if>>Average</option>
+				<option value="MAX" <c:if test="${matrixOperation == 'MAX'}"> selected="true"</c:if>>Max</option>
+				<option value="MIN" <c:if test="${matrixOperation == 'MIN'}"> selected="true"</c:if>>Min</option>
+				<option value="COUNT" <c:if test="${matrixOperation == 'COUNT'}"> selected="true"</c:if>>Count</option>
 				 -->
 				<!-- options -->
 				<!-- <c:if test="${dateFieldSelected == null}"> style="display: none;" </c:if> > -->
@@ -33,7 +33,7 @@
 					<option label="Count" value="COUNT" numeric="true"  string="false" boolean="false" none="false"
 						<c:if test="${calculation == 'COUNT'}"> selected="true" </c:if> >Count</option>
 			</SELECT></TD>
-<!--  
+<!--
 	<TD style="width: 360px"><SELECT
 		id="reportCrossTabFields.reportCrossTabMeasure[${measureIndex}].sortOrder"
 		name="reportCrossTabFields.reportCrossTabMeasure[${measureIndex}].sortOrder"
