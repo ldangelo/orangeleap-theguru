@@ -398,6 +398,12 @@ public class ReportQueryGenerator {
 		ReportField rf = reportFieldService.find(reportStandardFilter.getFieldId());
 		String controlName = rf.getColumnName() + Integer.toString(index);
 
+		String sqlDateType = "";
+		if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.MYSQL)
+			sqlDateType += "DATE";
+		else if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.SQLSERVER)
+			sqlDateType += "DATETIME";
+
 		switch(reportStandardFilter.getComparison()) {
 			case 1:
 				whereClause += getFieldNameForWhereClause(rf) + " =";
@@ -529,25 +535,25 @@ public class ReportQueryGenerator {
 				   			   getSqlCalendarDurationCriteriaFromCurrentDate(DatePart.WEEK, rf.getColumnName(), 0) + " )";
 				break;
 			case 39: // Today
-				whereClause += "CAST(" + rf.getColumnName() +" AS DATE) " + " = " + getSqlCriteriaDaysFromCurrentDate(0);
+				whereClause += "CAST(" + rf.getColumnName() +" AS " + sqlDateType + ") " + " = " + getSqlCriteriaDaysFromCurrentDate(0);
 				break;
 			case 40: // Yesterday
-				whereClause += "CAST(" + rf.getColumnName() +" AS DATE) " + " = " + getSqlCriteriaDaysFromCurrentDate(-1);
+				whereClause += "CAST(" + rf.getColumnName() +" AS " + sqlDateType + ") " + " = " + getSqlCriteriaDaysFromCurrentDate(-1);
 				break;
 			case 41: // Last 7
-				whereClause += "CAST(" + rf.getColumnName() +" AS DATE) " +  " > " + getSqlCriteriaDaysFromCurrentDate(-7);
+				whereClause += "CAST(" + rf.getColumnName() +" AS " + sqlDateType + ") " +  " > " + getSqlCriteriaDaysFromCurrentDate(-7);
 				break;
 			case 42: // Last 30
-				whereClause += "CAST(" + rf.getColumnName() +" AS DATE) " +  " > " + getSqlCriteriaDaysFromCurrentDate(-30);
+				whereClause += "CAST(" + rf.getColumnName() +" AS " + sqlDateType + ") " +  " > " + getSqlCriteriaDaysFromCurrentDate(-30);
 				break;
 			case 43: // Last 60
-				whereClause += "CAST(" + rf.getColumnName() +" AS DATE) " +  " > " + getSqlCriteriaDaysFromCurrentDate(-60);
+				whereClause += "CAST(" + rf.getColumnName() +" AS " + sqlDateType + ") " +  " > " + getSqlCriteriaDaysFromCurrentDate(-60);
 				break;
 			case 44: // Last 90
-				whereClause += "CAST(" + rf.getColumnName() +" AS DATE) " +  " > " + getSqlCriteriaDaysFromCurrentDate(-90);
+				whereClause += "CAST(" + rf.getColumnName() +" AS " + sqlDateType + ") " +  " > " + getSqlCriteriaDaysFromCurrentDate(-90);
 				break;
 			case 45: // Last 120
-				whereClause += "CAST(" + rf.getColumnName() +" AS DATE) " +  " > " + getSqlCriteriaDaysFromCurrentDate(-120);
+				whereClause += "CAST(" + rf.getColumnName() +" AS " + sqlDateType + ") " +  " > " + getSqlCriteriaDaysFromCurrentDate(-120);
 				break;
 		}
 		whereClause += ")";
@@ -758,7 +764,7 @@ public class ReportQueryGenerator {
 			result = "DATE_ADD(CURDATE(),INTERVAL " + Integer.toString(days) + " DAY)";
 		}
 		else if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.SQLSERVER) {
-			result = "DATEADD(DD, GETDATE(), " + Integer.toString(days) + ")";
+			result = "DATEADD(DD, " + Integer.toString(days) + ", GETDATE())";
 		}
 		return result;
 	}
