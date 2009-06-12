@@ -454,7 +454,10 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 
 			if (!(wiz.getCompany().compareToIgnoreCase("default") == 0))
 				wiz.setReportTemplateList(jasperServerService.list("/Reports/Default/templates"));
-			wiz.getReportTemplateList().addAll(jasperServerService.list("/Reports/" + wiz.getCompany() + "/templates"));
+			if (wiz.getReportTemplateList() != null)
+				wiz.getReportTemplateList().addAll(jasperServerService.list("/Reports/" + wiz.getCompany() + "/templates"));
+			else
+				wiz.setReportTemplateList(jasperServerService.list("/Reports/" + wiz.getCompany() + "/templates"));
 
 			if (wiz.getReportTemplateJRXML() == null || wiz.getReportTemplateJRXML().length() == 0) {
 				if (wiz.getReportTemplateList().size() > 0)
