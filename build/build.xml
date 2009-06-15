@@ -5,6 +5,7 @@
 	<property file="${basedir}/jasperserver/jasperserver.properties" />
 	<property name="lib.dir" value="${basedir}/lib" />
 	<property name="build.env" value="dev"/>
+	<tstamp prefix="build" />
 
 	<taskdef resource="net/sf/antcontrib/antcontrib.properties">
 		<classpath>
