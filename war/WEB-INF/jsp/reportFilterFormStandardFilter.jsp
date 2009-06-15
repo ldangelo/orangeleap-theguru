@@ -12,7 +12,7 @@
 		</TD>
 		<TD><jsp:include page="/WEB-INF/jsp/reportFilterFormStandardFilterComparison.jsp" /></TD>
 		<TD align=center><input type="checkbox" objectname="reportFilters[INDEXREPLACEMENT].reportStandardFilter.promptForCriteria" <c:if test="${(currentFilter != null) && (currentFilter.reportStandardFilter.promptForCriteria == true)}">checked="checked"</c:if> value="true"	onclick="togglePromptForCriteriaTextBox(this);"	></TD>
-		<TD><div class="criteriaWrapper"> <input objectname="reportFilters[INDEXREPLACEMENT].reportStandardFilter.criteria" style="width: 110px" <c:if test="${(dateFieldSelected != null) || (currentFilter == null) || ((currentFilter != null) && (currentFilter.reportStandardFilter.promptForCriteria == true))}">disabled="disabled"</c:if> <c:if test="${currentFilter != null}">value="${currentFilter.reportStandardFilter.criteria}"</c:if>> </div>
+		<TD style="width:110px"><div class="criteriaWrapper"> <input objectname="reportFilters[INDEXREPLACEMENT].reportStandardFilter.criteria" style="width: 110px" <c:if test="${(dateFieldSelected != null) || (currentFilter == null) || ((currentFilter != null) && (currentFilter.reportStandardFilter.promptForCriteria == true))}">disabled="disabled"</c:if> <c:if test="${currentFilter != null}">value="${currentFilter.reportStandardFilter.criteria}"</c:if>> </div>
 		</TD>
 	</TR>
 </Table>

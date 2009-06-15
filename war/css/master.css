@@ -15,7 +15,7 @@ a, a:visited {
 }
 p {
 	margin: 0 0 15px 0;
-	padding: 0;	
+	padding: 0;
 }
 form {
 	margin: 0;
@@ -134,4 +134,13 @@ select#subSourceId {
 
 select#dataSubSourceGroupId {
    width: 375px;
+}
+
+input.error {
+	border:1px solid red;
+}
+
+label.error {
+	background:transparent url(../images/icons/error.png) no-repeat scroll 0 0;
+	padding-left:16px;
 }
