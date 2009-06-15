@@ -102,6 +102,7 @@ function moveFieldRow(fieldRow, moveBy) {
 	}
 
 	sortFieldTable(fieldTable);
+	fieldRow.find('select[objectname$=fieldId]').focus();
 }
 
 function sortFieldTable(fieldTableSelector) {

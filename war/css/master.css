@@ -144,3 +144,7 @@ label.error {
 	background:transparent url(../images/icons/error.png) no-repeat scroll 0 0;
 	padding-left:16px;
 }
+
+input:focus, textarea:focus, select:focus, .focused {
+	background-color:#DFF1FF;
+}

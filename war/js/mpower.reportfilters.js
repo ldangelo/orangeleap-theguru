@@ -259,6 +259,7 @@ function moveFilterRow(filterRow, moveBy) {
 
 	sortFilterTable(filterTable);
 	cleanUpFilterTable(filterTable);
+	filterRow.find('select[objectname$=fieldId]').focus();
 }
 
 function sortFilterTable(filterTableSelector) {
