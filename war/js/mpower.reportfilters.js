@@ -1,13 +1,13 @@
 $(document).ready(function()
-   {	
+   {
 	/* This code block is your window.onload.  Please don't set window.onload directly. */
-	
-	// filter screen 
+
+	// filter screen
 	$('#report_filters_add').find('table').fadeIn('fast');
 	cleanUpFilterTable('#report_filters_add');
-	
+
 	$('#report_filters_add').find("tr[index!=-1]").each(function() {
-		var row = $(this);		
+		var row = $(this);
 		var filterType = row.find('input:hidden[name*=filterType]').val();
 		if (filterType != 4) {
 			row.find(".deleteButton").click(function(){
@@ -15,7 +15,7 @@ $(document).ready(function()
 			});
 		} else {
 			row.find('.deleteButton').attr("style", "cursor: auto;");
-			row.find('.deleteButton').attr('src', 'images/icons/blankSpace.png');			
+			row.find('.deleteButton').attr('src', 'images/icons/blankSpace.png');
 		}
 		row.find(".moveUpButton").click(function(){
 			moveFilterRow($(this).parent().parent().parent().parent().parent().parent(), -1);
@@ -25,15 +25,20 @@ $(document).ready(function()
 		}).show();
 		row.find(".addButton").click(function(){
 			insertFilterRow($(this).parent().parent().parent().parent().parent().parent());
-		});		
+		});
    	});
 	if ($('#sqlQuery').length > 0) {
 		var targetOffset = $('#showSqlQuerySpan').offset().top;
 		scrollTo(0,targetOffset);
-		
-		$('#dialog').jqm({overlay: 50, onShow: MPower.centerDialog}).jqDrag('.dragHandle');		
-		$('#dialog').jqmShow();	
+
+		$('#dialog').jqm({overlay: 50, onShow: MPower.centerDialog}).jqDrag('.dragHandle');
+		$('#dialog').jqmShow();
 	}
+	// Validate for 2 decimal for money
+	jQuery.validator.addMethod("money", function(value, element) {
+	    return this.optional(element) || /^\$?(?:\d+|\d{1,3}(?:,\d{3})*)(?:\.\d{1,2}){0,1}$/.test(value);
+	}, "Must be in US scc currency format 0.99");
+
    }
 );
 
@@ -45,7 +50,7 @@ var MPower = {
 			$dialog.css("margin-left", x);
 			$dialog.css("margin-top", y);
 			$dialog.show();
-		}	
+		}
 	}
 
 
@@ -61,8 +66,8 @@ function togglePromptForCriteriaTextBox(checkBox) {
 function populateCustomFilterRow(customFilterSelectId, selectedFiltersId) {
 	var customFilterSelect = $(customFilterSelectId);
 	// Get the index and increment it
-	var customFiltersIndexValue = parseInt($(selectedFiltersId).attr('index'));	
-	
+	var customFiltersIndexValue = parseInt($(selectedFiltersId).attr('index'));
+
 	// Create a new row
 	var row = $('<tr />');
 	var cell = $('<td />');
@@ -79,15 +84,15 @@ function populateCustomFilterRow(customFilterSelectId, selectedFiltersId) {
 		.attr('id', 'reportFilters[' + customFiltersIndexValue + '].reportCustomFilter.customFilterDefinitionId')
 		.val(customFilterSelect.val());
 	cell.append(newInput);
-	
-	// Add hidden field for default display html 
+
+	// Add hidden field for default display html
 	newInput = $('<input type="hidden" />')
 		.attr('objectname', 'reportFilters[INDEXREPLACEMENT].reportCustomFilter.displayHtml')
 		.attr('name', 'reportFilters[' + customFiltersIndexValue + '].reportCustomFilter.displayHtml')
 		.attr('id', 'reportFilters[' + customFiltersIndexValue + '].reportCustomFilter.displayHtml')
 		.val(displayHtml);
 	cell.append(newInput);
-	
+
 	customFilterSelect.parent().replaceWith(cell);
 	cleanUpFilterTable(selectedFiltersId);
 }
@@ -173,7 +178,7 @@ function addNewFilterRow(filterTable, selectedFiltersId, filterType, appendToSel
 		operatorOptions.attr('id', operatorOptions.attr('id') + j);
 		operatorOptions.fadeIn("fast");
 		cell.append(operatorOptions);
-		row.append(cell);				
+		row.append(cell);
 
 		if (append)
 			appendTo.append(row);
@@ -188,7 +193,7 @@ function addNewFilterRow(filterTable, selectedFiltersId, filterType, appendToSel
 			row.find('.deleteButton').attr("style", "cursor: auto;");
 			row.find('.deleteButton').attr('src', 'images/icons/blankSpace.png');
 			row.find('.addButton').attr("style", "cursor: auto;");
-			row.find('.addButton').attr('src', 'images/icons/blankSpace.png');			
+			row.find('.addButton').attr('src', 'images/icons/blankSpace.png');
 		}
 		row.find(".moveUpButton").click(function(){
 			moveFilterRow($(this).parent().parent().parent().parent().parent().parent(), -1);
@@ -198,14 +203,14 @@ function addNewFilterRow(filterTable, selectedFiltersId, filterType, appendToSel
 		}).show();
 		row.find(".addButton").click(function(){
 			insertFilterRow($(this).parent().parent().parent().parent().parent().parent());
-		});		
+		});
 	}
 	cleanUpFilterTable(selectedFilters);
 }
 
 function deleteFilterRow(filterRow) {
 	var filterType = filterRow.find('input:hidden[name*=filterType]').val();
-	
+
 	if (filterType == "3") {
 		// Begin Group - delete the end group
 		var filterTable = $(filterRow).parent().parent();
@@ -216,10 +221,10 @@ function deleteFilterRow(filterRow) {
 			if (filterRow.attr('id') == row.attr('id')) {
 				foundRow = true;
 			}
-			if (foundRow && row.find('input:hidden[name*=filterType]').val() == 3) 
+			if (foundRow && row.find('input:hidden[name*=filterType]').val() == 3)
 				groupCount++;
-			if (foundRow && row.find('input:hidden[name*=filterType]').val() == 4) 
-				groupCount--;			
+			if (foundRow && row.find('input:hidden[name*=filterType]').val() == 4)
+				groupCount--;
 			if (foundRow && row.find('input:hidden[name*=filterType]').val() == 4 && groupCount == 0) {
 				row.fadeOut("fast",function(){
 					$(this).remove();
@@ -227,7 +232,7 @@ function deleteFilterRow(filterRow) {
 				});
 				return false;
 			}
-	   	});		
+	   	});
 	}
 	filterRow.fadeOut("fast",function(){
 		$(this).remove();
@@ -247,11 +252,11 @@ function moveFilterRow(filterRow, moveBy) {
 			if (parseInt(row.attr('index')) == newIndex) {
 				row.attr('index', index);
 				return false;
-			}			
+			}
 	   	});
 		filterRow.attr('index', newIndex)
 	}
-	
+
 	sortFilterTable(filterTable);
 	cleanUpFilterTable(filterTable);
 }
@@ -259,7 +264,7 @@ function moveFilterRow(filterRow, moveBy) {
 function sortFilterTable(filterTableSelector) {
 	var filterTable = $(filterTableSelector);
 	var rows = filterTable.find('tr[index!=-1]').get();
-	
+
     rows.sort(function(a, b) {
       var keyA = parseInt($(a).attr('index'));
       var keyB = parseInt($(b).attr('index'));
@@ -267,10 +272,10 @@ function sortFilterTable(filterTableSelector) {
       if (keyA > keyB) return 1;
       return 0;
     });
-    
+
     $.each(rows, function(index, row) {
     	filterTable.children('tbody').append(row);
-   	});	
+   	});
 }
 
 function cleanUpFilterTable(filterTableSelector) {
@@ -288,8 +293,8 @@ function cleanUpFilterTable(filterTableSelector) {
 			if (firstRow)
 				firstRow = false;
 		} else {
-			filterTableRow.find('select[objectname$=operator]').removeAttr("disabled");			
-		}		
+			filterTableRow.find('select[objectname$=operator]').removeAttr("disabled");
+		}
 		filterTableRow.attr('index', index);
 		filterTableRow.attr('id', 'filterTable' + index);
 		filterTableRow.attr('name', 'filterTable' + index);
@@ -302,11 +307,11 @@ function cleanUpFilterTable(filterTableSelector) {
 			groupCount++;
 		}
 		if (filterTableRow.find('input:hidden[name*=filterType]').val() == 4) {
-			filterTableRow.find('select[name*=operator]').attr("disabled", true);	
+			filterTableRow.find('select[name*=operator]').attr("disabled", true);
 			groupCount--;
 			filterTableRow.find('#endGroupLabel').html(replicateString('<img src="images/icons/blankSpace.png"/>><img src="images/icons/blankSpace.png"/>', groupCount) + 'End Group');
-		}		
-		index++;	
+		}
+		index++;
    	});
 	filterTable.attr('index',index);
 }
@@ -317,15 +322,22 @@ function applyMasks(filterTableRowSelector) {
 	filterRow.find('input[objectname$=criteria]').attr('fieldtype', fieldtype);
 	filterRow.find('input').unmask();
 	filterRow.find('input[fieldtype=DATE]').mask('99/99/9999');
+
 	//filterRow.find('input[fieldtype=MONEY]').mask('$.');
 
-	Date.format = 'mm/dd/yyyy';	
+	Date.format = 'mm/dd/yyyy';
 	// do not process custom filter rows
 	if (fieldtype != null) {
 		filterRow.find('a.dp-choose-date').hide();
 		filterRow.find('input[fieldtype=DATE]').parent('div.criteriaWrapper').find('a.dp-choose-date').show();
 	}
-	filterRow.find('input[fieldtype=DATE]').datePicker({startDate:'01/01/1900'});	
+	filterRow.find('input[fieldtype=DATE]').datePicker({startDate:'01/01/1900'});
+	filterRow.find('input[fieldtype=DATE]').attr('class','date');
+	filterRow.find('input[fieldtype=INTEGER]').attr('class','digits');
+	filterRow.find('input[fieldtype=DOUBLE]').attr('class','digits');
+	filterRow.find('input[fieldtype=MONEY]').attr('class','money');
+	filterRow.find('input').valid();
+
 }
 
 function replicateString(string, number) {
@@ -345,7 +357,7 @@ function cleanUpFilterTableProcessRow(filterRow, index) {
 		var nameString = field.attr('objectname').replace(findExp, "["+index+"]");
 		field.attr('name',nameString);
 		var idString = field.attr('objectname').replace(findExp, "["+index+"]");
-		field.attr('id',idString);		
+		field.attr('id',idString);
 	});
 
 	row.find("select[objectname!=]").each(function(){
@@ -353,8 +365,8 @@ function cleanUpFilterTableProcessRow(filterRow, index) {
 		var nameString = field.attr('objectname').replace(findExp, "["+index+"]");
 		field.attr('name',nameString);
 		var idString = field.attr('objectname').replace(findExp, "["+index+"]");
-		field.attr('id',idString);				
-	});	
+		field.attr('id',idString);
+	});
 }
 
 function filterCriteria(fieldSelectId) {
@@ -388,13 +400,13 @@ function displayPromptForCriteriaOptions(comparisonSelectId) {
 		filterRow.find("[objectname$=reportStandardFilter.criteria]").attr("disabled", "true");
 	}
 	else {
-		var promptForCriteria = filterRow.find("[objectname$=promptForCriteria]"); 
+		var promptForCriteria = filterRow.find("[objectname$=promptForCriteria]");
 		promptForCriteria.removeAttr("disabled");
 		if (promptForCriteria.attr('checked'))
 			filterRow.find("[objectname$=reportStandardFilter.criteria]").attr("disabled", "true");
 		else
 			filterRow.find("[objectname$=reportStandardFilter.criteria]").removeAttr("disabled");
-	}	
+	}
 }
 
 function updateRowCountInput(rowCountSelector) {
