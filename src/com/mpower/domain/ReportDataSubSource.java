@@ -30,7 +30,7 @@ import com.mpower.domain.ReportFormatType;
 public class ReportDataSubSource implements java.io.Serializable,
 		Comparable<ReportDataSubSource> {
 	/**
-	 * 
+	 *
 	 */
 	@Transient
 	protected final Log logger = LogFactory.getLog(getClass());
@@ -43,14 +43,14 @@ public class ReportDataSubSource implements java.io.Serializable,
 
 	@Column(name = "DISPLAY_NAME")
 	private String displayName;
-	
-	@Column(name = "VIEW_NAME")
+
+	@Column(name = "VIEW_NAME", length = 8000)
 	private String viewName;
 
 	@ManyToOne( cascade=CascadeType.ALL)
 	@IndexColumn(name="REPORTDATASUBSOURCEGROUP_ID")
 	private ReportDataSubSourceGroup reportDataSubSourceGroup;
-	
+
 	@Enumerated
 	@Column(name = "REPORT_FORMAT_TYPE")
 	private ReportFormatType reportType;
@@ -66,12 +66,12 @@ public class ReportDataSubSource implements java.io.Serializable,
 
 	@Column(name = "DESCRIPTION")
 	private String description;
-	
+
 	@ManyToMany(mappedBy="reportDataSubSource",cascade=CascadeType.ALL)
 	@IndexColumn(name="REPORTCUSTOMFILTERDEFINITION_ID")
 	@Column(name = " REPORTDATASUBSOURCE_REPORTCUSTOMFILTERDEFINITION_ID")
 	private List<ReportCustomFilterDefinition> reportCustomFilterDefinitions;
-	
+
 	public ReportDataSubSource(ReportDataSubSource reportDataSubSource) {
 		displayName      = reportDataSubSource.displayName;
 		viewName         = reportDataSubSource.viewName;

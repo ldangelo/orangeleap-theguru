@@ -894,7 +894,7 @@ CREATE TABLE `REPORTDATASUBSOURCE` (
   `DISPLAY_NAME` varchar(255) default NULL,
   `JASPER_DATASOURCE_NAME` varchar(255) default NULL,
   `REPORT_FORMAT_TYPE` int(11) default NULL,
-  `VIEW_NAME` varchar(255) default NULL,
+  `VIEW_NAME` varchar(8000) default NULL,
   `reportDataSubSourceGroup_REPORTSUBSOURCEGROUP_ID` bigint(20) default NULL,
   PRIMARY KEY  (`REPORTSUBSOURCE_ID`),
   KEY `FK8817E91DD27B0EE8` (`reportDataSubSourceGroup_REPORTSUBSOURCEGROUP_ID`),
