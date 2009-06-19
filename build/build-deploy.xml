@@ -78,52 +78,6 @@
 
 
 		<!-- ******************************* -->
-		<!-- populate company2theguru schema -->
-
-		<property name="overrideUrl6" value="jdbc:mysql://${mysql.host}:${mysql.port}/company2theguru?${mysql.opts}" />
-        <script language="javascript"> <![CDATA[
-           self.getProject().setProperty("mysql.db.url", overrideUrl6);
-        ]]> </script>
-
-		<!-- Add the views to the Orangeleap schema-->
-
-		<property name="overrideUrl7" value="jdbc:mysql://${mysql.host}:${mysql.port}/company2?${mysql.opts}" />
-        <script language="javascript"> <![CDATA[
-           self.getProject().setProperty("orangeleap.mysql.db.url", overrideUrl7);
-        ]]> </script>
-
-		<property name="overrideJasperserverCreateAndLoadSchema3" value="JasperserverCreateAndLoadSchema_company2.sql" />
-        <script language="javascript"> <![CDATA[
-           self.getProject().setProperty("jasperserverCreateAndLoadSchema", overrideJasperserverCreateAndLoadSchema3);
-        ]]> </script>
-
-		<antcall target="create.load.schema" />
-
-
-		<!-- ******************************* -->
-		<!-- populate company3theguru schema -->
-
-		<property name="overrideUrl8" value="jdbc:mysql://${mysql.host}:${mysql.port}/company3theguru?${mysql.opts}" />
-        <script language="javascript"> <![CDATA[
-           self.getProject().setProperty("mysql.db.url", overrideUrl8);
-        ]]> </script>
-
-		<!-- Add the views to the Orangeleap schema-->
-
-		<property name="overrideUrl9" value="jdbc:mysql://${mysql.host}:${mysql.port}/company3?${mysql.opts}" />
-        <script language="javascript"> <![CDATA[
-           self.getProject().setProperty("orangeleap.mysql.db.url", overrideUrl9);
-        ]]> </script>
-
-		<property name="overrideJasperserverCreateAndLoadSchema4" value="JasperserverCreateAndLoadSchema_company3.sql" />
-        <script language="javascript"> <![CDATA[
-           self.getProject().setProperty("jasperserverCreateAndLoadSchema", overrideJasperserverCreateAndLoadSchema4);
-        ]]> </script>
-
-		<antcall target="create.load.schema" />
-
-
-		<!-- ******************************* -->
 		<!-- populate demotheguru schema -->
 
 		<property name="overrideUrl10" value="jdbc:mysql://${mysql.host}:${mysql.port}/demotheguru?${mysql.opts}" />

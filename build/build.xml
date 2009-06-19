@@ -184,62 +184,6 @@
 		<ant antfile="${internal.build.file}" target="create.load.schema" />
 
 
-		<!-- populate company2theguru schema -->
-
-		<property name="overrideUrl6" value="jdbc:mysql://${mysql.db.host}:${mysql.db.port}/company2theguru?autoReconnect=true&amp;useUnicode=true" />
-        <script language="javascript"> <![CDATA[
-           self.getProject().setProperty("mysql.db.url", overrideUrl6);
-        ]]> </script>
-
-
-		<!-- Add the views to the Orangeleap schema-->
-
-		<property name="overrideUrl7" value="jdbc:mysql://${mysql.db.host}:${mysql.db.port}/company2?autoReconnect=true&amp;useUnicode=true" />
-        <script language="javascript"> <![CDATA[
-           self.getProject().setProperty("orangeleap.mysql.db.url", overrideUrl7);
-        ]]> </script>
-
-		<property name="overrideUrl7localhost" value="jdbc:mysql://localhost:${mysql.db.port}/company2?autoReconnect=true&amp;useUnicode=true" />
-        <script language="javascript"> <![CDATA[
-           self.getProject().setProperty("localhost.mysql.db.url", overrideUrl7localhost);
-        ]]> </script>
-
-		<property name="overrideJasperserverCreateAndLoadSchema3" value="JasperserverCreateAndLoadSchema_company2.sql" />
-        <script language="javascript"> <![CDATA[
-           self.getProject().setProperty("jasperserverCreateAndLoadSchema", overrideJasperserverCreateAndLoadSchema3);
-        ]]> </script>
-
-		<ant antfile="${internal.build.file}" target="create.load.schema" />
-
-
-		<!-- populate company3theguru schema -->
-
-		<property name="overrideUrl8" value="jdbc:mysql://${mysql.db.host}:${mysql.db.port}/company3theguru?autoReconnect=true&amp;useUnicode=true" />
-        <script language="javascript"> <![CDATA[
-           self.getProject().setProperty("mysql.db.url", overrideUrl8);
-        ]]> </script>
-
-
-		<!-- Add the views to the Orangeleap schema-->
-
-		<property name="overrideUrl9" value="jdbc:mysql://${mysql.db.host}:${mysql.db.port}/company3?autoReconnect=true&amp;useUnicode=true" />
-        <script language="javascript"> <![CDATA[
-           self.getProject().setProperty("orangeleap.mysql.db.url", overrideUrl9);
-        ]]> </script>
-
-		<property name="overrideUrl9localhost" value="jdbc:mysql://localhost:${mysql.db.port}/company3?autoReconnect=true&amp;useUnicode=true" />
-        <script language="javascript"> <![CDATA[
-           self.getProject().setProperty("localhost.mysql.db.url", overrideUrl9localhost);
-        ]]> </script>
-
-		<property name="overrideJasperserverCreateAndLoadSchema4" value="JasperserverCreateAndLoadSchema_company3.sql" />
-        <script language="javascript"> <![CDATA[
-           self.getProject().setProperty("jasperserverCreateAndLoadSchema", overrideJasperserverCreateAndLoadSchema4);
-        ]]> </script>
-
-		<ant antfile="${internal.build.file}" target="create.load.schema" />
-
-
 		<!-- populate demotheguru schema -->
 
 		<property name="overrideUrl10" value="jdbc:mysql://${mysql.db.host}:${mysql.db.port}/demotheguru?autoReconnect=true&amp;useUnicode=true" />
