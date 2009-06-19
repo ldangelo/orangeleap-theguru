@@ -60,6 +60,49 @@ VALUES
 
 -- *********************************************************************************************************************
 --
+-- Error Log Field Definitions
+--
+-- *********************************************************************************************************************
+
+SET @REPORTDATASUBSOURCEGROUP_ID = (SELECT MAX(REPORTSUBSOURCEGROUP_ID) FROM REPORTDATASUBSOURCEGROUP WHERE DISPLAY_NAME = 'Administrative');
+
+INSERT INTO REPORTDATASUBSOURCE
+	(DISPLAY_NAME, DATABASE_TYPE, VIEW_NAME, reportDataSubSourceGroup_REPORTSUBSOURCEGROUP_ID, REPORT_FORMAT_TYPE, JASPER_DATASOURCE_NAME)
+VALUES
+	('Error Log', 0, 'ERROR_LOG', @REPORTDATASUBSOURCEGROUP_ID, 0, '/datasources/ReportWizardJdbcDS');
+
+SET @REPORTSUBSOURCE_ID = LAST_INSERT_ID();
+
+-- ***********************************************************************
+-- Error Log Information Field Group
+-- ***********************************************************************
+CALL INSERTREPORTFIELDGROUP('Error Log Information', @REPORTSUBSOURCE_ID, @REPORTFIELDGROUP_ID);
+
+-- Error Log ID
+CALL INSERTREPORTFIELD('ERROR_LOG_ID', 'ERROR_LOG_ID', 'Error Log ID', b'1', 2, @REPORTFIELDGROUP_ID);
+
+-- Site Name
+CALL INSERTREPORTFIELD('ERROR_LOG_ID', 'SITE_NAME', 'Site Name', b'0', 1, @REPORTFIELDGROUP_ID);
+
+-- Constituent Account Number
+CALL INSERTREPORTFIELDWITHALIAS('ERROR_LOG_ID', 'CONSTITUENT_ACCOUNT_NUMBER', 'GETCONSTITUENTACCOUNTNUMBER(CONSTITUENT_ID)', 'Constituent Account Number', b'1', 2, @REPORTFIELDGROUP_ID);
+
+-- Constituent Record ID
+CALL INSERTREPORTFIELD('ERROR_LOG_ID', 'CONSTITUENT_ID', 'Constituent Record ID', b'0', 2, @REPORTFIELDGROUP_ID);
+
+-- Context
+CALL INSERTREPORTFIELD('ERROR_LOG_ID', 'CONTEXT', 'Context', b'0', 1, @REPORTFIELDGROUP_ID);
+
+-- Message
+CALL INSERTREPORTFIELD('ERROR_LOG_ID', 'MESSAGE', 'Message', b'1', 1, @REPORTFIELDGROUP_ID);
+
+-- Create Date
+CALL INSERTREPORTFIELD('ERROR_LOG_ID', 'CREATE_DATE', 'Create Date', b'1', 4, @REPORTFIELDGROUP_ID);
+
+
+
+-- *********************************************************************************************************************
+--
 -- Picklists Field Definitions
 --
 -- *********************************************************************************************************************
