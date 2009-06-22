@@ -332,6 +332,7 @@ function applyMasks(filterTableRowSelector) {
 		filterRow.find('a.dp-choose-date').hide();
 		filterRow.find('input[fieldtype=DATE]').parent('div.criteriaWrapper').find('a.dp-choose-date').show();
 	}
+	filterRow.find("[objectname$=reportStandardFilter.criteria]").removeAttr('class');
 	filterRow.find('input[fieldtype=DATE]').datePicker({startDate:'01/01/1900'});
 	filterRow.find('input[fieldtype=DATE]').attr('class','date');
 	filterRow.find('input[fieldtype=INTEGER]').attr('class','digits');
