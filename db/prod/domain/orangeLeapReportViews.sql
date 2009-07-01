@@ -392,6 +392,40 @@ AS
 
 -- *********************************************************************************************************************
 --
+-- Constituent & Receive Correspondence Contact Information
+--
+-- *********************************************************************************************************************
+DROP VIEW IF EXISTS VW_CONSTITUENTS_RECEIVECORRESPONDENCECONTACTINFORMATION;
+CREATE VIEW VW_CONSTITUENTS_RECEIVECORRESPONDENCECONTACTINFORMATION
+AS
+  SELECT *
+  FROM VW_CONSTITUENTS_CONTACTINFORMATION
+  WHERE IFNULL(ADDRESS_RECEIVE_CORRESPONDENCE, 1) = 1
+  AND IFNULL(PHONE_RECEIVE_CORRESPONDENCE, 1) = 1
+  AND IFNULL(EMAIL_RECEIVE_CORRESPONDENCE, 1) = 1;
+;
+
+
+
+-- *********************************************************************************************************************
+--
+-- Constituent & Undeliverable Contact Information
+--
+-- *********************************************************************************************************************
+DROP VIEW IF EXISTS VW_CONSTITUENTS_UNDELIVERABLECONTACTINFORMATION;
+CREATE VIEW VW_CONSTITUENTS_UNDELIVERABLECONTACTINFORMATION
+AS
+  SELECT *
+  FROM VW_CONSTITUENTS_CONTACTINFORMATION
+  WHERE IFNULL(ADDRESS_UNDELIVERABLE, 1) = 1
+  AND IFNULL(PHONE_UNDELIVERABLE, 1) = 1
+  AND IFNULL(EMAIL_UNDELIVERABLE, 1) = 1;
+;
+
+
+
+-- *********************************************************************************************************************
+--
 -- Constituent & Relationships View
 --
 -- *********************************************************************************************************************
