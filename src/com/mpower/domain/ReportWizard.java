@@ -34,7 +34,7 @@ import com.mpower.util.ReportGenerator;
 public class ReportWizard implements java.io.Serializable{
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -8234358850416908612L;
 
@@ -48,10 +48,10 @@ public class ReportWizard implements java.io.Serializable{
 
 	@Column(name = "REPORT_NAME")
 	private String reportName;
-	
+
 	@Column(name = "REPORT_SAVEASNAME")
 	private String reportSaveAsName;
-	
+
 	@Column(name = "REPORT_COMMENT")
 	private String reportComment;
 
@@ -121,19 +121,19 @@ public class ReportWizard implements java.io.Serializable{
 
 	@Column(name = "REPORT_TYPE")
 	private String reportType;
-	
+
 	@Column(name = "REPORT_LAYOUT")
 	private ReportLayout reportLayout;
-	
+
 	@Column(name = "RECORDCOUNT")
 	private Boolean recordCount;
-	
+
 	@Column(name = "REPORT_PATH")
 	private String reportPath;
-	
+
 	@Column(name = "REPORT_TEMPLATE_PATH")
 	private String reportTemplatePath;
-	
+
 	@Column(name = "REPORT_TEMPLATE_JRXML")
 	private String reportTemplateJRXML;
 
@@ -160,9 +160,9 @@ public class ReportWizard implements java.io.Serializable{
 
 	@Transient
 	private long previousDataSubSourceId = -1;
-	
+
 	@Transient
-	private ReportGenerator	reportGenerator;	
+	private ReportGenerator	reportGenerator;
 
 	public ReportWizard() {
 		reportLayout = ReportLayout.PORTRAIT;
@@ -170,8 +170,8 @@ public class ReportWizard implements java.io.Serializable{
 		showSqlQuery = false;
 		recordCount = false;
 		previousPage = 0;
-		
-/*		reportType = "tabular";		
+
+/*		reportType = "tabular";
 		srcId = 0;
 		subSourceGroupId = 0;
 		subSourceId = 0;
@@ -388,6 +388,24 @@ public class ReportWizard implements java.io.Serializable{
 				reportSelectedFields.add(reportSelectedField);
 			}
 		}
+
+		// Add default blank matrix columns, rows & measure
+		// to avoid persistent issues when a report is saved, and then changed
+		// from tabular/summary to matrix
+		ReportCrossTabColumn column = new ReportCrossTabColumn();
+		column.fieldId = -1l;
+		column.sortOrder = "ASC";
+		reportCrossTabFields.getReportCrossTabColumns().add(column);
+
+		ReportCrossTabRow row = new ReportCrossTabRow();
+		row.fieldId = -1l;
+		row.sortOrder = "ASC";
+		reportCrossTabFields.getReportCrossTabRows().add(row);
+
+	    ReportCrossTabMeasure measure = new ReportCrossTabMeasure();
+		column.fieldId = -1l;
+		column.calculation = "SUM";
+		reportCrossTabFields.getReportCrossTabMeasure().add(measure);
 	}
 
 	public Boolean IsFieldGroupByField(long fieldId) {
@@ -611,7 +629,7 @@ public class ReportWizard implements java.io.Serializable{
 				reportSaveAsName = getReportName();
 			reportSaveAsName = reportSaveAsName.replace(" ", "_").replace("'", "").replace("\"", "");
 		}
-		return reportSaveAsName;		
+		return reportSaveAsName;
 	}
 
 	public void setReportGenerator(ReportGenerator reportGenerator) {
@@ -620,5 +638,5 @@ public class ReportWizard implements java.io.Serializable{
 
 	public ReportGenerator getReportGenerator() {
 		return reportGenerator;
-	}	
+	}
 }

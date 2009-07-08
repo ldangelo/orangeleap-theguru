@@ -186,15 +186,15 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 
 			LoadWizardLookupTables(wiz);
 
-			// once the data source and sub-source have been selected, select the default fields
-			wiz.populateDefaultReportFields();
-
 			// clear out any selected filters, chart settings, etc.
 			wiz.getReportFilters().clear();
 			wiz.getReportChartSettings().clear();
 			wiz.getReportCrossTabFields().getReportCrossTabColumns().clear();
 			wiz.getReportCrossTabFields().getReportCrossTabRows().clear();
 			wiz.getReportCrossTabFields().getReportCrossTabMeasure().clear();
+
+			// once the data source and sub-source have been selected, select the default fields
+			wiz.populateDefaultReportFields();
 		}
 
 		if (request.getParameter("_target5") != null || request.getParameter("_target5.x") != null) {
