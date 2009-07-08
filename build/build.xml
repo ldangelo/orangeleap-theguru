@@ -242,18 +242,7 @@
 	</target>
 
 
-	<target name="Beta Load Data">
-	     <sql driver="${mysql.db.driver}"
-		          url="${mysql.db.url}"
-		          userid="${mysql.db.user}"
-		          password="${mysql.db.pw}"
-		          encoding="UTF-8"
-	     		  classpath="${mysql.db.classpath}"
-	              delimiter=";"
-	     	>
-		    <transaction src="${basedir}/db/clearSchema.sql"/>
-   	 </sql>
-
+	<target name="9.2 Load Schema and Base Data(Can be used for Prod)">
 	     <sql driver="${mysql.db.driver}"
 		          url="${mysql.db.url}"
 		          userid="${mysql.db.user}"
@@ -264,7 +253,7 @@
 	     	>
 		    <transaction src="${basedir}/db/prod/domain/TheguruCreateAndLoadSchema-NoFunctions.sql"/>
 		    <transaction src="${basedir}/db/prod/domain/TheguruCreateFunctions-Part1.sql"/>
-	     	<transaction src="${basedir}/db/prod/domain/JasperserverCreateAndLoadSchema.sql"/>
+	     	<transaction src="${basedir}/db/prod/domain/JasperserverCreateAndLoadSchema_company1.sql"/>
   	     </sql>
 
 	     <sql driver="${mysql.db.driver}"
