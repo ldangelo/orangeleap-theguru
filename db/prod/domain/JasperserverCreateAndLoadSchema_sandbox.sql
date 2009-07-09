@@ -26,7 +26,7 @@ CREATE TABLE `JIBeanDatasource` (
   PRIMARY KEY (`id`),
   KEY `FK674BF34A8BF376D` (`id`),
   CONSTRAINT `FK674BF34A8BF376D` FOREIGN KEY (`id`) REFERENCES `JIResource` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `JIBeanDatasource`
@@ -48,7 +48,7 @@ CREATE TABLE `JIContentResource` (
   PRIMARY KEY (`id`),
   KEY `FKE466FC68A8BF376D` (`id`),
   CONSTRAINT `FKE466FC68A8BF376D` FOREIGN KEY (`id`) REFERENCES `JIResource` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `JIContentResource`
@@ -69,7 +69,7 @@ CREATE TABLE `JICustomDatasource` (
   PRIMARY KEY (`id`),
   KEY `FK2BBCEDF5A8BF376D` (`id`),
   CONSTRAINT `FK2BBCEDF5A8BF376D` FOREIGN KEY (`id`) REFERENCES `JIResource` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `JICustomDatasource`
@@ -91,7 +91,7 @@ CREATE TABLE `JICustomDatasourceProperty` (
   PRIMARY KEY (`ds_id`,`name`),
   KEY `FKB8A66AEA858A89D1` (`ds_id`),
   CONSTRAINT `FKB8A66AEA858A89D1` FOREIGN KEY (`ds_id`) REFERENCES `JICustomDatasource` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `JICustomDatasourceProperty`
@@ -119,7 +119,7 @@ CREATE TABLE `JIDataType` (
   PRIMARY KEY (`id`),
   KEY `FK533BCC63A8BF376D` (`id`),
   CONSTRAINT `FK533BCC63A8BF376D` FOREIGN KEY (`id`) REFERENCES `JIResource` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `JIDataType`
@@ -148,7 +148,7 @@ CREATE TABLE `JIFileResource` (
   KEY `FKF75B5889A8BF376D` (`id`),
   CONSTRAINT `FKF75B58895A0C539` FOREIGN KEY (`reference`) REFERENCES `JIFileResource` (`id`),
   CONSTRAINT `FKF75B5889A8BF376D` FOREIGN KEY (`id`) REFERENCES `JIResource` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `JIFileResource`
@@ -208,7 +208,7 @@ CREATE TABLE `JIInputControl` (
   CONSTRAINT `FKCAC6A51262A86F04` FOREIGN KEY (`list_of_values`) REFERENCES `JIListOfValues` (`id`),
   CONSTRAINT `FKCAC6A512A8BF376D` FOREIGN KEY (`id`) REFERENCES `JIResource` (`id`),
   CONSTRAINT `FKCAC6A512B37DB6EB` FOREIGN KEY (`list_query`) REFERENCES `JIQuery` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `JIInputControl`
@@ -236,7 +236,7 @@ CREATE TABLE `JIInputControlQueryColumn` (
   PRIMARY KEY (`input_control_id`,`column_index`),
   KEY `FKE436A5CCE7922149` (`input_control_id`),
   CONSTRAINT `FKE436A5CCE7922149` FOREIGN KEY (`input_control_id`) REFERENCES `JIInputControl` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `JIInputControlQueryColumn`
@@ -258,7 +258,7 @@ CREATE TABLE `JIJNDIJdbcDatasource` (
   PRIMARY KEY (`id`),
   KEY `FK7F9DA248A8BF376D` (`id`),
   CONSTRAINT `FK7F9DA248A8BF376D` FOREIGN KEY (`id`) REFERENCES `JIResource` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `JIJNDIJdbcDatasource`
@@ -283,7 +283,7 @@ CREATE TABLE `JIJdbcDatasource` (
   PRIMARY KEY (`id`),
   KEY `FKC8BDFCBFA8BF376D` (`id`),
   CONSTRAINT `FKC8BDFCBFA8BF376D` FOREIGN KEY (`id`) REFERENCES `JIResource` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `JIJdbcDatasource`
@@ -306,7 +306,7 @@ CREATE TABLE `JIListOfValues` (
   PRIMARY KEY (`id`),
   KEY `FK4E86A776A8BF376D` (`id`),
   CONSTRAINT `FK4E86A776A8BF376D` FOREIGN KEY (`id`) REFERENCES `JIResource` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `JIListOfValues`
@@ -329,7 +329,7 @@ CREATE TABLE `JIListOfValuesItem` (
   PRIMARY KEY (`id`,`idx`),
   KEY `FKD37CEBA993F0E1F6` (`id`),
   CONSTRAINT `FKD37CEBA993F0E1F6` FOREIGN KEY (`id`) REFERENCES `JIListOfValues` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `JIListOfValuesItem`
@@ -356,7 +356,7 @@ CREATE TABLE `JILogEvent` (
   `event_data` mediumblob,
   `event_state` tinyint(4) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=62 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=62 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `JILogEvent`
@@ -387,7 +387,7 @@ CREATE TABLE `JIMondrianConnection` (
   CONSTRAINT `FK4FF53B191D51BFAD` FOREIGN KEY (`id`) REFERENCES `JIOlapClientConnection` (`id`),
   CONSTRAINT `FK4FF53B19324CFECB` FOREIGN KEY (`reportDataSource`) REFERENCES `JIResource` (`id`),
   CONSTRAINT `FK4FF53B19C495A60B` FOREIGN KEY (`mondrianSchema`) REFERENCES `JIFileResource` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `JIMondrianConnection`
@@ -411,7 +411,7 @@ CREATE TABLE `JIMondrianXMLADefinition` (
   KEY `FK313B2AB8A8BF376D` (`id`),
   CONSTRAINT `FK313B2AB8A8BF376D` FOREIGN KEY (`id`) REFERENCES `JIResource` (`id`),
   CONSTRAINT `FK313B2AB8DC098B1` FOREIGN KEY (`mondrianConnection`) REFERENCES `JIMondrianConnection` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `JIMondrianXMLADefinition`
@@ -433,7 +433,7 @@ CREATE TABLE `JIObjectPermission` (
   `recipientobjectid` bigint(20) DEFAULT NULL,
   `permissionMask` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=178 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=178 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `JIObjectPermission`
@@ -461,7 +461,7 @@ CREATE TABLE `JIOlapClientConnection` (
   PRIMARY KEY (`id`),
   KEY `FK3CA3B7D4A8BF376D` (`id`),
   CONSTRAINT `FK3CA3B7D4A8BF376D` FOREIGN KEY (`id`) REFERENCES `JIResource` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `JIOlapClientConnection`
@@ -486,7 +486,7 @@ CREATE TABLE `JIOlapUnit` (
   KEY `FKF034DCCFA8BF376D` (`id`),
   CONSTRAINT `FKF034DCCF8F542247` FOREIGN KEY (`olapClientConnection`) REFERENCES `JIOlapClientConnection` (`id`),
   CONSTRAINT `FKF034DCCFA8BF376D` FOREIGN KEY (`id`) REFERENCES `JIResource` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `JIOlapUnit`
@@ -508,7 +508,7 @@ CREATE TABLE `JIProfileAttribute` (
   `principalobjectclass` varchar(255) NOT NULL,
   `principalobjectid` bigint(20) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `JIProfileAttribute`
@@ -533,7 +533,7 @@ CREATE TABLE `JIQuery` (
   KEY `FKCBCB0EC9A8BF376D` (`id`),
   CONSTRAINT `FKCBCB0EC92B329A97` FOREIGN KEY (`dataSource`) REFERENCES `JIResource` (`id`),
   CONSTRAINT `FKCBCB0EC9A8BF376D` FOREIGN KEY (`id`) REFERENCES `JIResource` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `JIQuery`
@@ -567,7 +567,7 @@ CREATE TABLE `JIReportJob` (
   CONSTRAINT `FK156F5F6A74D2696E` FOREIGN KEY (`job_trigger`) REFERENCES `JIReportJobTrigger` (`id`),
   CONSTRAINT `FK156F5F6A9EEC902C` FOREIGN KEY (`content_destination`) REFERENCES `JIReportJobRepoDest` (`id`),
   CONSTRAINT `FK156F5F6AE4D73E35` FOREIGN KEY (`mail_notification`) REFERENCES `JIReportJobMail` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `JIReportJob`
@@ -593,7 +593,7 @@ CREATE TABLE `JIReportJobCalendarTrigger` (
   PRIMARY KEY (`id`),
   KEY `FKC374C7D0D2B2EB53` (`id`),
   CONSTRAINT `FKC374C7D0D2B2EB53` FOREIGN KEY (`id`) REFERENCES `JIReportJobTrigger` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `JIReportJobCalendarTrigger`
@@ -616,7 +616,7 @@ CREATE TABLE `JIReportJobMail` (
   `send_type` tinyint(4) NOT NULL,
   `skip_empty` bit(1) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `JIReportJobMail`
@@ -639,7 +639,7 @@ CREATE TABLE `JIReportJobMailRecipient` (
   PRIMARY KEY (`destination_id`,`recipient_idx`),
   KEY `FKBB6DB6D880001AAE` (`destination_id`),
   CONSTRAINT `FKBB6DB6D880001AAE` FOREIGN KEY (`destination_id`) REFERENCES `JIReportJobMail` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `JIReportJobMailRecipient`
@@ -660,7 +660,7 @@ CREATE TABLE `JIReportJobOutputFormat` (
   PRIMARY KEY (`report_job_id`,`output_format`),
   KEY `FKB42A5CE2C3389A8` (`report_job_id`),
   CONSTRAINT `FKB42A5CE2C3389A8` FOREIGN KEY (`report_job_id`) REFERENCES `JIReportJob` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `JIReportJobOutputFormat`
@@ -682,7 +682,7 @@ CREATE TABLE `JIReportJobParameter` (
   PRIMARY KEY (`job_id`,`parameter_name`),
   KEY `FKEAC52B5F2EC643D` (`job_id`),
   CONSTRAINT `FKEAC52B5F2EC643D` FOREIGN KEY (`job_id`) REFERENCES `JIReportJob` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `JIReportJobParameter`
@@ -706,7 +706,7 @@ CREATE TABLE `JIReportJobRepoDest` (
   `output_description` varchar(100) DEFAULT NULL,
   `timestamp_pattern` varchar(250) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `JIReportJobRepoDest`
@@ -729,7 +729,7 @@ CREATE TABLE `JIReportJobSimpleTrigger` (
   PRIMARY KEY (`id`),
   KEY `FKB9337C5CD2B2EB53` (`id`),
   CONSTRAINT `FKB9337C5CD2B2EB53` FOREIGN KEY (`id`) REFERENCES `JIReportJobTrigger` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `JIReportJobSimpleTrigger`
@@ -752,7 +752,7 @@ CREATE TABLE `JIReportJobTrigger` (
   `start_date` datetime DEFAULT NULL,
   `end_date` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `JIReportJobTrigger`
@@ -785,7 +785,7 @@ CREATE TABLE `JIReportUnit` (
   CONSTRAINT `FK98818B778C8DF21B` FOREIGN KEY (`mainReport`) REFERENCES `JIFileResource` (`id`),
   CONSTRAINT `FK98818B778FDA11CC` FOREIGN KEY (`query`) REFERENCES `JIQuery` (`id`),
   CONSTRAINT `FK98818B77A8BF376D` FOREIGN KEY (`id`) REFERENCES `JIResource` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `JIReportUnit`
@@ -826,7 +826,7 @@ CREATE TABLE `JIReportUnitInputControl` (
   KEY `FK5FBE934AA6A48880` (`report_unit_id`),
   CONSTRAINT `FK5FBE934AA6A48880` FOREIGN KEY (`report_unit_id`) REFERENCES `JIReportUnit` (`id`),
   CONSTRAINT `FK5FBE934AE7922149` FOREIGN KEY (`input_control_id`) REFERENCES `JIInputControl` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `JIReportUnitInputControl`
@@ -855,7 +855,7 @@ CREATE TABLE `JIReportUnitResource` (
   KEY `FK8B1C4CA5A6A48880` (`report_unit_id`),
   CONSTRAINT `FK8B1C4CA5865B10DA` FOREIGN KEY (`resource_id`) REFERENCES `JIFileResource` (`id`),
   CONSTRAINT `FK8B1C4CA5A6A48880` FOREIGN KEY (`report_unit_id`) REFERENCES `JIReportUnit` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `JIReportUnitResource`
@@ -885,7 +885,7 @@ CREATE TABLE `JIRepositoryCache` (
   UNIQUE KEY `uri` (`uri`,`cache_name`),
   KEY `FKE7338B19E7C5A6` (`item_reference`),
   CONSTRAINT `FKE7338B19E7C5A6` FOREIGN KEY (`item_reference`) REFERENCES `JIRepositoryCache` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1216 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=1216 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `JIRepositoryCache`
@@ -936,7 +936,7 @@ CREATE TABLE `JIResource` (
   KEY `FKD444826DA58002DF` (`childrenFolder`),
   CONSTRAINT `FKD444826DA08E2155` FOREIGN KEY (`parent_folder`) REFERENCES `JIResourceFolder` (`id`),
   CONSTRAINT `FKD444826DA58002DF` FOREIGN KEY (`childrenFolder`) REFERENCES `JIResourceFolder` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4056 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4056 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `JIResource`
@@ -1013,7 +1013,7 @@ CREATE TABLE `JIResourceFolder` (
   UNIQUE KEY `uri` (`uri`),
   KEY `FK7F24453BA08E2155` (`parent_folder`),
   CONSTRAINT `FK7F24453BA08E2155` FOREIGN KEY (`parent_folder`) REFERENCES `JIResourceFolder` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1936 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=1936 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `JIResourceFolder`
@@ -1068,7 +1068,7 @@ CREATE TABLE `JIRole` (
   `externallyDefined` bit(1) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `rolename` (`rolename`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `JIRole`
@@ -1098,7 +1098,7 @@ CREATE TABLE `JIUser` (
   `previousPasswordChangeTime` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=112 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=112 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `JIUser`
@@ -1142,7 +1142,7 @@ CREATE TABLE `JIUserRole` (
   KEY `FKD8B5C1403C31045` (`roleId`),
   CONSTRAINT `FKD8B5C1403C31045` FOREIGN KEY (`roleId`) REFERENCES `JIRole` (`id`),
   CONSTRAINT `FKD8B5C14091865AF` FOREIGN KEY (`userId`) REFERENCES `JIUser` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `JIUserRole`
@@ -1199,7 +1199,7 @@ CREATE TABLE `JIXMLAConnection` (
   PRIMARY KEY (`id`),
   KEY `FK94C688A71D51BFAD` (`id`),
   CONSTRAINT `FK94C688A71D51BFAD` FOREIGN KEY (`id`) REFERENCES `JIOlapClientConnection` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `JIXMLAConnection`
@@ -1221,7 +1221,7 @@ CREATE TABLE `QRTZ_BLOB_TRIGGERS` (
   PRIMARY KEY (`TRIGGER_NAME`,`TRIGGER_GROUP`),
   KEY `TRIGGER_NAME` (`TRIGGER_NAME`,`TRIGGER_GROUP`),
   CONSTRAINT `QRTZ_BLOB_TRIGGERS_ibfk_1` FOREIGN KEY (`TRIGGER_NAME`, `TRIGGER_GROUP`) REFERENCES `QRTZ_TRIGGERS` (`TRIGGER_NAME`, `TRIGGER_GROUP`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `QRTZ_BLOB_TRIGGERS`
@@ -1240,7 +1240,7 @@ CREATE TABLE `QRTZ_CALENDARS` (
   `CALENDAR_NAME` varchar(80) NOT NULL,
   `CALENDAR` blob NOT NULL,
   PRIMARY KEY (`CALENDAR_NAME`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `QRTZ_CALENDARS`
@@ -1263,7 +1263,7 @@ CREATE TABLE `QRTZ_CRON_TRIGGERS` (
   PRIMARY KEY (`TRIGGER_NAME`,`TRIGGER_GROUP`),
   KEY `TRIGGER_NAME` (`TRIGGER_NAME`,`TRIGGER_GROUP`),
   CONSTRAINT `QRTZ_CRON_TRIGGERS_ibfk_1` FOREIGN KEY (`TRIGGER_NAME`, `TRIGGER_GROUP`) REFERENCES `QRTZ_TRIGGERS` (`TRIGGER_NAME`, `TRIGGER_GROUP`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `QRTZ_CRON_TRIGGERS`
@@ -1291,7 +1291,7 @@ CREATE TABLE `QRTZ_FIRED_TRIGGERS` (
   `IS_STATEFUL` varchar(1) DEFAULT NULL,
   `REQUESTS_RECOVERY` varchar(1) DEFAULT NULL,
   PRIMARY KEY (`ENTRY_ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `QRTZ_FIRED_TRIGGERS`
@@ -1317,7 +1317,7 @@ CREATE TABLE `QRTZ_JOB_DETAILS` (
   `REQUESTS_RECOVERY` varchar(1) NOT NULL,
   `JOB_DATA` blob,
   PRIMARY KEY (`JOB_NAME`,`JOB_GROUP`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `QRTZ_JOB_DETAILS`
@@ -1339,7 +1339,7 @@ CREATE TABLE `QRTZ_JOB_LISTENERS` (
   PRIMARY KEY (`JOB_NAME`,`JOB_GROUP`,`JOB_LISTENER`),
   KEY `JOB_NAME` (`JOB_NAME`,`JOB_GROUP`),
   CONSTRAINT `QRTZ_JOB_LISTENERS_ibfk_1` FOREIGN KEY (`JOB_NAME`, `JOB_GROUP`) REFERENCES `QRTZ_JOB_DETAILS` (`JOB_NAME`, `JOB_GROUP`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `QRTZ_JOB_LISTENERS`
@@ -1357,7 +1357,7 @@ DROP TABLE IF EXISTS `QRTZ_LOCKS`;
 CREATE TABLE `QRTZ_LOCKS` (
   `LOCK_NAME` varchar(40) NOT NULL,
   PRIMARY KEY (`LOCK_NAME`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `QRTZ_LOCKS`
@@ -1381,7 +1381,7 @@ DROP TABLE IF EXISTS `QRTZ_PAUSED_TRIGGER_GRPS`;
 CREATE TABLE `QRTZ_PAUSED_TRIGGER_GRPS` (
   `TRIGGER_GROUP` varchar(80) NOT NULL,
   PRIMARY KEY (`TRIGGER_GROUP`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `QRTZ_PAUSED_TRIGGER_GRPS`
@@ -1402,7 +1402,7 @@ CREATE TABLE `QRTZ_SCHEDULER_STATE` (
   `CHECKIN_INTERVAL` bigint(13) NOT NULL,
   `RECOVERER` varchar(80) DEFAULT NULL,
   PRIMARY KEY (`INSTANCE_NAME`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `QRTZ_SCHEDULER_STATE`
@@ -1426,7 +1426,7 @@ CREATE TABLE `QRTZ_SIMPLE_TRIGGERS` (
   PRIMARY KEY (`TRIGGER_NAME`,`TRIGGER_GROUP`),
   KEY `TRIGGER_NAME` (`TRIGGER_NAME`,`TRIGGER_GROUP`),
   CONSTRAINT `QRTZ_SIMPLE_TRIGGERS_ibfk_1` FOREIGN KEY (`TRIGGER_NAME`, `TRIGGER_GROUP`) REFERENCES `QRTZ_TRIGGERS` (`TRIGGER_NAME`, `TRIGGER_GROUP`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `QRTZ_SIMPLE_TRIGGERS`
@@ -1460,7 +1460,7 @@ CREATE TABLE `QRTZ_TRIGGERS` (
   PRIMARY KEY (`TRIGGER_NAME`,`TRIGGER_GROUP`),
   KEY `JOB_NAME` (`JOB_NAME`,`JOB_GROUP`),
   CONSTRAINT `QRTZ_TRIGGERS_ibfk_1` FOREIGN KEY (`JOB_NAME`, `JOB_GROUP`) REFERENCES `QRTZ_JOB_DETAILS` (`JOB_NAME`, `JOB_GROUP`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `QRTZ_TRIGGERS`
@@ -1482,7 +1482,7 @@ CREATE TABLE `QRTZ_TRIGGER_LISTENERS` (
   PRIMARY KEY (`TRIGGER_NAME`,`TRIGGER_GROUP`,`TRIGGER_LISTENER`),
   KEY `TRIGGER_NAME` (`TRIGGER_NAME`,`TRIGGER_GROUP`),
   CONSTRAINT `QRTZ_TRIGGER_LISTENERS_ibfk_1` FOREIGN KEY (`TRIGGER_NAME`, `TRIGGER_GROUP`) REFERENCES `QRTZ_TRIGGERS` (`TRIGGER_NAME`, `TRIGGER_GROUP`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `QRTZ_TRIGGER_LISTENERS`
