@@ -830,6 +830,17 @@ public class ReportQueryGenerator {
 		ReportCrossTabFields rptCTList = getReportWizard().getReportCrossTabFields();
 		List<ReportCrossTabRow> ctRows = rptCTList.getReportCrossTabRows();
 		addComma = false;
+
+		long columnIndex = 0;
+		List<ReportCrossTabMeasure> colMeasure = getReportWizard().getReportCrossTabFields().getReportCrossTabMeasure();
+		Iterator<ReportCrossTabMeasure> itMeasure = colMeasure.iterator();
+		while (itMeasure.hasNext()){
+			ReportCrossTabMeasure fGroupBy = (ReportCrossTabMeasure) itMeasure.next();
+			if (fGroupBy != null && fGroupBy.getFieldId() != -1){
+					columnIndex++;
+			}
+		}
+
 		List<Long> addedFields = new ArrayList<Long>();
 		//order by rows first
 		Iterator<ReportCrossTabRow> itCtRows = ctRows.iterator();
@@ -845,12 +856,19 @@ public class ReportQueryGenerator {
 						}
 						else
 							orderBy += ",";
-						orderBy += " " + rg.getColumnName();
+
+						if (rg.getAliasName() == null || rg.getAliasName().length() == 0)
+							orderBy += " " + rg.getColumnName() + "_" + columnIndex;
+						else
+							orderBy += " " + rg.getAliasName() + "_" + columnIndex;
+
 						addedFields.add(rg.getId());
 						if (rowField.getSortOrder().compareTo("") != 0)
 							orderBy += " " + rowField.getSortOrder();
 						else
 							orderBy += " ASC";
+
+						columnIndex++;
 					}
 				}
 			}
@@ -871,12 +889,19 @@ public class ReportQueryGenerator {
 						}
 						else
 							orderBy += ",";
-						orderBy += " " + rg.getColumnName();
+
+						if (rg.getAliasName() == null || rg.getAliasName().length() == 0)
+							orderBy += " " + rg.getColumnName() + "_" + columnIndex;
+						else
+							orderBy += " " + rg.getAliasName() + "_" + columnIndex;
+
 						addedFields.add(rg.getId());
 						if (colField.getSortOrder().compareTo("") != 0)
 							orderBy += " " + colField.getSortOrder();
 						else
 							orderBy += " ASC";
+
+						columnIndex++;
 					}
 				}
 			}
@@ -896,6 +921,7 @@ public class ReportQueryGenerator {
 		List<ReportSelectedField> reportSelectedFields = getReportWizard().getReportSelectedFields();
 		Iterator<ReportSelectedField> itReportSelectedFields = reportSelectedFields.iterator();
 		List<Long> addedFields = new ArrayList<Long>();
+		long columnIndex = 0;
 		if (itReportSelectedFields != null){
 			addComma = false;
 			while (itReportSelectedFields.hasNext()) {
@@ -912,7 +938,12 @@ public class ReportQueryGenerator {
 						}
 						else
 							orderBy += ",";
-						orderBy += " " + rg.getColumnName();
+
+						if (rg.getAliasName() == null || rg.getAliasName().length() == 0)
+							orderBy += " " + rg.getColumnName() + "_" + columnIndex;
+						else
+							orderBy += " " + rg.getAliasName() + "_" + columnIndex;
+
 						addedFields.add(rg.getId());
 						if (reportSelectedField.getSortOrder().compareTo("") != 0)
 							orderBy += " " + reportSelectedField.getSortOrder();
@@ -920,6 +951,7 @@ public class ReportQueryGenerator {
 							orderBy += " ASC";
 					}
 				}
+				columnIndex++;
 			}
 		}
 		return orderBy;
