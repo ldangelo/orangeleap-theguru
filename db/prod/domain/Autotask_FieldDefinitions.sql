@@ -1,0 +1,55 @@
+-- INSERT INTO REPORTDATASOURCE
+INSERT INTO REPORTDATASOURCE
+	(REPORT_NAME)
+VALUES
+	('Autotask');
+ 
+SET @REPORTDATASOURCE_ID = LAST_INSERT_ID();
+ 
+INSERT INTO REPORTDATASUBSOURCEGROUP
+	(DESCRIPTION, DISPLAY_NAME, reportDataSource_REPORTSOURCE_ID)
+VALUES
+	('Ticket Information', 'Account Information', @REPORTDATASOURCE_ID);
+ 
+SET @REPORTDATASUBSOURCEGROUP_ID = LAST_INSERT_ID();
+ 
+-- Insert REPORTDATASUBSOURCE
+INSERT REPORTDATASUBSOURCE
+  (REPORTSUBSOURCE_ID, DATABASE_TYPE, DISPLAY_NAME, DESCRIPTION, JASPER_DATASOURCE_NAME, REPORT_FORMAT_TYPE, VIEW_NAME, reportDataSubSourceGroup_REPORTSUBSOURCEGROUP_ID)
+VALUES 
+  (NULL, 1, 'Ticket & Note Information', 'Ticket & Note Information', '/datasources/ReportWizardJdbcDSForAutotask', 1, 'vw_Tickets_Notes', @REPORTDATASUBSOURCEGROUP_ID);
+
+SET @REPORTSUBSOURCE_ID = LAST_INSERT_ID();
+
+-- Insert REPORTFIELDGROUP
+CALL INSERTREPORTFIELDGROUP('Ticket Information', @REPORTSUBSOURCE_ID, @REPORTFIELDGROUP_ID);
+
+-- Insert Ticket Number
+CALL INSERTREPORTFIELD('tNumber','tNumber', 'Ticket Number', b'1', 1, @REPORTFIELDGROUP_ID);
+
+-- Insert Description
+CALL INSERTREPORTFIELD('tNumber','Description', 'Description', b'1', 1, @REPORTFIELDGROUP_ID);
+
+-- Insert Queue
+CALL INSERTREPORTFIELD('tNumber','Queue', 'Queue', b'1', 1, @REPORTFIELDGROUP_ID);
+
+-- Insert Status
+CALL INSERTREPORTFIELD('tNumber','Task_Status_Description', 'Status', b'1', 1, @REPORTFIELDGROUP_ID);
+
+-- Insert Reported By
+CALL INSERTREPORTFIELD('tNumber','WhoReported', 'Reported By', b'0', 1, @REPORTFIELDGROUP_ID);
+
+-- Insert Entry Date
+CALL INSERTREPORTFIELD('tNumber','EntryDate', 'Ticket Entry Date', b'0', 4, @REPORTFIELDGROUP_ID);
+
+-- Insert REPORTFIELDGROUP
+CALL INSERTREPORTFIELDGROUP('Note Information', @REPORTSUBSOURCE_ID, @REPORTFIELDGROUP_ID);
+
+-- Insert Entry Date
+CALL INSERTREPORTFIELD('DateAdded','DateAdded', 'Note Entry Date', b'0', 4, @REPORTFIELDGROUP_ID);
+
+-- Insert Title
+CALL INSERTREPORTFIELD('Title','Title', 'Title', b'0', 1, @REPORTFIELDGROUP_ID);
+
+-- Insert Description
+CALL INSERTREPORTFIELD('Description','Description', 'Description', b'0', 1, @REPORTFIELDGROUP_ID);
