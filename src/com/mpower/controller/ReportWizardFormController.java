@@ -405,7 +405,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 			GuruSessionData sessiondata = SessionHelper.getGuruSessionData();
 			sessiondata.setUsername(userName);
 			sessiondata.setPassword(password);
-			if (password.equals("/")) {
+			if (password.equals("/") || password.length() == 0) {
 				UserDetails userDetails = userDetailsService.loadUserByUsername(userName);
 				password = userDetails.getPassword();
 			}
