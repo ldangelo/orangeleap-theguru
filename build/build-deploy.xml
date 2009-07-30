@@ -105,14 +105,14 @@
 
 		<property name="overrideUrl12" value="jdbc:mysql://${mysql.host}:${mysql.port}/sandboxtheguru?${mysql.opts}" />
         <script language="javascript"> <![CDATA[
-           self.getProject().setProperty("mysql.db.url", overrideUrl10);
+           self.getProject().setProperty("mysql.db.url", overrideUrl12);
         ]]> </script>
 
 		<!-- Add the views to the Orangeleap schema-->
 
 		<property name="overrideUrl13" value="jdbc:mysql://${mysql.host}:${mysql.port}/sandbox?${mysql.opts}" />
         <script language="javascript"> <![CDATA[
-           self.getProject().setProperty("orangeleap.mysql.db.url", overrideUrl11);
+           self.getProject().setProperty("orangeleap.mysql.db.url", overrideUrl13);
         ]]> </script>
 
 		<property name="overrideJasperserverCreateAndLoadSchema6" value="JasperserverCreateAndLoadSchema_sandbox.sql" />
