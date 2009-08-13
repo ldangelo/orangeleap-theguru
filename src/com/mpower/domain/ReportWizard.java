@@ -1,16 +1,11 @@
 package com.mpower.domain;
 
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.SortedSet;
 import java.util.ArrayList;
-import java.util.StringTokenizer;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -60,6 +55,18 @@ public class ReportWizard implements java.io.Serializable{
 
 	@Column(name="UNIQUE_RECORDS")
 	private Boolean uniqueRecords;
+
+	@Transient
+	private Boolean executeSegmentation = false;
+
+	@Column(name="USE_REPORT_AS_SEGMENTATION")
+	private Boolean useReportAsSegmentation;
+
+	@Column(name="SEGMENTATION_QUERY")
+	private String segmentationQuery;
+
+	@Column(name = "REPORTSEGMENTATIONTYPE_ID")
+	private long reportSegmentationTypeId;
 
 	@Column(name="REPORTDATASOURCE_ID")
 	private long srcId;
@@ -170,6 +177,9 @@ public class ReportWizard implements java.io.Serializable{
 		showSqlQuery = false;
 		recordCount = false;
 		previousPage = 0;
+		useReportAsSegmentation = false;
+		segmentationQuery = "";
+		reportSegmentationTypeId = 0;
 
 /*		reportType = "tabular";
 		srcId = 0;
@@ -638,5 +648,37 @@ public class ReportWizard implements java.io.Serializable{
 
 	public ReportGenerator getReportGenerator() {
 		return reportGenerator;
+	}
+
+	public Boolean getExecuteSegmentation() {
+		return executeSegmentation;
+	}
+
+	public void setExecuteSegmentation(Boolean executeSegmentation) {
+		this.executeSegmentation = executeSegmentation;
+	}
+
+	public void setUseReportAsSegmentation(Boolean useReportAsSegmentation) {
+		this.useReportAsSegmentation = useReportAsSegmentation;
+	}
+
+	public Boolean getUseReportAsSegmentation() {
+		return useReportAsSegmentation;
+	}
+
+	public void setSegmentationQuery(String segmentationQuery) {
+		this.segmentationQuery = segmentationQuery;
+	}
+
+	public String getSegmentationQuery() {
+		return segmentationQuery;
+	}
+
+	public void setReportSegmentationTypeId(long reportSegmentationTypeId) {
+		this.reportSegmentationTypeId = reportSegmentationTypeId;
+	}
+
+	public long getReportSegmentationTypeId() {
+		return reportSegmentationTypeId;
 	}
 }

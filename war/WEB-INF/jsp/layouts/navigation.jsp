@@ -45,6 +45,8 @@
 	<a onclick="triggerClick(document.getElementById('reportDataHiddenInput'));">Report Data</a>
 </li>
 </ul>
+
+
 <c:choose>
 <c:when test="${page == 0}">
 	 Step ${page+1} of 5: Select report data source
@@ -64,6 +66,10 @@
 
 <c:when test="${page == 4}">
 	 Step ${page+1} of 5: Save report
+</c:when>
+
+<c:when test="${page == 10}">
+	 Segmentation Results
 </c:when>
 </c:choose>
 

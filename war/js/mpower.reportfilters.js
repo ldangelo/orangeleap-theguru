@@ -281,6 +281,7 @@ function sortFilterTable(filterTableSelector) {
 
 function cleanUpFilterTable(filterTableSelector) {
 	var filterTable = $(filterTableSelector);
+	var reportIsSegmentation = $('#useReportAsSegmentation').attr('checked');
 	var index = 0;
 	var groupCount = 0;
 	var beginGroup = false;
@@ -300,7 +301,7 @@ function cleanUpFilterTable(filterTableSelector) {
 		filterTableRow.attr('id', 'filterTable' + index);
 		filterTableRow.attr('name', 'filterTable' + index);
 		cleanUpFilterTableProcessRow(filterTableRow, index);
-		filterCriteria(filterTableRow.find('[objectname$=fieldId]'));
+		filterCriteria(filterTableRow.find('[objectname$=fieldId]'), reportIsSegmentation);
 		applyMasks(filterTableRow);
 		if (filterTableRow.find('input:hidden[name*=filterType]').val() == 3) {
 			beginGroup = true;
@@ -371,7 +372,10 @@ function cleanUpFilterTableProcessRow(filterRow, index) {
 	});
 }
 
-function filterCriteria(fieldSelectId) {
+function filterCriteria(fieldSelectId, reportIsSegmentation) {
+	if (reportIsSegmentation == null) {
+		reportIsSegmentation = $('#useReportAsSegmentation').attr('checked');
+	}
  	var fieldSelect = $(fieldSelectId);
 	var filterRow = fieldSelect.parent().parent();
 	var baseComparison = $('#baseComparisonSelect');
@@ -389,13 +393,21 @@ function filterCriteria(fieldSelectId) {
 	}
 	if (comparison.find('option[value=' + comparisonValue + ']').length > 0)
 		comparison.val(comparisonValue);
-	displayPromptForCriteriaOptions(comparison);
+	displayPromptForCriteriaOptions(comparison, reportIsSegmentation);
 }
 
-function displayPromptForCriteriaOptions(comparisonSelectId) {
+function displayPromptForCriteriaOptions(comparisonSelectId, reportIsSegmentation) {
 	var comparison = $(comparisonSelectId);
 	var filterRow = comparison.parent().parent();
-	if (comparison.find("option:selected").attr('dateonly') == "true"
+	if (reportIsSegmentation) {
+		var promptForCriteria = filterRow.find("[objectname$=promptForCriteria]");
+		promptForCriteria.attr('disabled', true);
+		promptForCriteria.attr('checked', false);
+		if (promptForCriteria.attr('checked'))
+			filterRow.find("[objectname$=reportStandardFilter.criteria]").attr("disabled", "true");
+		else
+			filterRow.find("[objectname$=reportStandardFilter.criteria]").removeAttr("disabled");
+	} else if (comparison.find("option:selected").attr('dateonly') == "true"
 		// has any value
 		|| comparison.find("option:selected").val() == 11) {
 		filterRow.find("[objectname$=promptForCriteria]").attr("disabled", "true");

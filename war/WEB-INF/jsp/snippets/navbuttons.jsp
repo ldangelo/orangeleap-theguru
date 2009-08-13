@@ -12,7 +12,9 @@
 </td>
 
 <td align="Right" width=360>
+<c:if test="${page <= maxpages}">
 <input type="hidden" id="previousPage" name="previousPage" value="${page}"/>
+</c:if>
 <input type="image" src="images/cancel_off.gif" value="Cancel" name="_cancel" ALT="Cancel" onmouseover="this.src = 'images/cancel_on.gif';" onmouseout="this.src = 'images/cancel_off.gif';">
 
 <c:if test="${page > 0}">

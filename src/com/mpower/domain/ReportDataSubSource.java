@@ -1,28 +1,20 @@
 package com.mpower.domain;
 
 import java.util.List;
-import java.util.Map;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import javax.persistence.JoinColumn;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.annotations.IndexColumn;
-import org.hibernate.annotations.Sort;
-import org.hibernate.annotations.SortType;
 import com.mpower.domain.ReportFormatType;
 
 @Entity
@@ -71,6 +63,11 @@ public class ReportDataSubSource implements java.io.Serializable,
 	@IndexColumn(name="REPORTCUSTOMFILTERDEFINITION_ID")
 	@Column(name = " REPORTDATASUBSOURCE_REPORTCUSTOMFILTERDEFINITION_ID")
 	private List<ReportCustomFilterDefinition> reportCustomFilterDefinitions;
+
+	@ManyToMany(mappedBy="reportDataSubSource",cascade=CascadeType.ALL)
+	@IndexColumn(name="REPORTSEGMENTATIONTYPE_ID")
+	@Column(name = " REPORTDATASUBSOURCE_REPORTSEGMENTATIONTYPE_ID")
+	private List<ReportSegmentationType> reportSegmentationTypes;
 
 	public ReportDataSubSource(ReportDataSubSource reportDataSubSource) {
 		displayName      = reportDataSubSource.displayName;
@@ -161,5 +158,13 @@ public class ReportDataSubSource implements java.io.Serializable,
 
 	public String getDescription() {
 		return description;
+	}
+
+	public void setReportSegmentationTypes(List<ReportSegmentationType> reportSegmentationTypes) {
+		this.reportSegmentationTypes = reportSegmentationTypes;
+	}
+
+	public List<ReportSegmentationType> getReportSegmentationTypes() {
+		return reportSegmentationTypes;
 	}
 }

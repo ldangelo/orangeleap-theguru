@@ -44,16 +44,20 @@ import com.mpower.domain.ReportCrossTabColumn;
 import com.mpower.domain.ReportCrossTabMeasure;
 import com.mpower.domain.ReportCrossTabRow;
 import com.mpower.domain.ReportCustomFilterCriteria;
+import com.mpower.domain.ReportCustomFilterDefinition;
 import com.mpower.domain.ReportDataSource;
 import com.mpower.domain.ReportDataSubSourceGroup;
 import com.mpower.domain.ReportDataSubSource;
 import com.mpower.domain.ReportField;
 import com.mpower.domain.ReportFieldGroup;
 import com.mpower.domain.ReportFilter;
+import com.mpower.domain.ReportSegmentationType;
 import com.mpower.domain.ReportSelectedField;
 import com.mpower.domain.ReportWizard;
 import com.mpower.service.JasperServerService;
 import com.mpower.service.ReportCustomFilterDefinitionService;
+import com.mpower.service.ReportSegmentationResultsService;
+import com.mpower.service.ReportSegmentationTypeService;
 import com.mpower.service.ReportFieldGroupService;
 import com.mpower.service.ReportFieldService;
 import com.mpower.service.ReportSourceService;
@@ -62,6 +66,7 @@ import com.mpower.service.ReportSubSourceService;
 import com.mpower.service.ReportWizardService;
 import com.mpower.service.SessionService;
 import com.mpower.util.ModifyReportJRXML;
+import com.mpower.util.ReportCustomFilterDefinitionLookup;
 import com.mpower.util.ReportGenerator;
 import com.mpower.util.ReportQueryGenerator;
 import com.mpower.util.SessionHelper;
@@ -83,6 +88,10 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 
 	private ReportFieldService      reportFieldService;
 	private ReportCustomFilterDefinitionService      reportCustomFilterDefinitionService;
+	private ReportCustomFilterDefinitionLookup      reportCustomFilterDefinitionLookup;
+
+	private ReportSegmentationTypeService      reportSegmentationTypeService;
+	private ReportSegmentationResultsService reportSegmentationResultsService;
 	private SessionService          sessionService;
 	private DataSource jdbcDataSource;
 	private String reportUnitDataSourceURI;
@@ -187,6 +196,9 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 			LoadWizardLookupTables(wiz);
 
 			// clear out any selected filters, chart settings, etc.
+			wiz.setReportSegmentationTypeId(0);
+			wiz.setUseReportAsSegmentation(false);
+			wiz.setSegmentationQuery("");
 			wiz.getReportFilters().clear();
 			wiz.getReportChartSettings().clear();
 			wiz.getReportCrossTabFields().getReportCrossTabColumns().clear();
@@ -239,11 +251,33 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 			ReportWizard wiz = (ReportWizard) command;
 			if (returnToSavePage)
 				return currentPage;
+			else if (wiz.getExecuteSegmentation())
+			{
+				int pageIndex = getPageIndexByName("ReportExecuteSegmentation");
+				if (pageIndex != -1)
+					return pageIndex;
+				else
+					return wiz.getPreviousPage();
+			}
 			else
 			    return wiz.getPreviousPage();
 		}
 
 		return super.getTargetPage(request, command, errors, currentPage);
+	}
+
+	private int getPageIndexByName(String pageName) {
+		int result = -1;
+		String[] pages = getPages();
+		for (int index = 0; index < pages.length; index++)
+		{
+			if (pages[index].equalsIgnoreCase(pageName))
+			{
+				result = index;
+				break;
+			}
+		}
+		return result;
 	}
 
 	@Override
@@ -266,8 +300,8 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		wiz.setFieldGroups(lrfg);
 
 		wiz.setDataSubSource(rdss);
-
-		wiz.getDataSubSource().setReportCustomFilterDefinitions(reportCustomFilterDefinitionService.readReportCustomFilterDefinitionBySubSourceId(rdss.getId()));
+		wiz.getDataSubSource().setReportCustomFilterDefinitions(getReportCustomFilterDefinitions(rdss.getId()));
+		wiz.getDataSubSource().setReportSegmentationTypes(reportSegmentationTypeService.readReportSegmentationTypeBySubSourceId(rdss.getId()));
 
 		List<ReportField> fields = new LinkedList<ReportField>();
 		// Iterate across the field groups in the
@@ -284,6 +318,10 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		if (copyIds)
 			emptyWizard.setId(savedWizard.getId());
 		emptyWizard.setRecordCount(savedWizard.getRecordCount());
+		emptyWizard.setUseReportAsSegmentation(savedWizard.getUseReportAsSegmentation());
+		emptyWizard.setSegmentationQuery(savedWizard.getSegmentationQuery());
+		emptyWizard.setReportSegmentationTypeId(savedWizard.getReportSegmentationTypeId());
+
 		emptyWizard.getReportChartSettings().clear();
 		emptyWizard.getReportChartSettings().addAll(savedWizard.getReportChartSettings());
 		emptyWizard.setReportComment(savedWizard.getReportComment());
@@ -385,7 +423,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		Map refData = new HashMap();
 
 		refData.put("page",page);
-		refData.put("maxpages", getPages().length-6); // 5 pages that are not actual steps
+		refData.put("maxpages", getPages().length-6); // 6 pages that are not actual steps
 
 		// see if we went backwards
 		if (wiz.getPreviousPage() > page)
@@ -541,7 +579,13 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		    }
 
 			refData.put("fieldGroups", lrfg);
-		    refData.put("customFilters", rdss.getReportCustomFilterDefinitions());
+		    refData.put("customFilters", getReportCustomFilterDefinitions(rdss.getId()));
+		    List<ReportSegmentationType> reportSegmentationTypes = rdss.getReportSegmentationTypes();
+		    refData.put("useReportAsSegmentation", wiz.getUseReportAsSegmentation());
+		    wiz.setUseReportAsSegmentation(false);
+		    refData.put("segmentationTypeId", wiz.getReportSegmentationTypeId());
+		    refData.put("segmentationTypeCount", reportSegmentationTypes.size());
+		    refData.put("segmentationTypes", reportSegmentationTypes);
 
 			List<ReportFilter> tempFilters = new LinkedList<ReportFilter>();
 			tempFilters.addAll(wiz.getReportFilters());
@@ -550,6 +594,10 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 			wiz.getReportFilters().clear();
 
 		    refData.put("rowCount", wiz.getRowCount());
+		}
+
+		if (page==4) {
+		    refData.put("useReportAsSegmentation", wiz.getUseReportAsSegmentation());
 		}
 
 		// run a saved report
@@ -618,11 +666,66 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 			tempFile.delete();
 		}
 
+		if (page == getPageIndexByName("ReportExecuteSegmentation")) {
+			boolean hasErrors = false;
+
+			refData.put("wiz", wiz);
+			refData.put("segmentationType", reportSegmentationTypeService.find(wiz.getReportSegmentationTypeId()).getSegmentationType());
+
+			if (!wiz.getUseReportAsSegmentation()) {
+				hasErrors = true;
+				errors.reject("error.segmentationnotselected", "This report was not selected to be used as a segmentation.  To change this, go to the Report Criteria page and select the 'Use report as segmentation' check box.  However, if the selected " +
+						"secondary data source is not able to be used as a segmentation, that check box will not be available.");
+			}
+			if (wiz.getReportSegmentationTypeId() == 0) {
+				hasErrors = true;
+				errors.reject("error.segmentationtypenotselected", "No segmentation type was selected.");
+			}
+
+			if (!hasErrors) {
+				try {
+					int rowsAffected = reportSegmentationResultsService.executeSegmentation(wiz.getId());
+					refData.put("rowsAffected", rowsAffected);
+					refData.put("hasErrors", false);
+				} catch (Exception e) {
+					e.printStackTrace();
+					refData.put("hasErrors", true);
+					String message = "Error executing segmentation query for report ID " + wiz.getId().toString() + " (\"" + wiz.getReportName() + "\")" + System.getProperty("line.separator") + e.getMessage() + System.getProperty("line.separator") + wiz.getSegmentationQuery();
+					errors.reject("error.segmentationexecutionerror", message);
+				}
+			} else {
+				refData.put("hasErrors", true);
+			}
+		}
 		return refData;
+	}
+
+	private List<ReportCustomFilterDefinition> getReportCustomFilterDefinitions(Long subSourceId) {
+		List<ReportCustomFilterDefinition> filterDefinitions = reportCustomFilterDefinitionService.readReportCustomFilterDefinitionBySubSourceId(subSourceId);
+		for (ReportCustomFilterDefinition filterDefinition : filterDefinitions) {
+			while (filterDefinition.getDisplayHtml().contains("{lookupReferenceBean:"))
+			{
+				int beginIndex = filterDefinition.getDisplayHtml().indexOf("{lookupReferenceBean:");
+				int endIndex = filterDefinition.getDisplayHtml().indexOf("}", beginIndex);
+				String lookupReferenceBeanString = filterDefinition.getDisplayHtml().substring(beginIndex, endIndex + 1);
+				String beanName = lookupReferenceBeanString. replace("{lookupReferenceBean:", "").replace("}", "");
+				WebApplicationContext applicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(this.getServletContext());
+				filterDefinition.setDisplayHtml(filterDefinition.getDisplayHtml().replace(lookupReferenceBeanString,
+						reportCustomFilterDefinitionLookup.getLookupHtml(applicationContext, beanName, wiz)));
+			}
+		}
+		return filterDefinitions;
 	}
 
 	protected void saveReport(ReportWizard wiz) throws Exception {
 		reportWizardService.save(wiz);
+
+		// If the report is to be used as a segmentation, generate the segmentation SQL, set it on the wiz and save again
+		if (wiz.getUseReportAsSegmentation()) {
+			ReportQueryGenerator reportQueryGenerator = new ReportQueryGenerator(wiz, reportFieldService, reportCustomFilterDefinitionService);
+			wiz.setSegmentationQuery(reportQueryGenerator.getSegmentationQueryString(reportSegmentationTypeService.find(wiz.getReportSegmentationTypeId()).getColumnName()));
+			reportWizardService.save(wiz);
+		}
 		//
 		// First we must generate a jrxml file
 		//
@@ -729,6 +832,9 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		if (request.getParameter("_target9") != null || request.getParameter("_target9.x") != null) {
 			return showPage(request, errors, 9);
 		}
+		else if (request.getParameter("_target10") != null || request.getParameter("_target10.x") != null) {
+			return showPage(request, errors, 10);
+		}
 		else
 		{
 			return showPage(request, errors, getInitialPage(request, errors
@@ -743,6 +849,15 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 
 	public ReportCustomFilterDefinitionService getReportCustomFilterDefinitionService() {
 		return reportCustomFilterDefinitionService;
+	}
+
+	public void setReportSegmentationTypeService(
+			ReportSegmentationTypeService reportSegmentationTypeService) {
+		this.reportSegmentationTypeService = reportSegmentationTypeService;
+	}
+
+	public ReportSegmentationTypeService getReportSegmentationTypeService() {
+		return reportSegmentationTypeService;
 	}
 
 	public void setJasperServerService(JasperServerService jss) {
@@ -763,5 +878,23 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 			throws Exception {
 		command = null;
 		return new ModelAndView(getSuccessView());
+	}
+
+	public void setReportSegmentationResultsService(
+			ReportSegmentationResultsService reportSegmentationResultsService) {
+		this.reportSegmentationResultsService = reportSegmentationResultsService;
+	}
+
+	public ReportSegmentationResultsService getReportSegmentationResultsService() {
+		return reportSegmentationResultsService;
+	}
+
+	public ReportCustomFilterDefinitionLookup getReportCustomFilterDefinitionLookup() {
+		return reportCustomFilterDefinitionLookup;
+	}
+
+	public void setReportCustomFilterDefinitionLookup(
+			ReportCustomFilterDefinitionLookup reportCustomFilterDefinitionLookup) {
+		this.reportCustomFilterDefinitionLookup = reportCustomFilterDefinitionLookup;
 	}
 }

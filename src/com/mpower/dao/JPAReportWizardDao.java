@@ -1,18 +1,12 @@
 package com.mpower.dao;
 
-import java.util.Iterator;
 import java.util.List;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import javax.transaction.Transaction;
-
 import org.springframework.stereotype.Repository;
 
-import com.mpower.domain.ReportField;
-import com.mpower.domain.ReportFieldGroup;
 import com.mpower.domain.ReportWizard;
 
 @Repository("reportWizardDao")
@@ -37,6 +31,15 @@ public class JPAReportWizardDao implements ReportWizardDao {
 			return reportWizardResultList.get(0);
 	}
 
+	public List<ReportWizard> findSegmentationsByReportDataSourceId(Long reportDataSourceId) {
+		Query q = em.createQuery("select reportwizard from ReportWizard reportwizard where reportwizard.srcId = :reportDataSourceId and reportwizard.useReportAsSegmentation = true");
+
+		q.setParameter("reportDataSourceId", reportDataSourceId);
+		List<ReportWizard> reportWizardResultList = q.getResultList();
+
+		return reportWizardResultList;
+	}
+
 	public List<ReportWizard> getAll() {
 		Query q = em
 		.createQuery("SELECT reportwizard from com.mpower.domain.ReportWizard reportwizard");
@@ -56,11 +59,11 @@ public class JPAReportWizardDao implements ReportWizardDao {
 			ReportField f = (ReportField) fieldIt.next();
 			em.merge(f);
 		}
-*/		
+*/
 		if (wiz.getId() != null)
 			em.merge(wiz);
 		else
-			em.persist(wiz);		
+			em.persist(wiz);
 	}
 
 }

@@ -4,7 +4,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -164,8 +163,27 @@ public class ReportQueryGenerator {
 	 */
 	public String getQueryString() throws ParseException {
 		String query = buildSelectClause();
-		query += buildWhereClause();
+		query += buildWhereClause(false);
 		query += buildOrderByClause();
+		if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.MYSQL
+				&& getReportWizard().getRowCount() > 0)
+			query += " LIMIT 0," + getReportWizard().getRowCount();
+		query += ";";
+		return query;
+	}
+
+	/**
+	 * Builds and returns a mySql or SQL Server query.
+	 * <P>
+	 * {@code} String query = getQueryString(reportSegmentationTypeService.find(wiz.getReportSegmentationTypeId()).getColumnName());
+     * @param columnName The name of the ID column that is to be selected for the segmentation results.
+	 * @return String
+	 * @throws ParseException
+	 */
+	public String getSegmentationQueryString(String columnName) throws ParseException {
+		String query = buildSegmentationSelectClause(reportWizard.getId(), columnName);
+		query += buildSegmentationWhereClause(columnName);
+		query += System.getProperty("line.separator") + "ORDER BY " + columnName;
 		if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.MYSQL
 				&& getReportWizard().getRowCount() > 0)
 			query += " LIMIT 0," + getReportWizard().getRowCount();
@@ -198,6 +216,45 @@ public class ReportQueryGenerator {
 		selectClause = selectClause + System.getProperty("line.separator") + "FROM " + getReportWizard().getDataSubSource().getViewName();
 
 		return selectClause;
+	}
+
+	/**
+	 * Builds and returns a segmentation select clause based on the report ID and column name.
+	 * {@code} String selectClause = buildSegmentationSelectClause(wiz.getId(), columnName);
+	 * @param reportId The ID of the report
+	 * @param columnName The column name to select and save to the theguru_segmentation_result table
+	 * @return
+	 */
+	private String buildSegmentationSelectClause(Long reportId, String columnName) {
+		String selectClause = "INSERT theguru_segmentation_result (REPORT_ID, ENTITY_ID) SELECT DISTINCT ";
+
+		if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.SQLSERVER
+				&& getReportWizard().getRowCount() > 0)
+			selectClause += "TOP " + getReportWizard().getRowCount() + " ";
+
+
+		selectClause += reportId.toString() + ", " + columnName + " ";
+
+		selectClause = selectClause + System.getProperty("line.separator") + "FROM " + getReportWizard().getDataSubSource().getViewName();
+
+		return selectClause;
+	}
+
+	/**
+	 * Builds and returns a segmentation where clause based on the column name.
+	 * {@code} String whereClause = buildSegmentationWhereClause(columnName);
+	 * @param columnName The column name to select and save to the theguru_segmentation_result table.  The where clause will require that the field is not null.
+	 * @return String
+	 * @throws ParseException
+	 */
+	private String buildSegmentationWhereClause(String columnName) throws ParseException {
+		String whereClause = buildWhereClause(true);
+		if (whereClause.length() > 0)
+			whereClause += System.getProperty("line.separator") + "AND ";
+		else
+			whereClause += System.getProperty("line.separator") + "WHERE ";
+		whereClause += "(" + columnName + " IS NOT NULL)";
+		return whereClause;
 	}
 
 	/**
@@ -234,7 +291,7 @@ public class ReportQueryGenerator {
 		//by the DISTINCT in the select clause
 		if (!reportWizard.getUniqueRecords()){
 			if (primaryKeys.size() > 0){
-				Iterator itPrimaryKeys = primaryKeys.values().iterator();
+				Iterator<String> itPrimaryKeys = primaryKeys.values().iterator();
 				while (itPrimaryKeys.hasNext()){
 					String pk = (String) itPrimaryKeys.next();
 					if (pk != null)
@@ -334,7 +391,7 @@ public class ReportQueryGenerator {
 	 * @return String
 	 * @throws ParseException
 	 */
-	private String buildWhereClause() throws ParseException {
+	private String buildWhereClause(Boolean segmentation) throws ParseException {
 		String whereClause = "";
 		// very first criteria doesn't need an and
 		boolean afterGroup = true;
@@ -352,6 +409,8 @@ public class ReportQueryGenerator {
 
 			if (addWhere) {
 				whereClause += System.getProperty("line.separator") + "WHERE";
+				if (segmentation)
+					whereClause += " (";
 				addWhere = false;
 			} else if (!afterGroup && filter.getFilterType() != 4) {
 				// Do not add And or Or the first record after a group, or on end groups
@@ -382,7 +441,10 @@ public class ReportQueryGenerator {
 		if (!hasCriteria)
 			return "";
 		else
-			return whereClause;
+			if (segmentation)
+				return whereClause + ")";
+			else
+				return whereClause;
 	}
 
 	/**

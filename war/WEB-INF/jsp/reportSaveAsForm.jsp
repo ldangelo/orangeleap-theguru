@@ -192,7 +192,11 @@ return true;
 	<div class="clearColumns"></div>
 	</div>
 
-
+	<c:if test="${useReportAsSegmentation}">
+	<div class="columns">
+	<input type="checkbox" id="executeSegmentation" name="executeSegmentation">Execute segmentation job after saving</select>
+	</div>
+	</c:if>
 
 	<div style="height: 20px;">
 	<p></p>

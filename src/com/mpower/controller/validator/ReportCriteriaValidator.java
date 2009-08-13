@@ -14,6 +14,7 @@ public class ReportCriteriaValidator extends ReportWizardValidator {
         return ReportWizard.class.equals(clazz);
     }
 
+
     @Override
     public void validate(Object obj, Errors errors) {
         logger.debug("in CriteriaValidator");
@@ -24,10 +25,13 @@ public class ReportCriteriaValidator extends ReportWizardValidator {
         }
         else
         {
-           if (wiz.getReportSelectedFields().size() == 0 && wiz.getReportType() != "matrix")
-           {
-              //errors.reject("error.code", "Report Content: No Report Fields Selected.");
-           }
+		    if (wiz.getReportSelectedFields().size() == 0 && wiz.getReportType() != "matrix")
+		    {
+		       //errors.reject("error.code", "Report Content: No Report Fields Selected.");
+		    }
+		    if (wiz.getUseReportAsSegmentation() && wiz.getReportSegmentationTypeId() == 0) {
+			    errors.reject("error.segmentationtypenotselected", "No segmentation type was selected.");
+		    }
         }
     }
 }

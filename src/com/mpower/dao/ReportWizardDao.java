@@ -9,4 +9,5 @@ public interface ReportWizardDao {
 	ReportWizard        find(Long id);
 	ReportWizard		findByUri(String reportPath, String reportName);
 	List<ReportWizard>  getAll();
+	List<ReportWizard>  findSegmentationsByReportDataSourceId(Long reportDataSourceId);
 }

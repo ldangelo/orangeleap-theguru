@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.mpower.dao.ReportFieldGroupDao;
 import com.mpower.dao.ReportWizardDao;
 import com.mpower.domain.ReportWizard;
 
@@ -34,6 +33,12 @@ public class ReportWizardServiceImpl implements ReportWizardService {
     @Transactional(propagation = Propagation.SUPPORTS)
 	public void save(ReportWizard wiz) {
 		reportWizardDAO.save(wiz);
+	}
+
+	@Override
+	public List<ReportWizard> findSegmentationsByReportDataSourceId(
+			Long reportDataSourceId) {
+		return reportWizardDAO.findSegmentationsByReportDataSourceId(reportDataSourceId);
 	}
 
 }

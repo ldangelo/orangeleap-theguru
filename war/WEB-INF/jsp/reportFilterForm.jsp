@@ -20,6 +20,7 @@
 <div class="columns">
  	<h2>Select filters for the report</h2>
 	<hr width="100%" size=1 color="black">
+
 	<table id="report_filters_select" class="tablesorter" >
 		<TR><TH>Add Filter</TH></TR>
 	</table>
@@ -84,6 +85,20 @@
 	<br>
  	<h2>Advanced Options</h2>
 	<hr width="100%" size=1 color="black">
+	<c:if test="${segmentationTypeCount > 0}" >
+	<table id="report_segmentation_options" class="tablesorter" >
+		<TR><TH><input type="checkbox" id="useReportAsSegmentation" name="useReportAsSegmentation" value="true"
+		onchange="if ($('#useReportAsSegmentation').attr('checked')) { $('#segmentationTypeDiv').show(); } else { $('#segmentationTypeDiv').hide(); }  cleanUpFilterTable('#report_filters_add');"
+		<c:if test="${useReportAsSegmentation}">checked="true"</c:if>/>Use report as segmenation (disables Prompt for Value options)</TH></TR>
+	</table>
+	<div id="segmentationTypeDiv" name="segmentationTypeDiv" <c:if test="${!useReportAsSegmentation}">style="display:none"> </c:if>
+		<select id="reportSegmentationTypeId" name="reportSegmentationTypeId" >
+		<c:forEach var="segmentationType" items="${segmentationTypes}" varStatus="outer"><c:if test="${segmentationType != null}"><option label="${segmentationType.segmentationType}" value="${segmentationType.id}" <c:if test="${segmentationType.id == segmentationTypeId}">selected="true" </c:if>>${segmentationType.segmentationType}</option></c:if></c:forEach>
+		</select>
+		<br>
+		<br>
+	</div>
+	</c:if>
 	<table class="tablesorter" id="showSqlQueryTable">
 		<th>
 			<span id="showSqlQuerySpan" style="cursor: pointer;text-decoration:underline;" onclick="showSqlQueryClick();" >Show SQL Query</span>

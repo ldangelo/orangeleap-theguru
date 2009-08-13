@@ -7,6 +7,7 @@ import com.mpower.domain.ReportWizard;
 public interface ReportWizardService {
 	ReportWizard Find(Long id);
 	ReportWizard FindByUri(String reportPath, String reportName);
+	List<ReportWizard> findSegmentationsByReportDataSourceId(Long reportDataSourceId);
 	List<ReportWizard> getAll();
 	void save(ReportWizard wiz);
 }

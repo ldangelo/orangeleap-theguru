@@ -134,6 +134,9 @@
         <property name="reportFieldService" ref="reportFieldService"/>
 		<property name="reportWizardService" ref="reportWizardService"/>
 		<property name="reportCustomFilterDefinitionService" ref="reportCustomFilterDefinitionService"/>
+		<property name="reportCustomFilterDefinitionLookup" ref="reportCustomFilterDefinitionLookup" />
+		<property name="reportSegmentationTypeService" ref="reportSegmentationTypeService"/>
+		<property name="reportSegmentationResultsService" ref="reportSegmentationResultsService"/>
 		<property name="reportUnitDataSourceURI" value="/datasources/ReportWizardJdbcDS"/>
         <property name="dynamicView" ref="dynamicReport"/>
     	<property name="jdbcDataSource" ref="dataSource"/>
@@ -150,6 +153,7 @@
 			<value>RunSavedReport</value>
 			<value>RunReport</value>
 			<value>ReportSaveAsNewReport</value>
+			<value>ReportExecuteSegmentation</value>
 			<value>ReportRedirect</value>
 		</list>
 		</property>
@@ -177,6 +181,40 @@
 
 	<bean id ="reportCriteriaValidator" class="com.mpower.controller.validator.ReportCriteriaValidator">
 		<property name="page" value="3"/>
+	</bean>
+
+	<bean id="reportSegmentationResultsDao" class="com.mpower.dao.JPAReportSegmentationResultsDao">
+		<property name="segmentationDataSource" ref="segmentationDataSource" />
+	</bean>
+
+	<bean id="reportSegmentationResultsService" class="com.mpower.service.ReportSegmentationResultsServiceImpl">
+		<property name="reportSegmentationResultsDao" ref="reportSegmentationResultsDao" />
+        <property name="reportFieldService" ref="reportFieldService"/>
+		<property name="reportWizardService" ref="reportWizardService"/>
+		<property name="reportCustomFilterDefinitionService" ref="reportCustomFilterDefinitionService"/>
+		<property name="reportSegmentationTypeService" ref="reportSegmentationTypeService"/>
+		<property name="jasperServerService" ref="JasperServerService"/>
+	</bean>
+
+	<bean id="reportCustomFilterDefinitionLookup" class="com.mpower.util.ReportCustomFilterDefinitionLookup" >
+	</bean>
+
+	<bean id="orangeLeapConstituentSegmentationList" class="com.mpower.service.customfilterdefinitionlookup.SegmentationList" >
+		<property name="reportWizardService" ref="reportWizardService"/>
+		<property name="reportSegmentationTypeService" ref="reportSegmentationTypeService"/>
+		<property name="segmentationType" value="Constituent Segmentation"/>
+	</bean>
+
+	<bean id="orangeLeapGiftSegmentationList" class="com.mpower.service.customfilterdefinitionlookup.SegmentationList" >
+		<property name="reportWizardService" ref="reportWizardService"/>
+		<property name="reportSegmentationTypeService" ref="reportSegmentationTypeService"/>
+		<property name="segmentationType" value="Gift Segmentation"/>
+	</bean>
+
+	<bean id="mpxAccountSegmentationList" class="com.mpower.service.customfilterdefinitionlookup.SegmentationList" >
+		<property name="reportWizardService" ref="reportWizardService"/>
+		<property name="reportSegmentationTypeService" ref="reportSegmentationTypeService"/>
+		<property name="segmentationType" value="Account Segmentation"/>
 	</bean>
 
 	<!-- Configures the Tiles layout system -->
