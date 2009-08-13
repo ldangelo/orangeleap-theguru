@@ -14236,6 +14236,17 @@ SELECT 490000, 'Gift Totals - Account has given at least $[GIFTAMOUNT] in year [
 '((SELECT SUM(AMOUNT) FROM GIFT GIFTLOOKUP WHERE GIFTLOOKUP.CONSTITUENT_ID = [VIEWNAME].PHONE_CONSTITUENT_ID AND YEAR(TRANSACTION_DATE) = {1}) >= {0})',
 'Gift Totals - Account has given at least $<input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[0].criteria" value="{0}"/> in year <input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[1].criteria" value="{1}"/>';
 
+-- Account is in a segmentation
+INSERT INTO REPORTCUSTOMFILTERDEFINITION (REPORTCUSTOMFILTERDEFINITION_ID, DISPLAY_TEXT, SQL_TEXT, DISPLAY_HTML)
+SELECT 600000, 'Segmentation - Account is in segmenation / report',
+'EXISTS (SELECT * FROM theguru_segmentation_result SEGTABLE WHERE SEGTABLE.REPORT_ID = {0} AND SEGTABLE.ENTITY_ID = [VIEWNAME].CONSTITUENT_CONSTITUENT_ID)',
+'Segmentation - Account is in segmenation / report <br> {lookupReferenceBean:orangeLeapConstituentSegmentationList}';
+
+-- Gift is in a segmentation
+INSERT INTO REPORTCUSTOMFILTERDEFINITION (REPORTCUSTOMFILTERDEFINITION_ID, DISPLAY_TEXT, SQL_TEXT, DISPLAY_HTML)
+SELECT 610000, 'Segmentation - Gift is in segmenation / report',
+'EXISTS (SELECT * FROM theguru_segmentation_result SEGTABLE WHERE SEGTABLE.REPORT_ID = {0} AND SEGTABLE.ENTITY_ID = [VIEWNAME].GIFT_GIFT_ID)',
+'Segmentation - Gift is in segmenation / report <br> {lookupReferenceBean:orangeLeapGiftSegmentationList}';
 
 
 -- ID for table, subsource ID, another subsource ID, and filter ID
