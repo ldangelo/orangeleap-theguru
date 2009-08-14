@@ -8,7 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "theguru_segmentation_result")
+@Table(name = "THEGURU_SEGMENTATION_RESULT")
 public class ReportSegmentationResult implements java.io.Serializable,
 		Comparable<ReportSegmentationResult> {
 

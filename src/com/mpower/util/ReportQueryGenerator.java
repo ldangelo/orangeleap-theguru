@@ -222,11 +222,11 @@ public class ReportQueryGenerator {
 	 * Builds and returns a segmentation select clause based on the report ID and column name.
 	 * {@code} String selectClause = buildSegmentationSelectClause(wiz.getId(), columnName);
 	 * @param reportId The ID of the report
-	 * @param columnName The column name to select and save to the theguru_segmentation_result table
+	 * @param columnName The column name to select and save to the THEGURU_SEGMENTATION_RESULT table
 	 * @return
 	 */
 	private String buildSegmentationSelectClause(Long reportId, String columnName) {
-		String selectClause = "INSERT theguru_segmentation_result (REPORT_ID, ENTITY_ID) SELECT DISTINCT ";
+		String selectClause = "INSERT THEGURU_SEGMENTATION_RESULT (REPORT_ID, ENTITY_ID) SELECT DISTINCT ";
 
 		if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.SQLSERVER
 				&& getReportWizard().getRowCount() > 0)
@@ -243,7 +243,7 @@ public class ReportQueryGenerator {
 	/**
 	 * Builds and returns a segmentation where clause based on the column name.
 	 * {@code} String whereClause = buildSegmentationWhereClause(columnName);
-	 * @param columnName The column name to select and save to the theguru_segmentation_result table.  The where clause will require that the field is not null.
+	 * @param columnName The column name to select and save to the THEGURU_SEGMENTATION_RESULT table.  The where clause will require that the field is not null.
 	 * @return String
 	 * @throws ParseException
 	 */
