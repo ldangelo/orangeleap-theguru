@@ -7,11 +7,11 @@ import com.mpower.service.customfilterdefinitionlookup.ReportCustomFilterDefinit
 
 public class ReportCustomFilterDefinitionLookup {
 
-	public String getLookupHtml(ApplicationContext applicationContext, String beanName, ReportWizard reportWizard) {
+	public String getLookupHtml(ApplicationContext applicationContext, String beanName, ReportWizard reportWizard, Integer criteriaIndex, String selectedValue) {
 		ReportCustomFilterDefinitionLookupService reportCustomFilterDefinitionLookupService = (ReportCustomFilterDefinitionLookupService)applicationContext.getBean(beanName);
 		String result = "";
 		if (reportCustomFilterDefinitionLookupService != null) {
-			result = reportCustomFilterDefinitionLookupService.getLookupHtml(reportWizard);
+			result = reportCustomFilterDefinitionLookupService.getLookupHtml(reportWizard, criteriaIndex, selectedValue);
 		}
 		return result;
 	}

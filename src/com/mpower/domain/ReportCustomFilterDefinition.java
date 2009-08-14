@@ -24,11 +24,11 @@ import org.hibernate.annotations.IndexColumn;
 public class ReportCustomFilterDefinition implements java.io.Serializable,
 		Comparable<ReportCustomFilterDefinition> {
 	/**
-	 * 
+	 *
 	 */
 	@Transient
 	private static final long serialVersionUID = 1452667860074343989L;
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "REPORTCUSTOMFILTERDEFINITION_ID")
@@ -39,10 +39,10 @@ public class ReportCustomFilterDefinition implements java.io.Serializable,
 
 	@Column(name = "DISPLAY_HTML", length = 8000)
 	private String displayHtml;
-	
+
 	@Column(name = "SQL_TEXT", length = 8000)
 	private String sqlText;
-	
+
 	@ManyToMany(cascade=CascadeType.ALL)
 	@IndexColumn(name="REPORTSUBSOURCE_ID")
 	@Column(name = "REPORTSUBSOURCE_ID")
@@ -56,6 +56,8 @@ public class ReportCustomFilterDefinition implements java.io.Serializable,
 		id = null;
 		this.setDisplayText(reportCustomFilterDefinition.getDisplayText());
 		this.setSqlText(reportCustomFilterDefinition.getSqlText());
+		this.setDisplayHtml(reportCustomFilterDefinition.getDisplayHtml());
+		this.setReportDataSubSource(reportCustomFilterDefinition.getReportDataSubSource());
 	}
 
 	public int compareTo(ReportCustomFilterDefinition o) {
@@ -108,6 +110,6 @@ public class ReportCustomFilterDefinition implements java.io.Serializable,
 		result = result.replace("\"", "&quot;");
 		result = result.replace(">", "&gt;");
 		result = result.replace("<", "&lt;");
-		return result; 
-	}	
+		return result;
+	}
 }

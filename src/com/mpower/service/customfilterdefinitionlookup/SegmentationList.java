@@ -14,9 +14,11 @@ public class SegmentationList implements ReportCustomFilterDefinitionLookupServi
 	private String segmentationType;
 
 	@Override
-	public String getLookupHtml(ReportWizard reportWizard) {
+	public String getLookupHtml(ReportWizard reportWizard, Integer criteriaIndex, String selectedValue) {
+		if (criteriaIndex == null)
+			criteriaIndex = 0;
 		List<ReportWizard> segmentations = reportWizardService.findSegmentationsByReportDataSourceId(reportWizard.getSrcId());
-		String result = "<select objectname=\"reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[0].criteria\" class=\"customCriteria\" >";
+		String result = "<select objectname=\"reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[" + criteriaIndex.toString() + "].criteria\" class=\"customCriteria\" >";
 		List<ReportSegmentationType> segmentationTypes;
 		if (segmentationType != null && segmentationType.length() == 0) {
 			segmentationTypes = reportSegmentationTypeService.findReportSegmentationTypeBySegmentationTypeName(segmentationType);
@@ -36,8 +38,12 @@ public class SegmentationList implements ReportCustomFilterDefinitionLookupServi
 				}
 			}
 			if (addSegmentation)
-				result += "<option value=\"" + segmentation.getId().toString() + "\">ID " +
-					segmentation.getId().toString() + " : " + segmentation.getReportName() + "</option>";
+			{
+				result += "<option value=\"" + segmentation.getId().toString() + "\"";
+				if (selectedValue != null && selectedValue.length() > 0 && selectedValue.equals(segmentation.getId().toString()))
+					result += " selected=\"true\"";
+				result += " >ID " + segmentation.getId().toString() + " : " + segmentation.getReportName() + "</option>";
+			}
 		}
 		result += "</select>";
 		return result;

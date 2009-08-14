@@ -134,7 +134,7 @@
         <property name="reportFieldService" ref="reportFieldService"/>
 		<property name="reportWizardService" ref="reportWizardService"/>
 		<property name="reportCustomFilterDefinitionService" ref="reportCustomFilterDefinitionService"/>
-		<property name="reportCustomFilterDefinitionLookup" ref="reportCustomFilterDefinitionLookup" />
+		<property name="reportCustomFilterHelper" ref="reportCustomFilterHelper" />
 		<property name="reportSegmentationTypeService" ref="reportSegmentationTypeService"/>
 		<property name="reportSegmentationResultsService" ref="reportSegmentationResultsService"/>
 		<property name="reportUnitDataSourceURI" value="/datasources/ReportWizardJdbcDS"/>
@@ -197,6 +197,11 @@
 	</bean>
 
 	<bean id="reportCustomFilterDefinitionLookup" class="com.mpower.util.ReportCustomFilterDefinitionLookup" >
+	</bean>
+
+	<bean id="reportCustomFilterHelper" class="com.mpower.util.ReportCustomFilterHelper" >
+		<property name="reportCustomFilterDefinitionService" ref="reportCustomFilterDefinitionService"/>
+		<property name="reportCustomFilterDefinitionLookup" ref="reportCustomFilterDefinitionLookup"/>
 	</bean>
 
 	<bean id="orangeLeapConstituentSegmentationList" class="com.mpower.service.customfilterdefinitionlookup.SegmentationList" >

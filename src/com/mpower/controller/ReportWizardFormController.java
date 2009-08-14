@@ -66,7 +66,7 @@ import com.mpower.service.ReportSubSourceService;
 import com.mpower.service.ReportWizardService;
 import com.mpower.service.SessionService;
 import com.mpower.util.ModifyReportJRXML;
-import com.mpower.util.ReportCustomFilterDefinitionLookup;
+import com.mpower.util.ReportCustomFilterHelper;
 import com.mpower.util.ReportGenerator;
 import com.mpower.util.ReportQueryGenerator;
 import com.mpower.util.SessionHelper;
@@ -88,8 +88,8 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 
 	private ReportFieldService      reportFieldService;
 	private ReportCustomFilterDefinitionService      reportCustomFilterDefinitionService;
-	private ReportCustomFilterDefinitionLookup      reportCustomFilterDefinitionLookup;
-
+	private ReportCustomFilterHelper reportCustomFilterHelper;
+	
 	private ReportSegmentationTypeService      reportSegmentationTypeService;
 	private ReportSegmentationResultsService reportSegmentationResultsService;
 	private SessionService          sessionService;
@@ -300,7 +300,8 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		wiz.setFieldGroups(lrfg);
 
 		wiz.setDataSubSource(rdss);
-		wiz.getDataSubSource().setReportCustomFilterDefinitions(getReportCustomFilterDefinitions(rdss.getId()));
+		WebApplicationContext applicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(this.getServletContext());
+		wiz.getDataSubSource().setReportCustomFilterDefinitions(reportCustomFilterHelper.getReportCustomFilterDefinitions(applicationContext, wiz));
 		wiz.getDataSubSource().setReportSegmentationTypes(reportSegmentationTypeService.readReportSegmentationTypeBySubSourceId(rdss.getId()));
 
 		List<ReportField> fields = new LinkedList<ReportField>();
@@ -579,7 +580,8 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		    }
 
 			refData.put("fieldGroups", lrfg);
-		    refData.put("customFilters", getReportCustomFilterDefinitions(rdss.getId()));
+			WebApplicationContext applicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(this.getServletContext());
+		    refData.put("customFilters", reportCustomFilterHelper.getReportCustomFilterDefinitions(applicationContext, wiz));
 		    List<ReportSegmentationType> reportSegmentationTypes = rdss.getReportSegmentationTypes();
 		    refData.put("useReportAsSegmentation", wiz.getUseReportAsSegmentation());
 		    wiz.setUseReportAsSegmentation(false);
@@ -587,8 +589,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		    refData.put("segmentationTypeCount", reportSegmentationTypes.size());
 		    refData.put("segmentationTypes", reportSegmentationTypes);
 
-			List<ReportFilter> tempFilters = new LinkedList<ReportFilter>();
-			tempFilters.addAll(wiz.getReportFilters());
+			List<ReportFilter> tempFilters = reportCustomFilterHelper.refreshReportCustomFilters(applicationContext, wiz);
 			refData.put("selectedFilters", tempFilters);
 			// Clear out the selected fields because some items do not post back correctly
 			wiz.getReportFilters().clear();
@@ -698,23 +699,6 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 			}
 		}
 		return refData;
-	}
-
-	private List<ReportCustomFilterDefinition> getReportCustomFilterDefinitions(Long subSourceId) {
-		List<ReportCustomFilterDefinition> filterDefinitions = reportCustomFilterDefinitionService.readReportCustomFilterDefinitionBySubSourceId(subSourceId);
-		for (ReportCustomFilterDefinition filterDefinition : filterDefinitions) {
-			while (filterDefinition.getDisplayHtml().contains("{lookupReferenceBean:"))
-			{
-				int beginIndex = filterDefinition.getDisplayHtml().indexOf("{lookupReferenceBean:");
-				int endIndex = filterDefinition.getDisplayHtml().indexOf("}", beginIndex);
-				String lookupReferenceBeanString = filterDefinition.getDisplayHtml().substring(beginIndex, endIndex + 1);
-				String beanName = lookupReferenceBeanString. replace("{lookupReferenceBean:", "").replace("}", "");
-				WebApplicationContext applicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(this.getServletContext());
-				filterDefinition.setDisplayHtml(filterDefinition.getDisplayHtml().replace(lookupReferenceBeanString,
-						reportCustomFilterDefinitionLookup.getLookupHtml(applicationContext, beanName, wiz)));
-			}
-		}
-		return filterDefinitions;
 	}
 
 	protected void saveReport(ReportWizard wiz) throws Exception {
@@ -889,12 +873,11 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		return reportSegmentationResultsService;
 	}
 
-	public ReportCustomFilterDefinitionLookup getReportCustomFilterDefinitionLookup() {
-		return reportCustomFilterDefinitionLookup;
+	public void setReportCustomFilterHelper(ReportCustomFilterHelper reportCustomFilterHelper) {
+		this.reportCustomFilterHelper = reportCustomFilterHelper;
 	}
 
-	public void setReportCustomFilterDefinitionLookup(
-			ReportCustomFilterDefinitionLookup reportCustomFilterDefinitionLookup) {
-		this.reportCustomFilterDefinitionLookup = reportCustomFilterDefinitionLookup;
+	public ReportCustomFilterHelper getReportCustomFilterHelper() {
+		return reportCustomFilterHelper;
 	}
 }

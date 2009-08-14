@@ -23,7 +23,7 @@ import org.hibernate.annotations.IndexColumn;
 public class ReportCustomFilter implements java.io.Serializable {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 839774897397732586L;
 
@@ -31,7 +31,7 @@ public class ReportCustomFilter implements java.io.Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "REPORTCUSTOMFILTER_ID")
 	private long customFilterId;
-	
+
 	@Column(name = "REPORTCUSTOMFILTERDEFINITION_ID")
 	private long customFilterDefinitionId;
 
@@ -39,13 +39,13 @@ public class ReportCustomFilter implements java.io.Serializable {
 	@IndexColumn(name="REPORTCUSTOMFILTERCRITERIA_ID")
 	private List<ReportCustomFilterCriteria> reportCustomFilterCriteria;
 
-	@Column(name = "DISPLAY_HTML", length=8000)	
+	@Column(name = "DISPLAY_HTML", length=8000)
 	private String displayHtml;
-	
+
 	public ReportCustomFilter() {
 		reportCustomFilterCriteria = LazyList.decorate(new ArrayList<ReportCustomFilterCriteria>(),FactoryUtils.instantiateFactory(ReportCustomFilterCriteria.class));
 	}
-	
+
 	public void setReportCustomFilterCriteria(
 			List<ReportCustomFilterCriteria> reportCustomFilterCriteria) {
 		this.reportCustomFilterCriteria = reportCustomFilterCriteria;
@@ -68,9 +68,9 @@ public class ReportCustomFilter implements java.io.Serializable {
 			displayHtml = displayHtml.replace("&quot;", "\"");
 			displayHtml = displayHtml.replace("&gt;", ">");
 			displayHtml = displayHtml.replace("&lt;", "<");
-		}		
+		}
 		this.displayHtml = displayHtml;
-		
+
 	}
 
 	public String getDisplayHtml() {
@@ -82,15 +82,18 @@ public class ReportCustomFilter implements java.io.Serializable {
 		}
 		return result;
 	}
-	
+
 	public String getPopulatedDisplayHtml() {
 		String result = displayHtml;
+		// The actual population is now done elsewhere due to look ups, but still need to use this call instead of getDisplayHtml due to formatting issues.
+		/*
 		if (result != null && result.length() != 0 && getReportCustomFilterCriteria() != null) {
 			int criteriaSize = getReportCustomFilterCriteria().size();
 			for (int index = 0; index < criteriaSize; index++) {
 				result = result.replace("{" + Integer.toString(index) + "}", getReportCustomFilterCriteria().get(index).getCriteria());
 			}
 		}
+		*/
 		return result;
 	}
 
