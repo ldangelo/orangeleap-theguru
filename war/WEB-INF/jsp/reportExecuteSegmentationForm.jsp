@@ -1,5 +1,5 @@
 <%@ include file="/WEB-INF/jsp/include.jsp"%>
-<mp:page pageName='ReportResultsToSegmenation' />
+<mp:page pageName='ReportResultsToSegmentation' />
 
 
 <form:form method="post" commandName="reportsource">
@@ -10,8 +10,8 @@
 	<div class="columns">
 	<br>
 	<table class="tablesorter">
-	<c:if test="${!hasErrors}"><tr><td>Segmenation Result<td><span style="color:#008800">Success</span></td></tr></c:if>
-	<c:if test="${hasErrors}"><tr><td>Segmenation Result<td><span style="color:#DD0000">Failure</span></td></tr></c:if>
+	<c:if test="${!hasErrors}"><tr><td>Segmentation Result<td><span style="color:#008800">Success</span></td></tr></c:if>
+	<c:if test="${hasErrors}"><tr><td>Segmentation Result<td><span style="color:#DD0000">Failure</span></td></tr></c:if>
 	<tr><td>Segmentation / Report ID</td><td>${wiz.id}</td></tr>
 	<tr><td>Result Count</td><td>${rowsAffected}</td></tr>
 	<tr><td>Report Name</td><td>${wiz.reportName}</td></tr>
