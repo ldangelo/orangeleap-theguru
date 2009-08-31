@@ -14238,15 +14238,15 @@ SELECT 490000, 'Gift Totals - Account has given at least $[GIFTAMOUNT] in year [
 
 -- Account is in a segmentation
 INSERT INTO REPORTCUSTOMFILTERDEFINITION (REPORTCUSTOMFILTERDEFINITION_ID, DISPLAY_TEXT, SQL_TEXT, DISPLAY_HTML)
-SELECT 600000, 'Segmentation - Account is in segmenation / report',
+SELECT 600000, 'Segmentation - Account is in segmentation / report',
 'EXISTS (SELECT * FROM THEGURU_SEGMENTATION_RESULT SEGTABLE WHERE SEGTABLE.REPORT_ID = {0} AND SEGTABLE.ENTITY_ID = [VIEWNAME].CONSTITUENT_CONSTITUENT_ID)',
-'Segmentation - Account is in segmenation / report <br> {lookupReferenceBean:orangeLeapConstituentSegmentationList}';
+'Segmentation - Account is in segmentation / report <br> {lookupReferenceBean:orangeLeapConstituentSegmentationList}';
 
 -- Gift is in a segmentation
 INSERT INTO REPORTCUSTOMFILTERDEFINITION (REPORTCUSTOMFILTERDEFINITION_ID, DISPLAY_TEXT, SQL_TEXT, DISPLAY_HTML)
-SELECT 610000, 'Segmentation - Gift is in segmenation / report',
+SELECT 610000, 'Segmentation - Gift is in segmentation / report',
 'EXISTS (SELECT * FROM THEGURU_SEGMENTATION_RESULT SEGTABLE WHERE SEGTABLE.REPORT_ID = {0} AND SEGTABLE.ENTITY_ID = [VIEWNAME].GIFT_GIFT_ID)',
-'Segmentation - Gift is in segmenation / report <br> {lookupReferenceBean:orangeLeapGiftSegmentationList}';
+'Segmentation - Gift is in segmentation / report <br> {lookupReferenceBean:orangeLeapGiftSegmentationList}';
 
 
 -- ID for table, subsource ID, another subsource ID, and filter ID

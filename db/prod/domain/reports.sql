@@ -28,22 +28,22 @@ insert into REPORTDATASOURCE values(2,'Gifts');
 insert into REPORTDATASOURCE values(3,'MPX');
 
 
-insert into REPORTDATASUBSOURCE 
+insert into REPORTDATASUBSOURCE
 		(REPORTSUBSOURCE_ID, DISPLAY_NAME, DATABASE_TYPE, VIEW_NAME, reportDataSource_REPORTSOURCE_ID, REPORT_FORMAT_TYPE, JASPER_DATASOURCE_NAME)
 		values(1,'People',0,'PERSON',1, 0, '/datasources/ReportWizardJdbcDS');
-insert into REPORTDATASUBSOURCE 
+insert into REPORTDATASUBSOURCE
 		(REPORTSUBSOURCE_ID, DISPLAY_NAME, DATABASE_TYPE, VIEW_NAME, reportDataSource_REPORTSOURCE_ID, REPORT_FORMAT_TYPE, JASPER_DATASOURCE_NAME)
 		values(2,'People & Addresses',0,'VPEOPLEADDRESS',1, 0, '/datasources/ReportWizardJdbcDS');
-insert into REPORTDATASUBSOURCE 
+insert into REPORTDATASUBSOURCE
 		(REPORTSUBSOURCE_ID, DISPLAY_NAME, DATABASE_TYPE, VIEW_NAME, reportDataSource_REPORTSOURCE_ID, REPORT_FORMAT_TYPE, JASPER_DATASOURCE_NAME)
 		values(3,'People & Gifts',0,'VPEOPLEGIFT',1, 0, '/datasources/ReportWizardJdbcDS');
 insert into REPORTDATASUBSOURCE
 		(REPORTSUBSOURCE_ID, DISPLAY_NAME, DATABASE_TYPE, VIEW_NAME, reportDataSource_REPORTSOURCE_ID, REPORT_FORMAT_TYPE, JASPER_DATASOURCE_NAME)
 		values(4,'Gifts',0,'GIFT',2, 0, '/datasources/ReportWizardJdbcDS');
-insert into REPORTDATASUBSOURCE 
+insert into REPORTDATASUBSOURCE
 		(REPORTSUBSOURCE_ID, DISPLAY_NAME, DATABASE_TYPE, VIEW_NAME, reportDataSource_REPORTSOURCE_ID, REPORT_FORMAT_TYPE, JASPER_DATASOURCE_NAME)
 		values(5,'People & Gift Distributions',0,'VPEOPLEGIFTDISTRO',1, 0, '/datasources/ReportWizardJdbcDS');
-insert into REPORTDATASUBSOURCE 
+insert into REPORTDATASUBSOURCE
 		(REPORTSUBSOURCE_ID, DISPLAY_NAME, DATABASE_TYPE, VIEW_NAME, reportDataSource_REPORTSOURCE_ID, REPORT_FORMAT_TYPE, JASPER_DATASOURCE_NAME)
 		values(6,'Gift Distributions',0,'VGIFTDISTRO',2, 0, '/datasources/ReportWizardJdbcDS');
 
@@ -117,38 +117,38 @@ insert into REPORTFIELD_REPORTFIELDGROUP values(6,3,9,6);
 -- E-mail in People General
 insert into REPORTFIELD_REPORTFIELDGROUP values(7,2,7,7);
 -- Organization in People General
-insert into REPORTFIELD_REPORTFIELDGROUP values(11,1,6,11);  
+insert into REPORTFIELD_REPORTFIELDGROUP values(11,1,6,11);
 -- Spouse First Name in People Misc.
-insert into REPORTFIELD_REPORTFIELDGROUP values(13,3,10,13); 
+insert into REPORTFIELD_REPORTFIELDGROUP values(13,3,10,13);
 -- Spouse Name in People Misc.
 insert into REPORTFIELD_REPORTFIELDGROUP values(14,3,11,14);
 -- Suffix in People General
-insert into REPORTFIELD_REPORTFIELDGROUP values(15,1,5,15); 
+insert into REPORTFIELD_REPORTFIELDGROUP values(15,1,5,15);
 -- Title in People General
-insert into REPORTFIELD_REPORTFIELDGROUP values(16,1,1,16); 
+insert into REPORTFIELD_REPORTFIELDGROUP values(16,1,1,16);
 -- Address Line 1 in People Address
 insert into REPORTFIELD_REPORTFIELDGROUP values(17,2,12,17);
 -- Address Line 2 in People Address
-insert into REPORTFIELD_REPORTFIELDGROUP values(18,2,13,18); 
+insert into REPORTFIELD_REPORTFIELDGROUP values(18,2,13,18);
 -- Address Line 3 in People Address
-insert into REPORTFIELD_REPORTFIELDGROUP values(19,2,14,19); 
+insert into REPORTFIELD_REPORTFIELDGROUP values(19,2,14,19);
 -- Address Type in People Address
 insert into REPORTFIELD_REPORTFIELDGROUP values(20,2,15,20);
 -- City in People Address
-insert into REPORTFIELD_REPORTFIELDGROUP values(21,2,16,21); 
+insert into REPORTFIELD_REPORTFIELDGROUP values(21,2,16,21);
 -- Country in People Address
 insert into REPORTFIELD_REPORTFIELDGROUP values(22,2,17,22);
 -- Postal Code in People Address
 insert into REPORTFIELD_REPORTFIELDGROUP values(23,2,18,23);
 -- State in People Address
-insert into REPORTFIELD_REPORTFIELDGROUP values(24,2,19,24); 
+insert into REPORTFIELD_REPORTFIELDGROUP values(24,2,19,24);
 -- Transaction date into gift general
-insert into REPORTFIELD_REPORTFIELDGROUP values(25,4,20,25); 
+insert into REPORTFIELD_REPORTFIELDGROUP values(25,4,20,25);
 -- Gift Amount into gift general
-insert into REPORTFIELD_REPORTFIELDGROUP values(26,4,21,26); 
+insert into REPORTFIELD_REPORTFIELDGROUP values(26,4,21,26);
 -- Gift Distribution Amount into gift general
 insert into REPORTFIELD_REPORTFIELDGROUP values(27,6,20,27);
--- Motivation Code into gift distribution 
+-- Motivation Code into gift distribution
 insert into REPORTFIELD_REPORTFIELDGROUP values(28,6,21,28);
 -- Project Code into gift distribution
 insert into REPORTFIELD_REPORTFIELDGROUP values(29,6,22,29);
@@ -192,12 +192,12 @@ DELETE FROM REPORTFIELD  WHERE COLUMN_NAME LIKE 'MOTIVATION%';
 
 -- Tangerine Custom Filters
 INSERT INTO REPORTCUSTOMFILTERDEFINITION (REPORTCUSTOMFILTERDEFINITION_ID, DISPLAY_TEXT, SQL_TEXT, DISPLAY_HTML)
-SELECT 100000, 'Account - Account is marked as a major donor',  
+SELECT 100000, 'Account - Account is marked as a major donor',
 '((SELECT MAJOR_DONOR FROM PERSON WHERE PERSON.PERSON_ID = [VIEWNAME].PERSON_ID) = true)',
 'Account - Account is marked as a major donor';
 
 INSERT INTO REPORTCUSTOMFILTERDEFINITION (REPORTCUSTOMFILTERDEFINITION_ID, DISPLAY_TEXT, SQL_TEXT, DISPLAY_HTML)
-SELECT 110000, 'Gift Totals - Account has given at least $[GIFTAMOUNT] in year [GIFTYEAR]',  
+SELECT 110000, 'Gift Totals - Account has given at least $[GIFTAMOUNT] in year [GIFTYEAR]',
 '((SELECT SUM(AMOUNT) FROM GIFT WHERE PERSON_ID = [VIEWNAME].PERSON_ID AND YEAR(TRANSACTION_DATE) = {1}) >= {0})',
 'Gift Totals - Account has given at least $<input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[0]" value="{0}"/> in year <input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[1]" value="{1}"/>';
 
@@ -234,9 +234,9 @@ SELECT 390, 'Pledge Codes - Account has an active or fulfilled pledge code of [P
 
 -- Account is in a segmentation
 INSERT INTO REPORTCUSTOMFILTERDEFINITION (REPORTCUSTOMFILTERDEFINITION_ID, DISPLAY_TEXT, SQL_TEXT, DISPLAY_HTML)
-SELECT 400, 'Segmentation - Account is in segmenation job number [JOBNUMBER] and group number [GROUPNUMBER]',
+SELECT 400, 'Segmentation - Account is in segmentation job number [JOBNUMBER] and group number [GROUPNUMBER]',
 'EXISTS (SELECT * FROM S{0}G{1} SEGTABLE WHERE SEGTABLE.ENTITYID = [VIEWNAME].ENTITY_ENTITYID)',
-'Segmentation - Account is in segmenation job number <input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[0]" value="{0}" /> <br> and group number <input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[1]" value="{1}" />';
+'Segmentation - Account is in segmentation job number <input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[0]" value="{0}" /> <br> and group number <input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[1]" value="{1}" />';
 
 -- Account is in a merge job
 INSERT INTO REPORTCUSTOMFILTERDEFINITION (REPORTCUSTOMFILTERDEFINITION_ID, DISPLAY_TEXT, SQL_TEXT, DISPLAY_HTML)
@@ -250,13 +250,13 @@ SELECT 600, 'Zip Radius - Account is within [ZIPRADIUS] miles of zip code [ZIPCO
 '(CONVERT(VARCHAR(5), [VIEWNAME].ENTITY_POSTALCODE) IN (SELECT TOZIP.ZIPLOW AS POSTALCODE FROM ZIPCODES TOZIP CROSS JOIN (SELECT * FROM ZIPCODES FROMZIP WHERE FROMZIP.ZIPLOW = ''{1}'') FROMZIP WHERE SQRT(((69.1 * (TOZIP.LATITUDE - FROMZIP.LATITUDE)) * (69.1 * (TOZIP.LATITUDE - FROMZIP.LATITUDE))) + ((53 * (TOZIP.LONGITUDE - FROMZIP.LONGITUDE)) * (53 * (TOZIP.LONGITUDE - FROMZIP.LONGITUDE)))) <= {0}))',
 'Zip Radius - Account is within <input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[0]" style="width:75px" value="{0}" /> miles of zip code <input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[1]" style="width:100px" value="{1}" />';
 
--- ID for table, subsource ID, another subsource ID, and filter ID 
+-- ID for table, subsource ID, another subsource ID, and filter ID
 -- INSERT REPORTCUSTOMFILTERDEFINITION_REPORTDATASUBSOURCE VALUES (100, 7, 7, 1);
 -- INSERT REPORTCUSTOMFILTERDEFINITION_REPORTDATASUBSOURCE VALUES (200, 7, 7, 2);
 -- INSERT REPORTCUSTOMFILTERDEFINITION_REPORTDATASUBSOURCE VALUES (300, 7, 7, 3);
 -- INSERT REPORTCUSTOMFILTERDEFINITION_REPORTDATASUBSOURCE VALUES (400, 7, 7, 4);
 
--- Tangerine 
+-- Tangerine
 INSERT REPORTCUSTOMFILTERDEFINITION_REPORTDATASUBSOURCE VALUES (100000, 1, 1, 7);
 INSERT REPORTCUSTOMFILTERDEFINITION_REPORTDATASUBSOURCE VALUES (100000, 2, 2, 8);
 INSERT REPORTCUSTOMFILTERDEFINITION_REPORTDATASUBSOURCE VALUES (100000, 3, 3, 9);

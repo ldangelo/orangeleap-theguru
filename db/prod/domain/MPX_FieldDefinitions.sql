@@ -29,15 +29,21 @@ SELECT 390, 'Pledge Codes - Account has an active or fulfilled pledge code of [P
 
 -- Account is in a segmentation
 INSERT INTO REPORTCUSTOMFILTERDEFINITION (REPORTCUSTOMFILTERDEFINITION_ID, DISPLAY_TEXT, SQL_TEXT, DISPLAY_HTML)
-SELECT 400, 'Segmentation - Account is in segmenation job number [JOBNUMBER] and group number [GROUPNUMBER]',
+SELECT 400, 'Segmentation - Account is in segmentation job number [JOBNUMBER] and group number [GROUPNUMBER]',
 'EXISTS (SELECT * FROM S{0}G{1} SEGTABLE WHERE SEGTABLE.ENTITYID = [VIEWNAME].ENTITY_ENTITYID)',
-'Segmentation - Account is in segmenation job number <input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[0].criteria" value="{0}" /> <br> and group number <input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[1].criteria" value="{1}" />';
+'Segmentation - Account is in segmentation job number <input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[0].criteria" value="{0}" /> <br> and group number <input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[1].criteria" value="{1}" />';
 
 -- Account is in a merge job
 INSERT INTO REPORTCUSTOMFILTERDEFINITION (REPORTCUSTOMFILTERDEFINITION_ID, DISPLAY_TEXT, SQL_TEXT, DISPLAY_HTML)
 SELECT 500, 'Segmentation - Account is in merge job number [JOBNUMBER]',
 'EXISTS (SELECT * FROM M{0} SEGTABLE WHERE SEGTABLE.ENTITYID = [VIEWNAME].ENTITY_ENTITYID)',
 'Segmentation - Account is in merge job number <input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[0].criteria" value="{0}" />';
+
+-- Account is in the Guru segmentation
+INSERT INTO REPORTCUSTOMFILTERDEFINITION (REPORTCUSTOMFILTERDEFINITION_ID, DISPLAY_TEXT, SQL_TEXT, DISPLAY_HTML)
+SELECT 550, 'The Guru Segmentation - Account is in the Guru segmentation / report',
+'EXISTS (SELECT * FROM THEGURU_SEGMENTATION_RESULT SEGTABLE WHERE SEGTABLE.REPORT_ID = {0} AND SEGTABLE.ENTITY_ID = [VIEWNAME].ENTITY_ENTITYID)',
+'The Guru Segmentation - Account is in segmentation / report <br> {lookupReferenceBean:mpxAccountSegmentationList}';
 
 -- Zip Radius
 INSERT INTO REPORTCUSTOMFILTERDEFINITION (REPORTCUSTOMFILTERDEFINITION_ID, DISPLAY_TEXT, SQL_TEXT, DISPLAY_HTML)

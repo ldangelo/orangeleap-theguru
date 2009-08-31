@@ -29,9 +29,9 @@ PRINT '''Pledge Codes - Account has an active or fulfilled pledge code of <input
 PRINT ''
 PRINT '-- Account is in a segmentation'
 PRINT 'INSERT INTO REPORTCUSTOMFILTERDEFINITION (REPORTCUSTOMFILTERDEFINITION_ID, DISPLAY_TEXT, SQL_TEXT, DISPLAY_HTML)'
-PRINT 'SELECT 400, ''Segmentation - Account is in segmenation job number [JOBNUMBER] and group number [GROUPNUMBER]'','
+PRINT 'SELECT 400, ''Segmentation - Account is in segmentation job number [JOBNUMBER] and group number [GROUPNUMBER]'','
 PRINT '''EXISTS (SELECT * FROM S{0}G{1} SEGTABLE WHERE SEGTABLE.ENTITYID = [VIEWNAME].ENTITY_ENTITYID)'','
-PRINT '''Segmentation - Account is in segmenation job number <input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[0]" value="{0}" /> <br> and group number <input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[1]" value="{1}" />'';'
+PRINT '''Segmentation - Account is in segmentation job number <input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[0]" value="{0}" /> <br> and group number <input class="customCriteria" objectname="reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[1]" value="{1}" />'';'
 PRINT ''
 PRINT '-- Account is in a merge job'
 PRINT 'INSERT INTO REPORTCUSTOMFILTERDEFINITION (REPORTCUSTOMFILTERDEFINITION_ID, DISPLAY_TEXT, SQL_TEXT, DISPLAY_HTML)'
@@ -56,7 +56,7 @@ PRINT ''
 PRINT 'SET @REPORTDATASOURCE_ID = LAST_INSERT_ID();'
 PRINT ''
 
-DECLARE @TABLENAME varchar(50), @SubSourceGroup VarChar(100), @PreviousSubSourceGroup VarChar(100), @SubSourceDescription VarChar(255), 
+DECLARE @TABLENAME varchar(50), @SubSourceGroup VarChar(100), @PreviousSubSourceGroup VarChar(100), @SubSourceDescription VarChar(255),
 	@PrimaryKey VarChar(255)
 Set @PreviousSubSourceGroup = ''
 Declare @CRLF as VarChar(50)
@@ -65,7 +65,7 @@ Set @CRLF = Char(13) + Char(10)
 Declare viewCursor Cursor For
 Select Name From SysObjects Where Name Like 'VW_REPORT%' And Xtype = 'V'
 And Name Not In ('VW_REPORT_GIFTHEADERCOMBINED', 'VW_REPORT_PEOPLE_TRANSACTIONS_BASE')
-Order By 
+Order By
 ISNULL((SELECT SUBSOURCEGROUP FROM DATADICTIONARY WHERE TABLENAME = Name AND COLUMNNAME IS NULL),''),
 ISNULL((SELECT DESCRIPTION FROM DATADICTIONARY WHERE TABLENAME = Name AND COLUMNNAME IS NULL),'')
 
@@ -111,7 +111,7 @@ Begin
 	DECLARE @FieldGroup VarChar(100), @CurrentFieldGroup VarChar(100), @CurrentFieldName VarChar(100)
 	Set @CurrentFieldGroup = ''
 
-	DECLARE CSR CURSOR FOR 
+	DECLARE CSR CURSOR FOR
 	SELECT COLUMN_NAME, DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = @TABLENAME
 
 	OPEN CSR
@@ -124,7 +124,7 @@ Begin
 		'SET @REPORTSUBSOURCE_ID = LAST_INSERT_ID();' + @CRLF + @CRLF
 
 	PRINT @REPORTDATASUBSOURCE
-	  
+
 	FETCH NEXT FROM CSR INTO @FIELDNAME, @FIELDTYPE
 	WHILE @@FETCH_STATUS = 0
 	BEGIN
@@ -178,18 +178,18 @@ Begin
 			/*
 			SET @REPORTFIELDGROUP = 'INSERT REPORTFIELDGROUP' + @CRLF +
 				'  (REPORTFIELDGROUP_ID, NAME)'  + @CRLF + 'VALUES' + @CRLF + '  (NULL, ''' + @PREFIX + ISNULL((SELECT DESCRIPTION FROM DATADICTIONARY WHERE TABLENAME = Replace(@FieldGroup, @PREFIX, '') AND COLUMNNAME IS NULL),@FieldGroup) + ''');' + @CRLF + @CRLF +
-				'SET @REPORTFIELDGROUP_ID = LAST_INSERT_ID();' + @CRLF + @CRLF 
+				'SET @REPORTFIELDGROUP_ID = LAST_INSERT_ID();' + @CRLF + @CRLF
 			SET @CurrentFieldGroup = @FieldGroup
 
 			PRINT @REPORTFIELDGROUP
-			
+
 			PRINT '-- Insert REPORTFIELDGROUP_REPORTDATASUBSOURCE'
-			
+
 			SET @REPORTFIELDGROUP_REPORTDATASUBSOURCE = 'SET @MAXREPORTSUBSOURCE_ID = (SELECT IFNULL(MAX(REPORTSUBSOURCE_ID),0) + 1 FROM REPORTFIELDGROUP_REPORTDATASUBSOURCE);' + @CRLF + @CRLF +
 				  'INSERT REPORTFIELDGROUP_REPORTDATASUBSOURCE' + @CRLF +
 						'  (REPORTFIELDGROUP_REPORTFIELDGROUP_ID, REPORTDATASUBSOURCE_REPORTSUBSOURCE_ID, REPORTSUBSOURCE_ID)' + @CRLF +
 				  'VALUES' + @CRLF + '  (@REPORTFIELDGROUP_ID, @REPORTSUBSOURCE_ID, @MAXREPORTSUBSOURCE_ID);' + @CRLF + @CRLF
-			
+
 			PRINT @REPORTFIELDGROUP_REPORTDATASUBSOURCE
 			*/
 		END
@@ -197,10 +197,10 @@ Begin
 		-- Insert REPORTFIELD
 		PRINT N'-- Insert ' + @CurrentFieldName
 		SET @INSERTREPORTFIELD = 'CALL INSERTREPORTFIELD(''' + @PrimaryKey + ''',''' + @FIELDNAME + ''', ''' + @CurrentFieldName + ''', b''0'', ' +
-		CASE 
+		CASE
 			WHEN (@FIELDTYPE in ('varchar', 'nvarchar', 'char')) THEN  '1, '
 			WHEN (@FIELDTYPE in ('tinyint', 'int', 'bigint')) THEN  '2, '
-			WHEN (@FIELDTYPE in ('float','real')) THEN  '3, '  
+			WHEN (@FIELDTYPE in ('float','real')) THEN  '3, '
 			WHEN (@FIELDTYPE in ('datetime','smalldatetime')) THEN  '4, '
 			WHEN (@FIELDTYPE in ('decimal','money')) THEN  '5, '
 			WHEN (@FIELDTYPE = 'bit') THEN  '6, '
@@ -218,50 +218,50 @@ Begin
 		--AVERAGE
 		IF @FIELDTYPE IN ('MONEY','INT')
 		BEGIN
-			SET @INSERTREPORTFIELD = @INSERTREPORTFIELD + '1, ' 
+			SET @INSERTREPORTFIELD = @INSERTREPORTFIELD + '1, '
 		END
 		ELSE
 		BEGIN
-			SET @INSERTREPORTFIELD = @INSERTREPORTFIELD + '0, ' 
+			SET @INSERTREPORTFIELD = @INSERTREPORTFIELD + '0, '
 		END
 		--CAN_BE_SUMMARIZED
 		IF @FIELDTYPE IN ('MONEY','INT')
 		BEGIN
-			SET @INSERTREPORTFIELD = @INSERTREPORTFIELD + '1, ' 
+			SET @INSERTREPORTFIELD = @INSERTREPORTFIELD + '1, '
 		END
 		ELSE
 		BEGIN
-			SET @INSERTREPORTFIELD = @INSERTREPORTFIELD + '0, ' 
+			SET @INSERTREPORTFIELD = @INSERTREPORTFIELD + '0, '
 		END
 		--COLUMN_NAME
-		SET @INSERTREPORTFIELD = @INSERTREPORTFIELD + '''' + @FIELDNAME + ''', ' 
+		SET @INSERTREPORTFIELD = @INSERTREPORTFIELD + '''' + @FIELDNAME + ''', '
 		--DISPLAY_NAME
-		SET @INSERTREPORTFIELD = @INSERTREPORTFIELD + '''' + @CurrentFieldName + ''', ' 
+		SET @INSERTREPORTFIELD = @INSERTREPORTFIELD + '''' + @CurrentFieldName + ''', '
 		--IS_DEFAULT
-		SET @INSERTREPORTFIELD = @INSERTREPORTFIELD + '0, ' 
+		SET @INSERTREPORTFIELD = @INSERTREPORTFIELD + '0, '
 		--IS_SUMMARIZED
-		SET @INSERTREPORTFIELD = @INSERTREPORTFIELD + '0, '  
+		SET @INSERTREPORTFIELD = @INSERTREPORTFIELD + '0, '
 		--LARGEST_VALUE
-		SET @INSERTREPORTFIELD = @INSERTREPORTFIELD + '0, '  
+		SET @INSERTREPORTFIELD = @INSERTREPORTFIELD + '0, '
 		--PERFORMSUMMARY
-		SET @INSERTREPORTFIELD = @INSERTREPORTFIELD + '0, ' 
+		SET @INSERTREPORTFIELD = @INSERTREPORTFIELD + '0, '
 		--IS_SELECTED
-		SET @INSERTREPORTFIELD = @INSERTREPORTFIELD + '0, '  
+		SET @INSERTREPORTFIELD = @INSERTREPORTFIELD + '0, '
 		--SMALLEST_VALUE
-		SET @INSERTREPORTFIELD = @INSERTREPORTFIELD + '0, '  
+		SET @INSERTREPORTFIELD = @INSERTREPORTFIELD + '0, '
 		--RECORD_COUNT
-		SET @INSERTREPORTFIELD = @INSERTREPORTFIELD + '0, ' + @CRLF; 
+		SET @INSERTREPORTFIELD = @INSERTREPORTFIELD + '0, ' + @CRLF;
 		--FIELD_TYPE
 		SET @INSERTREPORTFIELD = @INSERTREPORTFIELD +
-		CASE 
+		CASE
 			WHEN (@FIELDTYPE in ('varchar', 'nvarchar', 'char')) THEN  '1); '
 			WHEN (@FIELDTYPE in ('tinyint', 'int', 'bigint')) THEN  '2); '
-			WHEN (@FIELDTYPE in ('float','real')) THEN  '3); '  
+			WHEN (@FIELDTYPE in ('float','real')) THEN  '3); '
 			WHEN (@FIELDTYPE in ('datetime','smalldatetime')) THEN  '4); '
 			WHEN (@FIELDTYPE in ('decimal','money')) THEN  '5); '
 			WHEN (@FIELDTYPE = 'bit') THEN  '6); '
 			ELSE 'UNKNOWN);'
-		END 
+		END
 
 		SET @INSERTREPORTFIELD = @INSERTREPORTFIELD + @CRLF + 'SET @REPORTFIELD_ID = LAST_INSERT_ID();' + @CRLF + @CRLF
 */
@@ -272,12 +272,12 @@ Begin
 			'  (FIELDS_REPORTFIELD_ID, REPORTFIELDGROUP_ID, REPORTFIELDGROUP_REPORTFIELDGROUP_ID, REPORTFIELD_ID)' + @CRLF +
 			'VALUES' + @CRLF + '  (@REPORTFIELD_ID, @REPORTFIELDGROUP_ID, @REPORTFIELDGROUP_ID ,@REPORTFIELD_ID);' + @CRLF + @CRLF
 		PRINT @REPORTFIELD_REPORTFIELDGROUP
-		 
+
 		PRINT '-- ********************************************************************************************'
 */
 	  FETCH NEXT FROM CSR INTO @FIELDNAME, @FIELDTYPE
 	END
-	 
+
 	CLOSE CSR
 	DEALLOCATE CSR
 
@@ -287,7 +287,7 @@ Begin
 End
 Close viewCursor
 Deallocate viewCursor
-	 
+
 PRINT ''
 PRINT 'UPDATE REPORTFIELDGROUP SET NAME = ''Project Code Account'' WHERE NAME = ''Projectcodeentity'';'
 PRINT 'UPDATE REPORTFIELDGROUP SET NAME = ''Gift - Project Code Account'' WHERE NAME = ''Gift - Projectcodeentity'';'
