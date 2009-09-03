@@ -1,5 +1,6 @@
 package com.mpower.domain;
 
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
@@ -67,6 +68,18 @@ public class ReportWizard implements java.io.Serializable{
 
 	@Column(name = "REPORTSEGMENTATIONTYPE_ID")
 	private long reportSegmentationTypeId;
+
+	@Column(name = "LAST_RUN_BY_USERNAME")
+	private String lastRunByUserName;
+
+	@Column(name = "LAST_RUN_DATETIME")
+	private Date lastRunDateTime;
+
+	@Column(name = "EXECUTION_TIME")
+	private long executionTime;
+
+	@Column(name = "RESULT_COUNT")
+	private int resultCount;
 
 	@Column(name="REPORTDATASOURCE_ID")
 	private long srcId;
@@ -680,5 +693,37 @@ public class ReportWizard implements java.io.Serializable{
 
 	public long getReportSegmentationTypeId() {
 		return reportSegmentationTypeId;
+	}
+
+	public void setLastRunDateTime(Date lastRunDateTime) {
+		this.lastRunDateTime = lastRunDateTime;
+	}
+
+	public Date getLastRunDateTime() {
+		return lastRunDateTime;
+	}
+
+	public void setExecutionTime(long executionTime) {
+		this.executionTime = executionTime;
+	}
+
+	public long getExecutionTime() {
+		return executionTime;
+	}
+
+	public void setResultCount(int resultCount) {
+		this.resultCount = resultCount;
+	}
+
+	public int getResultCount() {
+		return resultCount;
+	}
+
+	public void setLastRunByUserName(String lastRunByUserName) {
+		this.lastRunByUserName = lastRunByUserName;
+	}
+
+	public String getLastRunByUserName() {
+		return lastRunByUserName;
 	}
 }

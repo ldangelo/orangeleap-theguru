@@ -154,6 +154,7 @@
 			<value>RunReport</value>
 			<value>ReportSaveAsNewReport</value>
 			<value>ReportExecuteSegmentation</value>
+			<value>ReportSegmentationExecutionResults</value>
 			<value>ReportRedirect</value>
 		</list>
 		</property>
@@ -192,6 +193,7 @@
         <property name="reportFieldService" ref="reportFieldService"/>
 		<property name="reportWizardService" ref="reportWizardService"/>
 		<property name="reportCustomFilterDefinitionService" ref="reportCustomFilterDefinitionService"/>
+		<property name="reportSubSourceService" ref="reportSubSourceService"/>
 		<property name="reportSegmentationTypeService" ref="reportSegmentationTypeService"/>
 		<property name="jasperServerService" ref="JasperServerService"/>
 	</bean>

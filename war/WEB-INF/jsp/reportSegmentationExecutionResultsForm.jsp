@@ -14,6 +14,9 @@
 	<c:if test="${hasErrors}"><tr><td>Segmentation Result<td><span style="color:#DD0000">Failure</span></td></tr></c:if>
 	<tr><td>Segmentation / Report ID</td><td>${wiz.id}</td></tr>
 	<tr><td>Result Count</td><td>${rowsAffected}</td></tr>
+	<tr><td>Last Run Date</td><td><fmt:formatDate value="${lastRunDate}" pattern="yyyy-MM-dd hh:mm:ss"/></td></tr>
+	<tr><td>Last Run By</td><td>${lastRunBy}</td></tr>
+	<tr><td>Execution Time (milliseconds)</td><td>${executionTime}</td></tr>
 	<tr><td>Report Name</td><td>${wiz.reportName}</td></tr>
 	<tr><td>Report Path</td><td>${wiz.reportPath}</td></tr>
 	<tr><td>Segmentation Type</td><td>${segmentationType}</td></tr>

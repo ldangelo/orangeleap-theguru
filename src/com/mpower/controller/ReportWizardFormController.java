@@ -69,6 +69,7 @@ import com.mpower.util.ModifyReportJRXML;
 import com.mpower.util.ReportCustomFilterHelper;
 import com.mpower.util.ReportGenerator;
 import com.mpower.util.ReportQueryGenerator;
+import com.mpower.util.ReportWizardHelper;
 import com.mpower.util.SessionHelper;
 import com.mpower.view.DynamicReportView;
 
@@ -89,7 +90,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 	private ReportFieldService      reportFieldService;
 	private ReportCustomFilterDefinitionService      reportCustomFilterDefinitionService;
 	private ReportCustomFilterHelper reportCustomFilterHelper;
-	
+
 	private ReportSegmentationTypeService      reportSegmentationTypeService;
 	private ReportSegmentationResultsService reportSegmentationResultsService;
 	private SessionService          sessionService;
@@ -314,108 +315,6 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		wiz.setFields(fields);
 	}
 
-	private void PopulateWizardFromSavedReport(ReportWizard emptyWizard, ReportWizard savedWizard, boolean copyIds) {
-		emptyWizard.setDataSubSourceGroupId(savedWizard.getDataSubSourceGroupId());
-		if (copyIds)
-			emptyWizard.setId(savedWizard.getId());
-		emptyWizard.setRecordCount(savedWizard.getRecordCount());
-		emptyWizard.setUseReportAsSegmentation(savedWizard.getUseReportAsSegmentation());
-		emptyWizard.setSegmentationQuery(savedWizard.getSegmentationQuery());
-		emptyWizard.setReportSegmentationTypeId(savedWizard.getReportSegmentationTypeId());
-
-		emptyWizard.getReportChartSettings().clear();
-		emptyWizard.getReportChartSettings().addAll(savedWizard.getReportChartSettings());
-		emptyWizard.setReportComment(savedWizard.getReportComment());
-		if (copyIds)
-			emptyWizard.getReportCrossTabFields().setId(savedWizard.getReportCrossTabFields().getId());
-		emptyWizard.getReportCrossTabFields().getReportCrossTabColumns().clear();
-		emptyWizard.getReportCrossTabFields().getReportCrossTabColumns().addAll(savedWizard.getReportCrossTabFields().getReportCrossTabColumns());
-		emptyWizard.getReportCrossTabFields().getReportCrossTabMeasure().clear();
-		emptyWizard.getReportCrossTabFields().getReportCrossTabMeasure().addAll(savedWizard.getReportCrossTabFields().getReportCrossTabMeasure());
-		emptyWizard.getReportCrossTabFields().setReportCrossTabOperation(savedWizard.getReportCrossTabFields().getReportCrossTabOperation());
-		emptyWizard.getReportCrossTabFields().getReportCrossTabRows().clear();
-		emptyWizard.getReportCrossTabFields().getReportCrossTabRows().addAll(savedWizard.getReportCrossTabFields().getReportCrossTabRows());
-		emptyWizard.getReportFilters().clear();
-
-	    Iterator itReportFilters = savedWizard.getReportFilters().iterator();
-	    while (itReportFilters.hasNext()){
-	    	ReportFilter reportFilter = (ReportFilter)itReportFilters.next();
-	    	ReportFilter newReportFilter = new ReportFilter();
-	    	newReportFilter.setFilterType(reportFilter.getFilterType());
-	    	if (copyIds)
-	    		newReportFilter.setId(reportFilter.getId());
-	    	newReportFilter.setOperator(reportFilter.getOperator());
-	    	newReportFilter.setOperatorNot(reportFilter.getOperatorNot());
-	    	newReportFilter.setReportStandardFilter(reportFilter.getReportStandardFilter());
-	    	if (!copyIds)
-	    		newReportFilter.getReportStandardFilter().setId(0);
-	    	if (copyIds)
-	    		newReportFilter.getReportCustomFilter().setCustomFilterId(reportFilter.getReportCustomFilter().getCustomFilterId());
-	    	newReportFilter.getReportCustomFilter().setCustomFilterDefinitionId(reportFilter.getReportCustomFilter().getCustomFilterDefinitionId());
-    		newReportFilter.getReportCustomFilter().setDisplayHtml(reportFilter.getReportCustomFilter().getDisplayHtml());
-	    	newReportFilter.getReportCustomFilter().getReportCustomFilterCriteria().addAll(reportFilter.getReportCustomFilter().getReportCustomFilterCriteria());
-
-	    	if (!copyIds) {
-	    		Iterator<ReportCustomFilterCriteria> itReportCustomFilterCriteria = newReportFilter.getReportCustomFilter().getReportCustomFilterCriteria().iterator();
-		    	while (itReportCustomFilterCriteria.hasNext()){
-		    		ReportCustomFilterCriteria reportCustomFilterCriteria = (ReportCustomFilterCriteria)itReportCustomFilterCriteria.next();
-		    		reportCustomFilterCriteria.setCustomFilterCriteriaId(0);
-		    	}
-	    	}
-
-	    	emptyWizard.getReportFilters().add(newReportFilter);
-	    }
-
-		emptyWizard.setReportLayout(savedWizard.getReportLayout());
-		if (copyIds)
-			emptyWizard.setReportName(savedWizard.getReportName());
-		else
-			emptyWizard.setReportName("Copy of " + savedWizard.getReportName());
-		emptyWizard.setReportPath(savedWizard.getReportPath());
-		emptyWizard.getReportSelectedFields().clear();
-		emptyWizard.getReportSelectedFields().addAll(savedWizard.getReportSelectedFields());
-		emptyWizard.setReportTemplateJRXML(savedWizard.getReportTemplateJRXML());
-		emptyWizard.setReportTemplatePath(savedWizard.getReportTemplatePath());
-		emptyWizard.setReportType(savedWizard.getReportType());
-		emptyWizard.setRowCount(savedWizard.getRowCount());
-		emptyWizard.setSrcId(savedWizard.getSrcId());
-		emptyWizard.setSubSourceId(savedWizard.getSubSourceId());
-		emptyWizard.setUniqueRecords(savedWizard.getUniqueRecords());
-
-		if (!copyIds)
-		{
-		    Iterator<ReportSelectedField> itReportFields = emptyWizard.getReportSelectedFields().iterator();
-		    while (itReportFields.hasNext()){
-		    	ReportSelectedField reportField = (ReportSelectedField)itReportFields.next();
-		    	reportField.setId(0);
-		    }
-
-		    Iterator<ReportChartSettings> itReportChartSettings = emptyWizard.getReportChartSettings().iterator();
-		    while (itReportChartSettings.hasNext()){
-		    	ReportChartSettings reportChartSetting = (ReportChartSettings)itReportChartSettings.next();
-		    	reportChartSetting.setId(0);
-		    }
-
-		    Iterator<ReportCrossTabColumn> itReportCrossTabColumn = emptyWizard.getReportCrossTabFields().getReportCrossTabColumns().iterator();
-		    while (itReportCrossTabColumn.hasNext()){
-		    	ReportCrossTabColumn reportCrossTabColumn = (ReportCrossTabColumn)itReportCrossTabColumn.next();
-		    	reportCrossTabColumn.setId(0);
-		    }
-
-		    Iterator<ReportCrossTabRow> itReportCrossTabRow = emptyWizard.getReportCrossTabFields().getReportCrossTabRows().iterator();
-		    while (itReportCrossTabRow.hasNext()){
-		    	ReportCrossTabRow reportCrossTabRow = (ReportCrossTabRow)itReportCrossTabRow.next();
-		    	reportCrossTabRow.setId(0);
-		    }
-
-		    Iterator<ReportCrossTabMeasure> itReportCrossTabMeasure = emptyWizard.getReportCrossTabFields().getReportCrossTabMeasure().iterator();
-		    while (itReportCrossTabMeasure.hasNext()){
-		    	ReportCrossTabMeasure reportCrossTabMeasure = (ReportCrossTabMeasure)itReportCrossTabMeasure.next();
-		    	reportCrossTabMeasure.setId(0);
-		    }
-		}
-	}
-
 	@SuppressWarnings("unchecked")
 	@Override
 	protected Map referenceData(HttpServletRequest request, Object command,
@@ -461,7 +360,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 				if (reportId != -1) {
 					ReportWizard tempWiz = reportWizardService.Find(reportId);
 					if (tempWiz != null) {
-						PopulateWizardFromSavedReport(wiz, tempWiz, page != 9);
+						ReportWizardHelper.PopulateWizardFromSavedReport(wiz, tempWiz, page != 9);
 						wiz.setPreviousDataSubSourceGroupId(wiz.getDataSubSourceGroupId());
 						wiz.setPreviousDataSubSourceId(wiz.getSubSourceId());
 						wiz.setReportPath(reportUri.substring(0, reportUri.indexOf("/THEGURU_")));
@@ -598,6 +497,8 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		}
 
 		if (page==4) {
+			refData.put("executeSegmentation", wiz.getExecuteSegmentation());
+			wiz.setExecuteSegmentation(false);
 		    refData.put("useReportAsSegmentation", wiz.getUseReportAsSegmentation());
 		}
 
@@ -667,7 +568,8 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 			tempFile.delete();
 		}
 
-		if (page == getPageIndexByName("ReportExecuteSegmentation")) {
+		if (page == getPageIndexByName("ReportExecuteSegmentation") ||
+				page == getPageIndexByName("ReportSegmentationExecutionResults")) {
 			boolean hasErrors = false;
 
 			refData.put("wiz", wiz);
@@ -685,8 +587,18 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 
 			if (!hasErrors) {
 				try {
-					int rowsAffected = reportSegmentationResultsService.executeSegmentation(wiz.getId());
-					refData.put("rowsAffected", rowsAffected);
+					if (page == getPageIndexByName("ReportExecuteSegmentation")) {
+						int rowsAffected = reportSegmentationResultsService.executeSegmentation(wiz.getId());
+						ReportWizard tempWiz = reportWizardService.Find(wiz.getId());
+						wiz.setLastRunDateTime(tempWiz.getLastRunDateTime());
+						wiz.setLastRunByUserName(tempWiz.getLastRunByUserName());
+						wiz.setResultCount(tempWiz.getResultCount());
+						wiz.setExecutionTime(tempWiz.getExecutionTime());
+					}
+					refData.put("rowsAffected", wiz.getResultCount());
+					refData.put("executionTime", wiz.getExecutionTime());
+					refData.put("lastRunDate", wiz.getLastRunDateTime());
+					refData.put("lastRunBy", wiz.getLastRunByUserName());
 					refData.put("hasErrors", false);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -704,7 +616,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 	protected void saveReport(ReportWizard wiz) throws Exception {
 		reportWizardService.save(wiz);
 
-		// If the report is to be used as a segmentation, generate the segmentation SQL, set it on the wiz and save again
+		// If the report is to be used as a segmentation, generate the segmentation SQL, set it on the wiz and save again since the segmentation query will require the report wizard ID
 		if (wiz.getUseReportAsSegmentation()) {
 			ReportQueryGenerator reportQueryGenerator = new ReportQueryGenerator(wiz, reportFieldService, reportCustomFilterDefinitionService);
 			wiz.setSegmentationQuery(reportQueryGenerator.getSegmentationQueryString(reportSegmentationTypeService.find(wiz.getReportSegmentationTypeId()).getColumnName()));
@@ -818,6 +730,9 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		}
 		else if (request.getParameter("_target10") != null || request.getParameter("_target10.x") != null) {
 			return showPage(request, errors, 10);
+		}
+		else if (request.getParameter("_target11") != null || request.getParameter("_target11.x") != null) {
+			return showPage(request, errors, 11);
 		}
 		else
 		{

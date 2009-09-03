@@ -1,11 +1,13 @@
 package com.mpower.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.mpower.domain.ReportWizard;
 
@@ -66,4 +68,13 @@ public class JPAReportWizardDao implements ReportWizardDao {
 			em.persist(wiz);
 	}
 
+	@Transactional
+	public void updateSegmentationExecutionInformation(Long reportId, String lastRunByUserName, Date lastRunDate, int resultCount, long executionTime) {
+	    ReportWizard wiz = em.find(ReportWizard.class, reportId);
+	    wiz.setLastRunByUserName(lastRunByUserName);
+	    wiz.setLastRunDateTime(lastRunDate);
+	    wiz.setResultCount(resultCount);
+	    wiz.setExecutionTime(executionTime);
+	    em.merge(wiz);
+	}
 }

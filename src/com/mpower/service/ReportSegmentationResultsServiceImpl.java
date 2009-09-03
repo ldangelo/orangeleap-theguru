@@ -1,5 +1,6 @@
 package com.mpower.service;
 
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -12,6 +13,7 @@ import com.mpower.dao.ReportSegmentationResultsDao;
 import com.mpower.domain.ReportSegmentationResult;
 import com.mpower.domain.ReportWizard;
 import com.mpower.util.ReportQueryGenerator;
+import com.mpower.util.SessionHelper;
 
 @Service("reportSegmentationResultsService")
 public class ReportSegmentationResultsServiceImpl implements ReportSegmentationResultsService {
@@ -22,6 +24,7 @@ public class ReportSegmentationResultsServiceImpl implements ReportSegmentationR
 	private ReportFieldService reportFieldService;
 	private ReportCustomFilterDefinitionService reportCustomFilterDefinitionService;
 	private ReportSegmentationTypeService reportSegmentationTypeService;
+	private ReportSubSourceService  reportSubSourceService;
 	private JasperServerService jasperServerService;
 
 	public List<ReportSegmentationResult> readReportSegmentationResultsByReportId(Long reportId) throws Exception {
@@ -62,7 +65,7 @@ public class ReportSegmentationResultsServiceImpl implements ReportSegmentationR
 			wiz.setSegmentationQuery(reportQueryGenerator.getSegmentationQueryString(reportSegmentationTypeService.find(wiz.getReportSegmentationTypeId()).getColumnName()));
 		}
 
-		ResourceDescriptor resource = jasperServerService.getDatasource(wiz.getDataSubSource().getJasperDatasourceName());
+		ResourceDescriptor resource = jasperServerService.getDatasource(reportSubSourceService.find(wiz.getSubSourceId()).getJasperDatasourceName());
 
 		Iterator itProperties = resource.getProperties().iterator();
 		while (itProperties.hasNext()) {
@@ -78,7 +81,13 @@ public class ReportSegmentationResultsServiceImpl implements ReportSegmentationR
 		}
 
 		reportSegmentationResultsDao.deleteReportSegmentationResultsByReportId(reportId, driverClassName, connectionUrl, username, password);
-		return reportSegmentationResultsDao.executeSegmentationQuery(wiz.getSegmentationQuery(), driverClassName, connectionUrl, username, password);
+		Date lastRunDate = new Date();
+		long startTime = System.currentTimeMillis();
+		int resultCount = reportSegmentationResultsDao.executeSegmentationQuery(wiz.getSegmentationQuery(), driverClassName, connectionUrl, username, password);
+	    long endTime = System.currentTimeMillis();
+		String lastRunByUserName = SessionHelper.getGuruSessionData().getUsername();
+	    reportWizardService.updateSegmentationExecutionInformation(reportId, lastRunByUserName, lastRunDate, resultCount, endTime-startTime);
+	    return resultCount;
 	}
 
 	public void setReportWizardService(ReportWizardService reportWizardService) {
@@ -130,5 +139,13 @@ public class ReportSegmentationResultsServiceImpl implements ReportSegmentationR
 
 	public void setJasperServerService(JasperServerService jasperServerService) {
 		this.jasperServerService = jasperServerService;
+	}
+
+	public void setReportSubSourceService(ReportSubSourceService reportSubSourceService) {
+		this.reportSubSourceService = reportSubSourceService;
+	}
+
+	public ReportSubSourceService getReportSubSourceService() {
+		return reportSubSourceService;
 	}
 }

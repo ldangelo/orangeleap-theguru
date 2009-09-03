@@ -59,7 +59,7 @@ public class ReportDataSubSource implements java.io.Serializable,
 	@Column(name = "DESCRIPTION")
 	private String description;
 
-	@ManyToMany(mappedBy="reportDataSubSource",cascade=CascadeType.ALL)
+	@ManyToMany(mappedBy="reportDataSubSource")
 	@IndexColumn(name="REPORTCUSTOMFILTERDEFINITION_ID")
 	@Column(name = " REPORTDATASUBSOURCE_REPORTCUSTOMFILTERDEFINITION_ID")
 	private List<ReportCustomFilterDefinition> reportCustomFilterDefinitions;

@@ -1,5 +1,6 @@
 package com.mpower.service;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -41,4 +42,9 @@ public class ReportWizardServiceImpl implements ReportWizardService {
 		return reportWizardDAO.findSegmentationsByReportDataSourceId(reportDataSourceId);
 	}
 
+	@Override
+	public void updateSegmentationExecutionInformation(Long reportId, String lastRunByUserName,
+			Date lastRunDate, int resultCount, long executionTime) {
+		reportWizardDAO.updateSegmentationExecutionInformation(reportId, lastRunByUserName, lastRunDate, resultCount, executionTime);
+	}
 }
