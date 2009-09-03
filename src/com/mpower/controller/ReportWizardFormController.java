@@ -573,7 +573,6 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 			boolean hasErrors = false;
 
 			refData.put("wiz", wiz);
-			refData.put("segmentationType", reportSegmentationTypeService.find(wiz.getReportSegmentationTypeId()).getSegmentationType());
 
 			if (!wiz.getUseReportAsSegmentation()) {
 				hasErrors = true;
@@ -595,6 +594,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 						wiz.setResultCount(tempWiz.getResultCount());
 						wiz.setExecutionTime(tempWiz.getExecutionTime());
 					}
+					refData.put("segmentationType", reportSegmentationTypeService.find(wiz.getReportSegmentationTypeId()).getSegmentationType());
 					refData.put("rowsAffected", wiz.getResultCount());
 					refData.put("executionTime", wiz.getExecutionTime());
 					refData.put("lastRunDate", wiz.getLastRunDateTime());
