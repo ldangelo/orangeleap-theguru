@@ -86,8 +86,8 @@
 				<include name="**/*.jar" />
 			</fileset>
 		</copy>
-		
-		<replace file="${stage.dir}/war/WEB-INF/jsp/layouts/footer.jsp" token="$${build.version}" value="${build.TODAY}"/>		
+
+		<replace file="${stage.dir}/war/WEB-INF/jsp/layouts/footer.jsp" token="${build.version}" value="${build.TODAY}"/>
 	</target>
 
 	<target name="classes-jar" depends="setup">
