@@ -9,7 +9,7 @@
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>/WEB-INF/Clementine-servlet.xml
-		/WEB-INF/applicationContext.xml</param-value>
+		/WEB-INF/applicationContext.xml </param-value>
 	</context-param>
 
 	<listener>
@@ -17,13 +17,13 @@
 	</listener>
 
 	<servlet>
-	  <servlet-name>dwr</servlet-name>
-	  <servlet-class>org.directwebremoting.spring.DwrSpringServlet</servlet-class>
-	  <load-on-startup>1</load-on-startup>
-	  <init-param>
-	    <param-name>debug</param-name>
-	    <param-value>true</param-value>
-	  </init-param>
+		<servlet-name>dwr</servlet-name>
+		<servlet-class>org.directwebremoting.spring.DwrSpringServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+		<init-param>
+			<param-name>debug</param-name>
+			<param-value>true</param-value>
+		</init-param>
 	</servlet>
 
 	<servlet>
@@ -84,4 +84,26 @@
 			<taglib-location>/WEB-INF/tld/mpower.tld</taglib-location>
 		</taglib>
 	</jsp-config>
+
+	<servlet>
+		<servlet-name>spring-ws</servlet-name>
+		<servlet-class>org.springframework.ws.transport.http.MessageDispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>/WEB-INF/webservice-context.xml</param-value>
+		</init-param>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>spring-ws</servlet-name>
+		<url-pattern>/services/*</url-pattern>
+	</servlet-mapping>
+
+
+	<servlet-mapping>
+        <servlet-name>spring-ws</servlet-name>
+        <url-pattern>*.wsdl</url-pattern>
+	</servlet-mapping>
+
+
 </web-app>
