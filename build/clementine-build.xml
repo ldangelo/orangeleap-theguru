@@ -11,6 +11,20 @@
 	<property name="war.lib.dir" value="${lib.dir}/war/bin" />
 	<property file="${basedir}/build/build.properties" />
 
+	<path id="axis.classpath">
+	  <fileset dir="${basedir}/lib/compile/bin">
+	    <include name="**/*.jar" />
+	  </fileset>
+	</path>
+	
+	<taskdef name="xjc" classname="com.sun.tools.xjc.XJCTask">
+	  <classpath>
+	    <fileset dir="${basedir}/lib/compile/bin" includes="*.jar" />
+	  </classpath>
+	</taskdef>
+	
+	<taskdef resource="axis-tasks.properties" classpathref="axis.classpath" />
+	
 	<taskdef resource="net/sf/antcontrib/antcontrib.properties">
 		<classpath>
 			<pathelement location="${lib.dir}/test/bin/ant-contrib-1.0b3.jar" />
@@ -238,7 +252,8 @@
 				<replacetokens begintoken="$" endtoken="$">
 					<token key="jdbcurl" value="${localhost.mysql.db.url}"/>
 					<token key="username" value="${orangeleap.mysql.db.user}"/>
-					<token key="password" value="${orangeleap.mysql.db.pw}"/>
+					<!-- setting the password to the encrypted value for 'orangeleap' -->
+					<token key="password" value="${orangeleap.mysql.db.encrypted.pw}"/>
 			   </replacetokens>
 			</filterchain>
 		</concat>
@@ -293,6 +308,18 @@
 					<!-- Add views to orangeleap database-->
 			     	<transaction src="${basedir}/db/prod/domain/orangeLeapReportViews.sql"/>
 		</sql>
+	</target>
+
+	<target name="wsdl2java">
+		<axis-wsdl2java output="src/com/mpower/ws/axis"
+		testcase="true"
+		verbose="true"
+		url="${basedir}/war/WEB-INF/theguru.wsdl"
+		helpergen="true"/>
+	</target>
+		
+	<target name="xjc.generate">
+		<xjc schema="war/WEB-INF/theguru.xsd" destdir="src" package="com.mpower.ws.axis"/>
 	</target>
 
 	<target name="usage">
