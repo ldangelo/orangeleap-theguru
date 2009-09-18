@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	   targetNamespace="http://www.orangeleap.com/theguru/services/1.0"
+	   xmlns:tns="http://www.orangeleap.com/theguru/services/1.0"
+	   elementFormDefault="qualified">
+
+   <xs:complexType name="segmentation">
+     <xs:sequence>
+     	<xs:element name="name" type="xs:string"/>
+     	<xs:element name="description" type="xs:string"/>
+     	<xs:element name="id" type="xs:long"/>
+     </xs:sequence>
+    </xs:complexType>
+     
+<xs:element name="GetSegmentationByNameRequest">
+  <xs:complexType>
+    <xs:sequence>
+    <xs:element name="segmentation" type="tns:segmentation" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:element>
+
+<xs:element name="GetSegmentationByNameResponse">
+  <xs:complexType>
+    <xs:sequence>
+      <xs:element name="constituentid" type="xs:long" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:element>
+
+<xs:element name="GetSegmentationListRequest">
+    <xs:complexType>
+        <xs:sequence>
+            <xs:element name="dummy" type="xs:string"/> 
+        </xs:sequence>
+    </xs:complexType>
+   
+</xs:element>
+
+<xs:element name="GetSegmentationListResponse">
+    <xs:complexType>
+    <xs:sequence>
+        <xs:element name="segmentation" type="tns:segmentation" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+    </xs:complexType>
+</xs:element>
+</xs:schema>	   
