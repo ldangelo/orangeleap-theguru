@@ -170,7 +170,7 @@
 				<replacetokens begintoken="$" endtoken="$">
 					<token key="jdbcurl" value="${orangeleap.mysql.db.url}"/>
 					<token key="username" value="${orangeleap.mysql.db.user}"/>
-					<token key="password" value="${orangeleap.mysql.db.pw}"/>
+					<token key="password" value="${orangeleap.mysql.db.encrypted.pw}"/>
 			   </replacetokens>
 			</filterchain>
 		</concat>
