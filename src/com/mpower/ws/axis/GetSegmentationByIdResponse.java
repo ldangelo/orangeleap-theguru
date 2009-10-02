@@ -40,8 +40,8 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "", propOrder = {
     "constituentid"
 })
-@XmlRootElement(name = "GetSegmentationByNameResponse")
-public class GetSegmentationByNameResponse {
+@XmlRootElement(name = "GetSegmentationByIdResponse")
+public class GetSegmentationByIdResponse {
 
     @XmlElement(type = Long.class)
     protected List<Long> constituentid;

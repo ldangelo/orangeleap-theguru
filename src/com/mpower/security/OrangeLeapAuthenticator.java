@@ -26,6 +26,8 @@ import org.springframework.security.userdetails.ldap.LdapUserDetails;
 import org.springframework.security.ldap.InitialDirContextFactory;
 import org.springframework.util.Assert;
 
+import com.mpower.util.SessionHelper;
+
 ;
 
 public class OrangeLeapAuthenticator implements LdapAuthenticator {
@@ -63,6 +65,9 @@ public class OrangeLeapAuthenticator implements LdapAuthenticator {
 	            throw new BadCredentialsException("BindAuthenticator.badCredentials", "Bad credentials");
 	        }
 
+   			SessionHelper.getGuruSessionData().setUsername(authentication.getName());
+			SessionHelper.getGuruSessionData().setPassword(password);
+
 	        return user;
 	    }
 
@@ -90,6 +95,9 @@ public class OrangeLeapAuthenticator implements LdapAuthenticator {
 
 			DirContextOperations dirContext = template.retrieveEntry(userDn,null);
 
+			SessionHelper.getGuruSessionData().setUsername(authentication.getName());
+			SessionHelper.getGuruSessionData().setPassword(password);
+			
 			return dirContext;
 		} catch (BadCredentialsException e) {
 			// This will be thrown if an invalid user name is used and the

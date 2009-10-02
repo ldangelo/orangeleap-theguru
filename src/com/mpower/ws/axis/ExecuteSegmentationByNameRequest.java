@@ -38,8 +38,8 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "", propOrder = {
     "name"
 })
-@XmlRootElement(name = "GetSegmentationByNameRequest")
-public class GetSegmentationByNameRequest {
+@XmlRootElement(name = "ExecuteSegmentationByNameRequest")
+public class ExecuteSegmentationByNameRequest {
 
     @XmlElement(required = true)
     protected String name;

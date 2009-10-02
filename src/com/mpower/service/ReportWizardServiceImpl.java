@@ -41,6 +41,11 @@ public class ReportWizardServiceImpl implements ReportWizardService {
 			Long reportDataSourceId) {
 		return reportWizardDAO.findSegmentationsByReportDataSourceId(reportDataSourceId);
 	}
+	
+	@Override
+	public List<ReportWizard> findAllSegmentations() {
+		return reportWizardDAO.findAllSegmentations();
+	}
 
 	@Override
 	public void updateSegmentationExecutionInformation(Long reportId, String lastRunByUserName,

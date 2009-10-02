@@ -41,6 +41,14 @@ public class JPAReportWizardDao implements ReportWizardDao {
 
 		return reportWizardResultList;
 	}
+	
+	public List<ReportWizard> findAllSegmentations() {
+		Query q = em.createQuery("select reportwizard from ReportWizard reportwizard where reportwizard.useReportAsSegmentation = true");
+
+		List<ReportWizard> reportWizardResultList = q.getResultList();
+
+		return reportWizardResultList;
+	}
 
 	public List<ReportWizard> getAll() {
 		Query q = em
