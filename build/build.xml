@@ -376,6 +376,10 @@
 		</javadoc>
 	</target>
 
+	<target name="xjc.generate" description="Generates java classes from xsd">
+		<ant antfile="${internal.build.file}" target="xjc.generate"/>
+	</target>
+	
 	<target name="app.synch" description="Synchs the XMHTML, JSP, JS, CSS, and Images of the project with a running application.">
 		<ant antfile="${internal.build.file}" target="app.synch" />
 	</target>
