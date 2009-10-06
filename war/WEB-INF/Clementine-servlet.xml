@@ -185,7 +185,9 @@
 	</bean>
 
 	<bean id="reportSegmentationResultsDao" class="com.mpower.dao.JPAReportSegmentationResultsDao">
-		<property name="segmentationDataSource" ref="segmentationDataSource" />
+		<property name="segmentationDataSourceDestination" ref="segmentationDataSource" />
+		<property name="segmentationDataSourceSource" ref="segmentationDataSource" />
+		<property name="resultSetFetchSize" value="500" />
 	</bean>
 
 	<bean id="reportSegmentationResultsService" class="com.mpower.service.ReportSegmentationResultsServiceImpl">

@@ -56,6 +56,9 @@ public class ReportDataSubSource implements java.io.Serializable,
 	@Column(name = "JASPER_DATASOURCE_NAME")
 	private String jasperDatasourceName;
 
+	@Column(name = "SEGMENTATION_RESULTS_DATASOURCE_NAME")
+	private String segmentationResultsDatasourceName;
+
 	@Column(name = "DESCRIPTION")
 	private String description;
 
@@ -76,6 +79,7 @@ public class ReportDataSubSource implements java.io.Serializable,
 		description = reportDataSubSource.description;
 		databaseType = reportDataSubSource.databaseType;
 		jasperDatasourceName = reportDataSubSource.jasperDatasourceName;
+		segmentationResultsDatasourceName = reportDataSubSource.segmentationResultsDatasourceName;
 		reportCustomFilterDefinitions = reportDataSubSource.reportCustomFilterDefinitions;
 		reportType = reportDataSubSource.reportType;
 	}
@@ -166,5 +170,14 @@ public class ReportDataSubSource implements java.io.Serializable,
 
 	public List<ReportSegmentationType> getReportSegmentationTypes() {
 		return reportSegmentationTypes;
+	}
+
+	public void setSegmentationResultsDatasourceName(
+			String segmentationResultsDatasourceName) {
+		this.segmentationResultsDatasourceName = segmentationResultsDatasourceName;
+	}
+
+	public String getSegmentationResultsDatasourceName() {
+		return segmentationResultsDatasourceName;
 	}
 }

@@ -13,6 +13,7 @@ import com.mpower.dao.ReportSegmentationResultsDao;
 import com.mpower.domain.ReportSegmentationResult;
 import com.mpower.domain.ReportWizard;
 import com.mpower.util.ReportQueryGenerator;
+import com.mpower.util.ReportSegmentationDatasourceSettings;
 import com.mpower.util.SessionHelper;
 
 @Service("reportSegmentationResultsService")
@@ -28,36 +29,14 @@ public class ReportSegmentationResultsServiceImpl implements ReportSegmentationR
 	private JasperServerService jasperServerService;
 
 	public List<ReportSegmentationResult> readReportSegmentationResultsByReportId(Long reportId) throws Exception {
-		String driverClassName = "";
-		String connectionUrl = "";
-		String username = "";
-		String password = "";
-
 		ReportWizard wiz = reportWizardService.Find(reportId);
 		ResourceDescriptor resource = jasperServerService.getDatasource(wiz.getDataSubSource().getJasperDatasourceName());
+		ReportSegmentationDatasourceSettings reportSegmentationDatasourceDestination = getReportSegmentationDatasourceSettings(resource);
 
-		Iterator itProperties = resource.getProperties().iterator();
-		while (itProperties.hasNext()) {
-			ResourceProperty property = (ResourceProperty)itProperties.next();
-			if (property.getName().equals(ResourceDescriptor.PROP_DATASOURCE_CONNECTION_URL))
-				connectionUrl = property.getValue();
-			else if (property.getName().equals(ResourceDescriptor.PROP_DATASOURCE_DRIVER_CLASS))
-			    driverClassName = property.getValue();
-			else if (property.getName().equals(ResourceDescriptor.PROP_DATASOURCE_USERNAME))
-				username = property.getValue();
-			else if (property.getName().equals(ResourceDescriptor.PROP_DATASOURCE_PASSWORD))
-				password = property.getValue();
-		}
-
-		return reportSegmentationResultsDao.readReportSegmentationResultsByReportId(reportId, driverClassName, connectionUrl, username, password);
+		return reportSegmentationResultsDao.readReportSegmentationResultsByReportId(reportId, reportSegmentationDatasourceDestination);
 	}
 
 	public int executeSegmentation(Long reportId) throws Exception {
-		String driverClassName = "";
-		String connectionUrl = "";
-		String username = "";
-		String password = "";
-
 		ReportWizard wiz = reportWizardService.Find(reportId);
 		if (wiz.getSegmentationQuery() == null || wiz.getSegmentationQuery().length() == 0)
 		{
@@ -66,28 +45,37 @@ public class ReportSegmentationResultsServiceImpl implements ReportSegmentationR
 		}
 
 		ResourceDescriptor resource = jasperServerService.getDatasource(reportSubSourceService.find(wiz.getSubSourceId()).getJasperDatasourceName());
+		ReportSegmentationDatasourceSettings reportSegmentationDatasourceSource = getReportSegmentationDatasourceSettings(resource);
 
-		Iterator itProperties = resource.getProperties().iterator();
-		while (itProperties.hasNext()) {
-			ResourceProperty property = (ResourceProperty)itProperties.next();
-			if (property.getName().equals(ResourceDescriptor.PROP_DATASOURCE_CONNECTION_URL))
-				connectionUrl = property.getValue();
-			else if (property.getName().equals(ResourceDescriptor.PROP_DATASOURCE_DRIVER_CLASS))
-			    driverClassName = property.getValue();
-			else if (property.getName().equals(ResourceDescriptor.PROP_DATASOURCE_USERNAME))
-				username = property.getValue();
-			else if (property.getName().equals(ResourceDescriptor.PROP_DATASOURCE_PASSWORD))
-				password = property.getValue();
-		}
+		resource = jasperServerService.getDatasource(reportSubSourceService.find(wiz.getSubSourceId()).getSegmentationResultsDatasourceName());
+		ReportSegmentationDatasourceSettings reportSegmentationDatasourceDestination = getReportSegmentationDatasourceSettings(resource);
 
-		reportSegmentationResultsDao.deleteReportSegmentationResultsByReportId(reportId, driverClassName, connectionUrl, username, password);
+		reportSegmentationResultsDao.deleteReportSegmentationResultsByReportId(reportId, reportSegmentationDatasourceDestination);
 		Date lastRunDate = new Date();
 		long startTime = System.currentTimeMillis();
-		int resultCount = reportSegmentationResultsDao.executeSegmentationQuery(wiz.getSegmentationQuery(), driverClassName, connectionUrl, username, password);
+		int resultCount = reportSegmentationResultsDao.executeSegmentationQuery(wiz.getSegmentationQuery(), reportSegmentationDatasourceSource, reportSegmentationDatasourceDestination);
 	    long endTime = System.currentTimeMillis();
 		String lastRunByUserName = SessionHelper.getGuruSessionData().getUsername();
 	    reportWizardService.updateSegmentationExecutionInformation(reportId, lastRunByUserName, lastRunDate, resultCount, endTime-startTime);
 	    return resultCount;
+	}
+
+	private ReportSegmentationDatasourceSettings getReportSegmentationDatasourceSettings(
+			ResourceDescriptor resource) {
+		ReportSegmentationDatasourceSettings reportSegmentationDatasourceSource = new ReportSegmentationDatasourceSettings();
+		Iterator itProperties = resource.getProperties().iterator();
+		while (itProperties.hasNext()) {
+			ResourceProperty property = (ResourceProperty)itProperties.next();
+			if (property.getName().equals(ResourceDescriptor.PROP_DATASOURCE_CONNECTION_URL))
+				reportSegmentationDatasourceSource.setConnectionUrl(property.getValue());
+			else if (property.getName().equals(ResourceDescriptor.PROP_DATASOURCE_DRIVER_CLASS))
+				reportSegmentationDatasourceSource.setDriver(property.getValue());
+			else if (property.getName().equals(ResourceDescriptor.PROP_DATASOURCE_USERNAME))
+				reportSegmentationDatasourceSource.setUsername(property.getValue());
+			else if (property.getName().equals(ResourceDescriptor.PROP_DATASOURCE_PASSWORD))
+				reportSegmentationDatasourceSource.setPassword(property.getValue());
+		}
+		return reportSegmentationDatasourceSource;
 	}
 
 	public void setReportWizardService(ReportWizardService reportWizardService) {

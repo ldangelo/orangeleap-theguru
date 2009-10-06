@@ -277,9 +277,10 @@ CREATE TABLE `JIJdbcDatasource` (
 /*!40000 ALTER TABLE `JIJdbcDatasource` DISABLE KEYS */;
 INSERT INTO `JIJdbcDatasource` (`id`,`driver`,`password`,`connectionUrl`,`username`,`timezone`) VALUES 
  (1,'com.mysql.jdbc.Driver','','jdbc:mysql://localhost:3306/sugarcrm','root',NULL),
- (3,'com.mysql.jdbc.Driver','','jdbc:mysql://localhost:10006/orangeleap?autoReconnect=true&useUnicode=true','orangeleap',NULL),
+ (3,'com.mysql.jdbc.Driver','72AD91424DDA0085179A17174040A206','jdbc:mysql://localhost:10006/orangeleap?autoReconnect=true&useUnicode=true','orangeleap',NULL),
  (198,'com.microsoft.sqlserver.jdbc.SQLServerDriver','','jdbc:sqlserver://Puddy;databaseName=ClementineTestDatabase;instanceName=Puddy05','sa','America/Chicago'),
- (3924,'com.mysql.jdbc.Driver','','jdbc:mysql://localhost:10206/sandbox','orangeleap',NULL);
+ (3924,'com.mysql.jdbc.Driver','','jdbc:mysql://localhost:10206/sandbox','orangeleap',NULL),
+ (4052,'com.mysql.jdbc.Driver','72AD91424DDA0085179A17174040A206','jdbc:mysql://localhost:10006/orangeleap?autoReconnect=true&useUnicode=true','orangeleap',NULL);
 /*!40000 ALTER TABLE `JIJdbcDatasource` ENABLE KEYS */;
 
 
@@ -946,7 +947,7 @@ CREATE TABLE `JIResource` (
   KEY `FKD444826DA58002DF` (`childrenFolder`),
   CONSTRAINT `FKD444826DA08E2155` FOREIGN KEY (`parent_folder`) REFERENCES `JIResourceFolder` (`id`),
   CONSTRAINT `FKD444826DA58002DF` FOREIGN KEY (`childrenFolder`) REFERENCES `JIResourceFolder` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4052 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4053 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `JIResource`
@@ -993,7 +994,8 @@ INSERT INTO `JIResource` (`id`,`version`,`name`,`parent_folder`,`childrenFolder`
  (3567,0,'mpower_template_landscape_jrxml',1703,NULL,'Main jrxml','Main jrxml','2009-04-22 14:36:57'),
  (3568,0,'mpower_template_landscape',1685,1703,'orange leap landscape template','Landscape Template','2009-04-22 14:36:57'),
  (3569,0,'mpower_template_landscape_jrxml',1704,NULL,'Main jrxml','Main jrxml','2009-04-22 14:37:24'),
- (3570,0,'mpower_template_landscape',1688,1704,'orange leap landscape template','Landscape Template','2009-04-22 14:37:24');
+ (3570,0,'mpower_template_landscape',1688,1704,'orange leap landscape template','Landscape Template','2009-04-22 14:37:24'),
+ (4052,14,'ReportWizardJdbcDSSegmentationResults',4,NULL,'Report Wizard JDBC Data Source For Segmentation Results','','2008-10-21 15:12:33');
 /*!40000 ALTER TABLE `JIResource` ENABLE KEYS */;
 
 

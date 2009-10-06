@@ -292,7 +292,8 @@ CREATE TABLE `JIJdbcDatasource` (
 /*!40000 ALTER TABLE `JIJdbcDatasource` DISABLE KEYS */;
 INSERT INTO `JIJdbcDatasource` (`id`,`driver`,`password`,`connectionUrl`,`username`,`timezone`) VALUES 
  (1,'com.mysql.jdbc.Driver','','jdbc:mysql://localhost:3306/sugarcrm','root',NULL),
- (3,'com.mysql.jdbc.Driver','','jdbc:mysql://localhost:10006/sandbox?autoReconnect=true&useUnicode=true','orangeleap',NULL);
+ (3,'com.mysql.jdbc.Driver','72AD91424DDA0085179A17174040A206','jdbc:mysql://localhost:10006/sandbox?autoReconnect=true&useUnicode=true','orangeleap',NULL),
+ (4056,'com.mysql.jdbc.Driver','72AD91424DDA0085179A17174040A206','jdbc:mysql://localhost:10006/sandbox?autoReconnect=true&useUnicode=true','orangeleap',NULL);
 /*!40000 ALTER TABLE `JIJdbcDatasource` ENABLE KEYS */;
 
 
@@ -941,7 +942,7 @@ CREATE TABLE `JIResource` (
   KEY `FKD444826DA58002DF` (`childrenFolder`),
   CONSTRAINT `FKD444826DA08E2155` FOREIGN KEY (`parent_folder`) REFERENCES `JIResourceFolder` (`id`),
   CONSTRAINT `FKD444826DA58002DF` FOREIGN KEY (`childrenFolder`) REFERENCES `JIResourceFolder` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4056 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4057 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `JIResource`
@@ -995,7 +996,8 @@ INSERT INTO `JIResource` (`id`,`version`,`name`,`parent_folder`,`childrenFolder`
  (3918,0,'THEGURU_11',214,1868,'Gifts by Accounts/Constituents','Constituents & Gifts Custom Report','2009-05-20 12:06:37'),
  (3962,0,'THEGURU_12',1888,NULL,'Gifts by Payment Method and Billing State','Matrix Report','2009-05-20 15:12:29'),
  (3963,0,'THEGURU_12',214,1888,'Gifts by Payment Method and Billing State','Matrix Report','2009-05-20 15:12:29'),
- (4051,2,'thankYou_jrxml',1816,NULL,'Main jrxml','Main jrxml','2009-06-02 15:15:32');
+ (4051,2,'thankYou_jrxml',1816,NULL,'Main jrxml','Main jrxml','2009-06-02 15:15:32'),
+ (4056,14,'ReportWizardJdbcDSSegmentationResults',4,NULL,'Report Wizard JDBC Data Source For Segmentation Results','','2008-10-21 15:12:33');
 /*!40000 ALTER TABLE `JIResource` ENABLE KEYS */;
 
 

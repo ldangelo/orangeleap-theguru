@@ -599,6 +599,7 @@ CREATE TABLE `REPORTDATASUBSOURCE` (
   `REPORT_FORMAT_TYPE` int(11) DEFAULT NULL,
   `VIEW_NAME` varchar(8000) DEFAULT NULL,
   `reportDataSubSourceGroup_REPORTSUBSOURCEGROUP_ID` bigint(20) DEFAULT NULL,
+  `SEGMENTATION_RESULTS_DATASOURCE_NAME` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`REPORTSUBSOURCE_ID`),
   KEY `FK8817E91DD27B0EE8` (`reportDataSubSourceGroup_REPORTSUBSOURCEGROUP_ID`),
   CONSTRAINT `FK8817E91DD27B0EE8` FOREIGN KEY (`reportDataSubSourceGroup_REPORTSUBSOURCEGROUP_ID`) REFERENCES `REPORTDATASUBSOURCEGROUP` (`REPORTSUBSOURCEGROUP_ID`)
@@ -609,53 +610,53 @@ CREATE TABLE `REPORTDATASUBSOURCE` (
 --
 
 /*!40000 ALTER TABLE `REPORTDATASUBSOURCE` DISABLE KEYS */;
-INSERT INTO `REPORTDATASUBSOURCE` (`REPORTSUBSOURCE_ID`,`DATABASE_TYPE`,`DESCRIPTION`,`DISPLAY_NAME`,`JASPER_DATASOURCE_NAME`,`REPORT_FORMAT_TYPE`,`VIEW_NAME`,`reportDataSubSourceGroup_REPORTSUBSOURCEGROUP_ID`) VALUES 
- (1,0,NULL,'Error Log','/datasources/ReportWizardJdbcDS',0,'ERROR_LOG',1),
- (2,0,NULL,'Picklists','/datasources/ReportWizardJdbcDS',0,'VW_PICKLISTS',1),
- (3,0,NULL,'Constituents','/datasources/ReportWizardJdbcDS',0,'VW_CONSTITUENTS',3),
- (4,0,NULL,'Constituents & Addresses','/datasources/ReportWizardJdbcDS',0,'VW_CONSTITUENTS_ADDRESSES',3),
- (5,0,NULL,'Constituents & Email Addresses','/datasources/ReportWizardJdbcDS',0,'VW_CONSTITUENTS_EMAILS',3),
- (6,0,NULL,'Constituents & Phone Numbers','/datasources/ReportWizardJdbcDS',0,'VW_CONSTITUENTS_PHONENUMBERS',3),
- (7,0,'Constituents and their primary addresses, email addresses and phone numbers','Constituents & Primary Contact Information','/datasources/ReportWizardJdbcDS',0,'VW_CONSTITUENTS_PRIMARYCONTACTINFORMATION',3),
- (8,0,'Constituents and their addresses, email addresses and phone numbers','Constituents & Contact Information','/datasources/ReportWizardJdbcDS',0,'VW_CONSTITUENTS_CONTACTINFORMATION',3),
- (9,0,'Constituents and their addresses, email addresses and phone numbers that are marked to receive correspondence','Constituents & Receive Correspondence Contact Information','/datasources/ReportWizardJdbcDS',0,'VW_CONSTITUENTS_RECEIVECORRESPONDENCECONTACTINFORMATION',3),
- (10,0,'Constituents and their undeliverable addresses, email addresses and phone numbers','Constituents & Undeliverable Contact Information','/datasources/ReportWizardJdbcDS',0,'VW_CONSTITUENTS_UNDELIVERABLECONTACTINFORMATION',3),
- (11,0,NULL,'Constituents & Relationships','/datasources/ReportWizardJdbcDS',0,'VW_CONSTITUENTS_RELATIONSHIPS',3),
- (12,0,NULL,'Gifts','/datasources/ReportWizardJdbcDS',0,'VW_GIFTS',6),
- (13,0,NULL,'Gifts & Gift Distributions','/datasources/ReportWizardJdbcDS',0,'VW_GIFTS_DISTRIBUTIONS',6),
- (14,0,NULL,'Gift Adjustments & Distributions','/datasources/ReportWizardJdbcDS',0,'VW_ADJUSTED_GIFTS_DISTRIBUTIONS',6),
- (15,0,NULL,'Gifts In Kind','/datasources/ReportWizardJdbcDS',0,'VW_GIFTS_IN_KIND',6),
- (16,0,NULL,'Gifts In Kind & Details','/datasources/ReportWizardJdbcDS',0,'VW_GIFTS_IN_KIND_DETAILS',6),
- (17,0,NULL,'Payment History','/datasources/ReportWizardJdbcDS',0,'VW_PAYMENTHISTORY',6),
- (18,0,NULL,'Payment Methods','/datasources/ReportWizardJdbcDS',0,'VW_PAYMENTMETHODS',6),
- (19,0,NULL,'Pledges','/datasources/ReportWizardJdbcDS',0,'VW_PLEDGES',6),
- (20,0,NULL,'Pledges & Distributions','/datasources/ReportWizardJdbcDS',0,'VW_PLEDGES_DISTRIBUTIONS',6),
- (21,0,NULL,'Recurring Gifts','/datasources/ReportWizardJdbcDS',0,'VW_RECURRINGGIFTS',6),
- (22,0,NULL,'Recurring Gifts & Distributions','/datasources/ReportWizardJdbcDS',0,'VW_RECURRINGGIFTS_DISTRIBUTIONS',6),
- (23,0,NULL,'Constituents & Gifts','/datasources/ReportWizardJdbcDS',0,'VW_CONSTITUENTS_GIFTS',4),
- (24,0,NULL,'Constituents & Gift Distributions','/datasources/ReportWizardJdbcDS',0,'VW_CONSTITUENTS_GIFTDISTRIBUTIONS',4),
- (25,0,NULL,'Constituents & Gift Adjustment Distributions','/datasources/ReportWizardJdbcDS',0,'VW_CONSTITUENTS_ADJUSTED_GIFTS_DISTRIBUTIONS',4),
- (26,0,NULL,'Constituents & Gifts In Kind','/datasources/ReportWizardJdbcDS',0,'VW_CONSTITUENTS_GIFTS_IN_KIND',4),
- (27,0,NULL,'Constituents & Gifts In Kind Details','/datasources/ReportWizardJdbcDS',0,'VW_CONSTITUENTS_GIFTS_IN_KIND_DETAILS',4),
- (28,0,NULL,'Constituents & Payment History','/datasources/ReportWizardJdbcDS',0,'VW_CONSTITUENTS_PAYMENTHISTORY',4),
- (29,0,NULL,'Constituents & Payment Methods','/datasources/ReportWizardJdbcDS',0,'VW_CONSTITUENTS_PAYMENTMETHODS',4),
- (30,0,NULL,'Constituents & Pledges','/datasources/ReportWizardJdbcDS',0,'VW_CONSTITUENTS_PLEDGES',4),
- (31,0,NULL,'Constituents, Pledges & Distributions','/datasources/ReportWizardJdbcDS',0,'VW_CONSTITUENTS_PLEDGES_DISTRIBUTIONS',4),
- (32,0,NULL,'Constituents & Recurring Gifts','/datasources/ReportWizardJdbcDS',0,'VW_CONSTITUENTS_RECURRINGGIFTS',4),
- (33,0,NULL,'Constituents, Recurring Gifts & Distributions','/datasources/ReportWizardJdbcDS',0,'VW_CONSTITUENTS_RECURRINGGIFTS_DISTRIBUTIONS',4),
- (34,0,NULL,'Constituents, Relationships & Gifts','/datasources/ReportWizardJdbcDS',0,'VW_CONSTITUENTS_RELATIONSHIPS_GIFTS',4),
- (35,0,NULL,'Constituents, Relationships & Gift Distributions','/datasources/ReportWizardJdbcDS',0,'VW_CONSTITUENTS_RELATIONSHIPS_GIFTDISTRIBUTIONS',4),
- (36,0,NULL,'Audit History','/datasources/ReportWizardJdbcDS',0,'VW_AUDITHISTORY',2),
- (37,0,NULL,'Address Audit History','/datasources/ReportWizardJdbcDS',0,'VW_AUDITHISTORY_ADDRESSES',2),
- (38,0,NULL,'Constituent Audit History','/datasources/ReportWizardJdbcDS',0,'VW_AUDITHISTORY_CONSTITUENTS',2),
- (39,0,NULL,'Email Address Audit History','/datasources/ReportWizardJdbcDS',0,'VW_AUDITHISTORY_EMAILADDRESSES',2),
- (40,0,NULL,'Gift Audit History','/datasources/ReportWizardJdbcDS',0,'VW_AUDITHISTORY_GIFTS',2),
- (41,0,NULL,'Payment Method Audit History','/datasources/ReportWizardJdbcDS',0,'VW_AUDITHISTORY_PAYMENTMETHODS',2),
- (42,0,NULL,'Phone Number Audit History','/datasources/ReportWizardJdbcDS',0,'VW_AUDITHISTORY_PHONENUMBERS',2),
- (43,0,NULL,'Pledge Audit History','/datasources/ReportWizardJdbcDS',0,'VW_AUDITHISTORY_PLEDGES',2),
- (44,0,NULL,'Recurring Gift Audit History','/datasources/ReportWizardJdbcDS',0,'VW_AUDITHISTORY_RECURRINGGIFTS',2),
- (45,0,NULL,'Touch Points','/datasources/ReportWizardJdbcDS',0,'VW_TOUCHPOINTS',5),
- (46,0,NULL,'Touch Points & Constituent Information','/datasources/ReportWizardJdbcDS',0,'VW_TOUCHPOINTS_CONSTITUENT_INFORMATION',5);
+INSERT INTO `REPORTDATASUBSOURCE` (`REPORTSUBSOURCE_ID`,`DATABASE_TYPE`,`DESCRIPTION`,`DISPLAY_NAME`,`JASPER_DATASOURCE_NAME`,`REPORT_FORMAT_TYPE`,`VIEW_NAME`,`reportDataSubSourceGroup_REPORTSUBSOURCEGROUP_ID`,`SEGMENTATION_RESULTS_DATASOURCE_NAME`) VALUES 
+ (1,0,NULL,'Error Log','/datasources/ReportWizardJdbcDS',0,'ERROR_LOG',1,'/datasources/ReportWizardJdbcDSSegmentationResults'),
+ (2,0,NULL,'Picklists','/datasources/ReportWizardJdbcDS',0,'VW_PICKLISTS',1,'/datasources/ReportWizardJdbcDSSegmentationResults'),
+ (3,0,NULL,'Constituents','/datasources/ReportWizardJdbcDS',0,'VW_CONSTITUENTS',3,'/datasources/ReportWizardJdbcDSSegmentationResults'),
+ (4,0,NULL,'Constituents & Addresses','/datasources/ReportWizardJdbcDS',0,'VW_CONSTITUENTS_ADDRESSES',3,'/datasources/ReportWizardJdbcDSSegmentationResults'),
+ (5,0,NULL,'Constituents & Email Addresses','/datasources/ReportWizardJdbcDS',0,'VW_CONSTITUENTS_EMAILS',3,'/datasources/ReportWizardJdbcDSSegmentationResults'),
+ (6,0,NULL,'Constituents & Phone Numbers','/datasources/ReportWizardJdbcDS',0,'VW_CONSTITUENTS_PHONENUMBERS',3,'/datasources/ReportWizardJdbcDSSegmentationResults'),
+ (7,0,'Constituents and their primary addresses, email addresses and phone numbers','Constituents & Primary Contact Information','/datasources/ReportWizardJdbcDS',0,'VW_CONSTITUENTS_PRIMARYCONTACTINFORMATION',3,'/datasources/ReportWizardJdbcDSSegmentationResults'),
+ (8,0,'Constituents and their addresses, email addresses and phone numbers','Constituents & Contact Information','/datasources/ReportWizardJdbcDS',0,'VW_CONSTITUENTS_CONTACTINFORMATION',3,'/datasources/ReportWizardJdbcDSSegmentationResults'),
+ (9,0,'Constituents and their addresses, email addresses and phone numbers that are marked to receive correspondence','Constituents & Receive Correspondence Contact Information','/datasources/ReportWizardJdbcDS',0,'VW_CONSTITUENTS_RECEIVECORRESPONDENCECONTACTINFORMATION',3,'/datasources/ReportWizardJdbcDSSegmentationResults'),
+ (10,0,'Constituents and their undeliverable addresses, email addresses and phone numbers','Constituents & Undeliverable Contact Information','/datasources/ReportWizardJdbcDS',0,'VW_CONSTITUENTS_UNDELIVERABLECONTACTINFORMATION',3,'/datasources/ReportWizardJdbcDSSegmentationResults'),
+ (11,0,NULL,'Constituents & Relationships','/datasources/ReportWizardJdbcDS',0,'VW_CONSTITUENTS_RELATIONSHIPS',3,'/datasources/ReportWizardJdbcDSSegmentationResults'),
+ (12,0,NULL,'Gifts','/datasources/ReportWizardJdbcDS',0,'VW_GIFTS',6,'/datasources/ReportWizardJdbcDSSegmentationResults'),
+ (13,0,NULL,'Gifts & Gift Distributions','/datasources/ReportWizardJdbcDS',0,'VW_GIFTS_DISTRIBUTIONS',6,'/datasources/ReportWizardJdbcDSSegmentationResults'),
+ (14,0,NULL,'Gift Adjustments & Distributions','/datasources/ReportWizardJdbcDS',0,'VW_ADJUSTED_GIFTS_DISTRIBUTIONS',6,'/datasources/ReportWizardJdbcDSSegmentationResults'),
+ (15,0,NULL,'Gifts In Kind','/datasources/ReportWizardJdbcDS',0,'VW_GIFTS_IN_KIND',6,'/datasources/ReportWizardJdbcDSSegmentationResults'),
+ (16,0,NULL,'Gifts In Kind & Details','/datasources/ReportWizardJdbcDS',0,'VW_GIFTS_IN_KIND_DETAILS',6,'/datasources/ReportWizardJdbcDSSegmentationResults'),
+ (17,0,NULL,'Payment History','/datasources/ReportWizardJdbcDS',0,'VW_PAYMENTHISTORY',6,'/datasources/ReportWizardJdbcDSSegmentationResults'),
+ (18,0,NULL,'Payment Methods','/datasources/ReportWizardJdbcDS',0,'VW_PAYMENTMETHODS',6,'/datasources/ReportWizardJdbcDSSegmentationResults'),
+ (19,0,NULL,'Pledges','/datasources/ReportWizardJdbcDS',0,'VW_PLEDGES',6,'/datasources/ReportWizardJdbcDSSegmentationResults'),
+ (20,0,NULL,'Pledges & Distributions','/datasources/ReportWizardJdbcDS',0,'VW_PLEDGES_DISTRIBUTIONS',6,'/datasources/ReportWizardJdbcDSSegmentationResults'),
+ (21,0,NULL,'Recurring Gifts','/datasources/ReportWizardJdbcDS',0,'VW_RECURRINGGIFTS',6,'/datasources/ReportWizardJdbcDSSegmentationResults'),
+ (22,0,NULL,'Recurring Gifts & Distributions','/datasources/ReportWizardJdbcDS',0,'VW_RECURRINGGIFTS_DISTRIBUTIONS',6,'/datasources/ReportWizardJdbcDSSegmentationResults'),
+ (23,0,NULL,'Constituents & Gifts','/datasources/ReportWizardJdbcDS',0,'VW_CONSTITUENTS_GIFTS',4,'/datasources/ReportWizardJdbcDSSegmentationResults'),
+ (24,0,NULL,'Constituents & Gift Distributions','/datasources/ReportWizardJdbcDS',0,'VW_CONSTITUENTS_GIFTDISTRIBUTIONS',4,'/datasources/ReportWizardJdbcDSSegmentationResults'),
+ (25,0,NULL,'Constituents & Gift Adjustment Distributions','/datasources/ReportWizardJdbcDS',0,'VW_CONSTITUENTS_ADJUSTED_GIFTS_DISTRIBUTIONS',4,'/datasources/ReportWizardJdbcDSSegmentationResults'),
+ (26,0,NULL,'Constituents & Gifts In Kind','/datasources/ReportWizardJdbcDS',0,'VW_CONSTITUENTS_GIFTS_IN_KIND',4,'/datasources/ReportWizardJdbcDSSegmentationResults'),
+ (27,0,NULL,'Constituents & Gifts In Kind Details','/datasources/ReportWizardJdbcDS',0,'VW_CONSTITUENTS_GIFTS_IN_KIND_DETAILS',4,'/datasources/ReportWizardJdbcDSSegmentationResults'),
+ (28,0,NULL,'Constituents & Payment History','/datasources/ReportWizardJdbcDS',0,'VW_CONSTITUENTS_PAYMENTHISTORY',4,'/datasources/ReportWizardJdbcDSSegmentationResults'),
+ (29,0,NULL,'Constituents & Payment Methods','/datasources/ReportWizardJdbcDS',0,'VW_CONSTITUENTS_PAYMENTMETHODS',4,'/datasources/ReportWizardJdbcDSSegmentationResults'),
+ (30,0,NULL,'Constituents & Pledges','/datasources/ReportWizardJdbcDS',0,'VW_CONSTITUENTS_PLEDGES',4,'/datasources/ReportWizardJdbcDSSegmentationResults'),
+ (31,0,NULL,'Constituents, Pledges & Distributions','/datasources/ReportWizardJdbcDS',0,'VW_CONSTITUENTS_PLEDGES_DISTRIBUTIONS',4,'/datasources/ReportWizardJdbcDSSegmentationResults'),
+ (32,0,NULL,'Constituents & Recurring Gifts','/datasources/ReportWizardJdbcDS',0,'VW_CONSTITUENTS_RECURRINGGIFTS',4,'/datasources/ReportWizardJdbcDSSegmentationResults'),
+ (33,0,NULL,'Constituents, Recurring Gifts & Distributions','/datasources/ReportWizardJdbcDS',0,'VW_CONSTITUENTS_RECURRINGGIFTS_DISTRIBUTIONS',4,'/datasources/ReportWizardJdbcDSSegmentationResults'),
+ (34,0,NULL,'Constituents, Relationships & Gifts','/datasources/ReportWizardJdbcDS',0,'VW_CONSTITUENTS_RELATIONSHIPS_GIFTS',4,'/datasources/ReportWizardJdbcDSSegmentationResults'),
+ (35,0,NULL,'Constituents, Relationships & Gift Distributions','/datasources/ReportWizardJdbcDS',0,'VW_CONSTITUENTS_RELATIONSHIPS_GIFTDISTRIBUTIONS',4,'/datasources/ReportWizardJdbcDSSegmentationResults'),
+ (36,0,NULL,'Audit History','/datasources/ReportWizardJdbcDS',0,'VW_AUDITHISTORY',2,'/datasources/ReportWizardJdbcDSSegmentationResults'),
+ (37,0,NULL,'Address Audit History','/datasources/ReportWizardJdbcDS',0,'VW_AUDITHISTORY_ADDRESSES',2,'/datasources/ReportWizardJdbcDSSegmentationResults'),
+ (38,0,NULL,'Constituent Audit History','/datasources/ReportWizardJdbcDS',0,'VW_AUDITHISTORY_CONSTITUENTS',2,'/datasources/ReportWizardJdbcDSSegmentationResults'),
+ (39,0,NULL,'Email Address Audit History','/datasources/ReportWizardJdbcDS',0,'VW_AUDITHISTORY_EMAILADDRESSES',2,'/datasources/ReportWizardJdbcDSSegmentationResults'),
+ (40,0,NULL,'Gift Audit History','/datasources/ReportWizardJdbcDS',0,'VW_AUDITHISTORY_GIFTS',2,'/datasources/ReportWizardJdbcDSSegmentationResults'),
+ (41,0,NULL,'Payment Method Audit History','/datasources/ReportWizardJdbcDS',0,'VW_AUDITHISTORY_PAYMENTMETHODS',2,'/datasources/ReportWizardJdbcDSSegmentationResults'),
+ (42,0,NULL,'Phone Number Audit History','/datasources/ReportWizardJdbcDS',0,'VW_AUDITHISTORY_PHONENUMBERS',2,'/datasources/ReportWizardJdbcDSSegmentationResults'),
+ (43,0,NULL,'Pledge Audit History','/datasources/ReportWizardJdbcDS',0,'VW_AUDITHISTORY_PLEDGES',2,'/datasources/ReportWizardJdbcDSSegmentationResults'),
+ (44,0,NULL,'Recurring Gift Audit History','/datasources/ReportWizardJdbcDS',0,'VW_AUDITHISTORY_RECURRINGGIFTS',2,'/datasources/ReportWizardJdbcDSSegmentationResults'),
+ (45,0,NULL,'Touch Points','/datasources/ReportWizardJdbcDS',0,'VW_TOUCHPOINTS',5,'/datasources/ReportWizardJdbcDSSegmentationResults'),
+ (46,0,NULL,'Touch Points & Constituent Information','/datasources/ReportWizardJdbcDS',0,'VW_TOUCHPOINTS_CONSTITUENT_INFORMATION',5,'/datasources/ReportWizardJdbcDSSegmentationResults');
 /*!40000 ALTER TABLE `REPORTDATASUBSOURCE` ENABLE KEYS */;
 
 
@@ -9838,7 +9839,7 @@ CREATE TABLE `VERSIONLOG` (
   `SCRIPT` varchar(255) NOT NULL,
   `INSTALLDATE` datetime NOT NULL,
   PRIMARY KEY (`VERSION_ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `VERSIONLOG`
@@ -9864,7 +9865,9 @@ INSERT INTO `VERSIONLOG` (`VERSION_ID`,`SCRIPT`,`INSTALLDATE`) VALUES
  (16,'20090903_12_DU_TouchPointsConstituents_PrimaryContactInfo.sql','2009-09-11 00:00:00'),
  (17,'20090904_01_DU_ReportField_PhoneUndeliverble.sql','2009-09-11 00:00:00'),
  (18,'20090909_01_DU_ReportField_DesignationDescription.sql','2009-09-11 00:00:00'),
- (19,'20090911_01_DU_JIFileResource_ExcelTemplate.sql','2009-09-11 00:00:00');
+ (19,'20090911_01_DU_JIFileResource_ExcelTemplate.sql','2009-09-11 00:00:00'),
+ (20,'20090918_01_TC_JasperUpdateScript.sql','2009-10-06 13:22:39'),
+ (21,'20091006_01_TU_ReportDataSubSource.sql','2009-10-06 13:22:39');
 /*!40000 ALTER TABLE `VERSIONLOG` ENABLE KEYS */;
 
 

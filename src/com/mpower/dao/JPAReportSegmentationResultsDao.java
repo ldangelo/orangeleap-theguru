@@ -10,24 +10,27 @@ import java.util.List;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.springframework.stereotype.Repository;
 import com.mpower.domain.ReportSegmentationResult;
+import com.mpower.util.ReportSegmentationDatasourceSettings;
 
 @Repository("reportSegmentationResultsDao")
 public class JPAReportSegmentationResultsDao implements ReportSegmentationResultsDao {
-	private BasicDataSource segmentationDataSource;
+	private BasicDataSource segmentationDataSourceDestination;
+	private BasicDataSource segmentationDataSourceSource;
+	private int resultSetFetchSize;
 
-	private void updateSegmentationDataSource(String driverClassName, String connectionUrl, String username, String password) throws SQLException {
+	private void updateSegmentationDataSource(BasicDataSource segmentationDataSource, ReportSegmentationDatasourceSettings reportSegmentationDatasourceSettings) throws SQLException {
 		segmentationDataSource.close();
-		segmentationDataSource.setUrl(connectionUrl);
-		segmentationDataSource.setDriverClassName(driverClassName);
-		segmentationDataSource.setUsername(username);
-		segmentationDataSource.setPassword(password);
+		segmentationDataSource.setUrl(reportSegmentationDatasourceSettings.getConnectionUrl());
+		segmentationDataSource.setDriverClassName(reportSegmentationDatasourceSettings.getDriver());
+		segmentationDataSource.setUsername(reportSegmentationDatasourceSettings.getUsername());
+		segmentationDataSource.setPassword(reportSegmentationDatasourceSettings.getPassword());
 	}
 
 	@Override
-	public List<ReportSegmentationResult> readReportSegmentationResultsByReportId(Long reportId, String driverClassName, String connectionUrl, String username, String password) throws SQLException {
+	public List<ReportSegmentationResult> readReportSegmentationResultsByReportId(Long reportId, ReportSegmentationDatasourceSettings reportSegmentationDatasourceDestination) throws SQLException {
 		LinkedList<ReportSegmentationResult> result = new LinkedList<ReportSegmentationResult>();
-		updateSegmentationDataSource(driverClassName, connectionUrl, username, password);
-		Connection connection = segmentationDataSource.getConnection();
+		updateSegmentationDataSource(segmentationDataSourceDestination, reportSegmentationDatasourceDestination);
+		Connection connection = segmentationDataSourceDestination.getConnection();
 		Statement statement = connection.createStatement();
 		try {
 			ResultSet segmentationResults = statement.executeQuery("SELECT * FROM THEGURU_SEGMENTATION_RESULT WHERE REPORT_ID = " + reportId.toString() + " ORDER BY ENTITY_ID");
@@ -49,10 +52,10 @@ public class JPAReportSegmentationResultsDao implements ReportSegmentationResult
 	}
 
 	@Override
-	public int deleteReportSegmentationResultsByReportId(Long reportId, String driverClassName, String connectionUrl, String username, String password) throws SQLException {
+	public int deleteReportSegmentationResultsByReportId(Long reportId, ReportSegmentationDatasourceSettings reportSegmentationDatasourceDestination) throws SQLException {
 		int result = 0;
-		updateSegmentationDataSource(driverClassName, connectionUrl, username, password);
-		Connection connection = segmentationDataSource.getConnection();
+		updateSegmentationDataSource(segmentationDataSourceDestination, reportSegmentationDatasourceDestination);
+		Connection connection = segmentationDataSourceDestination.getConnection();
 		Statement statement = connection.createStatement();
 		try {
 			result = statement.executeUpdate("DELETE FROM THEGURU_SEGMENTATION_RESULT WHERE REPORT_ID = " + reportId.toString());
@@ -67,13 +70,47 @@ public class JPAReportSegmentationResultsDao implements ReportSegmentationResult
 	}
 
 	@Override
-	public int executeSegmentationQuery(String query, String driverClassName, String connectionUrl, String username, String password) throws SQLException {
+	public int executeSegmentationQuery(String query, ReportSegmentationDatasourceSettings reportSegmentationDatasourceSource, ReportSegmentationDatasourceSettings reportSegmentationDatasourceDestination) throws SQLException {
 		int result = 0;
-		updateSegmentationDataSource(driverClassName, connectionUrl, username, password);
-		Connection connection = segmentationDataSource.getConnection();
+		updateSegmentationDataSource(segmentationDataSourceSource, reportSegmentationDatasourceSource);
+		updateSegmentationDataSource(segmentationDataSourceDestination, reportSegmentationDatasourceDestination);
+
+		Connection connection = segmentationDataSourceSource.getConnection();
 		Statement statement = connection.createStatement();
+
+		Connection connectionDestination = segmentationDataSourceDestination.getConnection();
+		Statement statementDestination = connectionDestination.createStatement();
+		String insertStatement = "INSERT THEGURU_SEGMENTATION_RESULT " + System.getProperty("line.separator") +
+			"(REPORT_ID, ENTITY_ID)" + System.getProperty("line.separator");
 		try {
-			result = statement.executeUpdate(query);
+			ResultSet resultSet = statement.executeQuery(query);
+			resultSet.setFetchSize(resultSetFetchSize);
+			Boolean addUnion = false;
+			String values = "";
+			int recordCount = 0;
+			while (resultSet.next()) {
+				result++;
+				recordCount++;
+				if (addUnion)
+					values += System.getProperty("line.separator") + "UNION" + System.getProperty("line.separator");
+				else
+					addUnion = true;
+				values += "SELECT " + resultSet.getLong("REPORT_ID") + ", " + resultSet.getLong("ENTITY_ID");
+
+				if (recordCount > resultSetFetchSize) {
+					statementDestination.execute(insertStatement + values);
+					recordCount = 0;
+					addUnion = false;
+					values = "";
+				}
+			}
+
+			if (recordCount > 0) {
+				statementDestination.execute(insertStatement + values);
+				recordCount = 0;
+				addUnion = false;
+				values = "";
+			}
 		} catch (SQLException exception) {
 			exception.printStackTrace();
 			throw new SQLException("Error excuting segmentation query." + System.getProperty("line.separator") + exception.getMessage() + "Query : " + System.getProperty("line.separator") + query);
@@ -84,11 +121,29 @@ public class JPAReportSegmentationResultsDao implements ReportSegmentationResult
 		return result;
 	}
 
-	public BasicDataSource getSegmentationDataSource() {
-		return segmentationDataSource;
+	public void setSegmentationDataSourceSource(
+			BasicDataSource segmentationDataSourceSource) {
+		this.segmentationDataSourceSource = segmentationDataSourceSource;
 	}
 
-	public void setSegmentationDataSource(BasicDataSource segmentationDataSource) {
-		this.segmentationDataSource = segmentationDataSource;
+	public BasicDataSource getSegmentationDataSourceSource() {
+		return segmentationDataSourceSource;
+	}
+
+	public void setSegmentationDataSourceDestination(
+			BasicDataSource segmentationDataSourceDestination) {
+		this.segmentationDataSourceDestination = segmentationDataSourceDestination;
+	}
+
+	public BasicDataSource getSegmentationDataSourceDestination() {
+		return segmentationDataSourceDestination;
+	}
+
+	public void setResultSetFetchSize(int resultSetFetchSize) {
+		this.resultSetFetchSize = resultSetFetchSize;
+	}
+
+	public int getResultSetFetchSize() {
+		return resultSetFetchSize;
 	}
 }

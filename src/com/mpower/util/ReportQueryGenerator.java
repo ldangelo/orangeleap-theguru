@@ -226,14 +226,14 @@ public class ReportQueryGenerator {
 	 * @return
 	 */
 	private String buildSegmentationSelectClause(Long reportId, String columnName) {
-		String selectClause = "INSERT THEGURU_SEGMENTATION_RESULT (REPORT_ID, ENTITY_ID) SELECT DISTINCT ";
+		String selectClause = "SELECT DISTINCT ";
 
 		if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.SQLSERVER
 				&& getReportWizard().getRowCount() > 0)
 			selectClause += "TOP " + getReportWizard().getRowCount() + " ";
 
 
-		selectClause += reportId.toString() + ", " + columnName + " ";
+		selectClause += reportId.toString() + " AS REPORT_ID, " + columnName + " AS ENTITY_ID ";
 
 		selectClause = selectClause + System.getProperty("line.separator") + "FROM " + getReportWizard().getDataSubSource().getViewName();
 

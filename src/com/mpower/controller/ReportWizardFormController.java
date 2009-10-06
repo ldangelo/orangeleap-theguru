@@ -481,12 +481,14 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 			refData.put("fieldGroups", lrfg);
 			WebApplicationContext applicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(this.getServletContext());
 		    refData.put("customFilters", reportCustomFilterHelper.getReportCustomFilterDefinitions(applicationContext, wiz));
-		    List<ReportSegmentationType> reportSegmentationTypes = rdss.getReportSegmentationTypes();
-		    refData.put("useReportAsSegmentation", wiz.getUseReportAsSegmentation());
+		    if (rdss.getSegmentationResultsDatasourceName() != null && rdss.getSegmentationResultsDatasourceName().length() > 0) {
+		    	List<ReportSegmentationType> reportSegmentationTypes = rdss.getReportSegmentationTypes();
+		    	refData.put("useReportAsSegmentation", wiz.getUseReportAsSegmentation());
+			    refData.put("segmentationTypeId", wiz.getReportSegmentationTypeId());
+			    refData.put("segmentationTypeCount", reportSegmentationTypes.size());
+			    refData.put("segmentationTypes", reportSegmentationTypes);
+		    }
 		    wiz.setUseReportAsSegmentation(false);
-		    refData.put("segmentationTypeId", wiz.getReportSegmentationTypeId());
-		    refData.put("segmentationTypeCount", reportSegmentationTypes.size());
-		    refData.put("segmentationTypes", reportSegmentationTypes);
 
 			List<ReportFilter> tempFilters = reportCustomFilterHelper.refreshReportCustomFilters(applicationContext, wiz);
 			refData.put("selectedFilters", tempFilters);
@@ -582,6 +584,11 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 			if (wiz.getReportSegmentationTypeId() == 0) {
 				hasErrors = true;
 				errors.reject("error.segmentationtypenotselected", "No segmentation type was selected.");
+			}
+
+			if (wiz.getDataSubSource().getSegmentationResultsDatasourceName() == null || wiz.getDataSubSource().getSegmentationResultsDatasourceName().length() == 0) {
+				hasErrors = true;
+				errors.reject("error.nosegmenationresultsdatasourcedefined", "The secondary datasource does not have a segmentation result datasource defined.");
 			}
 
 			if (!hasErrors) {
