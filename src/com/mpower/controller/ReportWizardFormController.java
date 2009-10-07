@@ -210,6 +210,40 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 			wiz.populateDefaultReportFields();
 		}
 
+		//
+		//They hit the Run Report button so we need to validate first
+		if (request.getParameter("_target8") != null || request.getParameter("_target8.x") != null) {
+
+			try {
+		        Validator[] validators = getValidators();
+		        for (int i=0; i<validators.length; i++) {
+		            Validator validator = validators[i];
+		            if (validator instanceof ReportWizardValidator) {
+		                    validator.validate(command, errors);
+		                }
+		            }
+
+			/*
+				ReportSaveValidator rsv = new ReportSaveValidator();
+				rsv.validate(wiz, errors);
+				Boolean saveValidationSuccess = true;
+				Iterator itErrors = errors.getAllErrors().iterator();
+				while (itErrors.hasNext()) {
+					ObjectError error = (ObjectError)itErrors.next();
+					if (error.getCode().contains("error.code")) {
+						saveValidationSuccess = false;
+						break;
+					}
+				}
+				if (saveValidationSuccess)
+					saveReport(wiz);
+					*/
+			} catch (Exception e) {
+				logger.error(e.getLocalizedMessage());
+				errors.reject(e.getLocalizedMessage());
+			}
+		}
+
 		if (request.getParameter("_target5") != null || request.getParameter("_target5.x") != null) {
 			//
 			// We are saving this report to jasperserver
