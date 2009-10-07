@@ -30,7 +30,7 @@ public class ReportSegmentationResultsServiceImpl implements ReportSegmentationR
 
 	public List<ReportSegmentationResult> readReportSegmentationResultsByReportId(Long reportId) throws Exception {
 		ReportWizard wiz = reportWizardService.Find(reportId);
-		ResourceDescriptor resource = jasperServerService.getDatasource(wiz.getDataSubSource().getJasperDatasourceName());
+		ResourceDescriptor resource = jasperServerService.getDatasource(wiz.getDataSubSource().getSegmentationResultsDatasourceName());
 		ReportSegmentationDatasourceSettings reportSegmentationDatasourceDestination = getReportSegmentationDatasourceSettings(resource);
 
 		return reportSegmentationResultsDao.readReportSegmentationResultsByReportId(reportId, reportSegmentationDatasourceDestination);
