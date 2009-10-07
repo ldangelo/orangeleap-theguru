@@ -223,21 +223,6 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		                }
 		            }
 
-			/*
-				ReportSaveValidator rsv = new ReportSaveValidator();
-				rsv.validate(wiz, errors);
-				Boolean saveValidationSuccess = true;
-				Iterator itErrors = errors.getAllErrors().iterator();
-				while (itErrors.hasNext()) {
-					ObjectError error = (ObjectError)itErrors.next();
-					if (error.getCode().contains("error.code")) {
-						saveValidationSuccess = false;
-						break;
-					}
-				}
-				if (saveValidationSuccess)
-					saveReport(wiz);
-					*/
 			} catch (Exception e) {
 				logger.error(e.getLocalizedMessage());
 				errors.reject(e.getLocalizedMessage());
