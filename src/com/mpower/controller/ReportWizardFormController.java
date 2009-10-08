@@ -225,7 +225,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 
 			} catch (Exception e) {
 				logger.error(e.getLocalizedMessage());
-				errors.reject(e.getLocalizedMessage());
+				errors.reject("error.code", e.getLocalizedMessage());
 			}
 		}
 
@@ -245,10 +245,10 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 					}
 				}
 				if (saveValidationSuccess)
-					saveReport(wiz);
+					saveReport(wiz, errors);
 			} catch (Exception e) {
-				logger.error(e.getLocalizedMessage());
-				errors.reject(e.getLocalizedMessage());
+				logger.error("Unable to save report: " + e.getLocalizedMessage());
+				errors.reject("error.save", "Unable to save report: " + e.getLocalizedMessage());
 			}
 		}
 	}
@@ -262,7 +262,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 			Iterator itErrors = errors.getAllErrors().iterator();
 			while (itErrors.hasNext()) {
 				ObjectError error = (ObjectError)itErrors.next();
-				if (error.getCode().contains("error.code")) {
+				if (error.getCode().length() != 0) {
 					returnToSavePage = true;
 					break;
 				}
@@ -639,7 +639,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		return refData;
 	}
 
-	protected void saveReport(ReportWizard wiz) throws Exception {
+	protected void saveReport(ReportWizard wiz, Errors errors) throws Exception {
 		reportWizardService.save(wiz);
 
 		// If the report is to be used as a segmentation, generate the segmentation SQL, set it on the wiz and save again since the segmentation query will require the report wizard ID
@@ -694,11 +694,12 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		String reportTitle = wiz.getDataSubSource().getDisplayName() + " Custom Report";
 		if (wiz.getReportName() != null && wiz.getReportName().length() > 0)
 			reportTitle = wiz.getReportName();
-		wiz.getReportGenerator().put(ResourceDescriptor.TYPE_REPORTUNIT, wiz.getReportSaveAsName(), reportTitle, reportComment,wiz.getReportPath(),tempFile, wiz.getReportGenerator().getParams(), wiz.getDataSubSource().getJasperDatasourceName());
-
-		//    		wiz.getReportGenerator().put(ResourceDescriptor.TYPE_REPORTUNIT, reportTitle.replace(" ", "_"), reportTitle, reportComment, wiz.getReportPath(),tempFile, wiz.getReportGenerator().getParams());
-
-
+		try{
+			wiz.getReportGenerator().put(ResourceDescriptor.TYPE_REPORTUNIT, wiz.getReportSaveAsName(), reportTitle, reportComment,wiz.getReportPath(),tempFile, wiz.getReportGenerator().getParams(), wiz.getDataSubSource().getJasperDatasourceName());
+		}catch (Exception e){
+			logger.error("Unable to save report: " + e.getLocalizedMessage());
+			errors.reject("error.save", "Unable to save report: " + e.getLocalizedMessage());
+		}
 		// delete the temporary file
 		tempFile.delete();
 	}
