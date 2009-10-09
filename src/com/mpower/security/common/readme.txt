@@ -1,0 +1,1 @@
+This package will be shared and eventually moved to commonbuild, so please do not modify these classes unless you modify the ones in tangerine with the same changes.
