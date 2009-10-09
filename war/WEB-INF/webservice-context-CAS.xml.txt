@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:sws="http://www.springframework.org/schema/web-services"
+    xmlns:sec="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	 http://www.springframework.org/schema/oxm http://www.springframework.org/schema/oxm/spring-oxm-1.5.xsd
+	 http://www.springframework.org/schema/web-services http://www.springframework.org/schema/web-services/web-services-1.5.xsd
+	 http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-2.0.xsd">
+   <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+ 				<value>classpath:theguru.properties</value>
+           </list>
+        </property>
+    </bean>
+	<bean id="messageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory" />
+
+	<bean id="messageReceiver"
+		class="org.springframework.ws.soap.server.SoapMessageDispatcher" />
+
+	<bean id="theguru"
+		class="org.springframework.ws.wsdl.wsdl11.DynamicWsdl11Definition">
+		<property name="builder">
+			<bean
+				class="org.springframework.ws.wsdl.wsdl11.builder.XsdBasedSoap11Wsdl4jDefinitionBuilder">
+				<property name="schema" value="/WEB-INF/theguru.xsd" />
+				<property name="portTypeName" value="theguru" />
+				<property name="locationUri" value="/services/1.0/" />
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="schema" class="org.springframework.xml.xsd.SimpleXsdSchema">
+		<property name="xsd" value="/WEB-INF/theguru.xsd" />
+	</bean>
+
+	<bean id="constituentEndpoint" class="com.mpower.ws.TheGuruWebService">
+	</bean>
+
+ 	<sec:global-method-security secured-annotations="enabled" /> 
+
+
+	<bean id="wsSecurityInterceptor"
+		class="org.springframework.ws.soap.security.xwss.XwsSecurityInterceptor">
+		<property name="policyConfiguration" value="classpath:ws-securityPolicy.xml" />
+		<property name="callbackHandlers">
+			<list>
+				<ref bean="springSecurityHandler" />
+			</list>
+		</property>
+	</bean>
+
+	<bean id="springSecurityHandler"
+		class="org.springframework.ws.soap.security.xwss.callback.SpringPlainTextPasswordValidationCallbackHandler">
+		<property name="authenticationManager" ref="authenticationManager" />
+	</bean>
+	
+
+
+	<bean
+		class="org.springframework.ws.server.endpoint.adapter.GenericMarshallingMethodEndpointAdapter">
+		<constructor-arg ref="marshaller" />
+	</bean>
+
+	<sws:marshalling-endpoints />
+
+	<bean id="marshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
+		<property name="contextPath" value="com.mpower.ws.axis" />
+	</bean>
+
+	<bean id="validatingInterceptor"
+		class="org.springframework.ws.soap.server.endpoint.interceptor.PayloadValidatingInterceptor">
+		<property name="schema" value="/WEB-INF/theguru.xsd" />
+		<property name="validateRequest" value="true" />
+		<property name="validateResponse" value="true" />
+	</bean>
+
+	<bean
+		class="org.springframework.ws.server.endpoint.mapping.PayloadRootAnnotationMethodEndpointMapping">
+		<property name="interceptors">
+			<list>
+				<ref bean="wsSecurityInterceptor" />
+				<ref bean="validatingInterceptor" />
+			</list>
+		</property>
+	</bean>
+	
+	<!-- COMMON AUTH SECTION -->
+	
+	<!-- OrangeLeap ordered list of providers to try -->
+	<bean id="orangeLeapAuthenticationProvider" class="com.orangeleap.tangerine.security.common.OrangeLeapAuthenticationProvider">
+     <sec:custom-authentication-provider/>
+     <property name="providerList" >
+     	<list>
+       	 	<ref bean="casAuthenticationProvider"/>
+        	<ref bean="ldapAuthenticationProvider"/>
+     	</list>
+     </property>
+    </bean>
+    
+    
+    <!-- General LDAP -->
+    
+    <bean id="contextSource" class="org.springframework.security.ldap.DefaultSpringSecurityContextSource">
+        <constructor-arg value="ldap://${ldap.host}:${ldap.port}/${ldap.root}"/>
+        <property name="userDn" value="${ldap.userDn}"/>
+        <property name="password" value="${ldap.password}"/>
+    </bean>
+    <bean  id="orangeLeapLdapAuthoritiesPopulator" class="com.orangeleap.tangerine.security.common.OrangeLeapLdapAuthoritiesPopulator">
+      <constructor-arg ref="contextSource"/>
+      <constructor-arg value="ou=roles"/>
+      <property name="searchSubtree" value="true"/>
+    </bean>
+    <bean id="orangeLeapUserSearch" class="com.orangeleap.tangerine.security.common.OrangeLeapLdapUserSearch">
+        <constructor-arg value="(uid={0})"/>
+        <constructor-arg ref="contextSource"/>
+    </bean>
+    <!-- Ensure passwords are encoded with a hash algorithm (SHA-1 in this case) -->
+    <bean id="passwordEncoder" class="org.springframework.security.providers.encoding.ShaPasswordEncoder"/>
+    <!-- Beans that make use of the LDAP ContextSource -->
+    <bean id="ldapTemplate" class="org.springframework.ldap.core.LdapTemplate">
+    	<constructor-arg ref="contextSource"/>
+	</bean>
+	
+    <!-- End general LDAP -->
+
+	
+	<!-- Ldap authenticator when CAS is not used (API) -->
+	
+	<bean id="ldapAuthenticationProvider" class="org.springframework.security.providers.ldap.LdapAuthenticationProvider">
+     <constructor-arg>
+       <bean class="com.orangeleap.tangerine.security.common.OrangeLeapBindAuthenticator">
+           <constructor-arg ref="contextSource"/>
+	       <property name="userSearch" ref="orangeLeapUserSearch"/>
+       </bean>
+     </constructor-arg>
+     <constructor-arg>
+        <ref bean="orangeLeapLdapAuthoritiesPopulator" />
+     </constructor-arg>
+    </bean>
+   
+	<!-- END Ldap authenticator -->
+	
+	
+	     <!-- BEGIN CAS Authentication configuration -->
+     <bean id="serviceProperties" class="org.springframework.security.ui.cas.ServiceProperties">
+        <property name="service" value="${casClient.serviceUrl}/j_spring_cas_security_check"/>
+        <property name="sendRenew" value="false"/>
+    </bean>
+
+    <bean id="casProcessingFilter" class="org.springframework.security.ui.cas.CasProcessingFilter">
+        <sec:custom-filter after="CAS_PROCESSING_FILTER"/>
+        <property name="authenticationManager" ref="authenticationManager"/>
+        <property name="authenticationFailureUrl" value="/casfailed.jsp"/>
+        <property name="defaultTargetUrl" value="/"/>
+<!--         <property name="authenticationDetailsSource" ref="customDetails"/> -->
+        <property name="proxyGrantingTicketStorage" ref="proxyGrantingTicketStorage" />
+        <property name="proxyReceptorUrl" value="/secure/receptor" />
+    </bean>
+
+    <bean id="casProcessingFilterEntryPoint"
+                class="org.springframework.security.ui.cas.CasProcessingFilterEntryPoint">
+        <property name="loginUrl" value="${casClient.serverUrl.external}/${casClient.serverContextPrefix}${casClient.serverContext}/login"/>
+        <property name="serviceProperties" ref="serviceProperties"/>
+    </bean>
+
+    <bean id="casAuthenticationProvider"
+                class="org.springframework.security.providers.cas.CasAuthenticationProvider">
+        <property name="userDetailsService" ref="userDetailsService"/>
+        <property name="serviceProperties" ref="serviceProperties"/>
+        <property name="ticketValidator">
+            <bean class="org.jasig.cas.client.validation.Cas20ServiceTicketValidator">
+                <constructor-arg index="0" value="${casClient.serverUrl}/${casClient.serverContextPrefix}${casClient.serverContext}"/>
+                <property name="proxyGrantingTicketStorage" ref="proxyGrantingTicketStorage" />
+                <property name="proxyCallbackUrl" value="${casClient.serviceUrl}/secure/receptor" />
+            </bean>
+        </property>
+        <property name="key" value="tangerine-client-key"/>
+    </bean>
+    
+    <bean id="proxyGrantingTicketStorage" class="org.jasig.cas.client.proxy.ProxyGrantingTicketStorageImpl" />
+
+    <!-- LDAP UserDetails service used by CAS -->
+     <bean id="userDetailsService" class="org.springframework.security.userdetails.ldap.LdapUserDetailsService">
+        <constructor-arg ref="orangeLeapUserSearch"/>
+        <constructor-arg ref="orangeLeapLdapAuthoritiesPopulator"/>
+    </bean>
+
+    <!--  these are used for LDAP and are needed to
+          be able to handle credentials in the "name@site" format. These beans override default
+          Spring Security beans to correctly parse out the name and site components, and take
+          them into account in the LDAP operations 
+    <bean id="customDetails" class="com.orangeleap.tangerine.security.TangerineAuthenticationDetailsSource"/>
+    -->
+    
+    <!-- END CAS Authentication configuration -->
+	
+   
+   	<!-- END COMMON AUTH SECTION -->
+   
+
+
+</beans>
