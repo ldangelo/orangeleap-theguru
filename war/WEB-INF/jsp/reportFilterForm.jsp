@@ -88,7 +88,7 @@
 	<c:if test="${segmentationTypeCount > 0}" >
 	<table id="report_segmentation_options" class="tablesorter" >
 		<TR><TH><input type="checkbox" id="useReportAsSegmentation" name="useReportAsSegmentation" value="true"
-		onchange="if ($('#useReportAsSegmentation').attr('checked')) { $('#segmentationTypeDiv').show(); } else { $('#segmentationTypeDiv').hide(); }  cleanUpFilterTable('#report_filters_add');"
+		onchange="toggleUseReportAsSegmentation($('#useReportAsSegmentation').attr('checked'));"
 		<c:if test="${useReportAsSegmentation}">checked="true"</c:if>/>Use report as segmentation (disables Prompt for Value options)</TH></TR>
 	</table>
 	<div id="segmentationTypeDiv" name="segmentationTypeDiv" <c:if test="${!useReportAsSegmentation}">style="display:none"> </c:if>

@@ -60,6 +60,7 @@ function togglePromptForCriteriaTextBox(checkBox) {
 		promptForCriteria.parent().parent().find("[objectname$=reportStandardFilter.criteria]").attr("disabled", "true");
 	else
 		promptForCriteria.parent().parent().find("[objectname$=reportStandardFilter.criteria]").removeAttr("disabled");
+	applyMasks(promptForCriteria.parent().parent());
 }
 
 
@@ -335,12 +336,16 @@ function applyMasks(filterTableRowSelector) {
 	}
 	filterRow.find("[objectname$=reportStandardFilter.criteria]").removeAttr('class');
 	filterRow.find('input[fieldtype=DATE]').datePicker({startDate:'01/01/1900'});
-	filterRow.find('input[fieldtype=DATE]').attr('class','date');
-	filterRow.find('input[fieldtype=INTEGER]').attr('class','digits');
-	filterRow.find('input[fieldtype=DOUBLE]').attr('class','digits');
-	filterRow.find('input[fieldtype=MONEY]').attr('class','money');
+	var promptForCriteria = filterRow.find("[objectname$=promptForCriteria]").attr('checked');
+	if (!promptForCriteria) {
+		filterRow.find('input[fieldtype=DATE]').attr('class','date required');
+		filterRow.find('input[fieldtype=INTEGER]').attr('class','digits required');
+		filterRow.find('input[fieldtype=DOUBLE]').attr('class','digits required');
+		filterRow.find('input[fieldtype=MONEY]').attr('class','money required');
+	} else {
+		filterRow.find("[objectname$=reportStandardFilter.criteria]").removeClass('required');
+	}
 	filterRow.find('input').valid();
-
 }
 
 function replicateString(string, number) {
@@ -441,4 +446,13 @@ function showSqlQueryClick() {
 	scrollTo(0,targetOffset);
 	$('#showSqlQuery').attr('checked', 'true');
 	triggerClick(document.getElementById('reportCriteriaHiddenInput'));
+}
+
+function toggleUseReportAsSegmentation(useReportAsSegmentation) {
+	if ($('#useReportAsSegmentation').attr('checked')) {
+		$('#segmentationTypeDiv').show();
+	} else {
+		$('#segmentationTypeDiv').hide();
+	}
+	cleanUpFilterTable('#report_filters_add');
 }
