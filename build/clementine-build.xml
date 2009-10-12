@@ -10,6 +10,7 @@
 	<property name="compile.lib.dir" value="${lib.dir}/compile/bin" />
 	<property name="war.lib.dir" value="${lib.dir}/war/bin" />
 	<property file="${basedir}/build/build.properties" />
+	<tstamp prefix="build" />
 
 	<path id="axis.classpath">
 	  <fileset dir="${basedir}/lib/compile/bin">
@@ -101,7 +102,7 @@
 			</fileset>
 		</copy>
 
-		<replace file="${stage.dir}/war/WEB-INF/jsp/layouts/footer.jsp" token="${build.version}" value="test ${build.TODAY}"/>
+		<replace file="${stage.dir}/war/WEB-INF/jsp/layouts/footer.jsp" token="${build.version}" value="${build.TODAY}"/>
 	</target>
 
 	<target name="classes-jar" depends="setup">
