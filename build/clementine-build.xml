@@ -12,6 +12,10 @@
 	<property file="${basedir}/build/build.properties" />
 	<tstamp prefix="build" />
 
+	<!-- Uncomment when adding ivy
+	<import file="${commonBuild.dir}/ivyBuild.xml"/>
+	-->
+	
 	<path id="axis.classpath">
 	  <fileset dir="${basedir}/lib/compile/bin">
 	    <include name="**/*.jar" />
