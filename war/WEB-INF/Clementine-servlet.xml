@@ -222,6 +222,12 @@
 		<property name="segmentationType" value="Gift Segmentation"/>
 	</bean>
 
+	<bean id="orangeLeapGiftDistributionSegmentationList" class="com.mpower.service.customfilterdefinitionlookup.SegmentationList" >
+		<property name="reportWizardService" ref="reportWizardService"/>
+		<property name="reportSegmentationTypeService" ref="reportSegmentationTypeService"/>
+		<property name="segmentationType" value="Gift Distribution Segmentation"/>
+	</bean>
+
 	<bean id="mpxAccountSegmentationList" class="com.mpower.service.customfilterdefinitionlookup.SegmentationList" >
 		<property name="reportWizardService" ref="reportWizardService"/>
 		<property name="reportSegmentationTypeService" ref="reportSegmentationTypeService"/>
