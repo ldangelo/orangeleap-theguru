@@ -32,6 +32,15 @@
     </publications>
 
     <dependencies>
+    
+    
+    	<!-- Orangeleap -->
+        <dependency org="orangeleap" name="dynamicjasper" transitive="false" rev="3.0.5" classifier="ModifiedByOrangeLeap" >
+            <artifact name="DynamicJasper" type="jar"/>
+        </dependency>
+    
+    
+    
         <!-- Commons -->
         <dependency org="commons-collections" name="commons-collections" transitive="false" rev="3.2.1">
             <artifact name="commons-collections" type="jar"/>
