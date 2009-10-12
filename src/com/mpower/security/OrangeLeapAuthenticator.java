@@ -14,6 +14,7 @@ import org.springframework.security.ldap.SpringSecurityLdapTemplate;
 import org.springframework.security.userdetails.ldap.LdapUserDetailsImpl;
 import org.springframework.security.userdetails.ldap.LdapUserDetailsMapper;
 import org.springframework.dao.DataAccessException;
+import org.springframework.ldap.NamingException;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.ldap.core.DistinguishedName;
@@ -202,6 +203,12 @@ public class OrangeLeapAuthenticator implements LdapAuthenticator {
 	        public DirContext getReadWriteContext() throws DataAccessException {
 	            return getReadOnlyContext();
 	        }
+
+			public DirContext getContext(String arg0, String arg1)
+					throws NamingException {
+				// TODO Auto-generated method stub
+				return null;
+			}
 	    }
 
 }
