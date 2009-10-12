@@ -199,6 +199,27 @@
             <artifact name="dom4j" type="jar"/>
             <artifact name="dom4j" type="source" ext="jar" classifier="sources" conf="sources"/>
         </dependency>
+        
+        <!-- Hibernate  -->
+        <dependency org="org.hibernate" name="ejb3-persistence" transitive="false" rev="3.3.2.Beta1"> 
+		<artifact name="ejb3-persistence" type="jar" />
+		</dependency>
+		<dependency org="org.hibernate" name="hibernate" transitive="false" rev="3.2.6.ga"> 
+		<artifact name="hibernate" type="jar" />
+		<artifact name="hibernate" type="source" ext="jar" classifier="sources" conf="sources"/>
+		</dependency>
+		<dependency org="org.hibernate" name="hibernate-annotations" transitive="false" rev="3.4.0.GA"> 
+		<artifact name="hibernate-annotations" type="jar" />
+		<artifact name="hibernate-annotations" type="source" ext="jar" classifier="sources" conf="sources"/>
+		</dependency>
+		<dependency org="org.hibernate" name="hibernate-entitymanager" transitive="false" rev="3.3.2.GA"> 
+		<artifact name="hibernate-entitymanager" type="jar" />
+		</dependency>
+		<dependency org="org.hibernate" name="hibernate-commons-annotations" transitive="false" rev="3.3.0.ga"> 
+		<artifact name="hibernate-commons-annotations" type="jar" />
+		<artifact name="hibernate-commons-annotations" type="source" ext="jar" classifier="sources" conf="sources"/>
+		</dependency>
+
 
         <!-- JDBC / MySQL / DB-->
         <dependency org="mysql" name="mysql-connector-java" rev="5.1.7" transitive="false" conf="compile->default">
