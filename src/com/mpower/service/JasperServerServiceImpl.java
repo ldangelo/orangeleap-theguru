@@ -34,7 +34,7 @@ public class JasperServerServiceImpl implements JasperServerService {
 	JServer jserver = new JServer();
 	jserver.setUsername(userName);
 	jserver.setPassword(password);
-	jserver.setUrl(baseUri + baseUri);
+	jserver.setUrl(baseUri + repositoryUri);
 	ResourceDescriptor rd = new ResourceDescriptor();
 	rd.setWsType(ResourceDescriptor.TYPE_FOLDER);
 	rd.setUriString(dir);
@@ -51,7 +51,7 @@ public class JasperServerServiceImpl implements JasperServerService {
     	JServer jserver = new JServer();
 		jserver.setUsername(userName);
 		jserver.setPassword(password);
-		jserver.setUrl(baseUri + baseUri);
+		jserver.setUrl(baseUri + repositoryUri);
 
     	CasUtil.populateJserverWithCasCredentials(jserver, getBaseUri());
 
