@@ -38,6 +38,21 @@
 	</bean>
 
 
+	<bean id="wsSecurityInterceptor"
+		class="org.springframework.ws.soap.security.xwss.XwsSecurityInterceptor">
+		<property name="policyConfiguration" value="classpath:ws-securityPolicy.xml" />
+		<property name="callbackHandlers">
+			<list>
+				<ref bean="springSecurityHandler" />
+			</list>
+		</property>
+	</bean>
+
+	<bean id="springSecurityHandler"
+		class="org.springframework.ws.soap.security.xwss.callback.SpringPlainTextPasswordValidationCallbackHandler">
+		<property name="authenticationManager" ref="authenticationManager" />
+	</bean>
+	
   
 
 	<bean
@@ -63,6 +78,7 @@
 		<property name="interceptors">
 			<list>
 				<ref bean="validatingInterceptor" />
+				<ref bean="wsSecurityInterceptor" />
 			</list>
 		</property>
 	</bean>
