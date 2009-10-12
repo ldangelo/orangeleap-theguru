@@ -7,6 +7,11 @@
 	<property name="build.env" value="dev"/>
 	<tstamp prefix="build" />
 
+	<!--  Uncoment when adding ivy
+	<property file="${commonBuild.dir}/commonBuild.properties"/>
+	<import file="${commonBuild.dir}/ivyBuild.xml"/>
+	-->
+
 	<taskdef resource="net/sf/antcontrib/antcontrib.properties">
 		<classpath>
 			<pathelement location="${lib.dir}/test/bin/ant-contrib-1.0b3.jar" />
