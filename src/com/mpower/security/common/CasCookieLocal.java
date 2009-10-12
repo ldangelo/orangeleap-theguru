@@ -68,6 +68,7 @@ public class CasCookieLocal {
     	HttpSession session = request.getSession();
     	if (session == null) return null;
     	SecurityContextImpl si = (SecurityContextImpl)session.getAttribute(HttpSessionContextIntegrationFilter.SPRING_SECURITY_CONTEXT_KEY);
+    	if (si == null) return null;
     	return  si.getAuthentication();
     }
     
