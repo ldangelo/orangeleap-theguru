@@ -2,28 +2,26 @@ package com.mpower.service;
 
 import java.util.List;
 
-import com.jaspersoft.jasperserver.api.metadata.xml.domain.impl.ResourceDescriptor;
-import com.jaspersoft.jasperserver.irplugin.JServer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import com.jaspersoft.jasperserver.api.metadata.xml.domain.impl.ResourceDescriptor;
+import com.jaspersoft.jasperserver.irplugin.JServer;
+import com.mpower.security.common.CasUtil;
 
 //@Service("jasperServerService")
 public class JasperServerServiceImpl implements JasperServerService {
     protected final Log logger = LogFactory.getLog(getClass());
     private String userName;
     private String password;
-    private String uri;
-    private JServer jserver;
+    private String baseUri;
+    private String repositoryUri;
 
     @Override
     public String getPassword() {
 	return password;
     }
 
-    @Override
-    public String getURI() {
-	return uri;
-    }
 
     @Override
     public String getUserName() {
@@ -33,14 +31,15 @@ public class JasperServerServiceImpl implements JasperServerService {
     @Override
     public List list(String dir) throws Exception {
 	logger.info("list(" + dir + ")");
-	jserver = new JServer();
+	JServer jserver = new JServer();
 	jserver.setUsername(userName);
 	jserver.setPassword(password);
-	jserver.setUrl(uri);
+	jserver.setUrl(baseUri + baseUri);
 	ResourceDescriptor rd = new ResourceDescriptor();
 	rd.setWsType(ResourceDescriptor.TYPE_FOLDER);
 	rd.setUriString(dir);
 
+	CasUtil.populateJserverWithCasCredentials(jserver, getBaseUri());
 	return jserver.getWSClient().list(rd);
     }
 
@@ -49,10 +48,12 @@ public class JasperServerServiceImpl implements JasperServerService {
     	ResourceDescriptor result = null;
 
     	logger.info("getDatasource(" + datasourceName + ")");
-    	jserver = new JServer();
+    	JServer jserver = new JServer();
 		jserver.setUsername(userName);
 		jserver.setPassword(password);
-		jserver.setUrl(uri);
+		jserver.setUrl(baseUri + baseUri);
+
+    	CasUtil.populateJserverWithCasCredentials(jserver, getBaseUri());
 
 		List datasources = jserver.getWSClient().listDatasources();
 		java.util.Iterator itDatasources = datasources.iterator();
@@ -72,12 +73,6 @@ public class JasperServerServiceImpl implements JasperServerService {
 
     }
 
-    @Override
-    public void setURI(String URI) {
-	logger.info("setURI(" + URI + ")");
-	uri = URI;
-
-    }
 
     @Override
     public void setUserName(String username) {
@@ -86,4 +81,26 @@ public class JasperServerServiceImpl implements JasperServerService {
 
     }
 
+
+	public void setBaseUri(String baseUri) {
+		this.baseUri = baseUri;
+	}
+
+
+	public String getBaseUri() {
+		return baseUri;
+	}
+
+
+	public void setRepositoryUri(String repositoryUri) {
+		this.repositoryUri = repositoryUri;
+	}
+
+
+	public String getRepositoryUri() {
+		return repositoryUri;
+	}
+
+
+	
 }

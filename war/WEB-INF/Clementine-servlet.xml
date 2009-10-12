@@ -51,10 +51,12 @@
 		<property name="userName" value="jasperadmin"/>
 		<property name="password" value="jasperadmin"/>
 -->
-		<property name="URI" value="http://${jasper.host}:${jasper.port}/${contextPrefix}jasperserver/services/repository"/>
+		<property name="baseUri" value="http://${jasper.host}:${jasper.port}/${contextPrefix}jasperserver"/>
+		<property name="repositoryUri" value="/services/repository"/>
 		<dwr:remote javascript="JasperServerService"/>
 
 	</bean>
+
 
 	<bean id="ReportSubSourceGroupService" class="com.mpower.service.DWRReportSubSourceGroupServiceImpl">
 	  <property name="reportSubSourceGroup" ref="reportSubSourceGroupService"/>
