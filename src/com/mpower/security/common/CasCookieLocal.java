@@ -20,6 +20,7 @@ package com.mpower.security.common;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.security.Authentication;
 import org.springframework.security.context.HttpSessionContextIntegrationFilter;
@@ -62,7 +63,11 @@ public class CasCookieLocal {
     }
     
     public static Authentication getAuthenticationToken() {
-    	SecurityContextImpl si = (SecurityContextImpl)getCasRequest().getSession().getAttribute(HttpSessionContextIntegrationFilter.SPRING_SECURITY_CONTEXT_KEY);
+    	HttpServletRequest request = getCasRequest();
+    	if (request == null) return null;
+    	HttpSession session = request.getSession();
+    	if (session == null) return null;
+    	SecurityContextImpl si = (SecurityContextImpl)session.getAttribute(HttpSessionContextIntegrationFilter.SPRING_SECURITY_CONTEXT_KEY);
     	return  si.getAuthentication();
     }
     
