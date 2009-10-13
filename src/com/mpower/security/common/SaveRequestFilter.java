@@ -28,14 +28,13 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.web.filter.OncePerRequestFilter;
 
-
-public class ReadCasCookieFilter extends OncePerRequestFilter {
+public class SaveRequestFilter extends OncePerRequestFilter {
 
     protected void doFilterInternal(
             HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-    	CasCookieLocal.setCasCookie(request);
+    	OrangeLeapRequestLocal.setRequest(request);
     	
         filterChain.doFilter(request, response);
 
