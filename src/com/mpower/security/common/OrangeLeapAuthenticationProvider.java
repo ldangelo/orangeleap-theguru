@@ -34,6 +34,11 @@ public class OrangeLeapAuthenticationProvider implements AuthenticationProvider 
 	private static final Log logger = OrangeLeapLogger.getLog(OrangeLeapBindAuthenticator.class);
 
 	private List<AuthenticationProvider> providerList = new ArrayList<AuthenticationProvider>();
+	private AuthenticationHelper authenticationHelper;
+	
+	public static interface AuthenticationHelper {
+		public void postProcess(Authentication authentication);
+	}
     
     public OrangeLeapAuthenticationProvider() {
     }
@@ -54,19 +59,30 @@ public class OrangeLeapAuthenticationProvider implements AuthenticationProvider 
 		
 		for (AuthenticationProvider authenticationProvider: providerList) {
 			if (authenticationProvider.supports(authentication.getClass())) {
+				
 				logger.debug("Attempting authentication with "+authentication.getClass().getName());
 				Authentication result = authenticationProvider.authenticate(authentication);
+				
 				// Return first successful authentication
 				if (result != null && result.isAuthenticated()) {
 					logger.debug("Authentication succeeded with "+authentication.getClass().getName());
-					OrangeLeapUsernamePasswordLocal.getOrangeLeapAuthInfo().put(OrangeLeapUsernamePasswordLocal.AUTH_TOKEN, result);
+					
+					if (authenticationHelper != null) {
+						authenticationHelper.postProcess(result);
+					}
+					
 					return result;
 				}
+				
 			}
 		}
 		
 		logger.debug("No authentication succeeded.");
 		return null;
+	}
+	
+	public void setAuthenticationHelper(AuthenticationHelper authenticationHelper) {
+		this.authenticationHelper = authenticationHelper;
 	}
 
 
