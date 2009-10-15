@@ -283,7 +283,7 @@ public class ReportQueryGenerator {
 					selectClause += ",";
 				else
 					addComma = true;
-				selectClause += " " + reportField.getColumnName() + " as " + columnName;
+				selectClause += " " + getFieldNameForSelectOrWhereClause(reportField) + " as " + columnName;
 				columnIndex++;
 
 			}
@@ -331,7 +331,7 @@ public class ReportQueryGenerator {
 						selectClause = selectClause + ",";
 					else
 						addComma = true;
-					selectClause = selectClause + " " + reportField.getColumnName() + " as " + columnName;
+					selectClause = selectClause + " " + getFieldNameForSelectOrWhereClause(reportField) + " as " + columnName;
 					//Add the primary_keys column to the select so that the DISTINCT in the select clause
 					//does not remove data that should be there.
 					if (reportField.getPrimaryKeys() != null){
@@ -468,31 +468,31 @@ public class ReportQueryGenerator {
 
 		switch(reportStandardFilter.getComparison()) {
 			case 1:
-				whereClause += getFieldNameForWhereClause(rf) + " =";
+				whereClause += getFieldNameForSelectOrWhereClause(rf) + " =";
 				whereClause += buildPromptForCritiera(reportStandardFilter, controlName, rf);
 				break;
 			case 2:
-				whereClause += getFieldNameForWhereClause(rf) + " !=";
+				whereClause += getFieldNameForSelectOrWhereClause(rf) + " !=";
 				whereClause += buildPromptForCritiera(reportStandardFilter, controlName, rf);
 				break;
 			case 3:
-				whereClause += getFieldNameForWhereClause(rf) + " <";
+				whereClause += getFieldNameForSelectOrWhereClause(rf) + " <";
 				whereClause += buildPromptForCritiera(reportStandardFilter, controlName, rf);
 				break;
 			case 4:
-				whereClause += getFieldNameForWhereClause(rf) + " >";
+				whereClause += getFieldNameForSelectOrWhereClause(rf) + " >";
 				whereClause += buildPromptForCritiera(reportStandardFilter, controlName, rf);
 				break;
 			case 5:
-				whereClause += getFieldNameForWhereClause(rf) + " <=";
+				whereClause += getFieldNameForSelectOrWhereClause(rf) + " <=";
 				whereClause += buildPromptForCritiera(reportStandardFilter, controlName, rf);
 				break;
 			case 6:
-				whereClause += getFieldNameForWhereClause(rf) + " >=";
+				whereClause += getFieldNameForSelectOrWhereClause(rf) + " >=";
 				whereClause += buildPromptForCritiera(reportStandardFilter, controlName, rf);
 				break;
 			case 7:
-				whereClause += getFieldNameForWhereClause(rf) + " LIKE";
+				whereClause += getFieldNameForSelectOrWhereClause(rf) + " LIKE";
 				if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.MYSQL)
 					whereClause += " CONCAT(";
 				else if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.SQLSERVER)
@@ -504,7 +504,7 @@ public class ReportQueryGenerator {
 					whereClause += " + '%'";
 				break; // starts with
 			case 8:
-				whereClause += getFieldNameForWhereClause(rf) + " LIKE";
+				whereClause += getFieldNameForSelectOrWhereClause(rf) + " LIKE";
 				if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.MYSQL)
 					whereClause += " CONCAT( '%',";
 				else if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.SQLSERVER)
@@ -516,7 +516,7 @@ public class ReportQueryGenerator {
 					whereClause += "";
 				break; // ends with
 			case 9:
-				whereClause += getFieldNameForWhereClause(rf) + " LIKE";
+				whereClause += getFieldNameForSelectOrWhereClause(rf) + " LIKE";
 				if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.MYSQL)
 					whereClause += " CONCAT( '%',";
 				else if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.SQLSERVER)
@@ -528,7 +528,7 @@ public class ReportQueryGenerator {
 					whereClause += " + '%'";
 				break; // contains
 			case 10:
-				whereClause += getFieldNameForWhereClause(rf) + " NOT LIKE";
+				whereClause += getFieldNameForSelectOrWhereClause(rf) + " NOT LIKE";
 				if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.MYSQL)
 					whereClause += " CONCAT( '%',";
 				else if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.SQLSERVER)
@@ -540,7 +540,7 @@ public class ReportQueryGenerator {
 					whereClause += " + '%'";
 				break; // does not contain
 			case 11:
-				whereClause += getFieldNameForWhereClause(rf) + " IS NOT NULL";
+				whereClause += getFieldNameForSelectOrWhereClause(rf) + " IS NOT NULL";
 				break;
 			// Duration filters
 			case 20: // Current FY
@@ -789,15 +789,15 @@ public class ReportQueryGenerator {
 	}
 
 	/**
-	 * Returns a value for the field that will be used in the where clause.  For DateTime fields
+	 * Returns a value for the field that will be used in the select or where clause.  For DateTime fields
 	 * this will return a string that will cause the time to be removed from the DateTime.  Other
 	 * field types may be returned with just the column name.
 	 * <P>
-	 * {@code} whereClause += " " + getFieldNameForWhereClause(reportField);
+	 * {@code} whereClause += " " + getFieldNameForSelectOrWhereClause(reportField);
 	 * @param reportField The report field for which the function will generate a string to be used in the where clause.
 	 * @return String
 	 */
-	private String getFieldNameForWhereClause(ReportField reportField) {
+	private String getFieldNameForSelectOrWhereClause(ReportField reportField) {
 		String result = "";
 		if (reportField.getFieldType() == ReportFieldType.DATE) {
 			if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.MYSQL) {
