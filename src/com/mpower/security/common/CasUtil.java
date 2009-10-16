@@ -27,7 +27,6 @@ import org.springframework.security.Authentication;
 import org.springframework.security.context.HttpSessionContextIntegrationFilter;
 import org.springframework.security.context.SecurityContextHolder;
 import org.springframework.security.context.SecurityContextImpl;
-import org.springframework.security.providers.AbstractAuthenticationToken;
 import org.springframework.security.providers.UsernamePasswordAuthenticationToken;
 import org.springframework.security.providers.cas.CasAuthenticationToken;
 import org.springframework.security.ui.cas.CasProcessingFilter;
@@ -40,7 +39,7 @@ public class CasUtil {
 		
 		if (!"true".equalsIgnoreCase(System.getProperty("use.cas"))) return; // TODO remove
 		
-        AbstractAuthenticationToken authentication = (AbstractAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        Authentication authentication = (Authentication) SecurityContextHolder.getContext().getAuthentication();
 
 		if (authentication instanceof UsernamePasswordAuthenticationToken) {
 			
@@ -63,6 +62,11 @@ public class CasUtil {
 			jserver.setUsername(CasProcessingFilter.CAS_STATELESS_IDENTIFIER);
 			jserver.setPassword(getProxyTicketFor(baseUrl)); 
 			
+		} else if (authentication instanceof OrangeLeapSystemAuthenticationToken) {
+
+			jserver.setUsername(""+authentication.getPrincipal());
+			jserver.setPassword(""+authentication.getCredentials()); 
+
 		}
 
 	}
