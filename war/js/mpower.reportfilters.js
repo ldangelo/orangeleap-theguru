@@ -334,16 +334,17 @@ function applyMasks(filterTableRowSelector) {
 		filterRow.find('a.dp-choose-date').hide();
 		filterRow.find('input[fieldtype=DATE]').parent('div.criteriaWrapper').find('a.dp-choose-date').show();
 	}
-	filterRow.find("[objectname$=reportStandardFilter.criteria]").removeAttr('class');
+	var criteria = filterRow.find("[objectname$=reportStandardFilter.criteria]");
+	criteria.removeAttr('class');
 	filterRow.find('input[fieldtype=DATE]').datePicker({startDate:'01/01/1900'});
-	var promptForCriteria = filterRow.find("[objectname$=promptForCriteria]").attr('checked');
-	if (!promptForCriteria) {
+	var promptForCriteria = filterRow.find("[objectname$=promptForCriteria]");
+	if (!promptForCriteria.attr('checked') && !criteria.attr('disabled')) {
 		filterRow.find('input[fieldtype=DATE]').attr('class','date required');
 		filterRow.find('input[fieldtype=INTEGER]').attr('class','digits required');
 		filterRow.find('input[fieldtype=DOUBLE]').attr('class','digits required');
 		filterRow.find('input[fieldtype=MONEY]').attr('class','money required');
 	} else {
-		filterRow.find("[objectname$=reportStandardFilter.criteria]").removeClass('required');
+		criteria.removeClass('required');
 	}
 	filterRow.find('input').valid();
 }
@@ -404,8 +405,8 @@ function filterCriteria(fieldSelectId, reportIsSegmentation) {
 function displayPromptForCriteriaOptions(comparisonSelectId, reportIsSegmentation) {
 	var comparison = $(comparisonSelectId);
 	var filterRow = comparison.parent().parent();
+	var promptForCriteria = filterRow.find("[objectname$=promptForCriteria]");
 	if (reportIsSegmentation) {
-		var promptForCriteria = filterRow.find("[objectname$=promptForCriteria]");
 		promptForCriteria.attr('disabled', true);
 		promptForCriteria.attr('checked', false);
 		if (promptForCriteria.attr('checked'))
@@ -415,17 +416,17 @@ function displayPromptForCriteriaOptions(comparisonSelectId, reportIsSegmentatio
 	} else if (comparison.find("option:selected").attr('dateonly') == "true"
 		// has any value
 		|| comparison.find("option:selected").val() == 11) {
-		filterRow.find("[objectname$=promptForCriteria]").attr("disabled", "true");
+		promptForCriteria.attr("disabled", "true");
 		filterRow.find("[objectname$=reportStandardFilter.criteria]").attr("disabled", "true");
 	}
 	else {
-		var promptForCriteria = filterRow.find("[objectname$=promptForCriteria]");
 		promptForCriteria.removeAttr("disabled");
 		if (promptForCriteria.attr('checked'))
 			filterRow.find("[objectname$=reportStandardFilter.criteria]").attr("disabled", "true");
 		else
 			filterRow.find("[objectname$=reportStandardFilter.criteria]").removeAttr("disabled");
 	}
+	applyMasks(promptForCriteria.parent().parent());
 }
 
 function updateRowCountInput(rowCountSelector) {
