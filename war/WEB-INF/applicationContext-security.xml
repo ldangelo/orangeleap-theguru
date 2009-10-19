@@ -17,7 +17,7 @@
 
     <!-- http auth config -->
     <sec:http entry-point-ref="casProcessingFilterEntryPoint" >
-        <sec:intercept-url pattern="/**" access="ROLE_USER" />
+        <sec:intercept-url pattern="/**" access="IS_AUTHENTICATED_ANONYMOUSLY" />
         <sec:anonymous granted-authority="ROLE_ANONYMOUS" key="anonymous" username="anonymous"/>
         <sec:concurrent-session-control max-sessions="1" expired-url="/" />
         <sec:logout invalidate-session="true"  logout-success-url="/logoutSuccess.jsp" logout-url="/logout"/>
