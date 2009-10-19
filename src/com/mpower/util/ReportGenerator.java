@@ -18,22 +18,11 @@ import javax.xml.parsers.ParserConfigurationException;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.design.JRDesignExpression;
 
-import com.jaspersoft.jasperserver.api.metadata.xml.domain.impl.ResourceDescriptor;
-import com.jaspersoft.jasperserver.irplugin.JServer;
-import com.jaspersoft.jasperserver.irplugin.wsclient.WSClient;
-import com.mpower.domain.ReportChartSettings;
-import com.mpower.domain.ReportCrossTabColumn;
-import com.mpower.domain.ReportCrossTabFields;
-import com.mpower.domain.ReportCrossTabMeasure;
-import com.mpower.domain.ReportCrossTabRow;
-import com.mpower.domain.ReportField;
-import com.mpower.domain.ReportFieldType;
-import com.mpower.domain.ReportFilter;
-import com.mpower.domain.ReportSelectedField;
-import com.mpower.domain.ReportWizard;
-import com.mpower.service.ReportCustomFilterDefinitionService;
-import com.mpower.service.ReportFieldService;
-import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 import ar.com.fdvs.dj.core.DJConstants;
 import ar.com.fdvs.dj.domain.DJCalculation;
@@ -58,11 +47,24 @@ import ar.com.fdvs.dj.domain.constants.VerticalAlign;
 import ar.com.fdvs.dj.domain.entities.DJGroup;
 import ar.com.fdvs.dj.domain.entities.columns.AbstractColumn;
 import ar.com.fdvs.dj.domain.entities.columns.PropertyColumn;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
+
+import com.jaspersoft.jasperserver.api.metadata.xml.domain.impl.ResourceDescriptor;
+import com.jaspersoft.jasperserver.irplugin.JServer;
+import com.jaspersoft.jasperserver.irplugin.wsclient.WSClient;
+import com.mpower.domain.ReportChartSettings;
+import com.mpower.domain.ReportCrossTabColumn;
+import com.mpower.domain.ReportCrossTabFields;
+import com.mpower.domain.ReportCrossTabMeasure;
+import com.mpower.domain.ReportCrossTabRow;
+import com.mpower.domain.ReportField;
+import com.mpower.domain.ReportFieldType;
+import com.mpower.domain.ReportFilter;
+import com.mpower.domain.ReportSelectedField;
+import com.mpower.domain.ReportWizard;
+import com.mpower.security.common.CasUtil;
+import com.mpower.service.ReportCustomFilterDefinitionService;
+import com.mpower.service.ReportFieldService;
+import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
 
 public class ReportGenerator implements java.io.Serializable {
 	protected final Log logger = LogFactory.getLog(getClass());
@@ -71,11 +73,11 @@ public class ReportGenerator implements java.io.Serializable {
 	//private Style headerVariables;
 	private Style titleStyle;
 	private Style defaultDetailStyle;
-	private String reportServicesURI;
-	private String reportUserName;
-	private String reportPassword;
-	private String reportCompany;
-	private JServer server = null;
+	private String reportBaseURI;
+	private String reportServicesPath;
+//	private String reportUserName;
+//	private String reportPassword;
+//	private String reportCompany;
 	private String reportUnitDataSourceURI;
 	private Map params;
 	private Map inputControls;
@@ -84,7 +86,7 @@ public class ReportGenerator implements java.io.Serializable {
 	public ReportGenerator() {
 		params = new HashMap();
 		inputControls = new HashMap();
-		reportCompany = "Default";
+//		reportCompany = "Default";
 	}
 
 	public Map getInputControls() {
@@ -95,13 +97,11 @@ public class ReportGenerator implements java.io.Serializable {
 		return params;
 	}
 
-	private void startServer() {
-		if (server == null) {
-			server = new JServer();
-		}
-		server.setUsername(reportUserName);
-		server.setPassword(reportPassword);
-		server.setUrl(reportServicesURI);
+	private JServer getServer() {
+		JServer server = new JServer();
+    	CasUtil.populateJserverWithCasCredentials(server, reportBaseURI);
+		server.setUrl(reportBaseURI + reportServicesPath);
+		return server;
 	}
 
 	private void initStyles() {
@@ -115,7 +115,6 @@ public class ReportGenerator implements java.io.Serializable {
 	}
 
 	private File getTemplateFile(ReportWizard wiz) throws Exception {
-		startServer();
 
 		//
 		// get the report template file from the server
@@ -124,7 +123,7 @@ public class ReportGenerator implements java.io.Serializable {
 
 		templateRD.setWsType(ResourceDescriptor.TYPE_REPORTUNIT);
 		templateRD.setUriString(wiz.getReportTemplateJRXML());
-		ResourceDescriptor rd = server.getWSClient().get(templateRD, templateFile);
+		ResourceDescriptor rd = getServer().getWSClient().get(templateRD, templateFile);
 
 		//check the template file to ensure the needed styles are there
 		initRequiredMissingTemplateStyles(templateFile);
@@ -866,7 +865,7 @@ public class ReportGenerator implements java.io.Serializable {
 		rd.setResourceProperty(
 				ResourceDescriptor.PROP_RU_ALWAYS_PROPMT_CONTROLS, true);
 		// Check if the report already exists and delete it if it does
-		WSClient wsClient = server.getWSClient();
+		WSClient wsClient = getServer().getWSClient();
 		boolean reportExists = false;
 
 		// wsClient.list(rd) throws an exception if the report does not exist
@@ -936,7 +935,7 @@ public class ReportGenerator implements java.io.Serializable {
 			jrxmlControl.getChildren().add(dataTypeDescriptor);
 
 			// server.getWSClient().addOrModifyResource(jrxmlControl, null);
-			server.getWSClient().modifyReportUnitResource(rd.getUriString(),
+			getServer().getWSClient().modifyReportUnitResource(rd.getUriString(),
 					jrxmlControl, null);
 
 		}
@@ -959,7 +958,7 @@ public class ReportGenerator implements java.io.Serializable {
 		rd.setIsNew(true);
 
 		if (type.equalsIgnoreCase(ResourceDescriptor.TYPE_FOLDER)) {
-			return server.getWSClient().addOrModifyResource(rd, null);
+			return getServer().getWSClient().addOrModifyResource(rd, null);
 		} else if (type.equalsIgnoreCase(ResourceDescriptor.TYPE_REPORTUNIT)) {
 			return putReportUnit(rd, name, label, desc, report, params, jasperDatasourceName);
 		}
@@ -974,65 +973,73 @@ public class ReportGenerator implements java.io.Serializable {
 		ResourceDescriptor rd = new ResourceDescriptor();
 		rd.setWsType(ResourceDescriptor.TYPE_REPORTUNIT);
 
-		return server.getWSClient().runReport(rd, parameters);
+		return getServer().getWSClient().runReport(rd, parameters);
 	}
 
 	public void addOrModifyResource(ResourceDescriptor rd, File tempFile)
 	throws Exception {
-		server.getWSClient().addOrModifyResource(rd, tempFile);
+		getServer().getWSClient().addOrModifyResource(rd, tempFile);
 
 	}
 
-	public String getReportServicesURI() {
-		return reportServicesURI;
+	public String getReportBaseURI() {
+		return reportBaseURI;
 	}
 
-	public void setReportServicesURI(String reportServicesURI) {
-		this.reportServicesURI = reportServicesURI;
+	public void setReportServicesURI(String reportBaseURI) {
+		this.reportBaseURI = reportBaseURI;
 	}
 
-	public String getReportUserName() {
-		return reportUserName;
+	public String getReportServicesPath() {
+		return reportServicesPath;
 	}
 
-	public void setReportUserName(String reportUserName) throws Exception {
-		if (reportUserName == null) {
-			throw new Exception("username can not be null");
-		}
-
-
-		int index = reportUserName.indexOf("@");
-
-		if (index != -1) {
-			setReportCompany(reportUserName.substring(index + 1));
-		} else {
-			setReportCompany("Default");
-		}
-
-
-		this.reportUserName = reportUserName;
+	public void setReportServicesPath(String reportServicesPath) {
+		this.reportServicesPath = reportServicesPath;
 	}
 
-	public String getReportPassword() {
-		return reportPassword;
-	}
-
-	public void setReportPassword(String reportPassword) throws Exception {
-		if (reportPassword == null) {
-			throw new Exception("password can not be null!");
-		}
-
-		this.reportPassword = reportPassword;
-	}
-
-	public String getReportCompany() {
-		return reportCompany;
-	}
-
-	public void setReportCompany(String company) {
-		logger.info("setReportCompany(" + company + ")");
-		reportCompany = company;
-	}
+//	public String getReportUserName() {
+//		return reportUserName;
+//	}
+//
+//	public void setReportUserName(String reportUserName) throws Exception {
+//		if (reportUserName == null) {
+//			throw new Exception("username can not be null");
+//		}
+//
+//
+//		int index = reportUserName.indexOf("@");
+//
+//		if (index != -1) {
+//			setReportCompany(reportUserName.substring(index + 1));
+//		} else {
+//			setReportCompany("Default");
+//		}
+//
+//
+//		this.reportUserName = reportUserName;
+//	}
+//
+//	public String getReportPassword() {
+//		return reportPassword;
+//	}
+//
+//	public void setReportPassword(String reportPassword) throws Exception {
+//		if (reportPassword == null) {
+//			throw new Exception("password can not be null!");
+//		}
+//
+//		this.reportPassword = reportPassword;
+//	}
+//
+//	public String getReportCompany() {
+//		return reportCompany;
+//	}
+//
+//	public void setReportCompany(String company) {
+//		logger.info("setReportCompany(" + company + ")");
+//		reportCompany = company;
+//	}
 
 	public String getReportUnitDataSourceURI() {
 		return reportUnitDataSourceURI;

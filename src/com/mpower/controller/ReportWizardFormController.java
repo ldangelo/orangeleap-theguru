@@ -400,8 +400,8 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 			refData.put("userFound", true);
 			refData.put("subSourceGroupId", wiz.getDataSubSourceGroupId());
 			refData.put("subSourceId", wiz.getSubSourceId());
-			wiz.getReportGenerator().setReportUserName(userName);
-			wiz.getReportGenerator().setReportPassword(password);
+//			wiz.getReportGenerator().setReportUserName(userName);
+//			wiz.getReportGenerator().setReportPassword(password);
 
 			jasperServerService.setUserName(userName);
 			jasperServerService.setPassword(password);

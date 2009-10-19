@@ -99,7 +99,8 @@
 	</bean>
 
 	<bean id="reportGenerator" class="com.mpower.util.ReportGenerator" scope="prototype">
-		<property name="reportServicesURI" value="http://${jasper.host}:${jasper.port}/${contextPrefix}jasperserver/services/repository"/>
+		<property name="reportBaseURI" value="http://${jasper.host}:${jasper.port}/${contextPrefix}jasperserver"/>
+		<property name="reportServicesPath" value="/services/repository"/>
 		<property name="reportUserName" value="jasperadmin"/>
 		<property name="reportPassword" value="jasperadmin"/>
 		<property name="reportUnitDataSourceURI" value="/datasources/ReportWizardJdbcDS"/>
