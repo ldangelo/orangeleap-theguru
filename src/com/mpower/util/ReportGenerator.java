@@ -986,7 +986,7 @@ public class ReportGenerator implements java.io.Serializable {
 		return reportBaseURI;
 	}
 
-	public void setReportServicesURI(String reportBaseURI) {
+	public void setReportBaseURI(String reportBaseURI) {
 		this.reportBaseURI = reportBaseURI;
 	}
 
