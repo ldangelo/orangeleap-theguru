@@ -132,6 +132,11 @@
         <servlet-name>spring-ws</servlet-name>
         <url-pattern>*.wsdl</url-pattern>
 	</servlet-mapping>
-
+	
+	
+	<session-config>
+	             <!-- 12 hours -->
+      <session-timeout>720</session-timeout> 
+    </session-config>
 
 </web-app>
