@@ -109,6 +109,8 @@
 		    </path>
 		</copy>
 
+		<copy todir="${stage.dir}/war/WEB-INF/lib" file="${config.dir}/jasperreport.dtd" />
+		
 	</target>
 
 	<target name="classes-jar" depends="setup">
