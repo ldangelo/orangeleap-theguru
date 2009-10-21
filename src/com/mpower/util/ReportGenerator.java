@@ -61,9 +61,9 @@ import com.mpower.domain.ReportFieldType;
 import com.mpower.domain.ReportFilter;
 import com.mpower.domain.ReportSelectedField;
 import com.mpower.domain.ReportWizard;
-import com.mpower.security.common.CasUtil;
 import com.mpower.service.ReportCustomFilterDefinitionService;
 import com.mpower.service.ReportFieldService;
+import com.orangeleap.common.security.CasUtil;
 import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
 
 public class ReportGenerator implements java.io.Serializable {

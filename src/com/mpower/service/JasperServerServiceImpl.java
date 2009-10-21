@@ -7,7 +7,7 @@ import org.apache.commons.logging.LogFactory;
 
 import com.jaspersoft.jasperserver.api.metadata.xml.domain.impl.ResourceDescriptor;
 import com.jaspersoft.jasperserver.irplugin.JServer;
-import com.mpower.security.common.CasUtil;
+import com.orangeleap.common.security.CasUtil;
 
 //@Service("jasperServerService")
 public class JasperServerServiceImpl implements JasperServerService {
