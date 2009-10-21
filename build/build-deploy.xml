@@ -3,11 +3,11 @@
 
 	<property file="${basedir}/build/build.properties" />
     <property file="${commonBuild.dir}/commonBuild.properties"/>
-	<!--<import file="${commonBuild.dir}/ivyBuild.xml"/>-->
+	<import file="${commonBuild.dir}/ivyBuild.xml"/>
 
 	<property name="mysql.opts" value="autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=UTF8" />
 
-	<property name="compile.lib.dir" value="${basedir}/lib/compile/bin"/>
+	<property name="compile.lib.dir" value="${basedir}/lib"/>
 
 
 	<target name="deploy" description="Deploy build output and populate database" >

@@ -7,35 +7,35 @@
 	<property name="test.src.dir" value="${basedir}/test" />
 	<property name="config.dir" value="${basedir}/config" />
 	<property name="lib.dir" value="${basedir}/lib" />
-	<property name="compile.lib.dir" value="${lib.dir}/compile/bin" />
-	<property name="war.lib.dir" value="${lib.dir}/war/bin" />
+	<property name="compile.lib.dir" value="${lib.dir}" />
+	<property name="war.lib.dir" value="${lib.dir}" />
 	<property file="${basedir}/build/build.properties" />
 	<tstamp prefix="build" />
 
-	<!-- Uncomment when adding ivy
 	<import file="${commonBuild.dir}/ivyBuild.xml"/>
-	-->
 	
 	<path id="axis.classpath">
-	  <fileset dir="${basedir}/lib/compile/bin">
+	  <fileset dir="${basedir}/lib">
 	    <include name="**/*.jar" />
 	  </fileset>
 	</path>
-
-	<taskdef name="xjc" classname="com.sun.tools.xjc.XJCTask">
-	  <classpath>
-	    <fileset dir="${basedir}/lib/compile/bin" includes="*.jar" />
-	  </classpath>
-	</taskdef>
-
-	<taskdef resource="axis-tasks.properties" classpathref="axis.classpath" />
-
+	
 	<taskdef resource="net/sf/antcontrib/antcontrib.properties">
 		<classpath>
-			<pathelement location="${lib.dir}/test/bin/ant-contrib-1.0b3.jar" />
+			<pathelement location="${antcontrib.jar}" />
 		</classpath>
 	</taskdef>
 
+	<!--
+	<taskdef name="xjc" classname="com.sun.tools.xjc.XJCTask">
+	  <classpath>
+	    <fileset dir="${basedir}/lib" includes="*.jar" />
+	  </classpath>
+	</taskdef>
+    -->
+	
+	<taskdef resource="axis-tasks.properties" classpathref="axis.classpath" />
+<!--
 	<fileset id="compile.lib" dir="${compile.lib.dir}" description="compile-time dependencies">
 		<include name="**/*.jar" />
 	</fileset>
@@ -43,7 +43,7 @@
 	<fileset id="war.lib" dir="${war.lib.dir}" description="war dependencies">
 		<include name="**/*.jar" />
 	</fileset>
-
+-->
 	<target name="deploy-integrated-war" depends="build-integrated-war">
 		<copy todir="${deploy.path}" file="${stage.dir}/${app.name}.war" />
 	</target>
@@ -64,21 +64,21 @@
 		</delete>
 	</target>
 
-	<target name="build-integrated-war" depends="setup-war">
+	<target name="build-integrated-war" depends="resolve, setup-war">
 		<war destfile="${stage.dir}/${app.name}.war" basedir="${stage.dir}/war">
 			<include name="**/*.*" />
 		</war>
-		<delete dir="${stage.dir}/war" />
+		<!--<delete dir="${stage.dir}/war" />-->
 	</target>
 
-	<target name="build-exploded-war" depends="setup-war">
+	<target name="build-exploded-war" depends="resolve, setup-war">
 		<mkdir dir="${stage.dir}/${app.name}.war" />
 		<copy todir="${stage.dir}/${app.name}.war">
 			<fileset dir="${stage.dir}/war">
 				<include name="**/*.*" />
 			</fileset>
 		</copy>
-		<delete dir="${stage.dir}/war" />
+		<!--<delete dir="${stage.dir}/war" />-->
 	</target>
 
 	<target name="setup-war" depends="classes-jar">
@@ -94,19 +94,20 @@
 			</fileset>
 		</copy>
 
+		<replace file="${stage.dir}/war/WEB-INF/jsp/layouts/footer.jsp" token="${build.version}" value="${build.TODAY}"/>
+
 		<copy todir="${stage.dir}/war/WEB-INF/lib">
 			<fileset dir="${stage.dir}">
 				<include name="${app.name}.jar" />
 			</fileset>
 		</copy>
-
-		<copy todir="${stage.dir}/war/WEB-INF/lib">
-			<fileset dir="${war.lib.dir}">
-				<include name="**/*.jar" />
-			</fileset>
+		
+		<copy todir="${stage.dir}/war/WEB-INF/lib" flatten="true">
+		    <path>
+				<pathelement path="${war.lib}"/> <!-- war.lib from ivyBuild.xml -->
+		    </path>
 		</copy>
 
-		<replace file="${stage.dir}/war/WEB-INF/jsp/layouts/footer.jsp" token="${build.version}" value="${build.TODAY}"/>
 	</target>
 
 	<target name="classes-jar" depends="setup">
@@ -120,7 +121,7 @@
 
 		<echo>Compiling with debug=${debug.compile}</echo>
 		<javac destdir="${stage.dir}/classes-jar"
-			srcdir="${src.dir}" classpathref="compile-lib" debug="${debug.compile}"/>
+			srcdir="${src.dir}" classpathref="compile.path" debug="${debug.compile}"/>
 
 		<copy todir="${stage.dir}/classes-jar">
 			<fileset dir="${src.dir}">

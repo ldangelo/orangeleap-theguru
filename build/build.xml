@@ -7,16 +7,15 @@
 	<property name="build.env" value="dev"/>
 	<tstamp prefix="build" />
 
-	<!--  Uncoment when adding ivy
 	<property file="${commonBuild.dir}/commonBuild.properties"/>
 	<import file="${commonBuild.dir}/ivyBuild.xml"/>
-	-->
 
 	<taskdef resource="net/sf/antcontrib/antcontrib.properties">
 		<classpath>
-			<pathelement location="${lib.dir}/test/bin/ant-contrib-1.0b3.jar" />
+			<pathelement location="${antcontrib.jar}" />
 		</classpath>
 	</taskdef>
+
 
 	<target name="0. Clean" description="Cleans the staging area. Does not undeploy the application(s).">
 		<ant antfile="${internal.build.file}" target="clean" />
