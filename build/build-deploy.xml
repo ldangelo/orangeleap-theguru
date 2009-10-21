@@ -10,7 +10,7 @@
 	<property name="compile.lib.dir" value="${basedir}/lib"/>
 
 
-	<target name="deploy" description="Deploy build output and populate database" >
+	<target name="deploy" description="Deploy build output and populate database" depends="resolve"  >
 
 
 		<exec dir="/opt/orangeleap" executable="su" spawn="true">
@@ -155,7 +155,7 @@
     </target>
 
 
-	<target name="create.load.schema" description="Create and loads the Guru database and loads the views and functions into the Orange Leap database.">
+	<target name="create.load.schema" description="Create and loads the Guru database and loads the views and functions into the Orange Leap database." depends="resolve"  >
 		<tempfile property="refresh.stub.tempfile"
 			destdir="${basedir}/db/prod/domain/"
 			prefix="SQLExec"
