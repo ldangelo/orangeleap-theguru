@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:schema="http://www.orangeleap.com/theguru/services/1.0" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" targetNamespace="http://www.orangeleap.com/theguru/services/1.0">
+  <wsdl:types>
+    <xs:schema xmlns:tns="http://www.orangeleap.com/theguru/services/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://www.orangeleap.com/theguru/services/1.0">
+
+   <xs:complexType name="segmentation">
+     <xs:sequence>
+     	<xs:element name="name" type="xs:string"/>
+     	<xs:element name="description" type="xs:string"/>
+     	<xs:element name="id" type="xs:long"/>
+     	<xs:element name="type" type="xs:string"/>
+     </xs:sequence>
+    </xs:complexType>
+
+<xs:element name="GetSegmentationByIdRequest">
+	<xs:complexType>
+		<xs:sequence>
+				<xs:element name="id" type="xs:long"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:element>
+
+<xs:element name="GetSegmentationByIdResponse">
+	<xs:complexType>
+		<xs:sequence>
+		      <xs:element maxOccurs="unbounded" minOccurs="0" name="constituentid" type="xs:long"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:element>     
+
+<xs:element name="ExecuteSegmentationByIdRequest">
+	<xs:complexType>
+		<xs:sequence>
+			<xs:element name="id" type="xs:long"/>
+		</xs:sequence>			
+	</xs:complexType>
+</xs:element>
+
+<xs:element name="ExecuteSegmentationByIdResponse">
+	<xs:complexType>
+		<xs:sequence>
+		      <xs:element maxOccurs="unbounded" minOccurs="0" name="constituentid" type="xs:long"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:element>
+
+<xs:element name="ExecuteSegmentationByNameRequest">
+	<xs:complexType>
+		<xs:sequence>
+			<xs:element name="name" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:element>
+
+<xs:element name="ExecuteSegmentationByNameResponse">
+	<xs:complexType>
+		<xs:sequence>
+		      <xs:element maxOccurs="unbounded" minOccurs="0" name="constituentid" type="xs:long"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:element>
+
+<xs:element name="GetSegmentationByNameRequest">
+  <xs:complexType>
+		<xs:sequence>
+		    <xs:element name="name" type="xs:string"/>
+	    </xs:sequence>
+  </xs:complexType>
+</xs:element>
+
+<xs:element name="GetSegmentationByNameResponse">
+  <xs:complexType>
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="constituentid" type="xs:long"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:element>
+
+<xs:element name="GetSegmentationListRequest">
+    <xs:complexType>
+        <xs:sequence>
+            <xs:element name="dummy" type="xs:string"/> 
+        </xs:sequence>
+    </xs:complexType>
+   
+</xs:element>
+
+<xs:element name="GetSegmentationListResponse">
+    <xs:complexType>
+    <xs:sequence>
+        <xs:element maxOccurs="unbounded" minOccurs="0" name="segmentation" type="tns:segmentation"/>
+    </xs:sequence>
+    </xs:complexType>
+</xs:element>
+</xs:schema>
+  </wsdl:types>
+  <wsdl:message name="GetSegmentationByNameRequest">
+    <wsdl:part element="schema:GetSegmentationByNameRequest" name="GetSegmentationByNameRequest"/>
+  </wsdl:message>
+  <wsdl:message name="GetSegmentationListResponse">
+    <wsdl:part element="schema:GetSegmentationListResponse" name="GetSegmentationListResponse"/>
+  </wsdl:message>
+  <wsdl:message name="ExecuteSegmentationByNameRequest">
+    <wsdl:part element="schema:ExecuteSegmentationByNameRequest" name="ExecuteSegmentationByNameRequest"/>
+  </wsdl:message>
+  <wsdl:message name="GetSegmentationByIdResponse">
+    <wsdl:part element="schema:GetSegmentationByIdResponse" name="GetSegmentationByIdResponse"/>
+  </wsdl:message>
+  <wsdl:message name="GetSegmentationListRequest">
+    <wsdl:part element="schema:GetSegmentationListRequest" name="GetSegmentationListRequest"/>
+  </wsdl:message>
+  <wsdl:message name="GetSegmentationByNameResponse">
+    <wsdl:part element="schema:GetSegmentationByNameResponse" name="GetSegmentationByNameResponse"/>
+  </wsdl:message>
+  <wsdl:message name="ExecuteSegmentationByIdResponse">
+    <wsdl:part element="schema:ExecuteSegmentationByIdResponse" name="ExecuteSegmentationByIdResponse"/>
+  </wsdl:message>
+  <wsdl:message name="GetSegmentationByIdRequest">
+    <wsdl:part element="schema:GetSegmentationByIdRequest" name="GetSegmentationByIdRequest"/>
+  </wsdl:message>
+  <wsdl:message name="ExecuteSegmentationByNameResponse">
+    <wsdl:part element="schema:ExecuteSegmentationByNameResponse" name="ExecuteSegmentationByNameResponse"/>
+  </wsdl:message>
+  <wsdl:message name="ExecuteSegmentationByIdRequest">
+    <wsdl:part element="schema:ExecuteSegmentationByIdRequest" name="ExecuteSegmentationByIdRequest"/>
+  </wsdl:message>
+  <wsdl:portType name="theguru">
+    <wsdl:operation name="GetSegmentationByName">
+      <wsdl:input message="schema:GetSegmentationByNameRequest" name="GetSegmentationByNameRequest"/>
+      <wsdl:output message="schema:GetSegmentationByNameResponse" name="GetSegmentationByNameResponse"/>
+    </wsdl:operation>
+    <wsdl:operation name="ExecuteSegmentationByName">
+      <wsdl:input message="schema:ExecuteSegmentationByNameRequest" name="ExecuteSegmentationByNameRequest"/>
+      <wsdl:output message="schema:ExecuteSegmentationByNameResponse" name="ExecuteSegmentationByNameResponse"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetSegmentationList">
+      <wsdl:input message="schema:GetSegmentationListRequest" name="GetSegmentationListRequest"/>
+      <wsdl:output message="schema:GetSegmentationListResponse" name="GetSegmentationListResponse"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetSegmentationById">
+      <wsdl:input message="schema:GetSegmentationByIdRequest" name="GetSegmentationByIdRequest"/>
+      <wsdl:output message="schema:GetSegmentationByIdResponse" name="GetSegmentationByIdResponse"/>
+    </wsdl:operation>
+    <wsdl:operation name="ExecuteSegmentationById">
+      <wsdl:input message="schema:ExecuteSegmentationByIdRequest" name="ExecuteSegmentationByIdRequest"/>
+      <wsdl:output message="schema:ExecuteSegmentationByIdResponse" name="ExecuteSegmentationByIdResponse"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="theguruBinding" type="schema:theguru">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="GetSegmentationByName">
+      <soap:operation soapAction=""/>
+      <wsdl:input name="GetSegmentationByNameRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="GetSegmentationByNameResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ExecuteSegmentationByName">
+      <soap:operation soapAction=""/>
+      <wsdl:input name="ExecuteSegmentationByNameRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="ExecuteSegmentationByNameResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetSegmentationList">
+      <soap:operation soapAction=""/>
+      <wsdl:input name="GetSegmentationListRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="GetSegmentationListResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetSegmentationById">
+      <soap:operation soapAction=""/>
+      <wsdl:input name="GetSegmentationByIdRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="GetSegmentationByIdResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ExecuteSegmentationById">
+      <soap:operation soapAction=""/>
+      <wsdl:input name="ExecuteSegmentationByIdRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="ExecuteSegmentationByIdResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="theguruService">
+    <wsdl:port binding="schema:theguruBinding" name="theguruPort">
+      <soap:address location="/services/1.0/"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
