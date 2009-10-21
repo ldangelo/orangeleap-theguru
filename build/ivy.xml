@@ -34,10 +34,16 @@
     <dependencies>
     
     
-    	<!-- Orangeleap -->
+    	<!-- Orange Leap -->
         <dependency org="orangeleap" name="dynamicjasper" transitive="false" rev="3.0.5" classifier="ModifiedByOrangeLeap" >
             <artifact name="DynamicJasper" type="jar"/>
         </dependency>
+       
+        <dependency org="orangeleap" name="orangeleap-common-security" transitive="false" rev="1.0" >
+            <artifact name="orangeleap-common-security" type="jar"/>
+        </dependency>
+    
+    
     
         <!-- Tiles -->
 		<dependency org="org.apache.tiles" name="tiles-api" transitive="false" rev="2.0.5">
