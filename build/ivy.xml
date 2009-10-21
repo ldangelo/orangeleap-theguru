@@ -81,6 +81,23 @@
         <dependency org="org.springframework" name="spring-test" transitive="false" rev="2.5.6" conf="test->default">
             <artifact name="spring-test" type="jar" ext="jar"/>
         </dependency>
+        
+        <!--  Hessian -->
+        <dependency org="com.caucho" name="hessian" transitive="false" rev="3.1.3">
+            <artifact name="hessian" type="jar"/>
+            <artifact name="hessian" type="source" ext="jar" classifier="sources" conf="sources"/>
+        </dependency>
+        
+        <!--  HSQLDB -->
+        <dependency org="hsqldb" name="hsqldb" transitive="false" rev="1.8.0.10">
+            <artifact name="hsqldb" type="jar"/>
+        </dependency>
+
+        <!--  Struts -->
+        <dependency org="struts" name="struts" transitive="false" rev="1.2.9">
+            <artifact name="struts" type="jar"/>
+            <artifact name="struts" type="source" ext="jar" classifier="sources" conf="sources"/>
+        </dependency>
 
         <!--  JUnit -->
         <dependency org="junit" name="junit" rev="4.5" transitive="false" conf="test->default">
