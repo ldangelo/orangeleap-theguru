@@ -29,7 +29,7 @@
 		          userid="${mysql.db.user}"
 		          password="${mysql.db.pw}"
 		          encoding="UTF-8"
-		          classpath="${compile.lib.dir}/mysql-connector-java-5.0.8-bin.jar"
+		          classpath="${compile.lib}"
  	              delimiter=";"
 	     	>
 		    <transaction src="${basedir}/db/clearSchema.sql"/>
@@ -180,7 +180,7 @@
 		          userid="${mysql.db.user}"
 		          password="${mysql.db.pw}"
 		          encoding="UTF-8"
-		          classpath="${compile.lib.dir}/mysql-connector-java-5.0.8-bin.jar"
+		          classpath="${compile.lib}"
 	              delimiter=";"
 	     	>
 		    <transaction src="${basedir}/db/prod/domain/TheguruCreateAndLoadSchema-NoFunctions.sql"/>
@@ -196,7 +196,7 @@
 		          userid="${mysql.db.user}"
 		          password="${mysql.db.pw}"
 		          encoding="UTF-8"
-		          classpath="${compile.lib.dir}/mysql-connector-java-5.0.8-bin.jar"
+		          classpath="${compile.lib}"
 	              delimiter="$$"
 	     	>
 	     	<transaction src="${basedir}/db/prod/domain/TheguruCreateFunctions-Part2.sql"/>
