@@ -82,6 +82,7 @@
 	</target>
 
 	<target name="setup-war" depends="classes-jar">
+		<mkdir dir="${stage.dir}" />
 		<mkdir dir="${stage.dir}/war" />
 		<mkdir dir="${stage.dir}/war/META-INF" />
 		<mkdir dir="${stage.dir}/war/WEB-INF" />
