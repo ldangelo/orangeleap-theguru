@@ -68,7 +68,7 @@
 		<war destfile="${stage.dir}/${app.name}.war" basedir="${stage.dir}/war">
 			<include name="**/*.*" />
 		</war>
-		<!--<delete dir="${stage.dir}/war" />-->
+		<delete dir="${stage.dir}/war" />
 	</target>
 
 	<target name="build-exploded-war" depends="resolve, setup-war">
@@ -78,7 +78,7 @@
 				<include name="**/*.*" />
 			</fileset>
 		</copy>
-		<!--<delete dir="${stage.dir}/war" />-->
+		<delete dir="${stage.dir}/war" />
 	</target>
 
 	<target name="setup-war" depends="classes-jar">
