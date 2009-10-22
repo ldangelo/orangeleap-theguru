@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="TheGuru" basedir=".." default="deploy">
 
-	<property name="build.output.dir" value="/root/.hudson/jobs/Clementine/workspace/tangerine/build/stage" />
-	<property name="jasperserver.build.output.dir" value="/root/.hudson/jobs/JasperServer-3.5/workspace/jasperserver-3.5/build/stage" />
+	<property name="build.output.dir" value="/root/.hudson/jobs/clementine/workspace/tangerine/build/stage" />
+	<property name="jasperserver.build.output.dir" value="/root/.hudson/jobs/jasperserver-3.5/workspace/jasperserver-3.5/build/stage" />
 	<property name="target.tomcat.dir" value="/opt/orangeleap/instance_GURUDEV" />
 	<property name="mysql.port" value="40006" />
 	<!--	<property name="mysql.host" value="10.0.2.162" /> -->
