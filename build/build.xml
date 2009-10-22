@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="clementine" basedir=".." default="8. Redeploy and Restart Tomcat">
-	<property name="internal.build.file" value="${basedir}/build/clementine-build.xml" />
+
+    <import file="clementine-build.xml"/>
 	<property file="${basedir}/build/build.properties" />
 	<property file="${basedir}/jasperserver/jasperserver.properties" />
-	<property name="lib.dir" value="${basedir}/lib" />
 	<property name="build.env" value="dev"/>
 	<tstamp prefix="build" />
 
@@ -17,26 +17,20 @@
 	</taskdef>
 
 	
-	<!-- "build" target is used by common build -->
-	<target name="build" depends="resolve">
-		<ant antfile="${internal.build.file}" target="build-integrated-war" />
-	</target>
-
-	
 	<target name="0. Clean" description="Cleans the staging area. Does not undeploy the application(s).">
-		<ant antfile="${internal.build.file}" target="clean" />
+		<antcall target="clean" />
 	</target>
 
 	<target name="1. Deploy Exploded War" description="Deploys the exploded war.">
-		<ant antfile="${internal.build.file}" target="deploy-exploded-war" />
+		<antcall target="deploy-exploded-war" />
 	</target>
 
 	<target name="2. Deploy War" description="Deploys the unexploded war.">
-		<ant antfile="${internal.build.file}" target="deploy-integrated-war" />
+		<antcall target="deploy-integrated-war" />
 	</target>
 
 	<target name="3. Undeploy War" description="Undeploys war file(s).">
-		<ant antfile="${internal.build.file}" target="undeploy-war" />
+		<antcall target="undeploy-war" />
 	</target>
 
 	<target name="4. Start Tomcat - Debug Mode">
@@ -63,7 +57,7 @@
 	</target>
 
 	<target name="6. Generate Java Docs" description="Generates Javadocs for the entire application.">
-		<ant antfile="${internal.build.file}" target="generate-javadocs" />
+		<antcall target="generate-javadocs" />
 	</target>
 
 	<target name="7. Deploy and Start Tomcat" depends="3. Undeploy War, 2. Deploy War, 4. Start Tomcat - Debug Mode"/>
@@ -164,7 +158,7 @@
 
 		<property name="jasperserverCreateAndLoadSchema" value="JasperserverCreateAndLoadSchema_theguru.sql" />
 
-		<ant antfile="${internal.build.file}" target="create.load.schema" />
+		<antcall target="create.load.schema" />
 
 
 		<!-- populate company1theguru schema -->
@@ -191,7 +185,7 @@
            self.getProject().setProperty("jasperserverCreateAndLoadSchema", overrideJasperserverCreateAndLoadSchema2);
         ]]> </script>
 
-		<ant antfile="${internal.build.file}" target="create.load.schema" />
+		<antcall target="create.load.schema" />
 
 
 		<!-- populate demotheguru schema -->
@@ -219,7 +213,7 @@
            self.getProject().setProperty("jasperserverCreateAndLoadSchema", overrideJasperserverCreateAndLoadSchema5);
         ]]> </script>
 
-		<ant antfile="${internal.build.file}" target="create.load.schema" />
+		<antcall target="create.load.schema" />
 
 
 		<!-- populate sandboxtheguru schema -->
@@ -247,7 +241,7 @@
            self.getProject().setProperty("jasperserverCreateAndLoadSchema", overrideJasperserverCreateAndLoadSchema6);
         ]]> </script>
 
-		<ant antfile="${internal.build.file}" target="create.load.schema" />
+		<antcall target="create.load.schema" />
 
 	</target>
 
@@ -387,11 +381,11 @@
 	</target>
 
 	<target name="xjc.generate" description="Generates java classes from xsd">
-		<ant antfile="${internal.build.file}" target="xjc.generate"/>
+		<antcall target="xjc.generate"/>
 	</target>
 	
 	<target name="app.synch" description="Synchs the XMHTML, JSP, JS, CSS, and Images of the project with a running application.">
-		<ant antfile="${internal.build.file}" target="app.synch" />
+		<antcall target="app.synch" />
 	</target>
 
 	<target name="usage">
