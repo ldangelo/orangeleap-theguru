@@ -16,7 +16,13 @@
 		</classpath>
 	</taskdef>
 
+	
+	<!-- "build" target is used by common build -->
+	<target name="build" >
+		<ant antfile="${internal.build.file}" target="build-integrated-war" />
+	</target>
 
+	
 	<target name="0. Clean" description="Cleans the staging area. Does not undeploy the application(s).">
 		<ant antfile="${internal.build.file}" target="clean" />
 	</target>
