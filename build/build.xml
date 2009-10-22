@@ -19,6 +19,7 @@
 	
 	<!-- "build" target is used by common build -->
 	<target name="build" depends="resolve">
+		<mkdir dir="${lib.dir}"/>
 		<ant antfile="${internal.build.file}" target="build-integrated-war" />
 	</target>
 
