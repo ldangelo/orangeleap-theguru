@@ -92,8 +92,30 @@
     </xs:sequence>
     </xs:complexType>
 </xs:element>
+
+<xs:element name="GetSegmentationListByTypeRequest">
+	<xs:complexType>
+		<xs:sequence>
+			<xs:element maxOccurs="1" minOccurs="1" name="type" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:element>
+
+<xs:element name="GetSegmentationListByTypeResponse">
+    <xs:complexType>
+    <xs:sequence>
+        <xs:element maxOccurs="unbounded" minOccurs="0" name="segmentation" type="tns:segmentation"/>
+    </xs:sequence>
+    </xs:complexType>
+</xs:element>
+
+
+
 </xs:schema>
   </wsdl:types>
+  <wsdl:message name="GetSegmentationListByTypeResponse">
+    <wsdl:part element="schema:GetSegmentationListByTypeResponse" name="GetSegmentationListByTypeResponse"/>
+  </wsdl:message>
   <wsdl:message name="GetSegmentationByNameRequest">
     <wsdl:part element="schema:GetSegmentationByNameRequest" name="GetSegmentationByNameRequest"/>
   </wsdl:message>
@@ -102,6 +124,9 @@
   </wsdl:message>
   <wsdl:message name="ExecuteSegmentationByNameRequest">
     <wsdl:part element="schema:ExecuteSegmentationByNameRequest" name="ExecuteSegmentationByNameRequest"/>
+  </wsdl:message>
+  <wsdl:message name="GetSegmentationListByTypeRequest">
+    <wsdl:part element="schema:GetSegmentationListByTypeRequest" name="GetSegmentationListByTypeRequest"/>
   </wsdl:message>
   <wsdl:message name="GetSegmentationByIdResponse">
     <wsdl:part element="schema:GetSegmentationByIdResponse" name="GetSegmentationByIdResponse"/>
@@ -133,6 +158,10 @@
       <wsdl:input message="schema:ExecuteSegmentationByNameRequest" name="ExecuteSegmentationByNameRequest"/>
       <wsdl:output message="schema:ExecuteSegmentationByNameResponse" name="ExecuteSegmentationByNameResponse"/>
     </wsdl:operation>
+    <wsdl:operation name="GetSegmentationListByType">
+      <wsdl:input message="schema:GetSegmentationListByTypeRequest" name="GetSegmentationListByTypeRequest"/>
+      <wsdl:output message="schema:GetSegmentationListByTypeResponse" name="GetSegmentationListByTypeResponse"/>
+    </wsdl:operation>
     <wsdl:operation name="GetSegmentationList">
       <wsdl:input message="schema:GetSegmentationListRequest" name="GetSegmentationListRequest"/>
       <wsdl:output message="schema:GetSegmentationListResponse" name="GetSegmentationListResponse"/>
@@ -163,6 +192,15 @@
         <soap:body use="literal"/>
       </wsdl:input>
       <wsdl:output name="ExecuteSegmentationByNameResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetSegmentationListByType">
+      <soap:operation soapAction=""/>
+      <wsdl:input name="GetSegmentationListByTypeRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="GetSegmentationListByTypeResponse">
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>

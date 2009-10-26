@@ -93,4 +93,23 @@
     </xs:sequence>
     </xs:complexType>
 </xs:element>
+
+<xs:element name="GetSegmentationListByTypeRequest">
+	<xs:complexType>
+		<xs:sequence>
+			<xs:element name="type" type="xs:string" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:element>
+
+<xs:element name="GetSegmentationListByTypeResponse">
+    <xs:complexType>
+    <xs:sequence>
+        <xs:element name="segmentation" type="tns:segmentation" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+    </xs:complexType>
+</xs:element>
+
+
+
 </xs:schema>	   

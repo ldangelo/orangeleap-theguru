@@ -9,9 +9,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.mpower.domain.ReportSegmentationResult;
+import com.mpower.domain.ReportSegmentationType;
 import com.mpower.domain.ReportWizard;
 import com.mpower.service.ReportSegmentationResultsService;
 import com.mpower.service.ReportSegmentationResultsServiceImpl;
+import com.mpower.service.ReportSegmentationTypeService;
 import com.mpower.service.ReportWizardService;
 import com.mpower.util.SessionHelper;
 
@@ -23,6 +25,8 @@ import com.mpower.ws.axis.GetSegmentationByIdRequest;
 import com.mpower.ws.axis.GetSegmentationByIdResponse;
 import com.mpower.ws.axis.GetSegmentationByNameRequest;
 import com.mpower.ws.axis.GetSegmentationByNameResponse;
+import com.mpower.ws.axis.GetSegmentationListByTypeRequest;
+import com.mpower.ws.axis.GetSegmentationListByTypeResponse;
 import com.mpower.ws.axis.GetSegmentationListRequest;
 import com.mpower.ws.axis.GetSegmentationListResponse;
 import com.mpower.ws.axis.ObjectFactory;
@@ -35,6 +39,36 @@ public class TheGuruWebService {
 
     ReportWizardService reportWizard;
     ReportSegmentationResultsServiceImpl reportSegmentationResults;
+    ReportSegmentationTypeService reportSegmentationType;
+    
+    @PayloadRoot(localPart = "GetSegmentationListByTypeRequest", namespace = "http://www.orangeleap.com/theguru/services/1.0")
+    public GetSegmentationListByTypeResponse getSegmentationListByType(GetSegmentationListByTypeRequest request) {
+    	ObjectFactory of = new ObjectFactory();
+    	GetSegmentationListByTypeResponse response = of.createGetSegmentationListByTypeResponse();
+
+    	List<ReportWizard> segmentations = reportWizard.findAllSegmentations();
+    	
+    	Iterator<ReportWizard> it = segmentations.iterator();
+    	
+    	while (it.hasNext()) {
+    		ReportWizard wiz = it.next();
+
+    		ReportSegmentationType segType = reportSegmentationType.find(wiz.getId());
+    		if (segType != null && segType.getSegmentationType().equals(request.getType())) {
+    			Segmentation seg = of.createSegmentation();
+    	
+    			seg.setId(wiz.getId());
+    			seg.setName(wiz.getReportName());
+    			seg.setDescription(wiz.getReportComment());
+    			seg.setType(segType.getSegmentationType());
+    		
+    			response.getSegmentation().add(seg);
+    		}
+    	}
+    	
+    	return response;
+    }
+    
     
     @PayloadRoot(localPart = "GetSegmentationListRequest", namespace = "http://www.orangeleap.com/theguru/services/1.0")
     public GetSegmentationListResponse getSegmentationList(GetSegmentationListRequest request) {
@@ -51,9 +85,14 @@ public class TheGuruWebService {
 
     		Segmentation seg = of.createSegmentation();
     	
-    		seg.setId(wiz.getSrcId());
+    		seg.setId(wiz.getId());
     		seg.setName(wiz.getReportName());
     		seg.setDescription(wiz.getReportComment());
+    		
+    		ReportSegmentationType segType = reportSegmentationType.find(wiz.getId());
+    		if (segType == null) seg.setType("Unknown");
+    		else seg.setType(segType.getSegmentationType());
+    		
     		response.getSegmentation().add(seg);
     	}
 
@@ -206,6 +245,15 @@ public class TheGuruWebService {
 		public void setReportSegmentationResults(
 				ReportSegmentationResultsServiceImpl reportSegmentationResults) {
 			this.reportSegmentationResults = reportSegmentationResults;
+		}
+
+		public ReportSegmentationTypeService getReportSegmentationType() {
+			return reportSegmentationType;
+		}
+
+		public void setReportSegmentationType(
+				ReportSegmentationTypeService reportSegmentationType) {
+			this.reportSegmentationType = reportSegmentationType;
 		}
     
 }
