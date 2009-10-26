@@ -35,7 +35,14 @@
 	</bean>
 
 	<bean id="constituentEndpoint" class="com.mpower.ws.TheGuruWebService">
+		<property name="reportWizard" ref="reportWizardService"/>
+		<property name="reportSegmentationResults" ref="reportSegmentationResultsService"/>
+		<property name="reportSegmentationType" ref="reportSegmentationTypeService"/>
 	</bean>
+
+	<alias name="authenticationManager" alias="_authenticationManager"/>
+ 	<security:global-method-security
+		secured-annotations="enabled" /> 
 
 
 	<bean id="wsSecurityInterceptor"
@@ -53,7 +60,51 @@
 		<property name="authenticationManager" ref="authenticationManager" />
 	</bean>
 	
-  
+
+    <!--
+
+   For LDAP authentication
+   -->
+   <bean id="initialDirContextFactory" class="org.springframework.security.ldap.DefaultSpringSecurityContextSource">
+     <constructor-arg value="ldap://${ldap.host}:${ldap.port}/${ldap.root}"/>
+     <property name="userDn"><value>${ldap.userDn}</value></property>
+     <property name="password"><value>${ldap.password}</value></property>
+   </bean>
+
+    <bean  id="orangeLeapAuthoritiesPopulator" class="com.mpower.security.OrangeLeapAuthoritiesPopulator">
+      <constructor-arg ref="initialDirContextFactory"/>
+      <constructor-arg value="ou=roles"/>
+      <property name="searchSubtree" value="true"/>
+    </bean>
+
+	<bean id="authenticationManager" class="org.springframework.security.providers.ProviderManager">
+		<property name="providers">
+			<bean class="org.springframework.security.providers.ldap.LdapAuthenticationProvider">
+				<constructor-arg>
+					<bean class="com.mpower.security.OrangeLeapAuthenticator">
+						<constructor-arg index="0">
+							<ref local="initialDirContextFactory"/>
+						</constructor-arg>
+						<!--  <property
+							name="userDnPatterns"><list><value>uid={0}</value></list></property> -->
+						
+						<!-- <property name="userSearch" ref="userSearch"/> -->
+						<!--
+							<property name="userDetailsService"><ref
+							bean="internalUserAuthorityService"/></property>
+						-->
+						<property name="userLookupPattern">
+							<value>uid={0},ou=users,o={1}</value>
+						</property>
+					</bean>
+				</constructor-arg>
+				<constructor-arg>
+				  <ref bean="orangeLeapAuthoritiesPopulator"/>
+				</constructor-arg>
+				</bean>
+		</property>
+	</bean>
+
 
 	<bean
 		class="org.springframework.ws.server.endpoint.adapter.GenericMarshallingMethodEndpointAdapter">
@@ -77,8 +128,8 @@
 		class="org.springframework.ws.server.endpoint.mapping.PayloadRootAnnotationMethodEndpointMapping">
 		<property name="interceptors">
 			<list>
-				<ref bean="validatingInterceptor" />
 				<ref bean="wsSecurityInterceptor" />
+				<ref bean="validatingInterceptor" />
 			</list>
 		</property>
 	</bean>
