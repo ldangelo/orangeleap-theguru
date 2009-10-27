@@ -196,7 +196,7 @@
 		</javadoc>
 	</target>
 
-	<target name="app.synch">
+	<target name="app.synch.internal">
 		<echo>Synchronizing App</echo>
 		<sync todir="${deploy.path}/${app.name}/css">
 			<fileset dir="${war.dir}/css">

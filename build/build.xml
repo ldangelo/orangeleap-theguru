@@ -16,7 +16,7 @@
 		</classpath>
 	</taskdef>
 
-	
+
 	<target name="0. Clean" description="Cleans the staging area. Does not undeploy the application(s).">
 		<antcall target="clean" />
 	</target>
@@ -383,9 +383,9 @@
 	<target name="xjc.generate" description="Generates java classes from xsd">
 		<antcall target="xjc.generate"/>
 	</target>
-	
+
 	<target name="app.synch" description="Synchs the XMHTML, JSP, JS, CSS, and Images of the project with a running application.">
-		<antcall target="app.synch" />
+		<antcall target="app.synch.internal" />
 	</target>
 
 	<target name="usage">
