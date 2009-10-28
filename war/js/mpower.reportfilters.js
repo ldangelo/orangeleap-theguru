@@ -346,7 +346,9 @@ function applyMasks(filterTableRowSelector) {
 	} else {
 		criteria.removeClass('required');
 	}
-	filterRow.find('input').valid();
+	var filterRowInputFields = filterRow.find('input');
+	if (filterRowInputFields.length > 0)
+		filterRowInputFields.valid();
 }
 
 function replicateString(string, number) {
