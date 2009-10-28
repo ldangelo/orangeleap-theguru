@@ -568,15 +568,21 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 			    reportXMLModifier.AddReportSummaryInfo(tempFile.getPath());
 			}
 
-			//move the chart to the header or footer of the report
+			//chart modifications
 			List<ReportChartSettings> rptChartSettings = wiz.getReportChartSettings();
 		    Iterator itRptChartSettings = rptChartSettings.iterator();
 		    while (itRptChartSettings.hasNext()){
 		    	ReportChartSettings rptChartSetting = (ReportChartSettings) itRptChartSettings.next();
 		    	String chartType = rptChartSetting.getChartType();
 		    	String chartLocation = rptChartSetting.getLocation();
+		    	//move the chart to the header or footer of the report
 		    	reportXMLModifier.moveChartFromGroup(tempFile.getPath(), chartType, chartLocation);
+		    	//if the report is a chart only report (used for the Dashboard of OL) remove all unnecessary elements
+			    if (isChartOnlyReport(wiz, reportFieldService)){
+			    	reportXMLModifier.modifyChartOnlyReport(tempFile.getPath(), chartType, chartLocation);
+			    }
 		    }
+
 
 
 			//
@@ -639,6 +645,20 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		return refData;
 	}
 
+	private boolean isChartOnlyReport(ReportWizard wiz,
+			ReportFieldService reportFieldService) {
+		Boolean chartOnly = false;
+		//iterate thru the chart settings to see if this report
+		//field is a chart field
+		List<ReportChartSettings> chartSettings = wiz.getReportChartSettings();
+		Iterator<ReportChartSettings> itChartSettings = chartSettings.iterator();
+		while (itChartSettings.hasNext()){
+			ReportChartSettings rcs = (ReportChartSettings) itChartSettings.next();
+			if (rcs.getLocation().compareTo("chartOnly") == 0) chartOnly = true; break;
+		}
+		return chartOnly;
+	}
+
 	protected void saveReport(ReportWizard wiz, Errors errors) throws Exception {
 		reportWizardService.save(wiz);
 
@@ -677,14 +697,19 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		    reportXMLModifier.AddReportSummaryInfo(tempFile.getPath());
 		   }
 
-		//move the chart to the header or footer of the report
+		//chart modifications
 		List<ReportChartSettings> rptChartSettings = wiz.getReportChartSettings();
 	    Iterator itRptChartSettings = rptChartSettings.iterator();
 	    while (itRptChartSettings.hasNext()){
 	    	ReportChartSettings rptChartSetting = (ReportChartSettings) itRptChartSettings.next();
 	    	String chartType = rptChartSetting.getChartType();
 	    	String chartLocation = rptChartSetting.getLocation();
+	    	//move the chart to the header or footer of the report
 	    	reportXMLModifier.moveChartFromGroup(tempFile.getPath(), chartType, chartLocation);
+	    	//if the report is a chart only report (used for the Dashboard of OL) remove all unnecessary elements
+		    if (isChartOnlyReport(wiz, reportFieldService)){
+		    	reportXMLModifier.modifyChartOnlyReport(tempFile.getPath(), chartType, chartLocation);
+		    }
 	    }
 
 		String reportComment = wiz.getDataSubSource().getDisplayName() + " Custom Report";

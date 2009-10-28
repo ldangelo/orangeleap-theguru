@@ -117,6 +117,12 @@
 						selected="true"
 					</c:if>
 				>Footer</OPTION>
+				<OPTION label="Chart Only" value="chartOnly"
+					<c:if test="${reportChartSettings[0].location == 'chartOnly'}">
+						selected="true"
+					</c:if>
+				>Chart Only</OPTION>
+
 			</SELECT></TD>
 			<TD><SELECT id="reportChartSettings[0].fieldIdx"
 				name="reportChartSettings[0].fieldIdx" >

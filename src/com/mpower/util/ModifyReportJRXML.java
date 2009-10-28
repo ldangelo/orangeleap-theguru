@@ -995,6 +995,71 @@ public class ModifyReportJRXML {
 		}
 	}
 
+	/**
+	 * Removes all elements from the report except the chart and
+	 * places the chart in the summary section of the report.
+	 *
+	 * @param fileName file name of the XML document
+	 * @param chartType The type of chart. Currently we only support Bar and Pie.
+	 * @param location The location you want to put the chart.  (header or footer)
+	 */
+	public void modifyChartOnlyReport(String fileName, String chartType, String location) throws ParserConfigurationException, SAXException, IOException{
+		String chart = null;
+		if (chartType.compareToIgnoreCase("bar") == 0)
+			chart = "barChart";
+		else if (chartType.compareToIgnoreCase("pie") == 0)
+			chart = "pieChart";
+		else
+			chart = null;
+
+
+		if (chart != null){
+			Document document = loadXMLDocument(fileName);
+			//copy the chart element
+			Node chartNode = document.getElementsByTagName(chart).item(0);
+			Element chartElement = (Element) chartNode;
+
+
+			//remove all unneeded elements
+			removeAll(document, Node.ELEMENT_NODE, "style");
+			removeAll(document, Node.ELEMENT_NODE, "groupHeader");
+			removeAll(document, Node.ELEMENT_NODE, "groupFooter");
+			removeAll(document, Node.ELEMENT_NODE, "background");
+			removeAll(document, Node.ELEMENT_NODE, "title");
+			removeAll(document, Node.ELEMENT_NODE, "pageHeader");
+			removeAll(document, Node.ELEMENT_NODE, "columnHeader");
+			removeAll(document, Node.ELEMENT_NODE, "detail");
+			removeAll(document, Node.ELEMENT_NODE, "columnFooter");
+			removeAll(document, Node.ELEMENT_NODE, "pageFooter");
+			removeAll(document, Node.ELEMENT_NODE, "lastPageFooter");
+			removeAll(document, Node.ELEMENT_NODE, "summary");
+
+			//set the size of the chart to width="330" height="220" (this size is defined by the OL dashboard)
+			String height = "220";
+			String width = "330";
+			Element chartNodeElement = (Element) chartElement.getElementsByTagName("chart").item(0);
+			Element chartReportElement = (Element) chartNodeElement.getElementsByTagName("reportElement").item(0);
+			if (chartReportElement != null){
+				chartReportElement.setAttribute("width", width);
+				chartReportElement.setAttribute("height", height);
+			}
+
+			//create a new summary node
+			Element summaryNode = document.createElement("summary");
+			Element summaryBand = document.createElement("band");
+			summaryBand.setAttribute("height", height);
+			//add the copied chart to the summary band
+			summaryBand.appendChild(chartElement);
+			//add the summaryBand to the summary node
+			summaryNode.appendChild(summaryBand);
+
+			//add the new summary node that contains the chart (this will replace the existing summary node)
+			Node jasperReport = document.getElementsByTagName("jasperReport").item(0);
+			jasperReport.appendChild(summaryNode);
+			saveXMLtoFile(fileName, document);
+		}
+	}
+
 	/*
 	 *
 	 */
@@ -1082,4 +1147,6 @@ public class ModifyReportJRXML {
 	public ReportFieldService getReportFieldService() {
 		return reportFieldService;
 	}
+
+
 }
