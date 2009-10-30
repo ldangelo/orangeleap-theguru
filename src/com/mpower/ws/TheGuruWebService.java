@@ -1,7 +1,11 @@
 package com.mpower.ws;
 
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
+
+import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
@@ -31,6 +35,7 @@ import com.mpower.ws.axis.GetSegmentationListRequest;
 import com.mpower.ws.axis.GetSegmentationListResponse;
 import com.mpower.ws.axis.ObjectFactory;
 import com.mpower.ws.axis.Segmentation;
+import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
 
 @Endpoint
 public class TheGuruWebService {
@@ -88,6 +93,23 @@ public class TheGuruWebService {
     		seg.setId(wiz.getId());
     		seg.setName(wiz.getReportName());
     		seg.setDescription(wiz.getReportComment());
+    		seg.setExecutionCount(wiz.getResultCount());
+    		seg.setExecutionUser(wiz.getLastRunByUserName());
+            GregorianCalendar cal = new GregorianCalendar();
+
+            Date lastRunDate = wiz.getLastRunDateTime(); 
+            if (lastRunDate != null) {
+            	cal.setTime(lastRunDate);
+
+            	XMLGregorianCalendar xmlDate = new XMLGregorianCalendarImpl();
+            	xmlDate.setSecond(cal.get(GregorianCalendar.SECOND));
+            	xmlDate.setMinute(cal.get(GregorianCalendar.MINUTE));
+            	xmlDate.setHour(cal.get(GregorianCalendar.HOUR_OF_DAY));
+            	xmlDate.setDay(cal.get(GregorianCalendar.DAY_OF_MONTH));
+            	xmlDate.setMonth(cal.get(GregorianCalendar.MONTH));
+            	xmlDate.setYear(cal.get(GregorianCalendar.YEAR));
+            	seg.setExecutionDate(xmlDate);
+            }
     		
     		ReportSegmentationType segType = reportSegmentationType.find(wiz.getId());
     		if (segType == null) seg.setType("Unknown");
