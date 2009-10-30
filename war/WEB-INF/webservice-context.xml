@@ -25,7 +25,7 @@
 				class="org.springframework.ws.wsdl.wsdl11.builder.XsdBasedSoap11Wsdl4jDefinitionBuilder">
 				<property name="schema" value="/WEB-INF/theguru.xsd" />
 				<property name="portTypeName" value="theguru" />
-				<property name="locationUri" value="/services/1.0/" />
+				<property name="locationUri" value="http://www.orangeleap.com/clementine/services/1.0/" />
 			</bean>
 		</property>
 	</bean>
