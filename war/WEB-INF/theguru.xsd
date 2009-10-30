@@ -10,6 +10,9 @@
      	<xs:element name="description" type="xs:string"/>
      	<xs:element name="id" type="xs:long"/>
      	<xs:element name="type" type="xs:string"/>
+     	<xs:element name="executionUser" type="xs:string"/>
+     	<xs:element name="executionCount" type="xs:long"/>
+     	<xs:element name="executionDate" type="xs:date"/>
      </xs:sequence>
     </xs:complexType>
 
