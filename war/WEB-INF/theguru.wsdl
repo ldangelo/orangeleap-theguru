@@ -9,6 +9,9 @@
      	<xs:element name="description" type="xs:string"/>
      	<xs:element name="id" type="xs:long"/>
      	<xs:element name="type" type="xs:string"/>
+     	<xs:element name="executionUser" type="xs:string"/>
+     	<xs:element name="executionCount" type="xs:long"/>
+     	<xs:element name="executionDate" type="xs:date"/>
      </xs:sequence>
     </xs:complexType>
 
@@ -234,7 +237,7 @@
   </wsdl:binding>
   <wsdl:service name="theguruService">
     <wsdl:port binding="schema:theguruBinding" name="theguruPort">
-      <soap:address location="/services/1.0/"/>
+      <soap:address location="http://localhost:8080/clementine/services/1.0/"/>
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>
