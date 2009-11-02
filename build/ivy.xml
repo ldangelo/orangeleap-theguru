@@ -39,7 +39,7 @@
             <artifact name="DynamicJasper" type="jar"/>
         </dependency>
 
-        <dependency org="orangeleap" name="orangeleap-common-security" transitive="false" rev="1.0" >
+        <dependency org="orangeleap" name="orangeleap-common-security" transitive="false" rev="1.1" >
             <artifact name="orangeleap-common-security" type="jar"/>
         </dependency>
 
