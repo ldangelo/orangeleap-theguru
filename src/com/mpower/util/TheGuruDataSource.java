@@ -4,6 +4,7 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Map;
 
 import javax.sql.DataSource;
 
@@ -15,6 +16,7 @@ import org.springframework.security.context.SecurityContextHolder;
 import org.springframework.security.providers.UsernamePasswordAuthenticationToken;
 
 import com.mpower.util.SessionHelper;
+import com.orangeleap.common.security.OrangeLeapUsernamePasswordLocal;
 
 public class TheGuruDataSource implements DataSource {
 
@@ -75,10 +77,13 @@ public class TheGuruDataSource implements DataSource {
 
 	private String getSiteName() {
 		try {
-			String username = SessionHelper.getGuruSessionData().getUsername();
-			if (username != null && username.lastIndexOf("@") > 0)
-				return username.substring(username.lastIndexOf("@") + 1) + "theguru";
-			else
+			Map<String, Object> info = OrangeLeapUsernamePasswordLocal.getOrangeLeapAuthInfo();
+	        
+			String site = (String) info.get(OrangeLeapUsernamePasswordLocal.SITE);
+			
+			if (site != null) 
+				return site + "theguru";
+			else 
 				return THEGURU_DEFAULT_SCHEMA;
 		} catch (Exception exception) {
 			logger.error(exception);
