@@ -20,7 +20,7 @@
         <sec:intercept-url pattern="/**" access="ROLE_USER,ROLE_GURU" />
         <sec:intercept-url pattern="/services/**" filters="none" />
         <sec:anonymous granted-authority="ROLE_ANONYMOUS" key="anonymous" username="anonymous"/>
-        <sec:concurrent-session-control max-sessions="1" expired-url="/../${contextPrefix}jasperserver/" />
+<!--         <sec:concurrent-session-control max-sessions="1" expired-url="/../${contextPrefix}jasperserver/" /> -->
         <sec:logout invalidate-session="true"  logout-success-url="/../${contextPrefix}jasperserver/" logout-url="/exituser.html"/>
     </sec:http>
 	
