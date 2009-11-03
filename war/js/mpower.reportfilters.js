@@ -411,10 +411,13 @@ function displayPromptForCriteriaOptions(comparisonSelectId, reportIsSegmentatio
 	if (reportIsSegmentation) {
 		promptForCriteria.attr('disabled', true);
 		promptForCriteria.attr('checked', false);
-		if (promptForCriteria.attr('checked'))
+		if (comparison.find("option:selected").attr('dateonly') == "true"
+		// has any value
+		|| comparison.find("option:selected").val() == 11) {
 			filterRow.find("[objectname$=reportStandardFilter.criteria]").attr("disabled", "true");
-		else
+		} else {
 			filterRow.find("[objectname$=reportStandardFilter.criteria]").removeAttr("disabled");
+		}
 	} else if (comparison.find("option:selected").attr('dateonly') == "true"
 		// has any value
 		|| comparison.find("option:selected").val() == 11) {
