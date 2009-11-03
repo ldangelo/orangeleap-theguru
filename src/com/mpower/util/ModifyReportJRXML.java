@@ -902,6 +902,22 @@ public class ModifyReportJRXML {
 		}
 	}
 
+	/**
+	 * Fixes a bug with pie charts only showing the first group. This bug
+	 * was a result of the upgrade to Jasperserver 3.5 and will hopefully go
+	 * away when we upgrade dyamic jasper.
+	 *
+	 * @param chartType The type of chart. Currently we only support Bar and Pie.
+	 * @param document The jrxml document.
+	 */
+	public void correctPieChartEvaluationTime(String chartType, Document document){
+			if (chartType.compareToIgnoreCase("pie") == 0){
+			//get the chart node
+			Element chartElement = (Element)document.getElementsByTagName("chart").item(0);
+			//change the attribute evaluationTime from "Group" to "Report"
+			chartElement.getAttributeNode("evaluationTime").setValue("Report");
+		}
+	}
 
 	/**
 	 * Removes the chart from the group created by dynamic jasper and
@@ -928,7 +944,9 @@ public class ModifyReportJRXML {
 			//correct the "category series is null" and "key is null" errors
 			//before moving chart
 			correctNullDataInChart(chartType, document);
-
+			//correct bug with pie chart due to upgrade to JS 3.5
+			if (chart.compareToIgnoreCase("pieChart") == 0)
+				correctPieChartEvaluationTime(chartType, document);
 			Node chartNode = document.getElementsByTagName(chart).item(0);
 			if (chartNode != null){
 				Element chartElement = (Element) chartNode;
