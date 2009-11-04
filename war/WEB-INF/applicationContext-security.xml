@@ -37,8 +37,12 @@
         	<ref bean="ldapAuthenticationProvider"/>
      	</list>
      </property>
+     <property name="authenticationHelper" ref="clementineAuthenticationHelper" />
     </bean>
     
+   	<bean id="clementineAuthenticationHelper" class="com.mpower.security.ClementineAuthenticationHelper">
+    </bean>
+
     
     <!-- General LDAP -->
     
