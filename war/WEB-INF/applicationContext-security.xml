@@ -32,6 +32,7 @@
      <sec:custom-authentication-provider/>
      <property name="providerList" >
      	<list>
+     		<ref bean="casProxyAuthenticationProvider"/>
        	 	<ref bean="casAuthenticationProvider"/>
         	<ref bean="ldapAuthenticationProvider"/>
      	</list>
@@ -111,6 +112,21 @@
         <property name="ticketValidator">
             <bean class="org.jasig.cas.client.validation.Cas20ServiceTicketValidator">
                 <constructor-arg index="0" value="${casClient.serverUrl}/${casClient.serverContextPrefix}${casClient.serverContext}"/>
+                <property name="proxyGrantingTicketStorage" ref="proxyGrantingTicketStorage" />
+                <property name="proxyCallbackUrl" value="${casClient.serverUrl}/${casClient.serverContextPrefix}clementine/secure/receptor" />
+            </bean>
+        </property>
+        <property name="key" value="tangerine-client-key"/>
+    </bean>
+
+    <bean id="casProxyAuthenticationProvider"
+                class="org.springframework.security.providers.cas.CasAuthenticationProvider">
+        <property name="userDetailsService" ref="userDetailsService"/>
+        <property name="serviceProperties" ref="serviceProperties"/>
+        <property name="ticketValidator">
+            <bean class="org.jasig.cas.client.validation.Cas20ProxyTicketValidator">
+                <constructor-arg index="0" value="${casClient.serverUrl}/${casClient.serverContextPrefix}${casClient.serverContext}"/>
+                <property name="acceptAnyProxy" value="true"/>
                 <property name="proxyGrantingTicketStorage" ref="proxyGrantingTicketStorage" />
                 <property name="proxyCallbackUrl" value="${casClient.serverUrl}/${casClient.serverContextPrefix}clementine/secure/receptor" />
             </bean>
