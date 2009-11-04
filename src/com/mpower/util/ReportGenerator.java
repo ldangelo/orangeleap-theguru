@@ -99,7 +99,7 @@ public class ReportGenerator implements java.io.Serializable {
 
 	private JServer getServer() {
 		JServer server = new JServer();
-    	CasUtil.populateJserverWithCasCredentials(server, reportBaseURI);
+    	CasUtil.populateJserverWithCasCredentials(server, reportBaseURI + "/j_acegi_cas_security_check");
 		server.setUrl(reportBaseURI + reportServicesPath);
 		return server;
 	}

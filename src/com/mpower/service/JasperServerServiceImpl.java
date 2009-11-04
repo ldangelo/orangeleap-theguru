@@ -39,7 +39,7 @@ public class JasperServerServiceImpl implements JasperServerService {
 	rd.setWsType(ResourceDescriptor.TYPE_FOLDER);
 	rd.setUriString(dir);
 
-	CasUtil.populateJserverWithCasCredentials(jserver, getBaseUri());
+	CasUtil.populateJserverWithCasCredentials(jserver, getBaseUri() + "/j_acegi_cas_security_check");
 	return jserver.getWSClient().list(rd);
     }
 
@@ -53,7 +53,7 @@ public class JasperServerServiceImpl implements JasperServerService {
 		jserver.setPassword(password);
 		jserver.setUrl(baseUri + repositoryUri);
 
-    	CasUtil.populateJserverWithCasCredentials(jserver, getBaseUri());
+    	CasUtil.populateJserverWithCasCredentials(jserver, getBaseUri() + "/j_acegi_cas_security_check");
 
 		List datasources = jserver.getWSClient().listDatasources();
 		java.util.Iterator itDatasources = datasources.iterator();
