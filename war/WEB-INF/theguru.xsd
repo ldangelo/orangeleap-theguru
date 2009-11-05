@@ -27,7 +27,7 @@
 <xs:element name="GetSegmentationByIdResponse">
 	<xs:complexType>
 		<xs:sequence>
-		      <xs:element name="constituentid" type="xs:long" minOccurs="0" maxOccurs="unbounded"/>
+		      <xs:element name="entityid" type="xs:long" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 	</xs:complexType>
 </xs:element>     
@@ -43,7 +43,7 @@
 <xs:element name="ExecuteSegmentationByIdResponse">
 	<xs:complexType>
 		<xs:sequence>
-		      <xs:element name="constituentid" type="xs:long" minOccurs="0" maxOccurs="unbounded"/>
+		      <xs:element name="entityid" type="xs:long" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 	</xs:complexType>
 </xs:element>
@@ -59,7 +59,7 @@
 <xs:element name="ExecuteSegmentationByNameResponse">
 	<xs:complexType>
 		<xs:sequence>
-		      <xs:element name="constituentid" type="xs:long" minOccurs="0" maxOccurs="unbounded"/>
+		      <xs:element name="entityid" type="xs:long" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 	</xs:complexType>
 </xs:element>
@@ -75,7 +75,7 @@
 <xs:element name="GetSegmentationByNameResponse">
   <xs:complexType>
     <xs:sequence>
-      <xs:element name="constituentid" type="xs:long" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="entityid" type="xs:long" minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>
   </xs:complexType>
 </xs:element>
