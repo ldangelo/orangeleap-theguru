@@ -343,7 +343,7 @@ CREATE TABLE `REPORTCUSTOMFILTERDEFINITION` (
   `DISPLAY_TEXT` longtext,
   `SQL_TEXT` longtext,
   PRIMARY KEY (`REPORTCUSTOMFILTERDEFINITION_ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=620001 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=630002 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `REPORTCUSTOMFILTERDEFINITION`
@@ -376,7 +376,9 @@ INSERT INTO `REPORTCUSTOMFILTERDEFINITION` (`REPORTCUSTOMFILTERDEFINITION_ID`,`D
  (490000,'Gift Totals - Account has given at least $<input class=\"customCriteria\" objectname=\"reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[0].criteria\" value=\"{0}\"/> in year <input class=\"customCriteria\" objectname=\"reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[1].criteria\" value=\"{1}\"/>','Gift Totals - Account has given at least $[GIFTAMOUNT] in year [GIFTYEAR]','((SELECT SUM(AMOUNT) FROM GIFT GIFTLOOKUP WHERE GIFTLOOKUP.CONSTITUENT_ID = [VIEWNAME].PHONE_CONSTITUENT_ID AND YEAR(TRANSACTION_DATE) = {1}) >= {0})'),
  (600000,'Segmentation - Account is in segmentation / report <br> {lookupReferenceBean:orangeLeapConstituentSegmentationList}','Segmentation - Account is in segmentation / report','EXISTS (SELECT * FROM THEGURU_SEGMENTATION_RESULT SEGTABLE WHERE SEGTABLE.REPORT_ID = {0} AND SEGTABLE.ENTITY_ID = [VIEWNAME].CONSTITUENT_CONSTITUENT_ID)'),
  (610000,'Segmentation - Gift is in segmentation / report <br> {lookupReferenceBean:orangeLeapGiftSegmentationList}','Segmentation - Gift is in segmentation / report','EXISTS (SELECT * FROM THEGURU_SEGMENTATION_RESULT SEGTABLE WHERE SEGTABLE.REPORT_ID = {0} AND SEGTABLE.ENTITY_ID = [VIEWNAME].GIFT_GIFT_ID)'),
- (620000,'Segmentation - Gift Distribution is in segmentation / report <br> {lookupReferenceBean:orangeLeapGiftDistributionSegmentationList}','Segmentation - Gift Distribution is in segmentation / report','EXISTS (SELECT * FROM THEGURU_SEGMENTATION_RESULT SEGTABLE WHERE SEGTABLE.REPORT_ID = {0} AND SEGTABLE.ENTITY_ID = [VIEWNAME].GIFT_GIFT_ID)');
+ (620000,'Segmentation - Gift Distribution is in segmentation / report <br> {lookupReferenceBean:orangeLeapGiftDistributionSegmentationList}','Segmentation - Gift Distribution is in segmentation / report','EXISTS (SELECT * FROM THEGURU_SEGMENTATION_RESULT SEGTABLE WHERE SEGTABLE.REPORT_ID = {0} AND SEGTABLE.ENTITY_ID = [VIEWNAME].GIFT_GIFT_ID)'),
+ (630000,'Segmentation - Gift Adjustment is in segmentation / report <br> {lookupReferenceBean:orangeLeapAdjustedGiftSegmentationList}','Segmentation - Gift Adjustment is in segmentation / report','EXISTS (SELECT * FROM THEGURU_SEGMENTATION_RESULT SEGTABLE WHERE SEGTABLE.REPORT_ID = {0} AND SEGTABLE.ENTITY_ID = [VIEWNAME].ADJUSTED_GIFT_ADJUSTED_GIFT_ID)'),
+ (630001,'Segmentation - Gift Adjustment is in segmentation / report <br> {lookupReferenceBean:orangeLeapAdjustedGiftSegmentationList}','Segmentation - Gift Adjustment is in segmentation / report','EXISTS (SELECT * FROM THEGURU_SEGMENTATION_RESULT SEGTABLE WHERE SEGTABLE.REPORT_ID = {0} AND SEGTABLE.ENTITY_ID = [VIEWNAME].VW_AGD_ADJUSTED_GIFT_ADJUSTED_GIFT_ID)');
 /*!40000 ALTER TABLE `REPORTCUSTOMFILTERDEFINITION` ENABLE KEYS */;
 
 
@@ -539,7 +541,11 @@ INSERT INTO `REPORTCUSTOMFILTERDEFINITION_REPORTDATASUBSOURCE` (`reportCustomFil
  (610000,40,40,113),
  (620000,13,13,620013),
  (620000,24,24,620024),
- (620000,35,35,620035);
+ (620000,35,35,620035),
+ (630000,14,14,630015),
+ (630001,23,23,630025),
+ (630001,24,24,630026),
+ (630001,25,25,630027);
 /*!40000 ALTER TABLE `REPORTCUSTOMFILTERDEFINITION_REPORTDATASUBSOURCE` ENABLE KEYS */;
 
 
@@ -10273,7 +10279,7 @@ CREATE TABLE `REPORTSEGMENTATIONTYPE` (
   `COLUMN_NAME` varchar(255) DEFAULT NULL,
   `SEGMENTATIONTYPE` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`REPORTSEGMENTATIONTYPE_ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `REPORTSEGMENTATIONTYPE`
@@ -10283,7 +10289,9 @@ CREATE TABLE `REPORTSEGMENTATIONTYPE` (
 INSERT INTO `REPORTSEGMENTATIONTYPE` (`REPORTSEGMENTATIONTYPE_ID`,`COLUMN_NAME`,`SEGMENTATIONTYPE`) VALUES 
  (1,'CONSTITUENT_CONSTITUENT_ID','Constituent Segmentation'),
  (2,'GIFT_GIFT_ID','Gift Segmentation'),
- (3,'DISTRO_LINE_DISTRO_LINE_ID','Gift Distribution Segmentation');
+ (3,'DISTRO_LINE_DISTRO_LINE_ID','Gift Distribution Segmentation'),
+ (4,'ADJUSTED_GIFT_ADJUSTED_GIFT_ID','Adjusted Gift Segmentation'),
+ (5,'VW_AGD_ADJUSTED_GIFT_ADJUSTED_GIFT_ID','Adjusted Gift Segmentation');
 /*!40000 ALTER TABLE `REPORTSEGMENTATIONTYPE` ENABLE KEYS */;
 
 
@@ -10343,7 +10351,11 @@ INSERT INTO `REPORTSEGMENTATIONTYPE_REPORTDATASUBSOURCE` (`reportSegmentationTyp
  (2,40,40,2),
  (3,13,13,3),
  (3,24,24,3),
- (3,35,35,3);
+ (3,35,35,3),
+ (4,14,14,4),
+ (5,23,23,5),
+ (5,24,24,5),
+ (5,25,25,5);
 /*!40000 ALTER TABLE `REPORTSEGMENTATIONTYPE_REPORTDATASUBSOURCE` ENABLE KEYS */;
 
 
@@ -10673,7 +10685,7 @@ CREATE TABLE `VERSIONLOG` (
   `SCRIPT` varchar(255) NOT NULL,
   `INSTALLDATE` datetime NOT NULL,
   PRIMARY KEY (`VERSION_ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `VERSIONLOG`
@@ -10708,7 +10720,11 @@ INSERT INTO `VERSIONLOG` (`VERSION_ID`,`SCRIPT`,`INSTALLDATE`) VALUES
  (25,'20091012_01_DU_ReportSegmentationType_ReportDataSubSource.sql','2009-10-12 14:25:16'),
  (26,'20091012_02_DU_ReportCustomFilterDefinition_ReportDataSubSource.sql','2009-10-12 14:25:16'),
  (27,'20091015_01_DU_ReportField_DesignationID.sql','2009-10-15 11:30:24'),
- (28,'20091016_01_DU_ConstituentsRelationshipDetails.sql','2009-10-16 14:02:43');
+ (28,'20091016_01_DU_ConstituentsRelationshipDetails.sql','2009-10-16 14:02:43'),
+ (29,'20091026_01_DU_ReportSegmentationType_ReportDataSubSource.sql','2009-11-05 11:28:09'),
+ (30,'20091026_02_DU_ReportCustomFilterDefinition_ReportDataSubSource.sql','2009-11-05 11:28:09'),
+ (31,'20091105_01_DU_ReportSegmentationType_ReportDataSubSource.sql','2009-11-05 11:28:09'),
+ (32,'20091105_02_DU_ReportCustomFilterDefinition_ReportDataSubSource.sql','2009-11-05 11:28:14');
 /*!40000 ALTER TABLE `VERSIONLOG` ENABLE KEYS */;
 
 
