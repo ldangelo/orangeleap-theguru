@@ -228,10 +228,15 @@ public class TheGuruWebService {
         	
            	
            	
-           	
+        	GetSegmentationByIdResponse response = of.createGetSegmentationByIdResponse();           	
         	ReportWizard wiz = reportWizard.Find(request.getId());
         	
-        	GetSegmentationByIdResponse response = of.createGetSegmentationByIdResponse();
+        	if (wiz.getExecuteSegmentation() == false) {
+        		//
+        		// we should throw an error that the segmentation has not been executed...
+        		return response;
+        	}
+
         	
 
 
