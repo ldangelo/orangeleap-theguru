@@ -147,7 +147,7 @@ public class TheGuruWebService {
         			Iterator<ReportSegmentationResult> it2 = results.iterator();
         			while (it2.hasNext()) {
         				ReportSegmentationResult result = it2.next();
-        				response.getConstituentid().add(result.getEntityId());
+        				response.getEntityid().add(result.getEntityId());
         			}
         			break;
         		}
@@ -180,7 +180,7 @@ public class TheGuruWebService {
         			Iterator<ReportSegmentationResult> it2 = results.iterator();
         			while (it2.hasNext()) {
         				ReportSegmentationResult result = it2.next();
-        				response.getConstituentid().add(result.getEntityId());
+        				response.getEntityid().add(result.getEntityId());
         			}
         			break;
         		}
@@ -213,7 +213,7 @@ public class TheGuruWebService {
         	Iterator<ReportSegmentationResult> it2 = results.iterator();
         	while (it2.hasNext()) {
         		ReportSegmentationResult result = it2.next();
-        		response.getConstituentid().add(result.getEntityId());
+        		response.getEntityid().add(result.getEntityId());
 
         	}
 
@@ -231,7 +231,7 @@ public class TheGuruWebService {
         	GetSegmentationByIdResponse response = of.createGetSegmentationByIdResponse();           	
         	ReportWizard wiz = reportWizard.Find(request.getId());
         	
-        	if (wiz.getExecuteSegmentation() == false) {
+        	if (wiz.getResultCount() == 0) {
         		//
         		// we should throw an error that the segmentation has not been executed...
         		return response;
@@ -249,7 +249,7 @@ public class TheGuruWebService {
         	Iterator<ReportSegmentationResult> it2 = results.iterator();
         	while (it2.hasNext()) {
         		ReportSegmentationResult result = it2.next();
-        		response.getConstituentid().add(result.getEntityId());
+        		response.getEntityid().add(result.getEntityId());
 
         	}
 
