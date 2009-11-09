@@ -96,7 +96,7 @@
     <bean id="casProcessingFilter" class="org.springframework.security.ui.cas.CasProcessingFilter">
         <sec:custom-filter after="CAS_PROCESSING_FILTER"/>
         <property name="authenticationManager" ref="authenticationManager"/>
-        <property name="authenticationFailureUrl" value="/casfailed.jsp"/>
+        <property name="authenticationFailureUrl" value="/"/>
         <property name="defaultTargetUrl" value="/"/>
 <!--         <property name="authenticationDetailsSource" ref="customDetails"/> -->
         <property name="proxyGrantingTicketStorage" ref="proxyGrantingTicketStorage" />
