@@ -41,7 +41,17 @@ public class ReportWizardServiceImpl implements ReportWizardService {
 			Long reportDataSourceId) {
 		return reportWizardDAO.findSegmentationsByReportDataSourceId(reportDataSourceId);
 	}
-	
+
+	@Override
+	public List<ReportWizard> findSegmentationsBySegmentationTypeName(String segmentationTypeName) {
+		return reportWizardDAO.findSegmentationsBySegmentationTypeName(segmentationTypeName);
+	}
+
+	@Override
+	public List<ReportWizard> findSegmentationsBySegmentationTypeName(String segmentationTypeName, int startIndex, int resultCount, String sortField, String sortOrder) {
+		return reportWizardDAO.findSegmentationsBySegmentationTypeName(segmentationTypeName, startIndex, resultCount, sortField, sortOrder);
+	}
+
 	@Override
 	public List<ReportWizard> findAllSegmentations() {
 		return reportWizardDAO.findAllSegmentations();

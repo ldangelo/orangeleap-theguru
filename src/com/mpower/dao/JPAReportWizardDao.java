@@ -41,7 +41,30 @@ public class JPAReportWizardDao implements ReportWizardDao {
 
 		return reportWizardResultList;
 	}
-	
+
+	public List<ReportWizard> findSegmentationsBySegmentationTypeName(String segmentationTypeName) {
+		return findSegmentationsBySegmentationTypeName(segmentationTypeName, 0, 0, null, null);
+	}
+
+	public List<ReportWizard> findSegmentationsBySegmentationTypeName(String segmentationTypeName, int startIndex, int resultCount, String sortField, String sortOrder) {
+		String queryString = "select reportwizard from ReportWizard reportwizard, ReportSegmentationType reportSegmentationType where reportWizard.reportSegmentationTypeId = reportSegmentationType.id and reportSegmentationType.segmentationType = :segmentationTypeName";
+		if (sortField != null && sortField.length() > 0) {
+			queryString += " order by reportWizard." + sortField;
+			if (sortOrder != null && sortOrder.length() > 0) {
+				queryString += " " + sortOrder;
+			}
+		}
+		Query q = em.createQuery(queryString);
+		if (startIndex > 0)
+			q.setFirstResult(startIndex);
+		if (resultCount > 0)
+			q.setMaxResults(resultCount);
+		q.setParameter("segmentationTypeName", segmentationTypeName);
+		List<ReportWizard> reportWizardResultList = q.getResultList();
+
+		return reportWizardResultList;
+	}
+
 	public List<ReportWizard> findAllSegmentations() {
 		Query q = em.createQuery("select reportwizard from ReportWizard reportwizard where reportwizard.useReportAsSegmentation = true");
 

@@ -11,6 +11,8 @@ public interface ReportWizardDao {
 	ReportWizard		findByUri(String reportPath, String reportName);
 	List<ReportWizard>  getAll();
 	List<ReportWizard>  findSegmentationsByReportDataSourceId(Long reportDataSourceId);
+	List<ReportWizard>  findSegmentationsBySegmentationTypeName(String segmentationTypeName);
+	List<ReportWizard>  findSegmentationsBySegmentationTypeName(String segmentationTypeName, int startIndex, int resultCount, String sortField, String sortOrder);
 	List<ReportWizard>  findAllSegmentations();
 	void updateSegmentationExecutionInformation(Long reportId, String lastRunByUserName, Date lastRunDate, int resultCount, long executionTime);
 }

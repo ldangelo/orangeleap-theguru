@@ -9,6 +9,8 @@ public interface ReportWizardService {
 	ReportWizard Find(Long id);
 	ReportWizard FindByUri(String reportPath, String reportName);
 	List<ReportWizard> findSegmentationsByReportDataSourceId(Long reportDataSourceId);
+	List<ReportWizard> findSegmentationsBySegmentationTypeName(String segmentationTypeName);
+	List<ReportWizard> findSegmentationsBySegmentationTypeName(String segmentationTypeName, int startIndex, int resultCount, String sortField, String sortOrder);
 	List<ReportWizard> findAllSegmentations();
 	List<ReportWizard> getAll();
 	void save(ReportWizard wiz);

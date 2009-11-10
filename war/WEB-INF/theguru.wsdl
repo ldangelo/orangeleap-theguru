@@ -100,6 +100,30 @@
 	<xs:complexType>
 		<xs:sequence>
 			<xs:element maxOccurs="1" minOccurs="1" name="type" type="xs:string"/>
+			<xs:element maxOccurs="1" minOccurs="0" name="startIndex" type="xs:int"/>
+			<xs:element maxOccurs="1" minOccurs="0" name="resultCount" type="xs:int"/>
+			<xs:element maxOccurs="1" minOccurs="0" name="sortField">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="id"/>
+						<xs:enumeration value="reportName"/>
+						<xs:enumeration value="lastRunByUserName"/>
+						<xs:enumeration value="lastRunDateTime"/>
+						<xs:enumeration value="executionTime"/>
+						<xs:enumeration value="resultCount"/>
+						<xs:enumeration value="reportPath"/>
+						<xs:enumeration value="reportComment"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element maxOccurs="1" minOccurs="0" name="sortDirection">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="ASC"/>
+						<xs:enumeration value="DESC"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 </xs:element>

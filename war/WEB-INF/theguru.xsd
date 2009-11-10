@@ -30,13 +30,13 @@
 		      <xs:element name="entityid" type="xs:long" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 	</xs:complexType>
-</xs:element>     
+</xs:element>
 
 <xs:element name="ExecuteSegmentationByIdRequest">
 	<xs:complexType>
 		<xs:sequence>
 			<xs:element name="id" type="xs:long"/>
-		</xs:sequence>			
+		</xs:sequence>
 	</xs:complexType>
 </xs:element>
 
@@ -83,10 +83,10 @@
 <xs:element name="GetSegmentationListRequest">
     <xs:complexType>
         <xs:sequence>
-            <xs:element name="dummy" type="xs:string"/> 
+            <xs:element name="dummy" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
-   
+
 </xs:element>
 
 <xs:element name="GetSegmentationListResponse">
@@ -100,7 +100,33 @@
 <xs:element name="GetSegmentationListByTypeRequest">
 	<xs:complexType>
 		<xs:sequence>
-			<xs:element name="type" type="xs:string" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="type" type="xs:string" minOccurs="1"
+				maxOccurs="1" />
+			<xs:element name="startIndex" type="xs:int" maxOccurs="1" minOccurs="0"></xs:element>
+			<xs:element name="resultCount" type="xs:int" maxOccurs="1" minOccurs="0"></xs:element>
+			<xs:element name="sortField" maxOccurs="1" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="id"></xs:enumeration>
+						<xs:enumeration value="reportName"></xs:enumeration>
+						<xs:enumeration value="lastRunByUserName"></xs:enumeration>
+						<xs:enumeration value="lastRunDateTime"></xs:enumeration>
+						<xs:enumeration value="executionTime"></xs:enumeration>
+						<xs:enumeration value="resultCount"></xs:enumeration>
+						<xs:enumeration value="reportPath"></xs:enumeration>
+						<xs:enumeration value="reportComment"></xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="sortDirection" maxOccurs="1"
+				minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="ASC"></xs:enumeration>
+						<xs:enumeration value="DESC"></xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 </xs:element>
@@ -115,4 +141,8 @@
 
 
 
-</xs:schema>	   
+
+
+
+
+</xs:schema>
