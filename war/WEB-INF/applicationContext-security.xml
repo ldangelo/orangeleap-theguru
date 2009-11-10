@@ -17,8 +17,10 @@
 
     <!-- http auth config -->
     <sec:http entry-point-ref="casProcessingFilterEntryPoint" >
-        <sec:intercept-url pattern="/**" access="ROLE_WIZARD" />
+        <sec:intercept-url pattern="/loggedout*" access="IS_AUTHENTICATED_ANONYMOUSLY" />
+        <sec:intercept-url pattern="/clearcookies*" access="IS_AUTHENTICATED_ANONYMOUSLY" />
         <sec:intercept-url pattern="/services/**" filters="none" />
+        <sec:intercept-url pattern="/**" access="ROLE_WIZARD" />
         <sec:anonymous granted-authority="ROLE_ANONYMOUS" key="anonymous" username="anonymous"/>
 <!--         <sec:concurrent-session-control max-sessions="1" expired-url="/../${contextPrefix}jasperserver/" /> -->
         <sec:logout invalidate-session="true"  logout-success-url="/../${contextPrefix}jasperserver/" logout-url="/exituser.html"/>
