@@ -16,28 +16,25 @@ public class ClementineAuthenticationHelper implements AuthenticationHelper {
 
 	@Override
 	public void postProcess(Authentication authentication) {
-		
+		Map<String, Object> info = OrangeLeapUsernamePasswordLocal.getOrangeLeapAuthInfo();
 		if (authentication instanceof UsernamePasswordAuthenticationToken) {
-		
+
 			UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken)authentication;
 
 			if (SecurityContextHolder.getContext().getAuthentication() == null) {
 				SecurityContextHolder.getContext().setAuthentication(token);
 			}
+			token.setDetails(info);
 		} else if (authentication instanceof CasAuthenticationToken) {
 			CasAuthenticationToken token = (CasAuthenticationToken) authentication;
-			
-			if (SecurityContextHolder.getContext().getAuthentication() == null) {
+			if (SecurityContextHolder.getContext().getAuthentication() == null)
 				SecurityContextHolder.getContext().setAuthentication(token);
-				Map<String, Object> info = OrangeLeapUsernamePasswordLocal.getOrangeLeapAuthInfo();
-				
-				String userName = ((LdapUserDetails)token.getPrincipal()).getUsername();
-				String siteName = userName.substring(userName.indexOf('@') +1);
-				info.put(OrangeLeapUsernamePasswordLocal.PASSWORD, ((LdapUserDetails)token.getPrincipal()).getPassword());
-				info.put(OrangeLeapUsernamePasswordLocal.USER_NAME,userName);
-				info.put(OrangeLeapUsernamePasswordLocal.SITE,siteName);
-			}
+			token.setDetails(info);
 		}
+		String userName = ((LdapUserDetails)authentication.getPrincipal()).getUsername();
+		String siteName = userName.substring(userName.indexOf('@') +1);
+		info.put(OrangeLeapUsernamePasswordLocal.PASSWORD, ((LdapUserDetails)authentication.getPrincipal()).getPassword());
+		info.put(OrangeLeapUsernamePasswordLocal.USER_NAME,userName);
+		info.put(OrangeLeapUsernamePasswordLocal.SITE,siteName);
 	}
-
 }

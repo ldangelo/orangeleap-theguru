@@ -77,13 +77,13 @@ public class TheGuruDataSource implements DataSource {
 
 	private String getSiteName() {
 		try {
-			Map<String, Object> info = OrangeLeapUsernamePasswordLocal.getOrangeLeapAuthInfo();
-	        
+			Map<String, Object> info = (Map<String, Object>)SecurityContextHolder.getContext().getAuthentication().getDetails();
+
 			String site = (String) info.get(OrangeLeapUsernamePasswordLocal.SITE);
-			
-			if (site != null) 
+
+			if (site != null)
 				return site + "theguru";
-			else 
+			else
 				return THEGURU_DEFAULT_SCHEMA;
 		} catch (Exception exception) {
 			logger.error(exception);
