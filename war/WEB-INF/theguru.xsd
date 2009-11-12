@@ -12,7 +12,7 @@
      	<xs:element name="type" type="xs:string"/>
      	<xs:element name="executionUser" type="xs:string"/>
      	<xs:element name="executionCount" type="xs:long"/>
-     	<xs:element name="executionDate" type="xs:date"/>
+     	<xs:element name="executionDate" type="xs:dateTime"/>
      </xs:sequence>
     </xs:complexType>
 

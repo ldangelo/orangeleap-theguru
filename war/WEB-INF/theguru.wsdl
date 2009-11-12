@@ -11,7 +11,7 @@
      	<xs:element name="type" type="xs:string"/>
      	<xs:element name="executionUser" type="xs:string"/>
      	<xs:element name="executionCount" type="xs:long"/>
-     	<xs:element name="executionDate" type="xs:date"/>
+     	<xs:element name="executionDate" type="xs:dateTime"/>
      </xs:sequence>
     </xs:complexType>
 
@@ -26,23 +26,23 @@
 <xs:element name="GetSegmentationByIdResponse">
 	<xs:complexType>
 		<xs:sequence>
-		      <xs:element maxOccurs="unbounded" minOccurs="0" name="constituentid" type="xs:long"/>
+		      <xs:element maxOccurs="unbounded" minOccurs="0" name="entityid" type="xs:long"/>
 		</xs:sequence>
 	</xs:complexType>
-</xs:element>     
+</xs:element>
 
 <xs:element name="ExecuteSegmentationByIdRequest">
 	<xs:complexType>
 		<xs:sequence>
 			<xs:element name="id" type="xs:long"/>
-		</xs:sequence>			
+		</xs:sequence>
 	</xs:complexType>
 </xs:element>
 
 <xs:element name="ExecuteSegmentationByIdResponse">
 	<xs:complexType>
 		<xs:sequence>
-		      <xs:element maxOccurs="unbounded" minOccurs="0" name="constituentid" type="xs:long"/>
+		      <xs:element maxOccurs="unbounded" minOccurs="0" name="entityid" type="xs:long"/>
 		</xs:sequence>
 	</xs:complexType>
 </xs:element>
@@ -58,7 +58,7 @@
 <xs:element name="ExecuteSegmentationByNameResponse">
 	<xs:complexType>
 		<xs:sequence>
-		      <xs:element maxOccurs="unbounded" minOccurs="0" name="constituentid" type="xs:long"/>
+		      <xs:element maxOccurs="unbounded" minOccurs="0" name="entityid" type="xs:long"/>
 		</xs:sequence>
 	</xs:complexType>
 </xs:element>
@@ -74,7 +74,7 @@
 <xs:element name="GetSegmentationByNameResponse">
   <xs:complexType>
     <xs:sequence>
-      <xs:element maxOccurs="unbounded" minOccurs="0" name="constituentid" type="xs:long"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="entityid" type="xs:long"/>
     </xs:sequence>
   </xs:complexType>
 </xs:element>
@@ -82,10 +82,10 @@
 <xs:element name="GetSegmentationListRequest">
     <xs:complexType>
         <xs:sequence>
-            <xs:element name="dummy" type="xs:string"/> 
+            <xs:element name="dummy" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
-   
+
 </xs:element>
 
 <xs:element name="GetSegmentationListResponse">
@@ -135,6 +135,10 @@
     </xs:sequence>
     </xs:complexType>
 </xs:element>
+
+
+
+
 
 
 
