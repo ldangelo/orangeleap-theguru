@@ -25,16 +25,22 @@ public class ClementineAuthenticationHelper implements AuthenticationHelper {
 				SecurityContextHolder.getContext().setAuthentication(token);
 			}
 			token.setDetails(info);
+			info.put(OrangeLeapUsernamePasswordLocal.PASSWORD, authentication.getCredentials());
 		} else if (authentication instanceof CasAuthenticationToken) {
 			CasAuthenticationToken token = (CasAuthenticationToken) authentication;
 			if (SecurityContextHolder.getContext().getAuthentication() == null)
 				SecurityContextHolder.getContext().setAuthentication(token);
 			token.setDetails(info);
+			info.put(OrangeLeapUsernamePasswordLocal.PASSWORD, ((LdapUserDetails)authentication.getPrincipal()).getPassword());
 		}
 		String userName = ((LdapUserDetails)authentication.getPrincipal()).getUsername();
 		String siteName = userName.substring(userName.indexOf('@') +1);
-		info.put(OrangeLeapUsernamePasswordLocal.PASSWORD, ((LdapUserDetails)authentication.getPrincipal()).getPassword());
+
 		info.put(OrangeLeapUsernamePasswordLocal.USER_NAME,userName);
 		info.put(OrangeLeapUsernamePasswordLocal.SITE,siteName);
+		
+		//
+		// let's switch schema's here since we know we are authenticated properly now...
+		
 	}
 }
