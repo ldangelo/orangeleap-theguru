@@ -668,8 +668,8 @@ INSERT INTO `REPORTDATASUBSOURCE` (`REPORTSUBSOURCE_ID`,`DATABASE_TYPE`,`DESCRIP
  (45,0,NULL,'Touch Points','/datasources/ReportWizardJdbcDS',0,'VW_TOUCHPOINTS',5,'/datasources/ReportWizardJdbcDSSegmentationResults'),
  (46,0,NULL,'Touch Points & Constituent Information','/datasources/ReportWizardJdbcDS',0,'VW_TOUCHPOINTS_CONSTITUENT_INFORMATION',5,'/datasources/ReportWizardJdbcDSSegmentationResults'),
  (47,0,NULL,'Constituents & Relationship Details','/datasources/ReportWizardJdbcDS',0,'VW_CONSTITUENTS_RELATIONSHIP_DETAILS',3,'/datasources/ReportWizardJdbcDSSegmentationResults'),
- (48,0,NULL,'Journals-theguru','/datasources/ReportWizardJdbcDS',0,'VW_JOURNAL',6,'/datasources/ReportWizardJdbcDSSegmentationResults'),
- (49,0,NULL,'Journals, Gifts & Adjusted Gifts-theguru','/datasources/ReportWizardJdbcDS',0,'VW_JOURNAL_GIFTS_ADJUSTED_GIFTS',6,'/datasources/ReportWizardJdbcDSSegmentationResults');
+ (48,0,NULL,'Journals','/datasources/ReportWizardJdbcDS',0,'VW_JOURNAL',6,'/datasources/ReportWizardJdbcDSSegmentationResults'),
+ (49,0,NULL,'Journals, Gifts & Adjusted Gifts','/datasources/ReportWizardJdbcDS',0,'VW_JOURNAL_GIFTS_ADJUSTED_GIFTS',6,'/datasources/ReportWizardJdbcDSSegmentationResults');
 /*!40000 ALTER TABLE `REPORTDATASUBSOURCE` ENABLE KEYS */;
 
 
@@ -5836,8 +5836,8 @@ INSERT INTO `REPORTFIELDGROUP` (`REPORTFIELDGROUP_ID`,`Name`) VALUES
  (271,'Related Account Matching Information'),
  (272,'Related Account Miscellaneous Information'),
  (273,'Related Account Current Address Information'),
- (274,'Journal-theguru'),
- (275,'Journal-theguru'),
+ (274,'Journal'),
+ (275,'Journal'),
  (276,'Gift Information'),
  (277,'Payment Information'),
  (278,'Payment Status Information'),
