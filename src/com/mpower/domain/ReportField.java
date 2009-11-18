@@ -83,7 +83,12 @@ public class ReportField implements java.io.Serializable,
 	@Column(name = "RECORD_COUNT")
 	private Boolean recordCount;
 
-
+	@Column(name = "URL")
+	private String   url;
+	
+	@Column(name = "TOOLTIP")
+	private String   toolTip;
+	
 
 	public Boolean getPerformSummary() {
 		return performSummary;
@@ -148,6 +153,8 @@ public class ReportField implements java.io.Serializable,
 		isSummarized = f.isSummarized;
 		selected = f.selected;
 		recordCount = f.recordCount;
+		url = f.url;
+		toolTip = f.toolTip;
 		// reportFieldGroup = new
 		// ArrayList<ReportFieldGroup>(f.reportFieldGroup);
 	}
@@ -270,5 +277,21 @@ public class ReportField implements java.io.Serializable,
 
 	public void setGroupBy(boolean groupBy){
 		this.groupBy = groupBy;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	public String getToolTip() {
+		return toolTip;
+	}
+
+	public void setToolTip(String toolTip) {
+		this.toolTip = toolTip;
 	}
 }

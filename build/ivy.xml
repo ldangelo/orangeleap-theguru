@@ -35,7 +35,7 @@
 
 
     	<!-- Orange Leap -->
-        <dependency org="orangeleap" name="dynamicjasper" transitive="false" rev="3.0.5" classifier="ModifiedByOrangeLeap" >
+        <dependency org="ar.com.fdvs" name="DynamicJasper" transitive="false" rev="3.0.13" >
             <artifact name="DynamicJasper" type="jar"/>
         </dependency>
 
@@ -471,16 +471,16 @@
 
         <!-- Jasper ireport plugin -->
         <dependency org="com.jaspersoft.jasperserver.irplugin" name="jasperserver-ireport-plugin" transitive="false"
-                    rev="3.0.0">
+                    rev="3.5.0">
             <artifact name="jasperserver-ireport-plugin" type="jar"/>
         </dependency>
         <!-- Jasperserver common -->
-        <dependency org="com.jaspersoft.jasperserver" name="jasperserver-common-ws" transitive="false" rev="3.0.0">
+        <dependency org="com.jaspersoft.jasperserver" name="jasperserver-common-ws" transitive="false" rev="3.5.0">
             <artifact name="jasperserver-common-ws" type="jar"/>
         </dependency>
 
         <!-- Jasper Reports -->
-        <dependency org="net.sf.jasperreports" name="jasperreports" transitive="false" rev="3.0.0">
+        <dependency org="net.sf.jasperreports" name="jasperreports" transitive="false" rev="3.5.0">
             <artifact name="jasperreports" type="jar"/>
         </dependency>
         <dependency org="org.apache.axis" name="axis" transitive="false" rev="1.3">

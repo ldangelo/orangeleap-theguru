@@ -31,7 +31,9 @@ import ar.com.fdvs.dj.domain.DJChartOptions;
 import ar.com.fdvs.dj.domain.DJCrosstab;
 import ar.com.fdvs.dj.domain.DJCrosstabColumn;
 import ar.com.fdvs.dj.domain.DJCrosstabRow;
+import ar.com.fdvs.dj.domain.DJHyperLink;
 import ar.com.fdvs.dj.domain.DynamicReport;
+import ar.com.fdvs.dj.domain.StringExpression;
 import ar.com.fdvs.dj.domain.Style;
 import ar.com.fdvs.dj.domain.builders.ColumnBuilder;
 import ar.com.fdvs.dj.domain.builders.ColumnBuilderException;
@@ -47,6 +49,7 @@ import ar.com.fdvs.dj.domain.constants.VerticalAlign;
 import ar.com.fdvs.dj.domain.entities.DJGroup;
 import ar.com.fdvs.dj.domain.entities.columns.AbstractColumn;
 import ar.com.fdvs.dj.domain.entities.columns.PropertyColumn;
+import ar.com.fdvs.dj.domain.hyperlink.LiteralExpression;
 
 import com.jaspersoft.jasperserver.api.metadata.xml.domain.impl.ResourceDescriptor;
 import com.jaspersoft.jasperserver.irplugin.JServer;
@@ -322,6 +325,7 @@ public class ReportGenerator implements java.io.Serializable {
 
 		drb.setQuery(query, DJConstants.QUERY_LANGUAGE_SQL);
 		drb.setTemplateFile(templateFile.getAbsolutePath());
+
 		DynamicReport dr = drb.build();
 
 		return dr;
@@ -414,7 +418,7 @@ public class ReportGenerator implements java.io.Serializable {
 
 				//add the measure column to the dynamic report builder
 				AbstractColumn column = null;
-				column = buildColumn(fMeasure, columnIndex);
+				column = buildColumn(drb,fMeasure, columnIndex);
 				drb.addColumn(column);
 
 				//now add the measure to the crosstab builder
@@ -434,7 +438,7 @@ public class ReportGenerator implements java.io.Serializable {
 				valueClassName = getValueClassName(fRow);
 				//add the row column to the dynamic report builder
 				AbstractColumn column = null;
-				column = buildColumn(fRow, columnIndex);
+				column = buildColumn(drb,fRow, columnIndex);
 				drb.addColumn(column);
 				columnIndex++;
 
@@ -443,7 +447,7 @@ public class ReportGenerator implements java.io.Serializable {
 				.setHeaderWidth(100).setHeight(20).setTitle(fRow.getDisplayName()).setShowTotals(true)
 				.setTotalStyle(CrossTabTotalStyle).setHeaderStyle(CrossTabColRowHeaderStyle).setTotalHeaderStyle(CrossTabColRowHeaderStyle)
 				.setTotalStyle(CrossTabColRowHeaderTotalStyle)
-				.setSortOrder((ctRow.getSortOrder().compareToIgnoreCase("DESC") == 0) ? DJConstants.ORDER_DESCENDING : DJConstants.ORDER_ASCENDING)
+//				.setSortOrder((ctRow.getSortOrder().compareToIgnoreCase("DESC") == 0) ? DJConstants.ORDER_DESCENDING : DJConstants.ORDER_ASCENDING)
 				.build();
 				cb.addRow(row);
 			}
@@ -460,7 +464,7 @@ public class ReportGenerator implements java.io.Serializable {
 				valueClassName = getValueClassName(fCol);
 				//add the  column to the dynamic report builder
 				AbstractColumn column = null;
-				column = buildColumn(fCol, columnIndex);
+				column = buildColumn(drb,fCol, columnIndex);
 				drb.addColumn(column);
 				columnIndex++;
 
@@ -469,7 +473,7 @@ public class ReportGenerator implements java.io.Serializable {
 				.setHeaderHeight(60).setWidth(80).setTitle(fCol.getDisplayName()).setShowTotals(true)
 				.setTotalStyle(CrossTabTotalStyle).setHeaderStyle(CrossTabColRowHeaderStyle).setTotalHeaderStyle(CrossTabColRowHeaderStyle)
 				.setTotalStyle(CrossTabColRowHeaderTotalStyle)
-				.setSortOrder((ctCol.getSortOrder().compareToIgnoreCase("DESC") == 0) ? DJConstants.ORDER_DESCENDING : DJConstants.ORDER_ASCENDING)
+//				.setSortOrder((ctCol.getSortOrder().compareToIgnoreCase("DESC") == 0) ? DJConstants.ORDER_DESCENDING : DJConstants.ORDER_ASCENDING)
 				.build();
 				cb.addColumn(col);
 			}
@@ -533,6 +537,8 @@ public class ReportGenerator implements java.io.Serializable {
 			newField.setRecordCount(reportSelectedField.getCount());
 			newField.setGroupBy(reportSelectedField.getGroupBy());
 			newField.setSelected(true);
+			newField.setUrl(f.getUrl());
+			newField.setToolTip(f.getToolTip());
 			//f.setDynamicColumnName(f.getColumnName() + "_" + columnIndex.toString());
 			//columnIndex++;
 			selectedReportFieldsList.add(newField);
@@ -551,8 +557,9 @@ public class ReportGenerator implements java.io.Serializable {
 		while (itFields.hasNext()){
 			ReportField f = (ReportField) itFields.next();
 			//Build and add the column
-			AbstractColumn column = buildColumn(f, columnIndex);
+			AbstractColumn column = buildColumn(drb, f, columnIndex);
 			drb.addColumn(column);
+			
 			//Build and add the group if it is a groupby field
 			DJGroup group = null;
 			if  ( f.getGroupBy()){
@@ -569,6 +576,8 @@ public class ReportGenerator implements java.io.Serializable {
 				chart = setChartColumns(chart, column, group, f, reportFieldService, wiz);
 				chartExists = true;
 			}
+			
+
 			columnIndex++;
 		}
 
@@ -605,7 +614,7 @@ public class ReportGenerator implements java.io.Serializable {
 					JRDesignExpression categoryAxisLabelExpression = new JRDesignExpression();
 					categoryAxisLabelExpression.setValueClass(String.class);
 					categoryAxisLabelExpression.setText(xAxisLabel);
-					options.setCategoryAxisLabelExpression(categoryAxisLabelExpression);
+//					options.setCategoryAxisLabelExpression(categoryAxisLabelExpression);
 				}
 
 				//Add the y axis label
@@ -625,7 +634,7 @@ public class ReportGenerator implements java.io.Serializable {
 					JRDesignExpression valueAxisLabelExpression = new JRDesignExpression();
 					valueAxisLabelExpression.setValueClass(String.class);
 					valueAxisLabelExpression.setText(yAxisLabel);
-					options.setValueAxisLabelExpression(valueAxisLabelExpression);
+//					options.setValueAxisLabelExpression(valueAxisLabelExpression);
 				}
 
 			}
@@ -692,7 +701,7 @@ public class ReportGenerator implements java.io.Serializable {
 		return group;
 	}
 
-	private AbstractColumn buildColumn(ReportField f, Integer columnIndex) {
+	private AbstractColumn buildColumn(FastReportBuilder drb, ReportField f, Integer columnIndex) {
 		String valueClassName = null;
 		String pattern = null;
 		valueClassName = getValueClassName(f);
@@ -711,6 +720,14 @@ public class ReportGenerator implements java.io.Serializable {
 			.setTitle(f.getDisplayName()).setPattern(pattern)
 			.build();
 			column.setName(columnName);
+			
+			//String link = new String();
+			//link = "\"http://localhost:8080/orangeleap/constituent.htm?constituentId=\" +  $F{CONSTITUENT_ACCOUNT_NUMBER_0}";
+			if (f.getUrl() != null) {
+				column.setTextLink(f.getUrl());
+				column.setToolTip(f.getToolTip());
+				drb.addField(f.getPrimaryKeys(), Long.class.getName());
+			}
 		} catch (ColumnBuilderException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

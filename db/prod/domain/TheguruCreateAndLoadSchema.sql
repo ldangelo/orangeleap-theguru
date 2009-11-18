@@ -1055,6 +1055,8 @@ CREATE TABLE `REPORTFIELD` (
   `FIELD_TYPE` int(11) default NULL,
   `ALIAS_NAME` varchar(255) default NULL,
   `PRIMARY_KEYS` varchar(255) default NULL,
+  `URL` varchar(255) default NULL,
+  'TOOLTIP' varchar(255) default NULL,
   PRIMARY KEY  (`REPORTFIELD_ID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5061 DEFAULT CHARSET=latin1;
 
