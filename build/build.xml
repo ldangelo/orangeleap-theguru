@@ -258,6 +258,7 @@
 		    <transaction src="${basedir}/db/prod/domain/TheguruCreateAndLoadSchema-NoFunctions.sql"/>
 		    <transaction src="${basedir}/db/prod/domain/TheguruCreateFunctions-Part1.sql"/>
 	     	<transaction src="${basedir}/db/prod/domain/JasperserverCreateAndLoadSchema_company1.sql"/>
+	     	<transaction src="${basedir}/db/prod/domain/constituentURL.sql"/>
   	     </sql>
 
 	     <sql driver="${mysql.db.driver}"
@@ -378,10 +379,6 @@
 				<pathelement location="./build/classes"/>
 			</classpath>
 		</javadoc>
-	</target>
-
-	<target name="xjc.generate" description="Generates java classes from xsd">
-		<antcall target="xjc.generate"/>
 	</target>
 
 	<target name="app.synch" description="Synchs the XMHTML, JSP, JS, CSS, and Images of the project with a running application.">
