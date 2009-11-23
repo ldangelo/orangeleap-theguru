@@ -3,12 +3,13 @@ package com.mpower.security;
 import java.util.Map;
 
 import org.springframework.security.Authentication;
+import org.springframework.security.context.HttpSessionContextIntegrationFilter;
 import org.springframework.security.context.SecurityContextHolder;
 import org.springframework.security.providers.UsernamePasswordAuthenticationToken;
 import org.springframework.security.providers.cas.CasAuthenticationToken;
-import org.springframework.security.ui.WebAuthenticationDetails;
 import org.springframework.security.userdetails.ldap.LdapUserDetails;
 
+import com.orangeleap.common.security.OrangeLeapRequestLocal;
 import com.orangeleap.common.security.OrangeLeapUsernamePasswordLocal;
 import com.orangeleap.common.security.OrangeLeapAuthenticationProvider.AuthenticationHelper;
 
@@ -38,9 +39,11 @@ public class ClementineAuthenticationHelper implements AuthenticationHelper {
 
 		info.put(OrangeLeapUsernamePasswordLocal.USER_NAME,userName);
 		info.put(OrangeLeapUsernamePasswordLocal.SITE,siteName);
-		
+
 		//
 		// let's switch schema's here since we know we are authenticated properly now...
-		
+
+		//setting this in the session so that jasperserver will not have a null password
+		OrangeLeapRequestLocal.getRequest().getSession().setAttribute(HttpSessionContextIntegrationFilter.SPRING_SECURITY_CONTEXT_KEY, SecurityContextHolder.getContext());
 	}
 }

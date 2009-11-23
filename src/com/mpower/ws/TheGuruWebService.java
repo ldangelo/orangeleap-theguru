@@ -17,6 +17,7 @@ import org.apache.commons.logging.LogFactory;
 import com.mpower.domain.ReportSegmentationResult;
 import com.mpower.domain.ReportSegmentationType;
 import com.mpower.domain.ReportWizard;
+import com.mpower.service.JasperServerService;
 import com.mpower.service.ReportSegmentationResultsService;
 import com.mpower.service.ReportSegmentationResultsServiceImpl;
 import com.mpower.service.ReportSegmentationTypeService;
@@ -37,6 +38,8 @@ import com.mpower.ws.axis.GetSegmentationListRequest;
 import com.mpower.ws.axis.GetSegmentationListResponse;
 import com.mpower.ws.axis.ObjectFactory;
 import com.mpower.ws.axis.Segmentation;
+import com.orangeleap.common.security.CasUtil;
+import com.orangeleap.common.security.OrangeLeapAuthentication;
 import com.orangeleap.common.security.OrangeLeapUsernamePasswordLocal;
 import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
 
@@ -126,10 +129,10 @@ public class TheGuruWebService {
 			xmlDate.setHour(cal.get(GregorianCalendar.HOUR));
 			xmlDate.setMinute(cal.get(GregorianCalendar.MINUTE));
 			xmlDate.setSecond(cal.get(GregorianCalendar.SECOND));
-			
+
 			seg.setExecutionDate(xmlDate);
 		}
-		
+
 		ReportSegmentationType segType = reportSegmentationType.find(wiz.getId());
 		if (segType == null) seg.setType("Unknown");
 		else seg.setType(segType.getSegmentationType());
@@ -154,8 +157,11 @@ public class TheGuruWebService {
         			List<ReportSegmentationResult> results;
         			Map<String, Object> info = (Map<String, Object>)SecurityContextHolder.getContext().getAuthentication().getDetails();
 
-                	reportSegmentationResults.getJasperServerService().setUserName((String) info.get(OrangeLeapUsernamePasswordLocal.USER_NAME));
-                	reportSegmentationResults.getJasperServerService().setPassword((String) info.get(OrangeLeapUsernamePasswordLocal.PASSWORD));
+        			OrangeLeapAuthentication auth = new OrangeLeapAuthentication();
+
+        			JasperServerService jss = reportSegmentationResults.getJasperServerService();
+        			jss.setUserName(auth.getUserName());
+        			jss.setPassword(auth.getPassword());
 
         			reportSegmentationResults.executeSegmentation(wiz.getId());
         			results = reportSegmentationResults.readReportSegmentationResultsByReportId(wiz.getId());
@@ -188,12 +194,15 @@ public class TheGuruWebService {
         		if (request.getName().equalsIgnoreCase(wiz.getReportName())) {
 
         			List<ReportSegmentationResult> results;
-        			
+
 
            			Map<String, Object> info = (Map<String, Object>)SecurityContextHolder.getContext().getAuthentication().getDetails();
 
-                	reportSegmentationResults.getJasperServerService().setUserName((String) info.get(OrangeLeapUsernamePasswordLocal.USER_NAME));
-                	reportSegmentationResults.getJasperServerService().setPassword((String) info.get(OrangeLeapUsernamePasswordLocal.PASSWORD));
+        			OrangeLeapAuthentication auth = new OrangeLeapAuthentication();
+
+        			JasperServerService jss = reportSegmentationResults.getJasperServerService();
+        			jss.setUserName(auth.getUserName());
+        			jss.setPassword(auth.getPassword());
 
         			results = reportSegmentationResults.readReportSegmentationResultsByReportId(wiz.getId());
 
@@ -223,11 +232,14 @@ public class TheGuruWebService {
 
 
         	List<ReportSegmentationResult> results;
-        	
+
         	Map<String, Object> info = (Map<String, Object>)SecurityContextHolder.getContext().getAuthentication().getDetails();
 
-        	reportSegmentationResults.getJasperServerService().setUserName((String) info.get(OrangeLeapUsernamePasswordLocal.USER_NAME));
-        	reportSegmentationResults.getJasperServerService().setPassword((String) info.get(OrangeLeapUsernamePasswordLocal.PASSWORD));
+			OrangeLeapAuthentication auth = new OrangeLeapAuthentication();
+
+			JasperServerService jss = reportSegmentationResults.getJasperServerService();
+			jss.setUserName(auth.getUserName());
+			jss.setPassword(auth.getPassword());
 
         	reportSegmentationResults.executeSegmentation(wiz.getId());
 
@@ -267,9 +279,12 @@ public class TheGuruWebService {
 			Map<String, Object> info = (Map<String, Object>)SecurityContextHolder.getContext().getAuthentication().getDetails();
 
 			String site = (String) info.get(OrangeLeapUsernamePasswordLocal.SITE);
-        	
-        	reportSegmentationResults.getJasperServerService().setUserName((String) info.get(OrangeLeapUsernamePasswordLocal.USER_NAME));
-        	reportSegmentationResults.getJasperServerService().setPassword((String) info.get(OrangeLeapUsernamePasswordLocal.PASSWORD));
+
+			OrangeLeapAuthentication auth = new OrangeLeapAuthentication();
+
+			JasperServerService jss = reportSegmentationResults.getJasperServerService();
+			jss.setUserName(auth.getUserName());
+			jss.setPassword(auth.getPassword());
 
         	results = reportSegmentationResults.readReportSegmentationResultsByReportId(wiz.getId());
 
