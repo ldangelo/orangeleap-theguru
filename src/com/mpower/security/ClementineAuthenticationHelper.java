@@ -2,6 +2,9 @@ package com.mpower.security;
 
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.security.Authentication;
 import org.springframework.security.context.HttpSessionContextIntegrationFilter;
 import org.springframework.security.context.SecurityContextHolder;
@@ -44,6 +47,11 @@ public class ClementineAuthenticationHelper implements AuthenticationHelper {
 		// let's switch schema's here since we know we are authenticated properly now...
 
 		//setting this in the session so that jasperserver will not have a null password
-		OrangeLeapRequestLocal.getRequest().getSession().setAttribute(HttpSessionContextIntegrationFilter.SPRING_SECURITY_CONTEXT_KEY, SecurityContextHolder.getContext());
+		HttpServletRequest request = OrangeLeapRequestLocal.getRequest();
+		if (request != null) {
+		   HttpSession session = request.getSession();
+		   if (session != null) session.setAttribute(HttpSessionContextIntegrationFilter.SPRING_SECURITY_CONTEXT_KEY, SecurityContextHolder.getContext());
+		}
+		
 	}
 }
