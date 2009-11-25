@@ -65,6 +65,15 @@ public class JPAReportWizardDao implements ReportWizardDao {
 		return reportWizardResultList;
 	}
 
+	@Override
+	public long getSegmentationCountBySegmentationTypeName(String segmentationTypeName) {
+		String queryString = "select count(reportwizard.id) from ReportWizard reportwizard, ReportSegmentationType reportSegmentationType where reportWizard.reportSegmentationTypeId = reportSegmentationType.id and reportSegmentationType.segmentationType = :segmentationTypeName";
+		Query q = em.createQuery(queryString);
+		q.setParameter("segmentationTypeName", segmentationTypeName);
+		long result = Long.parseLong(q.getSingleResult().toString());
+		return result;
+	}
+
 	public List<ReportWizard> findAllSegmentations() {
 		Query q = em.createQuery("select reportwizard from ReportWizard reportwizard where reportwizard.useReportAsSegmentation = true");
 

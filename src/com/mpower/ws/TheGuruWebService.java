@@ -32,6 +32,8 @@ import com.mpower.ws.axis.GetSegmentationByIdRequest;
 import com.mpower.ws.axis.GetSegmentationByIdResponse;
 import com.mpower.ws.axis.GetSegmentationByNameRequest;
 import com.mpower.ws.axis.GetSegmentationByNameResponse;
+import com.mpower.ws.axis.GetSegmentationCountByTypeRequest;
+import com.mpower.ws.axis.GetSegmentationCountByTypeResponse;
 import com.mpower.ws.axis.GetSegmentationListByTypeRequest;
 import com.mpower.ws.axis.GetSegmentationListByTypeResponse;
 import com.mpower.ws.axis.GetSegmentationListRequest;
@@ -81,6 +83,14 @@ public class TheGuruWebService {
 			response.getSegmentation().add(seg);
 		}
 
+		return response;
+	}
+
+    @PayloadRoot(localPart = "GetSegmentationCountByTypeRequest", namespace = "http://www.orangeleap.com/theguru/services/1.0")
+    public GetSegmentationCountByTypeResponse getSegmentationCountByType(GetSegmentationCountByTypeRequest request) {
+    	ObjectFactory of = new ObjectFactory();
+    	GetSegmentationCountByTypeResponse response = of.createGetSegmentationCountByTypeResponse();
+    	response.setCount(reportWizard.getSegmentationCountBySegmentationTypeName(request.getType()));
 		return response;
 	}
 

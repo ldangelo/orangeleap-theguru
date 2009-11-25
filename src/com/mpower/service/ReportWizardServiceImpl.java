@@ -53,6 +53,11 @@ public class ReportWizardServiceImpl implements ReportWizardService {
 	}
 
 	@Override
+	public long getSegmentationCountBySegmentationTypeName(String segmentationTypeName) {
+		return reportWizardDAO.getSegmentationCountBySegmentationTypeName(segmentationTypeName);
+	}
+
+	@Override
 	public List<ReportWizard> findAllSegmentations() {
 		return reportWizardDAO.findAllSegmentations();
 	}
