@@ -717,7 +717,7 @@ public class ReportGenerator implements java.io.Serializable {
 		try {
 			column = ColumnBuilder.getInstance()
 			.setColumnProperty(columnName, valueClassName)
-			.setTitle(f.getDisplayName()).setPattern(pattern)
+			.setTitle(f.getDisplayName().replace("\"", "\\\"")).setPattern(pattern)
 			.build();
 			column.setName(columnName);
 			
