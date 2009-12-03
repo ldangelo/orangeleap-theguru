@@ -47,7 +47,7 @@ public class JPAReportWizardDao implements ReportWizardDao {
 	}
 
 	public List<ReportWizard> findSegmentationsBySegmentationTypeName(String segmentationTypeName, int startIndex, int resultCount, String sortField, String sortOrder) {
-		String queryString = "select reportwizard from ReportWizard reportwizard, ReportSegmentationType reportSegmentationType where reportWizard.reportSegmentationTypeId = reportSegmentationType.id and reportSegmentationType.segmentationType = :segmentationTypeName";
+		String queryString = "select reportwizard from ReportWizard reportwizard, ReportSegmentationType reportSegmentationType where reportWizard.reportSegmentationTypeId = reportSegmentationType.id and reportSegmentationType.segmentationType = :segmentationTypeName and reportwizard.useReportAsSegmentation = true";
 		if (sortField != null && sortField.length() > 0) {
 			queryString += " order by reportWizard." + sortField;
 			if (sortOrder != null && sortOrder.length() > 0) {
@@ -67,7 +67,7 @@ public class JPAReportWizardDao implements ReportWizardDao {
 
 	@Override
 	public long getSegmentationCountBySegmentationTypeName(String segmentationTypeName) {
-		String queryString = "select count(reportwizard.id) from ReportWizard reportwizard, ReportSegmentationType reportSegmentationType where reportWizard.reportSegmentationTypeId = reportSegmentationType.id and reportSegmentationType.segmentationType = :segmentationTypeName";
+		String queryString = "select count(reportwizard.id) from ReportWizard reportwizard, ReportSegmentationType reportSegmentationType where reportWizard.reportSegmentationTypeId = reportSegmentationType.id and reportSegmentationType.segmentationType = :segmentationTypeName and reportwizard.useReportAsSegmentation = true";
 		Query q = em.createQuery(queryString);
 		q.setParameter("segmentationTypeName", segmentationTypeName);
 		long result = Long.parseLong(q.getSingleResult().toString());
