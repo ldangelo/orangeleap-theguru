@@ -100,7 +100,7 @@ CREATE TABLE `REPORTCROSSTABCOLUMN` (
 --
 
 /*!40000 ALTER TABLE `REPORTCROSSTABCOLUMN` DISABLE KEYS */;
-INSERT INTO `REPORTCROSSTABCOLUMN` (`REPORTCROSSTABCOLUMN_ID`,`CALCULATION`,`REPORTFIELD_ID`,`GROUPDATEBYOPTION`,`SORTORDER`) VALUES
+INSERT INTO `REPORTCROSSTABCOLUMN` (`REPORTCROSSTABCOLUMN_ID`,`CALCULATION`,`REPORTFIELD_ID`,`GROUPDATEBYOPTION`,`SORTORDER`) VALUES 
  (1,'',953,0,'ASC'),
  (2,'',-1,0,'ASC'),
  (3,'',5567,0,'ASC'),
@@ -124,7 +124,7 @@ CREATE TABLE `REPORTCROSSTABFIELDS` (
 --
 
 /*!40000 ALTER TABLE `REPORTCROSSTABFIELDS` DISABLE KEYS */;
-INSERT INTO `REPORTCROSSTABFIELDS` (`REPORTCROSSTABFIELDS_ID`,`OPERATION`) VALUES
+INSERT INTO `REPORTCROSSTABFIELDS` (`REPORTCROSSTABFIELDS_ID`,`OPERATION`) VALUES 
  (1,''),
  (2,''),
  (3,''),
@@ -170,7 +170,7 @@ CREATE TABLE `REPORTCROSSTABFIELDS_REPORTCROSSTABCOLUMN` (
 --
 
 /*!40000 ALTER TABLE `REPORTCROSSTABFIELDS_REPORTCROSSTABCOLUMN` DISABLE KEYS */;
-INSERT INTO `REPORTCROSSTABFIELDS_REPORTCROSSTABCOLUMN` (`REPORTCROSSTABFIELDS_REPORTCROSSTABFIELDS_ID`,`reportCrossTabColumns_REPORTCROSSTABCOLUMN_ID`,`REPORTGROUPBYFIELD_ID`) VALUES
+INSERT INTO `REPORTCROSSTABFIELDS_REPORTCROSSTABCOLUMN` (`REPORTCROSSTABFIELDS_REPORTCROSSTABFIELDS_ID`,`reportCrossTabColumns_REPORTCROSSTABCOLUMN_ID`,`REPORTGROUPBYFIELD_ID`) VALUES 
  (12,1,0),
  (12,2,1),
  (16,3,0),
@@ -200,7 +200,7 @@ CREATE TABLE `REPORTCROSSTABFIELDS_REPORTCROSSTABMEASURE` (
 --
 
 /*!40000 ALTER TABLE `REPORTCROSSTABFIELDS_REPORTCROSSTABMEASURE` DISABLE KEYS */;
-INSERT INTO `REPORTCROSSTABFIELDS_REPORTCROSSTABMEASURE` (`REPORTCROSSTABFIELDS_REPORTCROSSTABFIELDS_ID`,`reportCrossTabMeasure_REPORTCROSSTABMEASURE_ID`,`REPORTGROUPBYFIELD_ID`) VALUES
+INSERT INTO `REPORTCROSSTABFIELDS_REPORTCROSSTABMEASURE` (`REPORTCROSSTABFIELDS_REPORTCROSSTABFIELDS_ID`,`reportCrossTabMeasure_REPORTCROSSTABMEASURE_ID`,`REPORTGROUPBYFIELD_ID`) VALUES 
  (12,1,0),
  (16,2,0);
 /*!40000 ALTER TABLE `REPORTCROSSTABFIELDS_REPORTCROSSTABMEASURE` ENABLE KEYS */;
@@ -228,7 +228,7 @@ CREATE TABLE `REPORTCROSSTABFIELDS_REPORTCROSSTABROW` (
 --
 
 /*!40000 ALTER TABLE `REPORTCROSSTABFIELDS_REPORTCROSSTABROW` DISABLE KEYS */;
-INSERT INTO `REPORTCROSSTABFIELDS_REPORTCROSSTABROW` (`REPORTCROSSTABFIELDS_REPORTCROSSTABFIELDS_ID`,`reportCrossTabRows_REPORTCROSSTABROWS_ID`,`REPORTGROUPBYFIELD_ID`) VALUES
+INSERT INTO `REPORTCROSSTABFIELDS_REPORTCROSSTABROW` (`REPORTCROSSTABFIELDS_REPORTCROSSTABFIELDS_ID`,`reportCrossTabRows_REPORTCROSSTABROWS_ID`,`REPORTGROUPBYFIELD_ID`) VALUES 
  (12,1,0),
  (12,2,1),
  (16,3,0),
@@ -256,7 +256,7 @@ CREATE TABLE `REPORTCROSSTABMEASURE` (
 --
 
 /*!40000 ALTER TABLE `REPORTCROSSTABMEASURE` DISABLE KEYS */;
-INSERT INTO `REPORTCROSSTABMEASURE` (`REPORTCROSSTABMEASURE_ID`,`CALCULATION`,`REPORTFIELD_ID`,`GROUPDATEBYOPTION`,`SORTORDER`) VALUES
+INSERT INTO `REPORTCROSSTABMEASURE` (`REPORTCROSSTABMEASURE_ID`,`CALCULATION`,`REPORTFIELD_ID`,`GROUPDATEBYOPTION`,`SORTORDER`) VALUES 
  (1,'SUM',944,0,''),
  (2,'SUM',5558,0,'');
 /*!40000 ALTER TABLE `REPORTCROSSTABMEASURE` ENABLE KEYS */;
@@ -281,7 +281,7 @@ CREATE TABLE `REPORTCROSSTABROW` (
 --
 
 /*!40000 ALTER TABLE `REPORTCROSSTABROW` DISABLE KEYS */;
-INSERT INTO `REPORTCROSSTABROW` (`REPORTCROSSTABROWS_ID`,`CALCULATION`,`REPORTFIELD_ID`,`GROUPDATEBYOPTION`,`SORTORDER`) VALUES
+INSERT INTO `REPORTCROSSTABROW` (`REPORTCROSSTABROWS_ID`,`CALCULATION`,`REPORTFIELD_ID`,`GROUPDATEBYOPTION`,`SORTORDER`) VALUES 
  (1,'',966,0,'ASC'),
  (2,'',-1,0,'ASC'),
  (3,'',5558,0,'ASC'),
@@ -350,7 +350,7 @@ CREATE TABLE `REPORTCUSTOMFILTERDEFINITION` (
 --
 
 /*!40000 ALTER TABLE `REPORTCUSTOMFILTERDEFINITION` DISABLE KEYS */;
-INSERT INTO `REPORTCUSTOMFILTERDEFINITION` (`REPORTCUSTOMFILTERDEFINITION_ID`,`DISPLAY_HTML`,`DISPLAY_TEXT`,`SQL_TEXT`) VALUES
+INSERT INTO `REPORTCUSTOMFILTERDEFINITION` (`REPORTCUSTOMFILTERDEFINITION_ID`,`DISPLAY_HTML`,`DISPLAY_TEXT`,`SQL_TEXT`) VALUES 
  (300000,'Account - Account is marked as a major donor','Account - Account is marked as a major donor','(EXISTS (SELECT * FROM CUSTOM_FIELD MAJOR_DONOR_LOOKUP WHERE MAJOR_DONOR_LOOKUP.ENTITY_TYPE = \'constituent\' AND MAJOR_DONOR_LOOKUP.FIELD_NAME = \'donorProfiles\' AND MAJOR_DONOR_LOOKUP.FIELD_VALUE = \'majorDonor\' AND MAJOR_DONOR_LOOKUP.ENTITY_ID = [VIEWNAME].ADDRESS_CONSTITUENT_ID))'),
  (310000,'Account - Account is marked as a major donor','Account - Account is marked as a major donor','(EXISTS (SELECT * FROM CUSTOM_FIELD MAJOR_DONOR_LOOKUP WHERE MAJOR_DONOR_LOOKUP.ENTITY_TYPE = \'constituent\' AND MAJOR_DONOR_LOOKUP.FIELD_NAME = \'donorProfiles\' AND MAJOR_DONOR_LOOKUP.FIELD_VALUE = \'majorDonor\' AND MAJOR_DONOR_LOOKUP.ENTITY_ID = [VIEWNAME].AUDIT_CONSTITUENT_ID))'),
  (320000,'Account - Account is marked as a major donor','Account - Account is marked as a major donor','(EXISTS (SELECT * FROM CUSTOM_FIELD MAJOR_DONOR_LOOKUP WHERE MAJOR_DONOR_LOOKUP.ENTITY_TYPE = \'constituent\' AND MAJOR_DONOR_LOOKUP.FIELD_NAME = \'donorProfiles\' AND MAJOR_DONOR_LOOKUP.FIELD_VALUE = \'majorDonor\' AND MAJOR_DONOR_LOOKUP.ENTITY_ID = [VIEWNAME].COMMITMENT_CONSTITUENT_ID))'),
@@ -374,6 +374,16 @@ INSERT INTO `REPORTCUSTOMFILTERDEFINITION` (`REPORTCUSTOMFILTERDEFINITION_ID`,`D
  (470000,'Gift Totals - Account has given at least $<input class=\"customCriteria\" objectname=\"reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[0].criteria\" value=\"{0}\"/> in year <input class=\"customCriteria\" objectname=\"reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[1].criteria\" value=\"{1}\"/>','Gift Totals - Account has given at least $[GIFTAMOUNT] in year [GIFTYEAR]','((SELECT SUM(AMOUNT) FROM GIFT GIFTLOOKUP WHERE GIFTLOOKUP.CONSTITUENT_ID = [VIEWNAME].PAYMENT_SOURCE_CONSTITUENT_ID AND YEAR(TRANSACTION_DATE) = {1}) >= {0})'),
  (480000,'Gift Totals - Account has given at least $<input class=\"customCriteria\" objectname=\"reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[0].criteria\" value=\"{0}\"/> in year <input class=\"customCriteria\" objectname=\"reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[1].criteria\" value=\"{1}\"/>','Gift Totals - Account has given at least $[GIFTAMOUNT] in year [GIFTYEAR]','((SELECT SUM(AMOUNT) FROM GIFT GIFTLOOKUP WHERE GIFTLOOKUP.CONSTITUENT_ID = [VIEWNAME].CONSTITUENT_CONSTITUENT_ID AND YEAR(TRANSACTION_DATE) = {1}) >= {0})'),
  (490000,'Gift Totals - Account has given at least $<input class=\"customCriteria\" objectname=\"reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[0].criteria\" value=\"{0}\"/> in year <input class=\"customCriteria\" objectname=\"reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[1].criteria\" value=\"{1}\"/>','Gift Totals - Account has given at least $[GIFTAMOUNT] in year [GIFTYEAR]','((SELECT SUM(AMOUNT) FROM GIFT GIFTLOOKUP WHERE GIFTLOOKUP.CONSTITUENT_ID = [VIEWNAME].PHONE_CONSTITUENT_ID AND YEAR(TRANSACTION_DATE) = {1}) >= {0})'),
+ (500000,'Gift Totals - Account gave at least <span class=\"criteriaWrapper\">$<input class=\"customCriteria\" objectname=\"reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[0].criteria\" value=\"{0}\" style=\"width:100px\" fieldtype=\"MONEY\" /></span> in hard gifts <br>between <span class=\"criteriaWrapper\"><input class=\"customCriteria\" objectname=\"reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[1].criteria\" fieldtype=\"DATE\" value=\"\'{1}\'\" style=\"width:110px\"/></span> and <span class=\"criteriaWrapper\"><input class=\"customCriteria\" objectname=\"reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[2].criteria\" fieldtype=\"DATE\" value=\"\'{2}\'\" style=\"width:110px\"/></span>','Gift Totals - Account gave at least $[GIFTAMOUNT] in hard gifts between [GIFTDATE] and [GIFTDATE]','((SELECT SUM(AMOUNT) FROM GIFT GIFTLOOKUP WHERE GIFTLOOKUP.CONSTITUENT_ID = [VIEWNAME].ADDRESS_CONSTITUENT_ID AND CAST(GIFTLOOKUP.DONATION_DATE AS DATE) BETWEEN CAST(CONCAT(SUBSTRING_INDEX(\'{1}\',\'/\',-1), \'-\', SUBSTRING_INDEX(\'{1}\',\'/\',1), \'-\', SUBSTRING_INDEX(SUBSTRING_INDEX(\'{1}\',\'/\',2),\'/\',-1)) AS DATE) AND CAST(CONCAT(SUBSTRING_INDEX(\'{2}\',\'/\',-1), \'-\', SUBSTRING_INDEX(\'{2}\',\'/\',1), \'-\', SUBSTRING_INDEX(SUBSTRING_INDEX(\'{2}\',\'/\',2),\'/\',-1)) AS DATE)) >= {0})'),
+ (500100,'Gift Totals - Account gave at least <span class=\"criteriaWrapper\">$<input class=\"customCriteria\" objectname=\"reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[0].criteria\" value=\"{0}\" style=\"width:100px\" fieldtype=\"MONEY\" /></span> in hard gifts <br>between <span class=\"criteriaWrapper\"><input class=\"customCriteria\" objectname=\"reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[1].criteria\" fieldtype=\"DATE\" value=\"\'{1}\'\" style=\"width:110px\"/></span> and <span class=\"criteriaWrapper\"><input class=\"customCriteria\" objectname=\"reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[2].criteria\" fieldtype=\"DATE\" value=\"\'{2}\'\" style=\"width:110px\"/></span>','Gift Totals - Account gave at least $[GIFTAMOUNT] in hard gifts between [GIFTDATE] and [GIFTDATE]','((SELECT SUM(AMOUNT) FROM GIFT GIFTLOOKUP WHERE GIFTLOOKUP.CONSTITUENT_ID = [VIEWNAME].AUDIT_CONSTITUENT_ID AND CAST(GIFTLOOKUP.DONATION_DATE AS DATE) BETWEEN CAST(CONCAT(SUBSTRING_INDEX(\'{1}\',\'/\',-1), \'-\', SUBSTRING_INDEX(\'{1}\',\'/\',1), \'-\', SUBSTRING_INDEX(SUBSTRING_INDEX(\'{1}\',\'/\',2),\'/\',-1)) AS DATE) AND CAST(CONCAT(SUBSTRING_INDEX(\'{2}\',\'/\',-1), \'-\', SUBSTRING_INDEX(\'{2}\',\'/\',1), \'-\', SUBSTRING_INDEX(SUBSTRING_INDEX(\'{2}\',\'/\',2),\'/\',-1)) AS DATE)) >= {0})'),
+ (500200,'Gift Totals - Account gave at least <span class=\"criteriaWrapper\">$<input class=\"customCriteria\" objectname=\"reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[0].criteria\" value=\"{0}\" style=\"width:100px\" fieldtype=\"MONEY\" /></span> in hard gifts <br>between <span class=\"criteriaWrapper\"><input class=\"customCriteria\" objectname=\"reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[1].criteria\" fieldtype=\"DATE\" value=\"\'{1}\'\" style=\"width:110px\"/></span> and <span class=\"criteriaWrapper\"><input class=\"customCriteria\" objectname=\"reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[2].criteria\" fieldtype=\"DATE\" value=\"\'{2}\'\" style=\"width:110px\"/></span>','Gift Totals - Account gave at least $[GIFTAMOUNT] in hard gifts between [GIFTDATE] and [GIFTDATE]','((SELECT SUM(AMOUNT) FROM GIFT GIFTLOOKUP WHERE GIFTLOOKUP.CONSTITUENT_ID = [VIEWNAME].COMMITMENT_CONSTITUENT_ID AND CAST(GIFTLOOKUP.DONATION_DATE AS DATE) BETWEEN CAST(CONCAT(SUBSTRING_INDEX(\'{1}\',\'/\',-1), \'-\', SUBSTRING_INDEX(\'{1}\',\'/\',1), \'-\', SUBSTRING_INDEX(SUBSTRING_INDEX(\'{1}\',\'/\',2),\'/\',-1)) AS DATE) AND CAST(CONCAT(SUBSTRING_INDEX(\'{2}\',\'/\',-1), \'-\', SUBSTRING_INDEX(\'{2}\',\'/\',1), \'-\', SUBSTRING_INDEX(SUBSTRING_INDEX(\'{2}\',\'/\',2),\'/\',-1)) AS DATE)) >= {0})'),
+ (500300,'Gift Totals - Account gave at least <span class=\"criteriaWrapper\">$<input class=\"customCriteria\" objectname=\"reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[0].criteria\" value=\"{0}\" style=\"width:100px\" fieldtype=\"MONEY\" /></span> in hard gifts <br>between <span class=\"criteriaWrapper\"><input class=\"customCriteria\" objectname=\"reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[1].criteria\" fieldtype=\"DATE\" value=\"\'{1}\'\" style=\"width:110px\"/></span> and <span class=\"criteriaWrapper\"><input class=\"customCriteria\" objectname=\"reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[2].criteria\" fieldtype=\"DATE\" value=\"\'{2}\'\" style=\"width:110px\"/></span>','Gift Totals - Account gave at least $[GIFTAMOUNT] in hard gifts between [GIFTDATE] and [GIFTDATE]','((SELECT SUM(AMOUNT) FROM GIFT GIFTLOOKUP WHERE GIFTLOOKUP.CONSTITUENT_ID = [VIEWNAME].COMMUNICATION_HISTORY_CONSTITUENT_ID AND CAST(GIFTLOOKUP.DONATION_DATE AS DATE) BETWEEN CAST(CONCAT(SUBSTRING_INDEX(\'{1}\',\'/\',-1), \'-\', SUBSTRING_INDEX(\'{1}\',\'/\',1), \'-\', SUBSTRING_INDEX(SUBSTRING_INDEX(\'{1}\',\'/\',2),\'/\',-1)) AS DATE) AND CAST(CONCAT(SUBSTRING_INDEX(\'{2}\',\'/\',-1), \'-\', SUBSTRING_INDEX(\'{2}\',\'/\',1), \'-\', SUBSTRING_INDEX(SUBSTRING_INDEX(\'{2}\',\'/\',2),\'/\',-1)) AS DATE)) >= {0})'),
+ (500400,'Gift Totals - Account gave at least <span class=\"criteriaWrapper\">$<input class=\"customCriteria\" objectname=\"reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[0].criteria\" value=\"{0}\" style=\"width:100px\" fieldtype=\"MONEY\" /></span> in hard gifts <br>between <span class=\"criteriaWrapper\"><input class=\"customCriteria\" objectname=\"reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[1].criteria\" fieldtype=\"DATE\" value=\"\'{1}\'\" style=\"width:110px\"/></span> and <span class=\"criteriaWrapper\"><input class=\"customCriteria\" objectname=\"reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[2].criteria\" fieldtype=\"DATE\" value=\"\'{2}\'\" style=\"width:110px\"/></span>','Gift Totals - Account gave at least $[GIFTAMOUNT] in hard gifts between [GIFTDATE] and [GIFTDATE]','((SELECT SUM(AMOUNT) FROM GIFT GIFTLOOKUP WHERE GIFTLOOKUP.CONSTITUENT_ID = [VIEWNAME].EMAIL_CONSTITUENT_ID AND CAST(GIFTLOOKUP.DONATION_DATE AS DATE) BETWEEN CAST(CONCAT(SUBSTRING_INDEX(\'{1}\',\'/\',-1), \'-\', SUBSTRING_INDEX(\'{1}\',\'/\',1), \'-\', SUBSTRING_INDEX(SUBSTRING_INDEX(\'{1}\',\'/\',2),\'/\',-1)) AS DATE) AND CAST(CONCAT(SUBSTRING_INDEX(\'{2}\',\'/\',-1), \'-\', SUBSTRING_INDEX(\'{2}\',\'/\',1), \'-\', SUBSTRING_INDEX(SUBSTRING_INDEX(\'{2}\',\'/\',2),\'/\',-1)) AS DATE)) >= {0})'),
+ (500500,'Gift Totals - Account gave at least <span class=\"criteriaWrapper\">$<input class=\"customCriteria\" objectname=\"reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[0].criteria\" value=\"{0}\" style=\"width:100px\" fieldtype=\"MONEY\" /></span> in hard gifts <br>between <span class=\"criteriaWrapper\"><input class=\"customCriteria\" objectname=\"reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[1].criteria\" fieldtype=\"DATE\" value=\"\'{1}\'\" style=\"width:110px\"/></span> and <span class=\"criteriaWrapper\"><input class=\"customCriteria\" objectname=\"reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[2].criteria\" fieldtype=\"DATE\" value=\"\'{2}\'\" style=\"width:110px\"/></span>','Gift Totals - Account gave at least $[GIFTAMOUNT] in hard gifts between [GIFTDATE] and [GIFTDATE]','((SELECT SUM(AMOUNT) FROM GIFT GIFTLOOKUP WHERE GIFTLOOKUP.CONSTITUENT_ID = [VIEWNAME].GIFT_CONSTITUENT_ID AND CAST(GIFTLOOKUP.DONATION_DATE AS DATE) BETWEEN CAST(CONCAT(SUBSTRING_INDEX(\'{1}\',\'/\',-1), \'-\', SUBSTRING_INDEX(\'{1}\',\'/\',1), \'-\', SUBSTRING_INDEX(SUBSTRING_INDEX(\'{1}\',\'/\',2),\'/\',-1)) AS DATE) AND CAST(CONCAT(SUBSTRING_INDEX(\'{2}\',\'/\',-1), \'-\', SUBSTRING_INDEX(\'{2}\',\'/\',1), \'-\', SUBSTRING_INDEX(SUBSTRING_INDEX(\'{2}\',\'/\',2),\'/\',-1)) AS DATE)) >= {0})'),
+ (500600,'Gift Totals - Account gave at least <span class=\"criteriaWrapper\">$<input class=\"customCriteria\" objectname=\"reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[0].criteria\" value=\"{0}\" style=\"width:100px\" fieldtype=\"MONEY\" /></span> in hard gifts <br>between <span class=\"criteriaWrapper\"><input class=\"customCriteria\" objectname=\"reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[1].criteria\" fieldtype=\"DATE\" value=\"\'{1}\'\" style=\"width:110px\"/></span> and <span class=\"criteriaWrapper\"><input class=\"customCriteria\" objectname=\"reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[2].criteria\" fieldtype=\"DATE\" value=\"\'{2}\'\" style=\"width:110px\"/></span>','Gift Totals - Account gave at least $[GIFTAMOUNT] in hard gifts between [GIFTDATE] and [GIFTDATE]','((SELECT SUM(AMOUNT) FROM GIFT GIFTLOOKUP WHERE GIFTLOOKUP.CONSTITUENT_ID = [VIEWNAME].PAYMENT_HISTORY_CONSTITUENT_ID AND CAST(GIFTLOOKUP.DONATION_DATE AS DATE) BETWEEN CAST(CONCAT(SUBSTRING_INDEX(\'{1}\',\'/\',-1), \'-\', SUBSTRING_INDEX(\'{1}\',\'/\',1), \'-\', SUBSTRING_INDEX(SUBSTRING_INDEX(\'{1}\',\'/\',2),\'/\',-1)) AS DATE) AND CAST(CONCAT(SUBSTRING_INDEX(\'{2}\',\'/\',-1), \'-\', SUBSTRING_INDEX(\'{2}\',\'/\',1), \'-\', SUBSTRING_INDEX(SUBSTRING_INDEX(\'{2}\',\'/\',2),\'/\',-1)) AS DATE)) >= {0})'),
+ (500700,'Gift Totals - Account gave at least <span class=\"criteriaWrapper\">$<input class=\"customCriteria\" objectname=\"reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[0].criteria\" value=\"{0}\" style=\"width:100px\" fieldtype=\"MONEY\" /></span> in hard gifts <br>between <span class=\"criteriaWrapper\"><input class=\"customCriteria\" objectname=\"reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[1].criteria\" fieldtype=\"DATE\" value=\"\'{1}\'\" style=\"width:110px\"/></span> and <span class=\"criteriaWrapper\"><input class=\"customCriteria\" objectname=\"reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[2].criteria\" fieldtype=\"DATE\" value=\"\'{2}\'\" style=\"width:110px\"/></span>','Gift Totals - Account gave at least $[GIFTAMOUNT] in hard gifts between [GIFTDATE] and [GIFTDATE]','((SELECT SUM(AMOUNT) FROM GIFT GIFTLOOKUP WHERE GIFTLOOKUP.CONSTITUENT_ID = [VIEWNAME].PAYMENT_SOURCE_CONSTITUENT_ID AND CAST(GIFTLOOKUP.DONATION_DATE AS DATE) BETWEEN CAST(CONCAT(SUBSTRING_INDEX(\'{1}\',\'/\',-1), \'-\', SUBSTRING_INDEX(\'{1}\',\'/\',1), \'-\', SUBSTRING_INDEX(SUBSTRING_INDEX(\'{1}\',\'/\',2),\'/\',-1)) AS DATE) AND CAST(CONCAT(SUBSTRING_INDEX(\'{2}\',\'/\',-1), \'-\', SUBSTRING_INDEX(\'{2}\',\'/\',1), \'-\', SUBSTRING_INDEX(SUBSTRING_INDEX(\'{2}\',\'/\',2),\'/\',-1)) AS DATE)) >= {0})'),
+ (500800,'Gift Totals - Account gave at least <span class=\"criteriaWrapper\">$<input class=\"customCriteria\" objectname=\"reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[0].criteria\" value=\"{0}\" style=\"width:100px\" fieldtype=\"MONEY\" /></span> in hard gifts <br>between <span class=\"criteriaWrapper\"><input class=\"customCriteria\" objectname=\"reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[1].criteria\" fieldtype=\"DATE\" value=\"\'{1}\'\" style=\"width:110px\"/></span> and <span class=\"criteriaWrapper\"><input class=\"customCriteria\" objectname=\"reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[2].criteria\" fieldtype=\"DATE\" value=\"\'{2}\'\" style=\"width:110px\"/></span>','Gift Totals - Account gave at least $[GIFTAMOUNT] in hard gifts between [GIFTDATE] and [GIFTDATE]','((SELECT SUM(AMOUNT) FROM GIFT GIFTLOOKUP WHERE GIFTLOOKUP.CONSTITUENT_ID = [VIEWNAME].CONSTITUENT_CONSTITUENT_ID AND CAST(GIFTLOOKUP.DONATION_DATE AS DATE) BETWEEN CAST(CONCAT(SUBSTRING_INDEX(\'{1}\',\'/\',-1), \'-\', SUBSTRING_INDEX(\'{1}\',\'/\',1), \'-\', SUBSTRING_INDEX(SUBSTRING_INDEX(\'{1}\',\'/\',2),\'/\',-1)) AS DATE) AND CAST(CONCAT(SUBSTRING_INDEX(\'{2}\',\'/\',-1), \'-\', SUBSTRING_INDEX(\'{2}\',\'/\',1), \'-\', SUBSTRING_INDEX(SUBSTRING_INDEX(\'{2}\',\'/\',2),\'/\',-1)) AS DATE)) >= {0})'),
+ (500900,'Gift Totals - Account gave at least <span class=\"criteriaWrapper\">$<input class=\"customCriteria\" objectname=\"reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[0].criteria\" value=\"{0}\" style=\"width:100px\" fieldtype=\"MONEY\" /></span> in hard gifts <br>between <span class=\"criteriaWrapper\"><input class=\"customCriteria\" objectname=\"reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[1].criteria\" fieldtype=\"DATE\" value=\"\'{1}\'\" style=\"width:110px\"/></span> and <span class=\"criteriaWrapper\"><input class=\"customCriteria\" objectname=\"reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[2].criteria\" fieldtype=\"DATE\" value=\"\'{2}\'\" style=\"width:110px\"/></span>','Gift Totals - Account gave at least $[GIFTAMOUNT] in hard gifts between [GIFTDATE] and [GIFTDATE]','((SELECT SUM(AMOUNT) FROM GIFT GIFTLOOKUP WHERE GIFTLOOKUP.CONSTITUENT_ID = [VIEWNAME].PHONE_CONSTITUENT_ID AND CAST(GIFTLOOKUP.DONATION_DATE AS DATE) BETWEEN CAST(CONCAT(SUBSTRING_INDEX(\'{1}\',\'/\',-1), \'-\', SUBSTRING_INDEX(\'{1}\',\'/\',1), \'-\', SUBSTRING_INDEX(SUBSTRING_INDEX(\'{1}\',\'/\',2),\'/\',-1)) AS DATE) AND CAST(CONCAT(SUBSTRING_INDEX(\'{2}\',\'/\',-1), \'-\', SUBSTRING_INDEX(\'{2}\',\'/\',1), \'-\', SUBSTRING_INDEX(SUBSTRING_INDEX(\'{2}\',\'/\',2),\'/\',-1)) AS DATE)) >= {0})'),
  (600000,'Segmentation - Account is in segmentation / report <br> {lookupReferenceBean:orangeLeapConstituentSegmentationList}','Segmentation - Account is in segmentation / report','EXISTS (SELECT * FROM THEGURU_SEGMENTATION_RESULT SEGTABLE WHERE SEGTABLE.REPORT_ID = {0} AND SEGTABLE.ENTITY_ID = [VIEWNAME].CONSTITUENT_CONSTITUENT_ID)'),
  (610000,'Segmentation - Gift is in segmentation / report <br> {lookupReferenceBean:orangeLeapGiftSegmentationList}','Segmentation - Gift is in segmentation / report','EXISTS (SELECT * FROM THEGURU_SEGMENTATION_RESULT SEGTABLE WHERE SEGTABLE.REPORT_ID = {0} AND SEGTABLE.ENTITY_ID = [VIEWNAME].GIFT_GIFT_ID)'),
  (620000,'Segmentation - Gift Distribution is in segmentation / report <br> {lookupReferenceBean:orangeLeapGiftDistributionSegmentationList}','Segmentation - Gift Distribution is in segmentation / report','EXISTS (SELECT * FROM THEGURU_SEGMENTATION_RESULT SEGTABLE WHERE SEGTABLE.REPORT_ID = {0} AND SEGTABLE.ENTITY_ID = [VIEWNAME].GIFT_GIFT_ID)'),
@@ -404,7 +414,7 @@ CREATE TABLE `REPORTCUSTOMFILTERDEFINITION_REPORTDATASUBSOURCE` (
 --
 
 /*!40000 ALTER TABLE `REPORTCUSTOMFILTERDEFINITION_REPORTDATASUBSOURCE` DISABLE KEYS */;
-INSERT INTO `REPORTCUSTOMFILTERDEFINITION_REPORTDATASUBSOURCE` (`reportCustomFilterDefinitions_REPORTCUSTOMFILTERDEFINITION_ID`,`reportDataSubSource_REPORTSUBSOURCE_ID`,`REPORTSUBSOURCE_ID`,`REPORTCUSTOMFILTERDEFINITION_ID`) VALUES
+INSERT INTO `REPORTCUSTOMFILTERDEFINITION_REPORTDATASUBSOURCE` (`reportCustomFilterDefinitions_REPORTCUSTOMFILTERDEFINITION_ID`,`reportDataSubSource_REPORTSUBSOURCE_ID`,`REPORTSUBSOURCE_ID`,`REPORTCUSTOMFILTERDEFINITION_ID`) VALUES 
  (310000,36,36,1),
  (310000,37,37,2),
  (310000,38,38,3),
@@ -508,6 +518,31 @@ INSERT INTO `REPORTCUSTOMFILTERDEFINITION_REPORTDATASUBSOURCE` (`reportCustomFil
  (480000,34,34,69),
  (480000,35,35,70),
  (480000,46,46,71),
+ (500800,3,3,500804),
+ (500800,4,4,500805),
+ (500800,5,5,500806),
+ (500800,6,6,500807),
+ (500800,7,7,500808),
+ (500800,8,8,500809),
+ (500800,9,9,500810),
+ (500800,10,10,500811),
+ (500800,11,11,500812),
+ (500800,23,23,500824),
+ (500800,24,24,500825),
+ (500800,25,25,500826),
+ (500800,26,26,500827),
+ (500800,27,27,500828),
+ (500800,28,28,500829),
+ (500800,29,29,500830),
+ (500800,30,30,500831),
+ (500800,31,31,500832),
+ (500800,32,32,500833),
+ (500800,33,33,500834),
+ (500800,34,34,500835),
+ (500800,35,35,500836),
+ (500800,38,38,500839),
+ (500800,46,46,500847),
+ (500800,47,47,500848),
  (600000,3,3,72),
  (600000,4,4,73),
  (600000,5,5,74),
@@ -591,7 +626,7 @@ CREATE TABLE `REPORTDATASOURCE` (
 --
 
 /*!40000 ALTER TABLE `REPORTDATASOURCE` DISABLE KEYS */;
-INSERT INTO `REPORTDATASOURCE` (`REPORTSOURCE_ID`,`REPORT_NAME`) VALUES
+INSERT INTO `REPORTDATASOURCE` (`REPORTSOURCE_ID`,`REPORT_NAME`) VALUES 
  (1,'Orange Leap');
 /*!40000 ALTER TABLE `REPORTDATASOURCE` ENABLE KEYS */;
 
@@ -621,7 +656,7 @@ CREATE TABLE `REPORTDATASUBSOURCE` (
 --
 
 /*!40000 ALTER TABLE `REPORTDATASUBSOURCE` DISABLE KEYS */;
-INSERT INTO `REPORTDATASUBSOURCE` (`REPORTSUBSOURCE_ID`,`DATABASE_TYPE`,`DESCRIPTION`,`DISPLAY_NAME`,`JASPER_DATASOURCE_NAME`,`REPORT_FORMAT_TYPE`,`VIEW_NAME`,`reportDataSubSourceGroup_REPORTSUBSOURCEGROUP_ID`,`SEGMENTATION_RESULTS_DATASOURCE_NAME`) VALUES
+INSERT INTO `REPORTDATASUBSOURCE` (`REPORTSUBSOURCE_ID`,`DATABASE_TYPE`,`DESCRIPTION`,`DISPLAY_NAME`,`JASPER_DATASOURCE_NAME`,`REPORT_FORMAT_TYPE`,`VIEW_NAME`,`reportDataSubSourceGroup_REPORTSUBSOURCEGROUP_ID`,`SEGMENTATION_RESULTS_DATASOURCE_NAME`) VALUES 
  (1,0,NULL,'Error Log','/datasources/ReportWizardJdbcDS',0,'ERROR_LOG',1,'/datasources/ReportWizardJdbcDSSegmentationResults'),
  (2,0,NULL,'Picklists','/datasources/ReportWizardJdbcDS',0,'VW_PICKLISTS',1,'/datasources/ReportWizardJdbcDSSegmentationResults'),
  (3,0,NULL,'Constituents','/datasources/ReportWizardJdbcDS',0,'VW_CONSTITUENTS',3,'/datasources/ReportWizardJdbcDSSegmentationResults'),
@@ -694,7 +729,7 @@ CREATE TABLE `REPORTDATASUBSOURCEGROUP` (
 --
 
 /*!40000 ALTER TABLE `REPORTDATASUBSOURCEGROUP` DISABLE KEYS */;
-INSERT INTO `REPORTDATASUBSOURCEGROUP` (`REPORTSUBSOURCEGROUP_ID`,`DESCRIPTION`,`DISPLAY_NAME`,`reportDataSource_REPORTSOURCE_ID`) VALUES
+INSERT INTO `REPORTDATASUBSOURCEGROUP` (`REPORTSUBSOURCEGROUP_ID`,`DESCRIPTION`,`DISPLAY_NAME`,`reportDataSource_REPORTSOURCE_ID`) VALUES 
  (1,'Administrative','Administrative',1),
  (2,'Audit History','Audit History',1),
  (3,'Constituents','Constituents',1),
@@ -735,7 +770,7 @@ CREATE TABLE `REPORTFIELD` (
 --
 
 /*!40000 ALTER TABLE `REPORTFIELD` DISABLE KEYS */;
-INSERT INTO `REPORTFIELD` (`REPORTFIELD_ID`,`AVERAGE`,`CAN_BE_SUMMARIZED`,`COLUMN_NAME`,`DISPLAY_NAME`,`IS_DEFAULT`,`IS_SUMMARIZED`,`LARGEST_VALUE`,`PERFORMSUMMARY`,`RECORD_COUNT`,`IS_SELECTED`,`SMALLEST_VALUE`,`FIELD_TYPE`,`ALIAS_NAME`,`PRIMARY_KEYS`,`URL`,`TOOLTIP`) VALUES
+INSERT INTO `REPORTFIELD` (`REPORTFIELD_ID`,`AVERAGE`,`CAN_BE_SUMMARIZED`,`COLUMN_NAME`,`DISPLAY_NAME`,`IS_DEFAULT`,`IS_SUMMARIZED`,`LARGEST_VALUE`,`PERFORMSUMMARY`,`RECORD_COUNT`,`IS_SELECTED`,`SMALLEST_VALUE`,`FIELD_TYPE`,`ALIAS_NAME`,`PRIMARY_KEYS`,`URL`,`TOOLTIP`) VALUES 
  (1,0x00,0x00,'ERROR_LOG_ID','Error Log ID',0x01,0x00,0x00,0x00,0x00,0x00,0x00,2,'ERROR_LOG_ID','ERROR_LOG_ID',NULL,NULL),
  (2,0x00,0x00,'SITE_NAME','Site Name',0x00,0x00,0x00,0x00,0x00,0x00,0x00,1,'SITE_NAME','ERROR_LOG_ID',NULL,NULL),
  (3,0x00,0x00,'GETCONSTITUENTACCOUNTNUMBER(CONSTITUENT_ID)','Constituent Account Number',0x01,0x00,0x00,0x00,0x00,0x00,0x00,2,'CONSTITUENT_ACCOUNT_NUMBER','ERROR_LOG_ID',NULL,NULL),
@@ -963,7 +998,7 @@ INSERT INTO `REPORTFIELD` (`REPORTFIELD_ID`,`AVERAGE`,`CAN_BE_SUMMARIZED`,`COLUM
  (225,0x00,0x00,'GETCUSTOMFIELDCONCATENATED(CONSTITUENT_CONSTITUENT_ID, \'constituent\', \'organization.additional_eligibleOrganizations\')','Eligible Organizations - Additional',0x00,0x00,0x00,0x00,0x00,0x00,0x00,1,'ORGANIZATION_ELIGIBLEORGANIZATIONSADDITIONAL','CONSTITUENT_CONSTITUENT_ID','\"http://localhost:8080/orangeleap/constituent.htm?constituentId=\" + $F{CONSTITUENT_CONSTITUENT_ID}','\"Show Constiuent in Orange Leap\"'),
  (226,0x00,0x00,'GETCUSTOMFIELDCONCATENATED(CONSTITUENT_CONSTITUENT_ID, \'constituent\', \'organization.ineligibleOrganizations\')','Ineligible Organizations',0x00,0x00,0x00,0x00,0x00,0x00,0x00,1,'ORGANIZATION_INELIGIBLEORGANIZATIONS','CONSTITUENT_CONSTITUENT_ID','\"http://localhost:8080/orangeleap/constituent.htm?constituentId=\" + $F{CONSTITUENT_CONSTITUENT_ID}','\"Show Constiuent in Orange Leap\"'),
  (227,0x00,0x00,'GETCUSTOMFIELDCONCATENATED(CONSTITUENT_CONSTITUENT_ID, \'constituent\', \'organization.additional_ineligibleOrganizations\')','Ineligible Organizations - Additional',0x00,0x00,0x00,0x00,0x00,0x00,0x00,1,'ORGANIZATION_INELIGIBLEORGANIZATIONSADDITIONAL','CONSTITUENT_CONSTITUENT_ID','\"http://localhost:8080/orangeleap/constituent.htm?constituentId=\" + $F{CONSTITUENT_CONSTITUENT_ID}','\"Show Constiuent in Orange Leap\"');
-INSERT INTO `REPORTFIELD` (`REPORTFIELD_ID`,`AVERAGE`,`CAN_BE_SUMMARIZED`,`COLUMN_NAME`,`DISPLAY_NAME`,`IS_DEFAULT`,`IS_SUMMARIZED`,`LARGEST_VALUE`,`PERFORMSUMMARY`,`RECORD_COUNT`,`IS_SELECTED`,`SMALLEST_VALUE`,`FIELD_TYPE`,`ALIAS_NAME`,`PRIMARY_KEYS`,`URL`,`TOOLTIP`) VALUES
+INSERT INTO `REPORTFIELD` (`REPORTFIELD_ID`,`AVERAGE`,`CAN_BE_SUMMARIZED`,`COLUMN_NAME`,`DISPLAY_NAME`,`IS_DEFAULT`,`IS_SUMMARIZED`,`LARGEST_VALUE`,`PERFORMSUMMARY`,`RECORD_COUNT`,`IS_SELECTED`,`SMALLEST_VALUE`,`FIELD_TYPE`,`ALIAS_NAME`,`PRIMARY_KEYS`,`URL`,`TOOLTIP`) VALUES 
  (228,0x00,0x00,'GETCUSTOMFIELD(CONSTITUENT_CONSTITUENT_ID, \'constituent\', \'organization.onlineMatchingGiftForm\')','Matching Gift Form',0x00,0x00,0x00,0x00,0x00,0x00,0x00,1,'ORGANIZATION_MATCHINGGIFTFORM','CONSTITUENT_CONSTITUENT_ID','\"http://localhost:8080/orangeleap/constituent.htm?constituentId=\" + $F{CONSTITUENT_CONSTITUENT_ID}','\"Show Constiuent in Orange Leap\"'),
  (229,0x00,0x00,'GETPICKLISTDISPLAYVALUE(\'customFieldMap[organization.programStartMonth]\', GETCUSTOMFIELD(CONSTITUENT_CONSTITUENT_ID, \'constituent\', \'organization.programStartMonth\'))','Program Start Month Short Display Name',0x00,0x00,0x00,0x00,0x00,0x00,0x00,1,'ORGANIZATION_PROGRAMSTARTMONTH_SHORT_DISPLAY_NAME','CONSTITUENT_CONSTITUENT_ID','\"http://localhost:8080/orangeleap/constituent.htm?constituentId=\" + $F{CONSTITUENT_CONSTITUENT_ID}','\"Show Constiuent in Orange Leap\"'),
  (230,0x00,0x00,'GETCONSTITUENTACCOUNTNUMBER(GETCUSTOMFIELD(CONSTITUENT_CONSTITUENT_ID, \'constituent\', \'organization.programContact\'))','Program Contact Account Number',0x00,0x00,0x00,0x00,0x00,0x00,0x00,2,'ORGANIZATION_PROGRAMCONTACTACCOUNTNUMBER','CONSTITUENT_CONSTITUENT_ID','\"http://localhost:8080/orangeleap/constituent.htm?constituentId=\" + $F{CONSTITUENT_CONSTITUENT_ID}','\"Show Constiuent in Orange Leap\"'),
@@ -1201,7 +1236,7 @@ INSERT INTO `REPORTFIELD` (`REPORTFIELD_ID`,`AVERAGE`,`CAN_BE_SUMMARIZED`,`COLUM
  (462,0x00,0x00,'GETCUSTOMFIELD(CONSTITUENT_CONSTITUENT_ID, \'constituent\', \'organization.minimumGiftMatch\')','Mimimum Gift Match',0x00,0x00,0x00,0x00,0x00,0x00,0x00,5,'ORGANIZATION_MINIMUMGIFTMATCH','CONSTITUENT_CONSTITUENT_ID','\"http://localhost:8080/orangeleap/constituent.htm?constituentId=\" + $F{CONSTITUENT_CONSTITUENT_ID}','\"Show Constiuent in Orange Leap\"'),
  (463,0x00,0x00,'GETCUSTOMFIELD(CONSTITUENT_CONSTITUENT_ID, \'constituent\', \'organization.totalPerEmployeePerYear\')','Total Per Employee Per Year',0x00,0x00,0x00,0x00,0x00,0x00,0x00,5,'ORGANIZATION_TOTALPEREMPLOYEEPERYEAR','CONSTITUENT_CONSTITUENT_ID','\"http://localhost:8080/orangeleap/constituent.htm?constituentId=\" + $F{CONSTITUENT_CONSTITUENT_ID}','\"Show Constiuent in Orange Leap\"'),
  (464,0x00,0x00,'GETCUSTOMFIELDDISPLAYVALUECONCATENATED(CONSTITUENT_CONSTITUENT_ID, \'constituent\', \'organization.eligibility\', \'customFieldMap[organization.eligibility]\')','Eligibility',0x00,0x00,0x00,0x00,0x00,0x00,0x00,1,'ORGANIZATION_MINIMUMGIFTMATCH','CONSTITUENT_CONSTITUENT_ID','\"http://localhost:8080/orangeleap/constituent.htm?constituentId=\" + $F{CONSTITUENT_CONSTITUENT_ID}','\"Show Constiuent in Orange Leap\"');
-INSERT INTO `REPORTFIELD` (`REPORTFIELD_ID`,`AVERAGE`,`CAN_BE_SUMMARIZED`,`COLUMN_NAME`,`DISPLAY_NAME`,`IS_DEFAULT`,`IS_SUMMARIZED`,`LARGEST_VALUE`,`PERFORMSUMMARY`,`RECORD_COUNT`,`IS_SELECTED`,`SMALLEST_VALUE`,`FIELD_TYPE`,`ALIAS_NAME`,`PRIMARY_KEYS`,`URL`,`TOOLTIP`) VALUES
+INSERT INTO `REPORTFIELD` (`REPORTFIELD_ID`,`AVERAGE`,`CAN_BE_SUMMARIZED`,`COLUMN_NAME`,`DISPLAY_NAME`,`IS_DEFAULT`,`IS_SUMMARIZED`,`LARGEST_VALUE`,`PERFORMSUMMARY`,`RECORD_COUNT`,`IS_SELECTED`,`SMALLEST_VALUE`,`FIELD_TYPE`,`ALIAS_NAME`,`PRIMARY_KEYS`,`URL`,`TOOLTIP`) VALUES 
  (465,0x00,0x00,'GETCUSTOMFIELDCONCATENATED(CONSTITUENT_CONSTITUENT_ID, \'constituent\', \'organization.eligibleFunds\')','Eligible Funds',0x00,0x00,0x00,0x00,0x00,0x00,0x00,1,'ORGANIZATION_ELIGIBLEFUNDS','CONSTITUENT_CONSTITUENT_ID','\"http://localhost:8080/orangeleap/constituent.htm?constituentId=\" + $F{CONSTITUENT_CONSTITUENT_ID}','\"Show Constiuent in Orange Leap\"'),
  (466,0x00,0x00,'GETCUSTOMFIELDCONCATENATED(CONSTITUENT_CONSTITUENT_ID, \'constituent\', \'organization.additional_eligibleFunds\')','Eligible Funds - Additional',0x00,0x00,0x00,0x00,0x00,0x00,0x00,1,'ORGANIZATION_ELIGIBLEFUNDSADDITIONAL','CONSTITUENT_CONSTITUENT_ID','\"http://localhost:8080/orangeleap/constituent.htm?constituentId=\" + $F{CONSTITUENT_CONSTITUENT_ID}','\"Show Constiuent in Orange Leap\"'),
  (467,0x00,0x00,'GETCUSTOMFIELDCONCATENATED(CONSTITUENT_CONSTITUENT_ID, \'constituent\', \'organization.eligibleOrganizations\')','Eligible Organizations',0x00,0x00,0x00,0x00,0x00,0x00,0x00,1,'ORGANIZATION_ELIGIBLEORGANIZATIONS','CONSTITUENT_CONSTITUENT_ID','\"http://localhost:8080/orangeleap/constituent.htm?constituentId=\" + $F{CONSTITUENT_CONSTITUENT_ID}','\"Show Constiuent in Orange Leap\"'),
@@ -1466,7 +1501,7 @@ INSERT INTO `REPORTFIELD` (`REPORTFIELD_ID`,`AVERAGE`,`CAN_BE_SUMMARIZED`,`COLUM
  (726,0x00,0x00,'ADDRESS_POSTAL_CODE','Zip/Postal Code',0x00,0x00,0x00,0x00,0x00,0x00,0x00,1,'ADDRESS_POSTAL_CODE','ADDRESS_ADDRESS_ID',NULL,NULL),
  (727,0x00,0x00,'ADDRESS_RECEIVE_CORRESPONDENCE','Receive Correspondence',0x00,0x00,0x00,0x00,0x00,0x00,0x00,6,'ADDRESS_RECEIVE_CORRESPONDENCE','ADDRESS_ADDRESS_ID',NULL,NULL),
  (728,0x00,0x00,'ADDRESS_COMMENT','Comments',0x00,0x00,0x00,0x00,0x00,0x00,0x00,1,'ADDRESS_COMMENT','ADDRESS_ADDRESS_ID',NULL,NULL);
-INSERT INTO `REPORTFIELD` (`REPORTFIELD_ID`,`AVERAGE`,`CAN_BE_SUMMARIZED`,`COLUMN_NAME`,`DISPLAY_NAME`,`IS_DEFAULT`,`IS_SUMMARIZED`,`LARGEST_VALUE`,`PERFORMSUMMARY`,`RECORD_COUNT`,`IS_SELECTED`,`SMALLEST_VALUE`,`FIELD_TYPE`,`ALIAS_NAME`,`PRIMARY_KEYS`,`URL`,`TOOLTIP`) VALUES
+INSERT INTO `REPORTFIELD` (`REPORTFIELD_ID`,`AVERAGE`,`CAN_BE_SUMMARIZED`,`COLUMN_NAME`,`DISPLAY_NAME`,`IS_DEFAULT`,`IS_SUMMARIZED`,`LARGEST_VALUE`,`PERFORMSUMMARY`,`RECORD_COUNT`,`IS_SELECTED`,`SMALLEST_VALUE`,`FIELD_TYPE`,`ALIAS_NAME`,`PRIMARY_KEYS`,`URL`,`TOOLTIP`) VALUES 
  (729,0x00,0x00,'ADDRESS_CREATE_DATE','Address Create Date',0x00,0x00,0x00,0x00,0x00,0x00,0x00,4,'ADDRESS_CREATE_DATE','ADDRESS_ADDRESS_ID',NULL,NULL),
  (730,0x00,0x00,'ADDRESS_UPDATE_DATE','Address Update Date',0x00,0x00,0x00,0x00,0x00,0x00,0x00,4,'ADDRESS_UPDATE_DATE','ADDRESS_ADDRESS_ID',NULL,NULL),
  (731,0x00,0x00,'ADDRESS_IS_PRIMARY','Primary Address',0x00,0x00,0x00,0x00,0x00,0x00,0x00,6,'ADDRESS_IS_PRIMARY','ADDRESS_ADDRESS_ID',NULL,NULL),
@@ -1733,7 +1768,7 @@ INSERT INTO `REPORTFIELD` (`REPORTFIELD_ID`,`AVERAGE`,`CAN_BE_SUMMARIZED`,`COLUM
  (992,0x00,0x00,'VW_RGD_COMMITMENT_PAYMENT_ADDRESS_CITY','City',0x00,0x00,0x00,0x00,0x00,0x00,0x00,1,'VW_RGD_COMMITMENT_PAYMENT_ADDRESS_CITY','VW_RGD_COMMITMENT_COMMITMENT_ID',NULL,NULL),
  (993,0x00,0x00,'VW_RGD_COMMITMENT_PAYMENT_ADDRESS_STATE_PROVINCE','State/Province',0x00,0x00,0x00,0x00,0x00,0x00,0x00,1,'VW_RGD_COMMITMENT_PAYMENT_ADDRESS_STATE_PROVINCE','VW_RGD_COMMITMENT_COMMITMENT_ID',NULL,NULL),
  (994,0x00,0x00,'VW_RGD_COMMITMENT_PAYMENT_ADDRESS_POSTAL_CODE','Zip/Postal Code',0x00,0x00,0x00,0x00,0x00,0x00,0x00,1,'VW_RGD_COMMITMENT_PAYMENT_ADDRESS_POSTAL_CODE','VW_RGD_COMMITMENT_COMMITMENT_ID',NULL,NULL);
-INSERT INTO `REPORTFIELD` (`REPORTFIELD_ID`,`AVERAGE`,`CAN_BE_SUMMARIZED`,`COLUMN_NAME`,`DISPLAY_NAME`,`IS_DEFAULT`,`IS_SUMMARIZED`,`LARGEST_VALUE`,`PERFORMSUMMARY`,`RECORD_COUNT`,`IS_SELECTED`,`SMALLEST_VALUE`,`FIELD_TYPE`,`ALIAS_NAME`,`PRIMARY_KEYS`,`URL`,`TOOLTIP`) VALUES
+INSERT INTO `REPORTFIELD` (`REPORTFIELD_ID`,`AVERAGE`,`CAN_BE_SUMMARIZED`,`COLUMN_NAME`,`DISPLAY_NAME`,`IS_DEFAULT`,`IS_SUMMARIZED`,`LARGEST_VALUE`,`PERFORMSUMMARY`,`RECORD_COUNT`,`IS_SELECTED`,`SMALLEST_VALUE`,`FIELD_TYPE`,`ALIAS_NAME`,`PRIMARY_KEYS`,`URL`,`TOOLTIP`) VALUES 
  (995,0x00,0x00,'VW_RGD_COMMITMENT_PAYMENT_ADDRESS_COUNTRY','Country',0x00,0x00,0x00,0x00,0x00,0x00,0x00,1,'VW_RGD_COMMITMENT_PAYMENT_ADDRESS_COUNTRY','VW_RGD_COMMITMENT_COMMITMENT_ID',NULL,NULL),
  (996,0x00,0x00,'VW_RGD_COMMITMENT_PAYMENT_ADDRESS_IS_PRIMARY','Primary Address',0x00,0x00,0x00,0x00,0x00,0x00,0x00,6,'VW_RGD_COMMITMENT_PAYMENT_ADDRESS_IS_PRIMARY','VW_RGD_COMMITMENT_COMMITMENT_ID',NULL,NULL),
  (997,0x00,0x00,'VW_RGD_COMMITMENT_PAYMENT_ADDRESS_UNDELIVERABLE','Address Undeliverable',0x00,0x00,0x00,0x00,0x00,0x00,0x00,6,'VW_RGD_COMMITMENT_PAYMENT_ADDRESS_UNDELIVERABLE','VW_RGD_COMMITMENT_COMMITMENT_ID',NULL,NULL),
@@ -2027,7 +2062,7 @@ INSERT INTO `REPORTFIELD` (`REPORTFIELD_ID`,`AVERAGE`,`CAN_BE_SUMMARIZED`,`COLUM
  (1285,0x00,0x00,'PAYMENT_SOURCE_CREDIT_CARD_HOLDER_NAME','Credit Card Holder Name',0x00,0x00,0x00,0x00,0x00,0x00,0x00,1,'PAYMENT_SOURCE_CREDIT_CARD_HOLDER_NAME','PAYMENT_SOURCE_PAYMENT_SOURCE_ID',NULL,NULL),
  (1286,0x00,0x00,'PAYMENT_SOURCE_CREDIT_CARD_TYPE','Credit Card Type',0x00,0x00,0x00,0x00,0x00,0x00,0x00,1,'PAYMENT_SOURCE_CREDIT_CARD_TYPE','PAYMENT_SOURCE_PAYMENT_SOURCE_ID',NULL,NULL),
  (1287,0x00,0x00,'PAYMENT_SOURCE_CREDIT_CARD_EXPIRATION','Credit Card Expiration',0x00,0x00,0x00,0x00,0x00,0x00,0x00,1,'PAYMENT_SOURCE_CREDIT_CARD_EXPIRATION','PAYMENT_SOURCE_PAYMENT_SOURCE_ID',NULL,NULL);
-INSERT INTO `REPORTFIELD` (`REPORTFIELD_ID`,`AVERAGE`,`CAN_BE_SUMMARIZED`,`COLUMN_NAME`,`DISPLAY_NAME`,`IS_DEFAULT`,`IS_SUMMARIZED`,`LARGEST_VALUE`,`PERFORMSUMMARY`,`RECORD_COUNT`,`IS_SELECTED`,`SMALLEST_VALUE`,`FIELD_TYPE`,`ALIAS_NAME`,`PRIMARY_KEYS`,`URL`,`TOOLTIP`) VALUES
+INSERT INTO `REPORTFIELD` (`REPORTFIELD_ID`,`AVERAGE`,`CAN_BE_SUMMARIZED`,`COLUMN_NAME`,`DISPLAY_NAME`,`IS_DEFAULT`,`IS_SUMMARIZED`,`LARGEST_VALUE`,`PERFORMSUMMARY`,`RECORD_COUNT`,`IS_SELECTED`,`SMALLEST_VALUE`,`FIELD_TYPE`,`ALIAS_NAME`,`PRIMARY_KEYS`,`URL`,`TOOLTIP`) VALUES 
  (1288,0x00,0x00,'PAYMENT_SOURCE_CREDIT_CARD_EXPIRATION_DATE','Credit Card Expiration (Date / Time)',0x00,0x00,0x00,0x00,0x00,0x00,0x00,4,'PAYMENT_SOURCE_CREDIT_CARD_EXPIRATION_DATE','PAYMENT_SOURCE_PAYMENT_SOURCE_ID',NULL,NULL),
  (1289,0x00,0x00,'PAYMENT_SOURCE_ACH_HOLDER_NAME','ACH Holder Name',0x00,0x00,0x00,0x00,0x00,0x00,0x00,1,'PAYMENT_SOURCE_ACH_HOLDER_NAME','PAYMENT_SOURCE_PAYMENT_SOURCE_ID',NULL,NULL),
  (1290,0x00,0x00,'PAYMENT_SOURCE_ACH_ROUTING_NUMBER','ACH Routing Number',0x00,0x00,0x00,0x00,0x00,0x00,0x00,1,'PAYMENT_SOURCE_ACH_ROUTING_NUMBER','PAYMENT_SOURCE_PAYMENT_SOURCE_ID',NULL,NULL),
@@ -2316,7 +2351,7 @@ INSERT INTO `REPORTFIELD` (`REPORTFIELD_ID`,`AVERAGE`,`CAN_BE_SUMMARIZED`,`COLUM
  (1573,0x00,0x00,'GETCUSTOMFIELD(GETPICKLISTITEMIDBYITEMNAME(\'projectCode\', VW_PLEDGES_DISTRIBUTIONS_DISTRO_LINE_PROJECT_CODE), \'picklistItem\', \'04-GLPART4\')','Designation GL Part 4',0x00,0x00,0x00,0x00,0x00,0x00,0x00,1,'VW_PLEDGES_DISTRIBUTIONS_DISTRO_LINE_PROJECT_CODE_GLPART4','VW_PLEDGES_DISTRIBUTIONS_DISTRO_LINE_DISTRO_LINE_ID',NULL,NULL),
  (1574,0x00,0x00,'GETCUSTOMFIELD(GETPICKLISTITEMIDBYITEMNAME(\'projectCode\', VW_PLEDGES_DISTRIBUTIONS_DISTRO_LINE_PROJECT_CODE), \'picklistItem\', \'GLAccountCode\')','Designation GL Account Code',0x00,0x00,0x00,0x00,0x00,0x00,0x00,1,'VW_PLEDGES_DISTRIBUTIONS_DISTRO_LINE_PROJECT_CODE_GLACCOUNTCODE','VW_PLEDGES_DISTRIBUTIONS_DISTRO_LINE_DISTRO_LINE_ID',NULL,NULL),
  (1575,0x00,0x00,'GETCUSTOMFIELD(GETPICKLISTITEMIDBYITEMNAME(\'projectCode\', VW_PLEDGES_DISTRIBUTIONS_DISTRO_LINE_PROJECT_CODE), \'picklistItem\', \'AccountString1\')','Designation GL Account String 1',0x00,0x00,0x00,0x00,0x00,0x00,0x00,1,'VW_PLEDGES_DISTRIBUTIONS_DISTRO_LINE_PROJECT_CODE_GLACCOUNTSTRING1','VW_PLEDGES_DISTRIBUTIONS_DISTRO_LINE_DISTRO_LINE_ID',NULL,NULL);
-INSERT INTO `REPORTFIELD` (`REPORTFIELD_ID`,`AVERAGE`,`CAN_BE_SUMMARIZED`,`COLUMN_NAME`,`DISPLAY_NAME`,`IS_DEFAULT`,`IS_SUMMARIZED`,`LARGEST_VALUE`,`PERFORMSUMMARY`,`RECORD_COUNT`,`IS_SELECTED`,`SMALLEST_VALUE`,`FIELD_TYPE`,`ALIAS_NAME`,`PRIMARY_KEYS`,`URL`,`TOOLTIP`) VALUES
+INSERT INTO `REPORTFIELD` (`REPORTFIELD_ID`,`AVERAGE`,`CAN_BE_SUMMARIZED`,`COLUMN_NAME`,`DISPLAY_NAME`,`IS_DEFAULT`,`IS_SUMMARIZED`,`LARGEST_VALUE`,`PERFORMSUMMARY`,`RECORD_COUNT`,`IS_SELECTED`,`SMALLEST_VALUE`,`FIELD_TYPE`,`ALIAS_NAME`,`PRIMARY_KEYS`,`URL`,`TOOLTIP`) VALUES 
  (1576,0x00,0x00,'GETCUSTOMFIELD(GETPICKLISTITEMIDBYITEMNAME(\'projectCode\', VW_PLEDGES_DISTRIBUTIONS_DISTRO_LINE_PROJECT_CODE), \'picklistItem\', \'AccountString2\')','Designation GL Account String 2',0x00,0x00,0x00,0x00,0x00,0x00,0x00,1,'VW_PLEDGES_DISTRIBUTIONS_DISTRO_LINE_PROJECT_CODE_GLACCOUNTSTRING2','VW_PLEDGES_DISTRIBUTIONS_DISTRO_LINE_DISTRO_LINE_ID',NULL,NULL),
  (1577,0x00,0x00,'IFNULL(GETPICKLISTDISPLAYVALUE(\'motivationCode\', VW_PLEDGES_DISTRIBUTIONS_DISTRO_LINE_MOTIVATION_CODE), VW_PLEDGES_DISTRIBUTIONS_DISTRO_LINE_MOTIVATION_CODE)','Motivation',0x00,0x00,0x00,0x00,0x00,0x00,0x00,1,'VW_PLEDGES_DISTRIBUTIONS_DISTRO_LINE_MOTIVATION_CODE','VW_PLEDGES_DISTRIBUTIONS_DISTRO_LINE_DISTRO_LINE_ID',NULL,NULL),
  (1578,0x00,0x00,'GETPICKLISTLONGDESCRIPTION(\'motivationCode\', VW_PLEDGES_DISTRIBUTIONS_DISTRO_LINE_MOTIVATION_CODE)','Motivation Description',0x00,0x00,0x00,0x00,0x00,0x00,0x00,1,'VW_PLEDGES_DISTRIBUTIONS_DISTRO_LINE_MOTIVATION_CODE_DESCRIPTION','VW_PLEDGES_DISTRIBUTIONS_DISTRO_LINE_DISTRO_LINE_ID',NULL,NULL),
@@ -2580,7 +2615,7 @@ INSERT INTO `REPORTFIELD` (`REPORTFIELD_ID`,`AVERAGE`,`CAN_BE_SUMMARIZED`,`COLUM
  (1836,0x00,0x00,'GETCUSTOMFIELD(GETPICKLISTITEMIDBYITEMNAME(\'projectCode\', VW_PLEDGES_DISTRIBUTIONS_DISTRO_LINE_PROJECT_CODE), \'picklistItem\', \'GLAccountCode\')','Designation GL Account Code',0x00,0x00,0x00,0x00,0x00,0x00,0x00,1,'VW_PLEDGES_DISTRIBUTIONS_DISTRO_LINE_PROJECT_CODE_GLACCOUNTCODE','VW_PLEDGES_DISTRIBUTIONS_DISTRO_LINE_DISTRO_LINE_ID',NULL,NULL),
  (1837,0x00,0x00,'GETCUSTOMFIELD(GETPICKLISTITEMIDBYITEMNAME(\'projectCode\', VW_PLEDGES_DISTRIBUTIONS_DISTRO_LINE_PROJECT_CODE), \'picklistItem\', \'AccountString1\')','Designation GL Account String 1',0x00,0x00,0x00,0x00,0x00,0x00,0x00,1,'VW_PLEDGES_DISTRIBUTIONS_DISTRO_LINE_PROJECT_CODE_GLACCOUNTSTRING1','VW_PLEDGES_DISTRIBUTIONS_DISTRO_LINE_DISTRO_LINE_ID',NULL,NULL),
  (1838,0x00,0x00,'GETCUSTOMFIELD(GETPICKLISTITEMIDBYITEMNAME(\'projectCode\', VW_PLEDGES_DISTRIBUTIONS_DISTRO_LINE_PROJECT_CODE), \'picklistItem\', \'AccountString2\')','Designation GL Account String 2',0x00,0x00,0x00,0x00,0x00,0x00,0x00,1,'VW_PLEDGES_DISTRIBUTIONS_DISTRO_LINE_PROJECT_CODE_GLACCOUNTSTRING2','VW_PLEDGES_DISTRIBUTIONS_DISTRO_LINE_DISTRO_LINE_ID',NULL,NULL);
-INSERT INTO `REPORTFIELD` (`REPORTFIELD_ID`,`AVERAGE`,`CAN_BE_SUMMARIZED`,`COLUMN_NAME`,`DISPLAY_NAME`,`IS_DEFAULT`,`IS_SUMMARIZED`,`LARGEST_VALUE`,`PERFORMSUMMARY`,`RECORD_COUNT`,`IS_SELECTED`,`SMALLEST_VALUE`,`FIELD_TYPE`,`ALIAS_NAME`,`PRIMARY_KEYS`,`URL`,`TOOLTIP`) VALUES
+INSERT INTO `REPORTFIELD` (`REPORTFIELD_ID`,`AVERAGE`,`CAN_BE_SUMMARIZED`,`COLUMN_NAME`,`DISPLAY_NAME`,`IS_DEFAULT`,`IS_SUMMARIZED`,`LARGEST_VALUE`,`PERFORMSUMMARY`,`RECORD_COUNT`,`IS_SELECTED`,`SMALLEST_VALUE`,`FIELD_TYPE`,`ALIAS_NAME`,`PRIMARY_KEYS`,`URL`,`TOOLTIP`) VALUES 
  (1839,0x00,0x00,'IFNULL(GETPICKLISTDISPLAYVALUE(\'motivationCode\', VW_PLEDGES_DISTRIBUTIONS_DISTRO_LINE_MOTIVATION_CODE), VW_PLEDGES_DISTRIBUTIONS_DISTRO_LINE_MOTIVATION_CODE)','Motivation',0x00,0x00,0x00,0x00,0x00,0x00,0x00,1,'VW_PLEDGES_DISTRIBUTIONS_DISTRO_LINE_MOTIVATION_CODE','VW_PLEDGES_DISTRIBUTIONS_DISTRO_LINE_DISTRO_LINE_ID',NULL,NULL),
  (1840,0x00,0x00,'GETPICKLISTLONGDESCRIPTION(\'motivationCode\', VW_PLEDGES_DISTRIBUTIONS_DISTRO_LINE_MOTIVATION_CODE)','Motivation Description',0x00,0x00,0x00,0x00,0x00,0x00,0x00,1,'VW_PLEDGES_DISTRIBUTIONS_DISTRO_LINE_MOTIVATION_CODE_DESCRIPTION','VW_PLEDGES_DISTRIBUTIONS_DISTRO_LINE_DISTRO_LINE_ID',NULL,NULL),
  (1841,0x00,0x00,'VW_RGD_COMMITMENT_COMMITMENT_ID','Recurring Gift ID',0x00,0x00,0x00,0x00,0x00,0x00,0x00,2,'VW_RGD_COMMITMENT_COMMITMENT_ID','VW_RGD_COMMITMENT_COMMITMENT_ID',NULL,NULL),
@@ -2836,7 +2871,7 @@ INSERT INTO `REPORTFIELD` (`REPORTFIELD_ID`,`AVERAGE`,`CAN_BE_SUMMARIZED`,`COLUM
  (2091,0x00,0x00,'VW_AGD_ADJUSTED_GIFT_PAYMENT_PHONE_NUMBER','Phone Number',0x00,0x00,0x00,0x00,0x00,0x00,0x00,1,'VW_AGD_ADJUSTED_GIFT_PAYMENT_PHONE_NUMBER','VW_AGD_ADJUSTED_GIFT_ADJUSTED_GIFT_ID',NULL,NULL),
  (2092,0x00,0x00,'VW_AGD_ADJUSTED_GIFT_PAYMENT_PHONE_IS_PRIMARY','Primary Phone',0x00,0x00,0x00,0x00,0x00,0x00,0x00,6,'VW_AGD_ADJUSTED_GIFT_PAYMENT_PHONE_IS_PRIMARY','VW_AGD_ADJUSTED_GIFT_ADJUSTED_GIFT_ID',NULL,NULL),
  (2093,0x00,0x00,'VW_AGD_ADJUSTED_GIFT_PAYMENT_PHONE_UNDELIVERABLE','Phone Undeliverable',0x00,0x00,0x00,0x00,0x00,0x00,0x00,6,'VW_AGD_ADJUSTED_GIFT_PAYMENT_PHONE_UNDELIVERABLE','VW_AGD_ADJUSTED_GIFT_ADJUSTED_GIFT_ID',NULL,NULL);
-INSERT INTO `REPORTFIELD` (`REPORTFIELD_ID`,`AVERAGE`,`CAN_BE_SUMMARIZED`,`COLUMN_NAME`,`DISPLAY_NAME`,`IS_DEFAULT`,`IS_SUMMARIZED`,`LARGEST_VALUE`,`PERFORMSUMMARY`,`RECORD_COUNT`,`IS_SELECTED`,`SMALLEST_VALUE`,`FIELD_TYPE`,`ALIAS_NAME`,`PRIMARY_KEYS`,`URL`,`TOOLTIP`) VALUES
+INSERT INTO `REPORTFIELD` (`REPORTFIELD_ID`,`AVERAGE`,`CAN_BE_SUMMARIZED`,`COLUMN_NAME`,`DISPLAY_NAME`,`IS_DEFAULT`,`IS_SUMMARIZED`,`LARGEST_VALUE`,`PERFORMSUMMARY`,`RECORD_COUNT`,`IS_SELECTED`,`SMALLEST_VALUE`,`FIELD_TYPE`,`ALIAS_NAME`,`PRIMARY_KEYS`,`URL`,`TOOLTIP`) VALUES 
  (2094,0x00,0x00,'VW_AGD_ADJUSTED_GIFT_PAYMENT_PHONE_INACTIVE','Phone Inactive',0x00,0x00,0x00,0x00,0x00,0x00,0x00,6,'VW_AGD_ADJUSTED_GIFT_PAYMENT_PHONE_INACTIVE','VW_AGD_ADJUSTED_GIFT_ADJUSTED_GIFT_ID',NULL,NULL),
  (2095,0x00,0x00,'VW_AGD_ADJUSTED_GIFT_PAYMENT_MESSAGE','Payment Message',0x00,0x00,0x00,0x00,0x00,0x00,0x00,1,'VW_AGD_ADJUSTED_GIFT_PAYMENT_MESSAGE','VW_AGD_ADJUSTED_GIFT_ADJUSTED_GIFT_ID',NULL,NULL),
  (2096,0x00,0x00,'VW_AGD_ADJUSTED_GIFT_PAYMENT_STATUS','Payment Status',0x00,0x00,0x00,0x00,0x00,0x00,0x00,1,'VW_AGD_ADJUSTED_GIFT_PAYMENT_STATUS','VW_AGD_ADJUSTED_GIFT_ADJUSTED_GIFT_ID',NULL,NULL),
@@ -3065,7 +3100,7 @@ INSERT INTO `REPORTFIELD` (`REPORTFIELD_ID`,`AVERAGE`,`CAN_BE_SUMMARIZED`,`COLUM
  (2319,0x00,0x00,'GETCUSTOMFIELD(CONSTITUENT_CONSTITUENT_ID, \'constituent\', \'organization.website\')','Website',0x00,0x00,0x00,0x00,0x00,0x00,0x00,1,'ORGANIZATION_WEBSITE','CONSTITUENT_CONSTITUENT_ID','\"http://localhost:8080/orangeleap/constituent.htm?constituentId=\" + $F{CONSTITUENT_CONSTITUENT_ID}','\"Show Constiuent in Orange Leap\"'),
  (2320,0x00,0x00,'GETCUSTOMFIELD(CONSTITUENT_CONSTITUENT_ID, \'constituent\', \'organization.taxid\')','Tax ID',0x00,0x00,0x00,0x00,0x00,0x00,0x00,1,'ORGANIZATION_TAXID','CONSTITUENT_CONSTITUENT_ID','\"http://localhost:8080/orangeleap/constituent.htm?constituentId=\" + $F{CONSTITUENT_CONSTITUENT_ID}','\"Show Constiuent in Orange Leap\"'),
  (2321,0x00,0x00,'CONSTITUENT_NAICS_CODE','NAICS Code',0x00,0x00,0x00,0x00,0x00,0x00,0x00,1,'CONSTITUENT_NAICS_CODE','CONSTITUENT_CONSTITUENT_ID','\"http://localhost:8080/orangeleap/constituent.htm?constituentId=\" + $F{CONSTITUENT_CONSTITUENT_ID}','\"Show Constiuent in Orange Leap\"');
-INSERT INTO `REPORTFIELD` (`REPORTFIELD_ID`,`AVERAGE`,`CAN_BE_SUMMARIZED`,`COLUMN_NAME`,`DISPLAY_NAME`,`IS_DEFAULT`,`IS_SUMMARIZED`,`LARGEST_VALUE`,`PERFORMSUMMARY`,`RECORD_COUNT`,`IS_SELECTED`,`SMALLEST_VALUE`,`FIELD_TYPE`,`ALIAS_NAME`,`PRIMARY_KEYS`,`URL`,`TOOLTIP`) VALUES
+INSERT INTO `REPORTFIELD` (`REPORTFIELD_ID`,`AVERAGE`,`CAN_BE_SUMMARIZED`,`COLUMN_NAME`,`DISPLAY_NAME`,`IS_DEFAULT`,`IS_SUMMARIZED`,`LARGEST_VALUE`,`PERFORMSUMMARY`,`RECORD_COUNT`,`IS_SELECTED`,`SMALLEST_VALUE`,`FIELD_TYPE`,`ALIAS_NAME`,`PRIMARY_KEYS`,`URL`,`TOOLTIP`) VALUES 
  (2322,0x00,0x00,'GETCUSTOMFIELD(CONSTITUENT_CONSTITUENT_ID, \'constituent\', \'communicationPreferences\')','Communication Preferences',0x00,0x00,0x00,0x00,0x00,0x00,0x00,1,'COMMUNICATIONPREFERENCES','CONSTITUENT_CONSTITUENT_ID','\"http://localhost:8080/orangeleap/constituent.htm?constituentId=\" + $F{CONSTITUENT_CONSTITUENT_ID}','\"Show Constiuent in Orange Leap\"'),
  (2323,0x00,0x00,'GETCUSTOMFIELDDISPLAYVALUECONCATENATED(CONSTITUENT_CONSTITUENT_ID, \'constituent\', \'communicationOptInPreferences\', \'customFieldMap[communicationOptInPreferences]\')','Opt In Preferences',0x00,0x00,0x00,0x00,0x00,0x00,0x00,1,'CONSTITUENT_OPT_IN_PREFERENCES','CONSTITUENT_CONSTITUENT_ID','\"http://localhost:8080/orangeleap/constituent.htm?constituentId=\" + $F{CONSTITUENT_CONSTITUENT_ID}','\"Show Constiuent in Orange Leap\"'),
  (2324,0x00,0x00,'GETCUSTOMFIELD(CONSTITUENT_CONSTITUENT_ID, \'constituent\', \'emailFormat\')','Email Format',0x00,0x00,0x00,0x00,0x00,0x00,0x00,1,'EMAILFORMAT','CONSTITUENT_CONSTITUENT_ID','\"http://localhost:8080/orangeleap/constituent.htm?constituentId=\" + $F{CONSTITUENT_CONSTITUENT_ID}','\"Show Constiuent in Orange Leap\"'),
@@ -3290,7 +3325,7 @@ INSERT INTO `REPORTFIELD` (`REPORTFIELD_ID`,`AVERAGE`,`CAN_BE_SUMMARIZED`,`COLUM
  (2543,0x00,0x00,'ADDRESS_CURRENT_CREATE_DATE','Address Create Date',0x00,0x00,0x00,0x00,0x00,0x00,0x00,4,'ADDRESS_CURRENT_CREATE_DATE','ADDRESS_CURRENT_ADDRESS_ID',NULL,NULL),
  (2544,0x00,0x00,'ADDRESS_CURRENT_UPDATE_DATE','Address Update Date',0x00,0x00,0x00,0x00,0x00,0x00,0x00,4,'ADDRESS_CURRENT_UPDATE_DATE','ADDRESS_CURRENT_ADDRESS_ID',NULL,NULL),
  (2545,0x00,0x00,'ADDRESS_CURRENT_IS_PRIMARY','Primary Address',0x00,0x00,0x00,0x00,0x00,0x00,0x00,6,'ADDRESS_CURRENT_IS_PRIMARY','ADDRESS_CURRENT_ADDRESS_ID',NULL,NULL);
-INSERT INTO `REPORTFIELD` (`REPORTFIELD_ID`,`AVERAGE`,`CAN_BE_SUMMARIZED`,`COLUMN_NAME`,`DISPLAY_NAME`,`IS_DEFAULT`,`IS_SUMMARIZED`,`LARGEST_VALUE`,`PERFORMSUMMARY`,`RECORD_COUNT`,`IS_SELECTED`,`SMALLEST_VALUE`,`FIELD_TYPE`,`ALIAS_NAME`,`PRIMARY_KEYS`,`URL`,`TOOLTIP`) VALUES
+INSERT INTO `REPORTFIELD` (`REPORTFIELD_ID`,`AVERAGE`,`CAN_BE_SUMMARIZED`,`COLUMN_NAME`,`DISPLAY_NAME`,`IS_DEFAULT`,`IS_SUMMARIZED`,`LARGEST_VALUE`,`PERFORMSUMMARY`,`RECORD_COUNT`,`IS_SELECTED`,`SMALLEST_VALUE`,`FIELD_TYPE`,`ALIAS_NAME`,`PRIMARY_KEYS`,`URL`,`TOOLTIP`) VALUES 
  (2546,0x00,0x00,'ADDRESS_CURRENT_UNDELIVERABLE','Address Undeliverable',0x00,0x00,0x00,0x00,0x00,0x00,0x00,6,'ADDRESS_CURRENT_UNDELIVERABLE','ADDRESS_CURRENT_ADDRESS_ID',NULL,NULL),
  (2547,0x00,0x00,'ADDRESS_CURRENT_INACTIVE','Address Inactive',0x00,0x00,0x00,0x00,0x00,0x00,0x00,6,'ADDRESS_CURRENT_INACTIVE','ADDRESS_CURRENT_ADDRESS_ID',NULL,NULL),
  (2548,0x00,0x00,'COMMITMENT_COMMITMENT_ID','Pledge ID',0x01,0x00,0x00,0x00,0x00,0x00,0x00,2,'COMMITMENT_COMMITMENT_ID','COMMITMENT_COMMITMENT_ID',NULL,NULL),
@@ -3532,7 +3567,7 @@ INSERT INTO `REPORTFIELD` (`REPORTFIELD_ID`,`AVERAGE`,`CAN_BE_SUMMARIZED`,`COLUM
  (2784,0x00,0x00,'CONSTITUENT_NAICS_CODE','NAICS Code',0x00,0x00,0x00,0x00,0x00,0x00,0x00,1,'CONSTITUENT_NAICS_CODE','CONSTITUENT_CONSTITUENT_ID','\"http://localhost:8080/orangeleap/constituent.htm?constituentId=\" + $F{CONSTITUENT_CONSTITUENT_ID}','\"Show Constiuent in Orange Leap\"'),
  (2785,0x00,0x00,'GETCUSTOMFIELD(CONSTITUENT_CONSTITUENT_ID, \'constituent\', \'communicationPreferences\')','Communication Preferences',0x00,0x00,0x00,0x00,0x00,0x00,0x00,1,'COMMUNICATIONPREFERENCES','CONSTITUENT_CONSTITUENT_ID','\"http://localhost:8080/orangeleap/constituent.htm?constituentId=\" + $F{CONSTITUENT_CONSTITUENT_ID}','\"Show Constiuent in Orange Leap\"'),
  (2786,0x00,0x00,'GETCUSTOMFIELDDISPLAYVALUECONCATENATED(CONSTITUENT_CONSTITUENT_ID, \'constituent\', \'communicationOptInPreferences\', \'customFieldMap[communicationOptInPreferences]\')','Opt In Preferences',0x00,0x00,0x00,0x00,0x00,0x00,0x00,1,'CONSTITUENT_OPT_IN_PREFERENCES','CONSTITUENT_CONSTITUENT_ID','\"http://localhost:8080/orangeleap/constituent.htm?constituentId=\" + $F{CONSTITUENT_CONSTITUENT_ID}','\"Show Constiuent in Orange Leap\"');
-INSERT INTO `REPORTFIELD` (`REPORTFIELD_ID`,`AVERAGE`,`CAN_BE_SUMMARIZED`,`COLUMN_NAME`,`DISPLAY_NAME`,`IS_DEFAULT`,`IS_SUMMARIZED`,`LARGEST_VALUE`,`PERFORMSUMMARY`,`RECORD_COUNT`,`IS_SELECTED`,`SMALLEST_VALUE`,`FIELD_TYPE`,`ALIAS_NAME`,`PRIMARY_KEYS`,`URL`,`TOOLTIP`) VALUES
+INSERT INTO `REPORTFIELD` (`REPORTFIELD_ID`,`AVERAGE`,`CAN_BE_SUMMARIZED`,`COLUMN_NAME`,`DISPLAY_NAME`,`IS_DEFAULT`,`IS_SUMMARIZED`,`LARGEST_VALUE`,`PERFORMSUMMARY`,`RECORD_COUNT`,`IS_SELECTED`,`SMALLEST_VALUE`,`FIELD_TYPE`,`ALIAS_NAME`,`PRIMARY_KEYS`,`URL`,`TOOLTIP`) VALUES 
  (2787,0x00,0x00,'GETCUSTOMFIELD(CONSTITUENT_CONSTITUENT_ID, \'constituent\', \'emailFormat\')','Email Format',0x00,0x00,0x00,0x00,0x00,0x00,0x00,1,'EMAILFORMAT','CONSTITUENT_CONSTITUENT_ID','\"http://localhost:8080/orangeleap/constituent.htm?constituentId=\" + $F{CONSTITUENT_CONSTITUENT_ID}','\"Show Constiuent in Orange Leap\"'),
  (2788,0x00,0x00,'CONSTITUENT_LOGIN_ID','Login ID',0x00,0x00,0x00,0x00,0x00,0x00,0x00,1,'CONSTITUENT_LOGIN_ID','CONSTITUENT_CONSTITUENT_ID','\"http://localhost:8080/orangeleap/constituent.htm?constituentId=\" + $F{CONSTITUENT_CONSTITUENT_ID}','\"Show Constiuent in Orange Leap\"'),
  (2789,0x00,0x00,'CONSTITUENT_CREATE_DATE','Create Date',0x00,0x00,0x00,0x00,0x00,0x00,0x00,4,'CONSTITUENT_CREATE_DATE','CONSTITUENT_CONSTITUENT_ID','\"http://localhost:8080/orangeleap/constituent.htm?constituentId=\" + $F{CONSTITUENT_CONSTITUENT_ID}','\"Show Constiuent in Orange Leap\"'),
@@ -3771,7 +3806,7 @@ INSERT INTO `REPORTFIELD` (`REPORTFIELD_ID`,`AVERAGE`,`CAN_BE_SUMMARIZED`,`COLUM
  (3022,0x00,0x00,'GIFT_POSTMARK_DATE','Postmark Date',0x00,0x00,0x00,0x00,0x00,0x00,0x00,4,'GIFT_POSTMARK_DATE','GIFT_GIFT_ID',NULL,NULL),
  (3023,0x00,0x00,'GETPICKLISTDISPLAYVALUE(\'customFieldMap[source]\', GETCUSTOMFIELD(GIFT_GIFT_ID, \'gift\', \'source\'))','Source Short Display Name',0x00,0x00,0x00,0x00,0x00,0x00,0x00,1,'GIFT_SOURCE_SHORT_DISPLAY_NAME','GIFT_GIFT_ID',NULL,NULL),
  (3024,0x00,0x00,'GIFT_COMMENTS','Comments',0x00,0x00,0x00,0x00,0x00,0x00,0x00,1,'GIFT_COMMENTS','GIFT_GIFT_ID',NULL,NULL);
-INSERT INTO `REPORTFIELD` (`REPORTFIELD_ID`,`AVERAGE`,`CAN_BE_SUMMARIZED`,`COLUMN_NAME`,`DISPLAY_NAME`,`IS_DEFAULT`,`IS_SUMMARIZED`,`LARGEST_VALUE`,`PERFORMSUMMARY`,`RECORD_COUNT`,`IS_SELECTED`,`SMALLEST_VALUE`,`FIELD_TYPE`,`ALIAS_NAME`,`PRIMARY_KEYS`,`URL`,`TOOLTIP`) VALUES
+INSERT INTO `REPORTFIELD` (`REPORTFIELD_ID`,`AVERAGE`,`CAN_BE_SUMMARIZED`,`COLUMN_NAME`,`DISPLAY_NAME`,`IS_DEFAULT`,`IS_SUMMARIZED`,`LARGEST_VALUE`,`PERFORMSUMMARY`,`RECORD_COUNT`,`IS_SELECTED`,`SMALLEST_VALUE`,`FIELD_TYPE`,`ALIAS_NAME`,`PRIMARY_KEYS`,`URL`,`TOOLTIP`) VALUES 
  (3025,0x00,0x00,'GIFT_TRANSACTIONDATE','Transaction Date',0x00,0x00,0x00,0x00,0x00,0x00,0x00,4,'GIFT_TRANSACTIONDATE','GIFT_GIFT_ID',NULL,NULL),
  (3026,0x00,0x00,'GIFT_PAYMENT_SOURCE_PAYMENT_PROFILE_DESCRIPTION','Payment Profile Description',0x00,0x00,0x00,0x00,0x00,0x00,0x00,1,'GIFT_PAYMENT_SOURCE_PAYMENT_PROFILE_DESCRIPTION','GIFT_GIFT_ID',NULL,NULL),
  (3027,0x00,0x00,'GIFT_PAYMENT_SOURCE_INACTIVE','Payment Method Inactive',0x00,0x00,0x00,0x00,0x00,0x00,0x00,6,'GIFT_PAYMENT_SOURCE_INACTIVE','GIFT_GIFT_ID',NULL,NULL),
@@ -4020,7 +4055,7 @@ INSERT INTO `REPORTFIELD` (`REPORTFIELD_ID`,`AVERAGE`,`CAN_BE_SUMMARIZED`,`COLUM
  (3270,0x00,0x00,'GIFT_POSTMARK_DATE','Postmark Date',0x00,0x00,0x00,0x00,0x00,0x00,0x00,4,'GIFT_POSTMARK_DATE','GIFT_GIFT_ID',NULL,NULL),
  (3271,0x00,0x00,'GETPICKLISTDISPLAYVALUE(\'customFieldMap[source]\', GETCUSTOMFIELD(GIFT_GIFT_ID, \'gift\', \'source\'))','Source Short Display Name',0x00,0x00,0x00,0x00,0x00,0x00,0x00,1,'GIFT_SOURCE_SHORT_DISPLAY_NAME','GIFT_GIFT_ID',NULL,NULL),
  (3272,0x00,0x00,'GIFT_COMMENTS','Comments',0x00,0x00,0x00,0x00,0x00,0x00,0x00,1,'GIFT_COMMENTS','GIFT_GIFT_ID',NULL,NULL);
-INSERT INTO `REPORTFIELD` (`REPORTFIELD_ID`,`AVERAGE`,`CAN_BE_SUMMARIZED`,`COLUMN_NAME`,`DISPLAY_NAME`,`IS_DEFAULT`,`IS_SUMMARIZED`,`LARGEST_VALUE`,`PERFORMSUMMARY`,`RECORD_COUNT`,`IS_SELECTED`,`SMALLEST_VALUE`,`FIELD_TYPE`,`ALIAS_NAME`,`PRIMARY_KEYS`,`URL`,`TOOLTIP`) VALUES
+INSERT INTO `REPORTFIELD` (`REPORTFIELD_ID`,`AVERAGE`,`CAN_BE_SUMMARIZED`,`COLUMN_NAME`,`DISPLAY_NAME`,`IS_DEFAULT`,`IS_SUMMARIZED`,`LARGEST_VALUE`,`PERFORMSUMMARY`,`RECORD_COUNT`,`IS_SELECTED`,`SMALLEST_VALUE`,`FIELD_TYPE`,`ALIAS_NAME`,`PRIMARY_KEYS`,`URL`,`TOOLTIP`) VALUES 
  (3273,0x00,0x00,'GIFT_TRANSACTIONDATE','Transaction Date',0x00,0x00,0x00,0x00,0x00,0x00,0x00,4,'GIFT_TRANSACTIONDATE','GIFT_GIFT_ID',NULL,NULL),
  (3274,0x00,0x00,'GIFT_PAYMENT_SOURCE_PAYMENT_PROFILE_DESCRIPTION','Payment Profile Description',0x00,0x00,0x00,0x00,0x00,0x00,0x00,1,'GIFT_PAYMENT_SOURCE_PAYMENT_PROFILE_DESCRIPTION','GIFT_GIFT_ID',NULL,NULL),
  (3275,0x00,0x00,'GIFT_PAYMENT_SOURCE_INACTIVE','Payment Method Inactive',0x00,0x00,0x00,0x00,0x00,0x00,0x00,6,'GIFT_PAYMENT_SOURCE_INACTIVE','GIFT_GIFT_ID',NULL,NULL),
@@ -4312,7 +4347,7 @@ INSERT INTO `REPORTFIELD` (`REPORTFIELD_ID`,`AVERAGE`,`CAN_BE_SUMMARIZED`,`COLUM
  (3561,0x00,0x00,'GIFT_CURRENCY_CODE','Currency Code',0x00,0x00,0x00,0x00,0x00,0x00,0x00,1,'GIFT_CURRENCY_CODE','GIFT_GIFT_ID',NULL,NULL),
  (3562,0x00,0x00,'GETPICKLISTDISPLAYVALUE(\'giftStatus\', GIFT_GIFT_STATUS)','Gift Status Short Display Name',0x00,0x00,0x00,0x00,0x00,0x00,0x00,1,'GIFT_STATUS_DISPLAYVALUE_SHORT_DISPLAY_NAME','GIFT_GIFT_ID',NULL,NULL),
  (3563,0x00,0x00,'GETPICKLISTDISPLAYVALUE(\'customFieldMap[bank]\', GETCUSTOMFIELD(GIFT_GIFT_ID, \'gift\', \'bank\'))','Bank Short Display Name',0x00,0x00,0x00,0x00,0x00,0x00,0x00,1,'GIFT_BANK_SHORT_DISPLAY_NAME','GIFT_GIFT_ID',NULL,NULL);
-INSERT INTO `REPORTFIELD` (`REPORTFIELD_ID`,`AVERAGE`,`CAN_BE_SUMMARIZED`,`COLUMN_NAME`,`DISPLAY_NAME`,`IS_DEFAULT`,`IS_SUMMARIZED`,`LARGEST_VALUE`,`PERFORMSUMMARY`,`RECORD_COUNT`,`IS_SELECTED`,`SMALLEST_VALUE`,`FIELD_TYPE`,`ALIAS_NAME`,`PRIMARY_KEYS`,`URL`,`TOOLTIP`) VALUES
+INSERT INTO `REPORTFIELD` (`REPORTFIELD_ID`,`AVERAGE`,`CAN_BE_SUMMARIZED`,`COLUMN_NAME`,`DISPLAY_NAME`,`IS_DEFAULT`,`IS_SUMMARIZED`,`LARGEST_VALUE`,`PERFORMSUMMARY`,`RECORD_COUNT`,`IS_SELECTED`,`SMALLEST_VALUE`,`FIELD_TYPE`,`ALIAS_NAME`,`PRIMARY_KEYS`,`URL`,`TOOLTIP`) VALUES 
  (3564,0x00,0x00,'GIFT_POSTED','Posted',0x00,0x00,0x00,0x00,0x00,0x00,0x00,6,'GIFT_POSTED','GIFT_GIFT_ID',NULL,NULL),
  (3565,0x00,0x00,'GIFT_POSTED_DATE','Posted Date',0x00,0x00,0x00,0x00,0x00,0x00,0x00,4,'GIFT_POSTED_DATE','GIFT_GIFT_ID',NULL,NULL),
  (3566,0x00,0x00,'GIFT_DONATION_DATE','Donation Date',0x01,0x00,0x00,0x00,0x00,0x00,0x00,4,'GIFT_DONATION_DATE','GIFT_GIFT_ID',NULL,NULL),
@@ -4621,7 +4656,7 @@ INSERT INTO `REPORTFIELD` (`REPORTFIELD_ID`,`AVERAGE`,`CAN_BE_SUMMARIZED`,`COLUM
  (3869,0x00,0x00,'GETCUSTOMFIELD(CONSTITUENT_CONSTITUENT_ID, \'constituent\', \'individual.gender\')','Gender',0x00,0x00,0x00,0x00,0x00,0x00,0x00,1,'INDIVIDUAL_GENDER','CONSTITUENT_CONSTITUENT_ID','\"http://localhost:8080/orangeleap/constituent.htm?constituentId=\" + $F{CONSTITUENT_CONSTITUENT_ID}','\"Show Constiuent in Orange Leap\"'),
  (3870,0x00,0x00,'GETCUSTOMFIELD(CONSTITUENT_CONSTITUENT_ID, \'constituent\', \'individual.race\')','Race',0x00,0x00,0x00,0x00,0x00,0x00,0x00,1,'INDIVIDUAL_RACE','CONSTITUENT_CONSTITUENT_ID','\"http://localhost:8080/orangeleap/constituent.htm?constituentId=\" + $F{CONSTITUENT_CONSTITUENT_ID}','\"Show Constiuent in Orange Leap\"'),
  (3871,0x00,0x00,'GETCUSTOMFIELD(CONSTITUENT_CONSTITUENT_ID, \'constituent\', \'individual.military\')','Military',0x00,0x00,0x00,0x00,0x00,0x00,0x00,1,'INDIVIDUAL_MILITARY','CONSTITUENT_CONSTITUENT_ID','\"http://localhost:8080/orangeleap/constituent.htm?constituentId=\" + $F{CONSTITUENT_CONSTITUENT_ID}','\"Show Constiuent in Orange Leap\"');
-INSERT INTO `REPORTFIELD` (`REPORTFIELD_ID`,`AVERAGE`,`CAN_BE_SUMMARIZED`,`COLUMN_NAME`,`DISPLAY_NAME`,`IS_DEFAULT`,`IS_SUMMARIZED`,`LARGEST_VALUE`,`PERFORMSUMMARY`,`RECORD_COUNT`,`IS_SELECTED`,`SMALLEST_VALUE`,`FIELD_TYPE`,`ALIAS_NAME`,`PRIMARY_KEYS`,`URL`,`TOOLTIP`) VALUES
+INSERT INTO `REPORTFIELD` (`REPORTFIELD_ID`,`AVERAGE`,`CAN_BE_SUMMARIZED`,`COLUMN_NAME`,`DISPLAY_NAME`,`IS_DEFAULT`,`IS_SUMMARIZED`,`LARGEST_VALUE`,`PERFORMSUMMARY`,`RECORD_COUNT`,`IS_SELECTED`,`SMALLEST_VALUE`,`FIELD_TYPE`,`ALIAS_NAME`,`PRIMARY_KEYS`,`URL`,`TOOLTIP`) VALUES 
  (3872,0x00,0x00,'GETCUSTOMFIELD(CONSTITUENT_CONSTITUENT_ID, \'constituent\', \'organization.matching\')','Matching',0x00,0x00,0x00,0x00,0x00,0x00,0x00,1,'ORGANIZATION_MATCHING','CONSTITUENT_CONSTITUENT_ID','\"http://localhost:8080/orangeleap/constituent.htm?constituentId=\" + $F{CONSTITUENT_CONSTITUENT_ID}','\"Show Constiuent in Orange Leap\"'),
  (3873,0x00,0x00,'GETCUSTOMFIELD(CONSTITUENT_CONSTITUENT_ID, \'constituent\', \'organization.percentMatch\')','Percent Matching',0x00,0x00,0x00,0x00,0x00,0x00,0x00,3,'ORGANIZATION_PERCENTMATCH','CONSTITUENT_CONSTITUENT_ID','\"http://localhost:8080/orangeleap/constituent.htm?constituentId=\" + $F{CONSTITUENT_CONSTITUENT_ID}','\"Show Constiuent in Orange Leap\"'),
  (3874,0x00,0x00,'GETCUSTOMFIELD(CONSTITUENT_CONSTITUENT_ID, \'constituent\', \'organization.maximumAnnualLimit\')','Maximum Annual Limit',0x00,0x00,0x00,0x00,0x00,0x00,0x00,5,'ORGANIZATION_MAXIMUMMATCH','CONSTITUENT_CONSTITUENT_ID','\"http://localhost:8080/orangeleap/constituent.htm?constituentId=\" + $F{CONSTITUENT_CONSTITUENT_ID}','\"Show Constiuent in Orange Leap\"'),
@@ -4882,7 +4917,7 @@ INSERT INTO `REPORTFIELD` (`REPORTFIELD_ID`,`AVERAGE`,`CAN_BE_SUMMARIZED`,`COLUM
  (4129,0x00,0x00,'GETCUSTOMFIELDVALUESANDDISPLAYVALUESCONCATENATED(VW_PLEDGES_DISTRIBUTIONS_DISTRO_LINE_DISTRO_LINE_ID, \'distributionline\', \'additional_tributeOccasion\', \'tributeOccasion\', \'customFieldMap[tributeOccasion]\')','Tribute Occasion',0x00,0x00,0x00,0x00,0x00,0x00,0x00,1,'VW_PLEDGES_DISTRIBUTIONS_DISTRO_LINE_TRIBUTE_OCCASION','VW_PLEDGES_DISTRIBUTIONS_DISTRO_LINE_DISTRO_LINE_ID',NULL,NULL),
  (4130,0x00,0x00,'IFNULL(GETCONSTITUENTDISPLAYNAME(GETCUSTOMFIELD(VW_PLEDGES_DISTRIBUTIONS_DISTRO_LINE_DISTRO_LINE_ID, \'distributionline\', \'onBehalfOf\')), GETCUSTOMFIELD(VW_PLEDGES_DISTRIBUTIONS_DISTRO_LINE_DISTRO_LINE_ID, \'distributionline\', \'other_onBehalfOf\'))','On Behalf Of',0x00,0x00,0x00,0x00,0x00,0x00,0x00,1,'VW_PLEDGES_DISTRIBUTIONS_DISTRO_LINE_ON_BEHALF_OF','VW_PLEDGES_DISTRIBUTIONS_DISTRO_LINE_DISTRO_LINE_ID',NULL,NULL),
  (4131,0x00,0x00,'IFNULL(GETCUSTOMFIELD(VW_PLEDGES_DISTRIBUTIONS_DISTRO_LINE_DISTRO_LINE_ID, \'distributionline\', \'anonymous\'), \'false\')','Anonymous',0x00,0x00,0x00,0x00,0x00,0x00,0x00,6,'VW_PLEDGES_DISTRIBUTIONS_DISTRO_LINE_ANONYMOUS','VW_PLEDGES_DISTRIBUTIONS_DISTRO_LINE_DISTRO_LINE_ID',NULL,NULL);
-INSERT INTO `REPORTFIELD` (`REPORTFIELD_ID`,`AVERAGE`,`CAN_BE_SUMMARIZED`,`COLUMN_NAME`,`DISPLAY_NAME`,`IS_DEFAULT`,`IS_SUMMARIZED`,`LARGEST_VALUE`,`PERFORMSUMMARY`,`RECORD_COUNT`,`IS_SELECTED`,`SMALLEST_VALUE`,`FIELD_TYPE`,`ALIAS_NAME`,`PRIMARY_KEYS`,`URL`,`TOOLTIP`) VALUES
+INSERT INTO `REPORTFIELD` (`REPORTFIELD_ID`,`AVERAGE`,`CAN_BE_SUMMARIZED`,`COLUMN_NAME`,`DISPLAY_NAME`,`IS_DEFAULT`,`IS_SUMMARIZED`,`LARGEST_VALUE`,`PERFORMSUMMARY`,`RECORD_COUNT`,`IS_SELECTED`,`SMALLEST_VALUE`,`FIELD_TYPE`,`ALIAS_NAME`,`PRIMARY_KEYS`,`URL`,`TOOLTIP`) VALUES 
  (4132,0x00,0x00,'GETCUSTOMFIELD(VW_PLEDGES_DISTRIBUTIONS_DISTRO_LINE_DISTRO_LINE_ID, \'distributionline\', \'recognitionName\')','Recognition Name',0x00,0x00,0x00,0x00,0x00,0x00,0x00,1,'VW_PLEDGES_DISTRIBUTIONS_DISTRO_LINE_RECOGNITION_NAME','VW_PLEDGES_DISTRIBUTIONS_DISTRO_LINE_DISTRO_LINE_ID',NULL,NULL),
  (4133,0x00,0x00,'IFNULL(GETCONSTITUENTDISPLAYNAME(GETCUSTOMFIELD(VW_PLEDGES_DISTRIBUTIONS_DISTRO_LINE_DISTRO_LINE_ID, \'distributionline\', \'notified\')), GETCUSTOMFIELD(VW_PLEDGES_DISTRIBUTIONS_DISTRO_LINE_DISTRO_LINE_ID, \'distributionline\', \'other_notified\'))','To Be Notified',0x00,0x00,0x00,0x00,0x00,0x00,0x00,1,'VW_PLEDGES_DISTRIBUTIONS_DISTRO_LINE_TO_BE_NOTIFIED','VW_PLEDGES_DISTRIBUTIONS_DISTRO_LINE_DISTRO_LINE_ID',NULL,NULL),
  (4134,0x00,0x00,'GETCUSTOMFIELD(VW_PLEDGES_DISTRIBUTIONS_DISTRO_LINE_DISTRO_LINE_ID, \'distributionline\', \'message\')','Message',0x00,0x00,0x00,0x00,0x00,0x00,0x00,1,'VW_PLEDGES_DISTRIBUTIONS_DISTRO_LINE_MESSAGE','VW_PLEDGES_DISTRIBUTIONS_DISTRO_LINE_DISTRO_LINE_ID',NULL,NULL),
@@ -5103,7 +5138,7 @@ INSERT INTO `REPORTFIELD` (`REPORTFIELD_ID`,`AVERAGE`,`CAN_BE_SUMMARIZED`,`COLUM
  (4349,0x00,0x00,'ADDRESS_CURRENT_IS_PRIMARY','Primary Address',0x00,0x00,0x00,0x00,0x00,0x00,0x00,6,'ADDRESS_CURRENT_IS_PRIMARY','ADDRESS_CURRENT_ADDRESS_ID',NULL,NULL),
  (4350,0x00,0x00,'ADDRESS_CURRENT_UNDELIVERABLE','Address Undeliverable',0x00,0x00,0x00,0x00,0x00,0x00,0x00,6,'ADDRESS_CURRENT_UNDELIVERABLE','ADDRESS_CURRENT_ADDRESS_ID',NULL,NULL),
  (4351,0x00,0x00,'ADDRESS_CURRENT_INACTIVE','Address Inactive',0x00,0x00,0x00,0x00,0x00,0x00,0x00,6,'ADDRESS_CURRENT_INACTIVE','ADDRESS_CURRENT_ADDRESS_ID',NULL,NULL);
-INSERT INTO `REPORTFIELD` (`REPORTFIELD_ID`,`AVERAGE`,`CAN_BE_SUMMARIZED`,`COLUMN_NAME`,`DISPLAY_NAME`,`IS_DEFAULT`,`IS_SUMMARIZED`,`LARGEST_VALUE`,`PERFORMSUMMARY`,`RECORD_COUNT`,`IS_SELECTED`,`SMALLEST_VALUE`,`FIELD_TYPE`,`ALIAS_NAME`,`PRIMARY_KEYS`,`URL`,`TOOLTIP`) VALUES
+INSERT INTO `REPORTFIELD` (`REPORTFIELD_ID`,`AVERAGE`,`CAN_BE_SUMMARIZED`,`COLUMN_NAME`,`DISPLAY_NAME`,`IS_DEFAULT`,`IS_SUMMARIZED`,`LARGEST_VALUE`,`PERFORMSUMMARY`,`RECORD_COUNT`,`IS_SELECTED`,`SMALLEST_VALUE`,`FIELD_TYPE`,`ALIAS_NAME`,`PRIMARY_KEYS`,`URL`,`TOOLTIP`) VALUES 
  (4352,0x00,0x00,'CONSTITUENT_RELATIONSHIP_TYPE','Relationship Type',0x00,0x00,0x00,0x00,0x00,0x00,0x00,1,'CONSTITUENT_RELATIONSHIP_TYPE','CONSTITUENT_RELATIONSHIP_CONSTITUENT_ID',NULL,NULL),
  (4353,0x00,0x00,'GETCONSTITUENTACCOUNTNUMBER(CONSTITUENT_RELATIONSHIP_CONSTITUENT_ID)','Related Account\'s Account Number',0x00,0x00,0x00,0x00,0x00,0x00,0x00,2,'CONSTITUENT_RELATIONSHIP_ACCOUNTNUMBER','CONSTITUENT_RELATIONSHIP_CONSTITUENT_ID',NULL,NULL),
  (4354,0x00,0x00,'GETCONSTITUENTDISPLAYNAME(CONSTITUENT_RELATIONSHIP_CONSTITUENT_ID)','Related Account\'s Name',0x00,0x00,0x00,0x00,0x00,0x00,0x00,1,'CONSTITUENT_RELATIONSHIP_NAME','CONSTITUENT_RELATIONSHIP_CONSTITUENT_ID',NULL,NULL),
@@ -5337,7 +5372,7 @@ INSERT INTO `REPORTFIELD` (`REPORTFIELD_ID`,`AVERAGE`,`CAN_BE_SUMMARIZED`,`COLUM
  (4582,0x00,0x00,'JOURNAL_DONATION_DATE','Donation Date',0x00,0x00,0x00,0x00,0x00,0x00,0x00,4,'JOURNAL_DONATION_DATE','JOURNAL_JOURNAL_ID',NULL,NULL),
  (4583,0x00,0x00,'JOURNAL_ADJUSTMENT_DATE','Adjustment Date',0x00,0x00,0x00,0x00,0x00,0x00,0x00,4,'JOURNAL_ADJUSTMENT_DATE','JOURNAL_JOURNAL_ID',NULL,NULL),
  (4584,0x00,0x00,'JOURNAL_POSTED_DATE','Posted Date',0x00,0x00,0x00,0x00,0x00,0x00,0x00,4,'JOURNAL_POSTED_DATE','JOURNAL_JOURNAL_ID',NULL,NULL);
-INSERT INTO `REPORTFIELD` (`REPORTFIELD_ID`,`AVERAGE`,`CAN_BE_SUMMARIZED`,`COLUMN_NAME`,`DISPLAY_NAME`,`IS_DEFAULT`,`IS_SUMMARIZED`,`LARGEST_VALUE`,`PERFORMSUMMARY`,`RECORD_COUNT`,`IS_SELECTED`,`SMALLEST_VALUE`,`FIELD_TYPE`,`ALIAS_NAME`,`PRIMARY_KEYS`,`URL`,`TOOLTIP`) VALUES
+INSERT INTO `REPORTFIELD` (`REPORTFIELD_ID`,`AVERAGE`,`CAN_BE_SUMMARIZED`,`COLUMN_NAME`,`DISPLAY_NAME`,`IS_DEFAULT`,`IS_SUMMARIZED`,`LARGEST_VALUE`,`PERFORMSUMMARY`,`RECORD_COUNT`,`IS_SELECTED`,`SMALLEST_VALUE`,`FIELD_TYPE`,`ALIAS_NAME`,`PRIMARY_KEYS`,`URL`,`TOOLTIP`) VALUES 
  (4585,0x00,0x00,'JOURNAL_EXPORT_DATE','Export Date',0x00,0x00,0x00,0x00,0x00,0x00,0x00,4,'JOURNAL_EXPORT_DATE','JOURNAL_JOURNAL_ID',NULL,NULL),
  (4586,0x00,0x00,'JOURNAL_CREATE_DATE','Journal Create Date',0x00,0x00,0x00,0x00,0x00,0x00,0x00,4,'JOURNAL_CREATE_DATE','JOURNAL_JOURNAL_ID',NULL,NULL),
  (4587,0x00,0x00,'JOURNAL_UPDATE_DATE','Journal Update Date',0x00,0x00,0x00,0x00,0x00,0x00,0x00,4,'JOURNAL_UPDATE_DATE','JOURNAL_JOURNAL_ID',NULL,NULL),
@@ -5568,7 +5603,7 @@ CREATE TABLE `REPORTFIELDGROUP` (
 --
 
 /*!40000 ALTER TABLE `REPORTFIELDGROUP` DISABLE KEYS */;
-INSERT INTO `REPORTFIELDGROUP` (`REPORTFIELDGROUP_ID`,`Name`) VALUES
+INSERT INTO `REPORTFIELDGROUP` (`REPORTFIELDGROUP_ID`,`Name`) VALUES 
  (1,'Error Log Information'),
  (2,'Picklist Information'),
  (3,'Contact Details'),
@@ -5881,7 +5916,7 @@ CREATE TABLE `REPORTFIELDGROUP_REPORTDATASUBSOURCE` (
 --
 
 /*!40000 ALTER TABLE `REPORTFIELDGROUP_REPORTDATASUBSOURCE` DISABLE KEYS */;
-INSERT INTO `REPORTFIELDGROUP_REPORTDATASUBSOURCE` (`REPORTFIELDGROUP_REPORTFIELDGROUP_ID`,`reportDataSubSource_REPORTSUBSOURCE_ID`,`REPORTSUBSOURCE_ID`) VALUES
+INSERT INTO `REPORTFIELDGROUP_REPORTDATASUBSOURCE` (`REPORTFIELDGROUP_REPORTFIELDGROUP_ID`,`reportDataSubSource_REPORTSUBSOURCE_ID`,`REPORTSUBSOURCE_ID`) VALUES 
  (1,1,1),
  (2,2,3),
  (3,3,4),
@@ -6195,7 +6230,7 @@ CREATE TABLE `REPORTFIELD_REPORTFIELDGROUP` (
 --
 
 /*!40000 ALTER TABLE `REPORTFIELD_REPORTFIELDGROUP` DISABLE KEYS */;
-INSERT INTO `REPORTFIELD_REPORTFIELDGROUP` (`fields_REPORTFIELD_ID`,`reportFieldGroup_REPORTFIELDGROUP_ID`,`REPORTFIELDGROUP_ID`,`REPORTFIELD_ID`) VALUES
+INSERT INTO `REPORTFIELD_REPORTFIELDGROUP` (`fields_REPORTFIELD_ID`,`reportFieldGroup_REPORTFIELDGROUP_ID`,`REPORTFIELDGROUP_ID`,`REPORTFIELD_ID`) VALUES 
  (1,1,1,1),
  (2,1,1,2),
  (3,1,1,3),
@@ -9352,7 +9387,7 @@ INSERT INTO `REPORTFIELD_REPORTFIELDGROUP` (`fields_REPORTFIELD_ID`,`reportField
  (3154,205,205,3154),
  (3155,205,205,3155),
  (3156,205,205,3156);
-INSERT INTO `REPORTFIELD_REPORTFIELDGROUP` (`fields_REPORTFIELD_ID`,`reportFieldGroup_REPORTFIELDGROUP_ID`,`REPORTFIELDGROUP_ID`,`REPORTFIELD_ID`) VALUES
+INSERT INTO `REPORTFIELD_REPORTFIELDGROUP` (`fields_REPORTFIELD_ID`,`reportFieldGroup_REPORTFIELDGROUP_ID`,`REPORTFIELDGROUP_ID`,`REPORTFIELD_ID`) VALUES 
  (3157,205,205,3157),
  (3158,205,205,3158),
  (3159,205,205,3159),
@@ -11060,7 +11095,7 @@ CREATE TABLE `REPORTSEGMENTATIONTYPE` (
 --
 
 /*!40000 ALTER TABLE `REPORTSEGMENTATIONTYPE` DISABLE KEYS */;
-INSERT INTO `REPORTSEGMENTATIONTYPE` (`REPORTSEGMENTATIONTYPE_ID`,`COLUMN_NAME`,`SEGMENTATIONTYPE`) VALUES
+INSERT INTO `REPORTSEGMENTATIONTYPE` (`REPORTSEGMENTATIONTYPE_ID`,`COLUMN_NAME`,`SEGMENTATIONTYPE`) VALUES 
  (1,'CONSTITUENT_CONSTITUENT_ID','Constituent Segmentation'),
  (2,'GIFT_GIFT_ID','Gift Segmentation'),
  (3,'DISTRO_LINE_DISTRO_LINE_ID','Gift Distribution Segmentation'),
@@ -11091,7 +11126,7 @@ CREATE TABLE `REPORTSEGMENTATIONTYPE_REPORTDATASUBSOURCE` (
 --
 
 /*!40000 ALTER TABLE `REPORTSEGMENTATIONTYPE_REPORTDATASUBSOURCE` DISABLE KEYS */;
-INSERT INTO `REPORTSEGMENTATIONTYPE_REPORTDATASUBSOURCE` (`reportSegmentationTypes_REPORTSEGMENTATIONTYPE_ID`,`reportDataSubSource_REPORTSUBSOURCE_ID`,`REPORTSUBSOURCE_ID`,`REPORTSEGMENTATIONTYPE_ID`) VALUES
+INSERT INTO `REPORTSEGMENTATIONTYPE_REPORTDATASUBSOURCE` (`reportSegmentationTypes_REPORTSEGMENTATIONTYPE_ID`,`reportDataSubSource_REPORTSUBSOURCE_ID`,`REPORTSUBSOURCE_ID`,`REPORTSEGMENTATIONTYPE_ID`) VALUES 
  (1,3,3,1),
  (1,4,4,1),
  (1,5,5,1),
@@ -11460,14 +11495,14 @@ CREATE TABLE `VERSIONLOG` (
   `SCRIPT` varchar(255) NOT NULL,
   `INSTALLDATE` datetime NOT NULL,
   PRIMARY KEY (`VERSION_ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=45 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `VERSIONLOG`
 --
 
 /*!40000 ALTER TABLE `VERSIONLOG` DISABLE KEYS */;
-INSERT INTO `VERSIONLOG` (`VERSION_ID`,`SCRIPT`,`INSTALLDATE`) VALUES
+INSERT INTO `VERSIONLOG` (`VERSION_ID`,`SCRIPT`,`INSTALLDATE`) VALUES 
  (1,'20090901_01_TC_VersionLog.sql','2009-09-11 00:00:00'),
  (2,'20090902_01_DU_CurrentAddressFieldDefinitions.sql','2009-09-11 00:00:00'),
  (3,'20090902_02_TU_ReportDataSource_View_Name.sql','2009-09-11 00:00:00'),
@@ -11509,7 +11544,9 @@ INSERT INTO `VERSIONLOG` (`VERSION_ID`,`SCRIPT`,`INSTALLDATE`) VALUES
  (39,'20091209_01_DU_ReportSegmentationType_ReportDataSubSource.sql','2009-12-09 13:21:09'),
  (40,'20091209_02_PC_Delete_ReportWizard.sql','2009-12-09 13:21:09'),
  (41,'20091209_03_PC_Is_Segmentation_In_Use.sql','2009-12-09 13:21:09'),
- (42,'20091209_04_DU_ReportCustomFilterDefinition_ReportDataSubSource.sql','2009-12-09 14:49:08');
+ (42,'20091209_04_DU_ReportCustomFilterDefinition_ReportDataSubSource.sql','2009-12-09 14:49:08'),
+ (43,'20091210_01_DU_ReportCustomFilterDefinition_ReportDataSubSource.sql','2009-12-11 11:04:56'),
+ (44,'20091211_01_DU_JIFileResource_ExcelTemplate.sql','2009-12-11 11:04:56');
 /*!40000 ALTER TABLE `VERSIONLOG` ENABLE KEYS */;
 
 
