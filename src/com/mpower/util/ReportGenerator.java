@@ -225,7 +225,7 @@ public class ReportGenerator implements java.io.Serializable {
 		.setDetailHeight(new Integer(15))
 		.setLeftMargin(margin).setRightMargin(margin).setTopMargin(margin).setBottomMargin(margin)
 		.setAllowDetailSplit(false)
-		.setIgnorePagination(true)
+		.setIgnorePagination(false)
 		.setUseFullPageWidth(true)
 		.setWhenNoDataShowNoDataSection();
 
