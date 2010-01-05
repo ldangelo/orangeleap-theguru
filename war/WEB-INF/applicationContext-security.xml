@@ -119,7 +119,7 @@
             <bean class="org.jasig.cas.client.validation.Cas20ServiceTicketValidator">
                 <constructor-arg index="0" value="${casClient.serverUrl}/${casClient.serverContextPrefix}${casClient.serverContext}"/>
                 <property name="proxyGrantingTicketStorage" ref="proxyGrantingTicketStorage" />
-                <property name="proxyCallbackUrl" value="${casClient.serverUrl}/${casClient.serverContextPrefix}clementine/secure/receptor" />
+                <property name="proxyCallbackUrl" value="${casClient.clientUrl}/${casClient.serverContextPrefix}clementine/secure/receptor" />
             </bean>
         </property>
         <property name="key" value="tangerine-client-key"/>
@@ -134,7 +134,7 @@
                 <constructor-arg index="0" value="${casClient.serverUrl}/${casClient.serverContextPrefix}${casClient.serverContext}"/>
                 <property name="acceptAnyProxy" value="true"/>
                 <property name="proxyGrantingTicketStorage" ref="proxyGrantingTicketStorage" />
-                <property name="proxyCallbackUrl" value="${casClient.serverUrl}/${casClient.serverContextPrefix}clementine/secure/receptor" />
+                <property name="proxyCallbackUrl" value="${casClient.clientUrl}/${casClient.serverContextPrefix}clementine/secure/receptor" />
             </bean>
         </property>
         <property name="key" value="tangerine-client-key"/>
