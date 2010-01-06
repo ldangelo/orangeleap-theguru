@@ -6,6 +6,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.springframework.security.context.SecurityContextHolder;
@@ -129,18 +131,13 @@ public class TheGuruWebService {
 		if (lastRunDate != null) {
 			cal.setTime(lastRunDate);
 
-			XMLGregorianCalendar xmlDate = new XMLGregorianCalendarImpl();
-			xmlDate.setSecond(cal.get(GregorianCalendar.SECOND));
-			xmlDate.setMinute(cal.get(GregorianCalendar.MINUTE));
-			xmlDate.setHour(cal.get(GregorianCalendar.HOUR_OF_DAY));
-			xmlDate.setDay(cal.get(GregorianCalendar.DAY_OF_MONTH));
-			xmlDate.setMonth(cal.get(GregorianCalendar.MONTH));
-			xmlDate.setYear(cal.get(GregorianCalendar.YEAR));
-			xmlDate.setHour(cal.get(GregorianCalendar.HOUR));
-			xmlDate.setMinute(cal.get(GregorianCalendar.MINUTE));
-			xmlDate.setSecond(cal.get(GregorianCalendar.SECOND));
-
-			seg.setExecutionDate(xmlDate);
+			XMLGregorianCalendar xmlDate;
+			try {
+				xmlDate = DatatypeFactory.newInstance().newXMLGregorianCalendar(cal);
+				seg.setExecutionDate(xmlDate);
+			} catch (DatatypeConfigurationException e) {
+				logger.error(e.getMessage());
+			}
 		}
 
 		ReportSegmentationType segType = reportSegmentationType.find(wiz.getId());
