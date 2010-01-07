@@ -552,9 +552,6 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		    //
 		    // modify the jrxml
 		    ModifyReportJRXML reportXMLModifier = new ModifyReportJRXML(wiz, reportFieldService);
-		    //in the upgrade to DJ 3.0.4 they add a scriptletclass that jasperserver is not aware of so we remove as we
-		    //are not using it right now
-		    reportXMLModifier.removeDJDefaultScriptlet(tempFile.getPath());
 
 		    // DJ adds a dataset that causes an error on the matrix reports so we need to remove it
 		    if (wiz.getReportType().compareToIgnoreCase("matrix") == 0)
@@ -681,9 +678,6 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		//
 	    // modify the jrxml
 	    ModifyReportJRXML reportXMLModifier = new ModifyReportJRXML(wiz, reportFieldService);
-	    //in the upgrade to DJ 3.0.4 they add a scriptletclass that jasperserver is not aware of so we remove as we
-	    //are not using it right now
-	    reportXMLModifier.removeDJDefaultScriptlet(tempFile.getPath());
 
 	    // DJ adds a dataset that causes an error on the matrix reports so we need to remove it
 	    if (wiz.getReportType().compareToIgnoreCase("matrix") == 0)
