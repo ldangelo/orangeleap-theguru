@@ -458,7 +458,7 @@ public class ReportQueryGenerator {
 	private String buildStandardFilterWhereClause(ReportStandardFilter reportStandardFilter, int index) throws ParseException {
 		String whereClause = " (";
 		ReportField rf = reportFieldService.find(reportStandardFilter.getFieldId());
-		String controlName = rf.getColumnName() + Integer.toString(index);
+		String controlName = rf.getAliasName() + Integer.toString(index);
 
 		String sqlDateType = "";
 		if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.MYSQL)

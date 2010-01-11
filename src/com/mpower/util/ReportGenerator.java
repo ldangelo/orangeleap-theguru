@@ -263,7 +263,7 @@ public class ReportGenerator implements java.io.Serializable {
 
 			ReportField rf = reportFieldService.find(filter.getReportStandardFilter().getFieldId());
 
-			String controlName = rf.getColumnName() + Integer.toString(index);
+			String controlName = rf.getAliasName() + Integer.toString(index);
 
 			if (filter.getReportStandardFilter().getPromptForCriteria()) {
 				String operatorDisplayName = new String();
@@ -559,7 +559,7 @@ public class ReportGenerator implements java.io.Serializable {
 			//Build and add the column
 			AbstractColumn column = buildColumn(drb, f, columnIndex);
 			drb.addColumn(column);
-			
+
 			//Build and add the group if it is a groupby field
 			DJGroup group = null;
 			if  ( f.getGroupBy()){
@@ -576,7 +576,7 @@ public class ReportGenerator implements java.io.Serializable {
 				chart = setChartColumns(chart, column, group, f, reportFieldService, wiz);
 				chartExists = true;
 			}
-			
+
 
 			columnIndex++;
 		}
@@ -720,7 +720,7 @@ public class ReportGenerator implements java.io.Serializable {
 			.setTitle(f.getDisplayName().replace("\"", "\\\"")).setPattern(pattern)
 			.build();
 			column.setName(columnName);
-			
+
 			//String link = new String();
 			//link = "\"http://localhost:8080/orangeleap/constituent.htm?constituentId=\" +  $F{CONSTITUENT_ACCOUNT_NUMBER_0}";
 			if (f.getUrl() != null) {
