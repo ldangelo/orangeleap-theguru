@@ -542,6 +542,11 @@ public class ReportQueryGenerator {
 			case 11:
 				whereClause += getFieldNameForSelectOrWhereClause(rf) + " IS NOT NULL";
 				break;
+			case 12:
+				whereClause += getFieldNameForSelectOrWhereClause(rf) + " IN (";
+				whereClause += buildPromptForCritiera(reportStandardFilter, controlName, rf);
+				whereClause += ") ";
+				break;
 			// Duration filters
 			case 20: // Current FY
 				break;
@@ -642,6 +647,11 @@ public class ReportQueryGenerator {
 				whereClause += " $P{" + controlName + "} ";
 			} else {
 				whereClause += " '" + filter.getCriteria() + "'";
+				if (filter.getComparison() == 12) {
+					//  We are doing a 'is one of' so we need to strip spaces and replace , with ','
+					whereClause = whereClause.replaceAll(" ", "");
+					whereClause = whereClause.replaceAll(",", "','"); // quote strings
+				}
 			}
 		} else if(rf.getFieldType() == ReportFieldType.DOUBLE) {
 			if (filter.getPromptForCriteria()) {

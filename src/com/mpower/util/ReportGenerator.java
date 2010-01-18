@@ -275,7 +275,8 @@ public class ReportGenerator implements java.io.Serializable {
 				case 6:   	operatorDisplayName = " greater than or equal to "; break;
 				case 7:   	operatorDisplayName = " starts with "; 				break;
 				case 8:   	operatorDisplayName = " ends with ";				break;
-				case 9:   	operatorDisplayName = " contains ";
+				case 9:   	operatorDisplayName = " contains ";					break;
+				case 12:    operatorDisplayName = " is one of "; 				break;
 				}
 
 				InputControlParameters ic = new InputControlParameters();

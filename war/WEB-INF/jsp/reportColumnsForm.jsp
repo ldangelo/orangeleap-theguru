@@ -42,16 +42,17 @@
 <br>
 
 <table id="report_fields_selected" class="tablesorter" bgcolor=#E0E0E0>
+<tr>
 	<th>
 		<span class="selectedFieldsTitleWrapper">Selected Fields
 			<span class="selectedFieldsTitleDistinctWrapper"><input id="uniqueRecords" name="uniqueRecords" value="true"  type="checkbox"
 							<c:if test="${(reportUniqueRecords == true)}">
 								checked="true"
-							</c:if>/>Unique Records </td>
+							</c:if>/>Unique Records 
 			</span>
 		</span>
 	</th>
-
+</tr>
 	<tr>
 		<td>
 		<table id="report_fields_add" index="0" class="tablesorter"	bgcolor=#E0E0E0>

@@ -13,6 +13,7 @@
 	<option value="8"<c:if test="${(currentFilter != null) && (currentFilter.reportStandardFilter.comparison == 8)}"> selected="true" </c:if> >ends with</option>
 	<option value="9" <c:if test="${(currentFilter != null) && (currentFilter.reportStandardFilter.comparison == 9)}"> selected="true" </c:if> >contains</option>
 	<option value="11"<c:if test="${(currentFilter != null) && (currentFilter.reportStandardFilter.comparison == 11)}"> selected="true" </c:if> >has any value</option>
+	<option value="12"<c:if test="${(currentFilter != null) && (currentFilter.reportStandardFilter.comparison == 12)}"> selected="true" </c:if> >is one of</option>	
 	<c:if test="${dateFieldSelected == null || (comparisonSelectId != null && comparisonSelectId != '')}">
 		<!-- Date only options -->
 <!--  		<optgroup label="Fiscal Year" dateonly="true" >

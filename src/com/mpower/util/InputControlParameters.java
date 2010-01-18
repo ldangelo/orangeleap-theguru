@@ -31,7 +31,8 @@ public class InputControlParameters {
 			v += " Not Equal To";
 		if (filter == FilterOperator.STARTSWITH)
 			v += " Starts With";
-		
+		if (filter == FilterOperator.ISONEOF)
+			v += " Is One Of ";
 		return v;
 	}
 
@@ -87,7 +88,12 @@ public class InputControlParameters {
 		case 10:
 			this.filter = FilterOperator.EXCLUDES; 
 			break;
-			
+		case 11:
+			this.filter = FilterOperator.LIKE;
+			break;
+		case 12:
+			this.filter = FilterOperator.ISONEOF;
+			break;
 			
 		}
 

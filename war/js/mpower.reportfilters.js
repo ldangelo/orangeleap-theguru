@@ -24,7 +24,24 @@ $(document).ready(function()
 			moveFilterRow($(this).parent().parent().parent().parent().parent().parent(), 1);
 		}).show();
 		row.find(".addButton").click(function(){
-			insertFilterRow($(this).parent().parent().parent().parent().parent().parent());
+			var btn = $(this);
+			var row = btn.parent().parent().parent().parent().parent().parent();
+			var clonedRow = row.clone(true);
+			
+			//
+			// because selected options don't clone we need to walk through the select on the old row
+			// and select them properly on the new row...
+			selectedOperator = $('select',row).each(function() {
+				var select = $(this);
+				$('option:selected',$(this)).each(function() {
+					$("select[name=" + select.attr('name') + "]",clonedRow).val($(this).val());
+				});
+			});
+			
+			row.closest('tbody').append(clonedRow);
+			
+			//insertFilterRow($(this)..closest('tr').clone());
+			
 		});
    	});
 	if ($('#sqlQuery').length > 0) {
