@@ -51,7 +51,6 @@
 	<classpathentry kind="lib" path="lib/drools-core-4.0.7.jar"/>
 	<classpathentry kind="lib" path="lib/dwr-2.0.3-sources.jar"/>
 	<classpathentry kind="lib" path="lib/dwr-2.0.3.jar"/>
-	<classpathentry kind="lib" path="lib/DynamicJasper-3.0.5-ModifiedByOrangeLeap.jar"/>
 	<classpathentry kind="lib" path="lib/ehcache-1.5.0.jar"/>
 	<classpathentry kind="lib" path="lib/ejb3-persistence-3.3.2.Beta1.jar"/>
 	<classpathentry kind="lib" path="lib/el-api-6.0.18.jar"/>
@@ -71,9 +70,6 @@
 	<classpathentry kind="lib" path="lib/itext-1.3.1.jar"/>
 	<classpathentry kind="lib" path="lib/jasper-6.0.18.jar"/>
 	<classpathentry kind="lib" path="lib/jasper-el-6.0.18.jar"/>
-	<classpathentry kind="lib" path="lib/jasperreports-3.0.0.jar"/>
-	<classpathentry kind="lib" path="lib/jasperserver-common-ws-3.0.0.jar"/>
-	<classpathentry kind="lib" path="lib/jasperserver-ireport-plugin-3.0.0.jar"/>
 	<classpathentry kind="lib" path="lib/javamail-1.4.2.jar"/>
 	<classpathentry kind="lib" path="lib/javassist-3.4.GA.jar"/>
 	<classpathentry kind="lib" path="lib/jboss-archive-browsing-5.0.0alpha-200607201-119.jar"/>
@@ -169,12 +165,17 @@
 	<classpathentry kind="lib" path="lib/hsqldb-1.8.0.10.jar"/>
 	<classpathentry kind="lib" path="lib/struts-1.2.9-sources.jar"/>
 	<classpathentry kind="lib" path="lib/struts-1.2.9.jar"/>
-	<classpathentry kind="lib" path="lib/orangeleap-common-security-1.0.jar"/>
 	<classpathentry kind="lib" path="lib/tiles-api-2.0.5-sources.jar"/>
 	<classpathentry kind="lib" path="lib/tiles-api-2.0.5.jar"/>
 	<classpathentry kind="lib" path="lib/tiles-core-2.0.5-sources.jar"/>
 	<classpathentry kind="lib" path="lib/tiles-core-2.0.5.jar"/>
 	<classpathentry kind="lib" path="lib/tiles-jsp-2.0.5-sources.jar"/>
 	<classpathentry kind="lib" path="lib/tiles-jsp-2.0.5.jar"/>
+	<classpathentry kind="lib" path="lib/DynamicJasper-3.0.13.jar"/>
+	<classpathentry kind="lib" path="lib/jasperreports-3.5.0.jar"/>
+	<classpathentry kind="lib" path="lib/jasperserver-common-ws-3.5.0.jar"/>
+	<classpathentry kind="lib" path="lib/jasperserver-ireport-plugin-3.5.0.jar"/>
+	<classpathentry kind="lib" path="lib/jfreechart-1.0.0.jar"/>
+	<classpathentry kind="lib" path="lib/orangeleap-common-security-1.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
