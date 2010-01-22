@@ -240,6 +240,6 @@ function checkForReturn(selector)
 	});
 }
 
-jQuery.extend(jQuery.expr[':'], {
-    Contains : "jQuery(a).text().toUpperCase().indexOf(m[3].toUpperCase())>=0"
- });
+$.expr[':'].Contains = function(obj, index, meta, stack){
+	return (obj.textContent || obj.innerText || jQuery(obj).text() || '').toLowerCase().indexOf(meta[3].toLowerCase()) >= 0;
+};
