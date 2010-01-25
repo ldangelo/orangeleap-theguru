@@ -14,6 +14,8 @@
 <!-- <script type="text/javascript" src="js/jquery.datePicker.js"></script> -->
 <script type="text/javascript" src="js/jquery-ui-1.7.2.custom.min.js"></script>
 <script type="text/javascript" src="js/jquery.validate.js"></script>
+<script type="text/javascript" src="js/jqModal.js"></script>
+<script type="text/javascript" src="js/jqDnR.js"></script>
 <!--
 <script type="text/javascript" src="js/jquery.tablesorter.js"></script>
 <script type="text/javascript" src="js/jquery.tablesorter.pager.js"></script>
@@ -24,9 +26,6 @@
 
 
 <script type="text/javascript" src="js/date.js"></script>
-
-<script type="text/javascript" src="js/jqModal.js"></script>
-<script type="text/javascript" src="js/jqDnR.js"></script>
  -->
 <script type="text/javascript" src="js/mpower.js"></script>
 
