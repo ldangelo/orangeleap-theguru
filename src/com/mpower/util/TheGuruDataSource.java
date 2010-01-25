@@ -67,7 +67,12 @@ public class TheGuruDataSource implements DataSource {
 			}
 
 			logger.debug("Setting schema for site = " + siteName + "...");
-			changeSchema(conn, siteName);
+			try  {
+	            changeSchema(conn, siteName);
+            } catch (RuntimeException e) {
+            	try { conn.close(); } catch (Exception ee) {}
+            	throw e;
+            }
 			//logger.debug("Set schema for site = "+siteName + ".");
 
 			return conn;
