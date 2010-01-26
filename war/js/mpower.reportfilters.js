@@ -349,13 +349,21 @@ function applyMasks(filterTableRowSelector) {
 	Date.format = 'mm/dd/yyyy';
 	// do not process custom filter rows
 	if (fieldtype != null) {
-		filterRow.find('a.dp-choose-date').hide();
-		filterRow.find('input[fieldtype=DATE]').parent('div.criteriaWrapper').find('a.dp-choose-date').show();
+		if (fieldtype != 'DATE') {
+			filterRow.find('img.ui-datepicker-trigger').hide();
+		} else {
+			var datepickerIcons = filterRow.find('img.ui-datepicker-trigger');
+			if (datepickerIcons.length > 0) {
+				datepickerIcons.show();
+			}
+			filterRow.find('input[fieldtype=DATE]').datepicker({showOn: 'button', buttonImage: 'images/icons/calendar.png', buttonImageOnly: true, onClose : function(dateText, inst) {$(this).valid();}});
+		}
+	} else {
+		filterRow.find('input[fieldtype=DATE]').datepicker({showOn: 'button', buttonImage: 'images/icons/calendar.png', buttonImageOnly: true, onClose : function(dateText, inst) {$(this).valid();}});
 	}
+
 	var criteria = filterRow.find("[objectname$=reportStandardFilter.criteria]");
 	criteria.removeAttr('class');
-	//filterRow.find('input[fieldtype=DATE]').datePicker({startDate:'01/01/1900'});
-	filterRow.find('input[fieldtype=DATE]').datepicker();
 	var promptForCriteria = filterRow.find("[objectname$=promptForCriteria]");
 	if (!promptForCriteria.attr('checked') && !criteria.attr('disabled')) {
 		filterRow.find('input[fieldtype=DATE]').attr('class','date required');
