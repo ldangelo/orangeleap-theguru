@@ -1,44 +1,56 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!--
-  - DispatcherServlet application context for the Spring web MVC
-  - implementation of Tangarine's web tier.
-  -->
+	<!--
+		- DispatcherServlet application context for the Spring web MVC -
+		implementation of Tangarine's web tier.
+	-->
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:dwr="http://www.directwebremoting.org/schema/spring-dwr"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dwr="http://www.directwebremoting.org/schema/spring-dwr"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
            http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
 	   http://www.directwebremoting.org/schema/spring-dwr
 	   http://www.directwebremoting.org/schema/spring-dwr-2.0.xsd">
 
-   <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-        <property name="locations">
-            <list>
+	<bean id="propertyConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
 				<value>classpath:theguru.properties</value>
-            </list>
-        </property>
-    </bean>
+			</list>
+		</property>
+	</bean>
 
 	<bean id="mpxDataSource" class="com.mpower.util.TheGuruDataSource">
 		<property name="dataSource" ref="mpxDataSource-pooled" />
 		<property name="splitDatabases" value="${mysql.splitDatabases}" />
 	</bean>
 
-	 <bean id="mpxDataSource-pooled" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+	<bean id="mpxDataSource-pooled" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
 		<property name="driverClassName" value="${userdetails.jdbc.driverClassName}" />
-		<property name="url" value="${userdetails.jdbc.url}"/>
-		<property name="username" value="${userdetails.jdbc.username}"/>
-		<property name="password" value="${userdetails.jdbc.password}"/>
- 		<property name="maxActive"><value>100</value></property>
-		<property name="maxIdle"><value>30</value></property>
-		<property name="maxWait"><value>10000</value></property>
- 		<property name="validationQuery" value="SELECT 1"/>
-		<property name="testOnBorrow"><value>true</value></property>
-		<property name="testWhileIdle"><value>true</value></property>
+		<property name="url" value="${userdetails.jdbc.url}" />
+		<property name="username" value="${userdetails.jdbc.username}" />
+		<property name="password" value="${userdetails.jdbc.password}" />
+		<property name="maxActive">
+			<value>100</value>
+		</property>
+		<property name="maxIdle">
+			<value>30</value>
+		</property>
+		<property name="maxWait">
+			<value>10000</value>
+		</property>
+		<property name="validationQuery" value="SELECT 1" />
+		<property name="testOnBorrow">
+			<value>true</value>
+		</property>
+		<property name="testWhileIdle">
+			<value>true</value>
+		</property>
 	</bean>
 
-	<bean id="jdbcAuthenticationDao" class="org.springframework.security.userdetails.jdbc.JdbcDaoImpl">
-		<property name="dataSource" ref="mpxDataSource"/>
+	<bean id="jdbcAuthenticationDao"
+		class="org.springframework.security.userdetails.jdbc.JdbcDaoImpl">
+		<property name="dataSource" ref="mpxDataSource" />
 		<property name="usersByUsernameQuery">
 			<value>${userdetails.userbyusernamequery}</value>
 		</property>
@@ -47,144 +59,171 @@
 		</property>
 	</bean>
 	<bean id="JasperServerService" class="com.mpower.service.JasperServerServiceImpl">
-<!--
-		<property name="userName" value="jasperadmin"/>
-		<property name="password" value="jasperadmin"/>
--->
-		<property name="baseUri" value="http://${jasper.host}:${jasper.port}/${contextPrefix}jasperserver"/>
-		<property name="repositoryUri" value="/services/repository"/>
-		<dwr:remote javascript="JasperServerService"/>
+		<!--
+			<property name="userName" value="jasperadmin"/> <property
+			name="password" value="jasperadmin"/>
+		-->
+		<property name="baseUri"
+			value="http://${jasper.host}:${jasper.port}/${contextPrefix}jasperserver" />
+		<property name="repositoryUri" value="/services/repository" />
+		<dwr:remote javascript="JasperServerService" />
 
 	</bean>
 
 
 	<bean id="ReportSubSourceGroupService" class="com.mpower.service.DWRReportSubSourceGroupServiceImpl">
-	  <property name="reportSubSourceGroup" ref="reportSubSourceGroupService"/>
-	  <dwr:remote javascript="ReportSubSourceGroupService"/>
+		<property name="reportSubSourceGroup" ref="reportSubSourceGroupService" />
+		<dwr:remote javascript="ReportSubSourceGroupService" />
 	</bean>
 
 	<bean id="ReportSubSourceService" class="com.mpower.service.DWRReportSubSourceServiceImpl">
-	  <property name="reportSubSource" ref="reportSubSourceService"/>
-	  <dwr:remote javascript="ReportSubSourceService"/>
+		<property name="reportSubSource" ref="reportSubSourceService" />
+		<dwr:remote javascript="ReportSubSourceService" />
 	</bean>
 	<dwr:configuration>
-	  <dwr:convert type="bean" class="com.jaspersoft.jasperserver.api.metadata.xml.domain.impl.ResourceDescriptor"/>
-	  <dwr:convert type="bean" class="com.mpower.domain.dwr.ReportDataSubSourceGroup"/>
-	  <dwr:convert type="bean" class="com.mpower.domain.dwr.ReportDataSubSource"/>
+		<dwr:convert type="bean"
+			class="com.jaspersoft.jasperserver.api.metadata.xml.domain.impl.ResourceDescriptor" />
+		<dwr:convert type="bean"
+			class="com.mpower.domain.dwr.ReportDataSubSourceGroup" />
+		<dwr:convert type="bean"
+			class="com.mpower.domain.dwr.ReportDataSubSource" />
 	</dwr:configuration>
 
 
-    <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
-        <property name="basename" value="messages"/>
-    </bean>
+	<bean id="messageSource"
+		class="org.springframework.context.support.ResourceBundleMessageSource">
+		<property name="basename" value="messages" />
+	</bean>
 
-	<!-- ========================= VIEW DEFINITIONS ========================= -->
+	<!--
+		========================= VIEW DEFINITIONS =========================
+	-->
 
-	<bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-		<property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
-		<property name="prefix" value="/WEB-INF/jsp/"/>
-		<property name="suffix" value=".jsp"/>
+	<bean id="viewResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="viewClass"
+			value="org.springframework.web.servlet.view.JstlView" />
+		<property name="prefix" value="/WEB-INF/jsp/" />
+		<property name="suffix" value=".jsp" />
 	</bean>
 
 
-	<!-- ========================= DEFINITIONS OF PUBLIC CONTROLLERS ========================= -->
+	<!--
+		========================= DEFINITIONS OF PUBLIC CONTROLLERS
+		=========================
+	-->
 
-	<bean id="defaultHandlerMapping" class="org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping"/>
+	<bean id="defaultHandlerMapping"
+		class="org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping" />
 
-
+	<bean id="virtualizer" class="net.sf.jasperreports.engine.fill.JRFileVirtualizer">
+		<constructor-arg>
+			<value>10</value>  <!-- 10 cached pages -->
+		</constructor-arg>
+		<constructor-arg>
+			<value>${theguru.temp.file.dir}</value>    <!-- Directory to store cache fields -->
+		</constructor-arg>
+	</bean>
 	<bean id="dynamicReport" class="com.mpower.view.DynamicReportView">
-	    	<property name="jdbcDataSource" ref="dataSource"/>
-	    	<property name="reportFieldService" ref="reportFieldService"/>
-	    	<property name="reportGenerator" ref="reportGenerator"/>
+		<property name="jdbcDataSource" ref="dataSource" />
+		<property name="reportFieldService" ref="reportFieldService" />
+		<property name="reportGenerator" ref="reportGenerator" />
+		<property name="virtualizer" ref="virtualizer" />
 	</bean>
 
-	<bean id="reportGenerator" class="com.mpower.util.ReportGenerator" scope="prototype">
-		<property name="reportBaseURI" value="http://${jasper.host}:${jasper.port}/${contextPrefix}jasperserver"/>
-		<property name="reportServicesPath" value="/services/repository"/>
-<!-- 		<property name="reportUserName" value="jasperadmin"/>
-		<property name="reportPassword" value="jasperadmin"/> -->
-		<property name="reportUnitDataSourceURI" value="/datasources/ReportWizardJdbcDS"/>
+	<bean id="reportGenerator" class="com.mpower.util.ReportGenerator"
+		scope="prototype">
+		<property name="reportBaseURI"
+			value="http://${jasper.host}:${jasper.port}/${contextPrefix}jasperserver" />
+		<property name="reportServicesPath" value="/services/repository" />
+		<!--
+			<property name="reportUserName" value="jasperadmin"/> <property
+			name="reportPassword" value="jasperadmin"/>
+		-->
+		<property name="reportUnitDataSourceURI" value="/datasources/ReportWizardJdbcDS" />
 	</bean>
 
-    <bean name="/dynamicReport.htm" class="com.mpower.controller.DynamicReportController">
-		<property name="dynamicView" ref="dynamicReport"/>
-    </bean>
+	<bean name="/dynamicReport.htm" class="com.mpower.controller.DynamicReportController">
+		<property name="dynamicView" ref="dynamicReport" />
+	</bean>
 
 	<bean name="/ReportManager.htm" class="com.mpower.controller.ReportManagerFormController">
-		<property name="commandName"  value="reportmanager"/>
-		<property name="commandClass" value="com.mpower.domain.ReportManager"/>
-		<property name="reportWizardService" ref="reportWizardService"/>
+		<property name="commandName" value="reportmanager" />
+		<property name="commandClass" value="com.mpower.domain.ReportManager" />
+		<property name="reportWizardService" ref="reportWizardService" />
 	</bean>
 
-	<bean name="ReportWizard" class="com.mpower.domain.ReportWizard" scope="prototype">
-		<property name="reportGenerator" ref="reportGenerator"/>
-		<property name="reportType" value="tabular"/>
-		<property name="srcId" value="0"/>
-		<property name="dataSubSourceGroupId" value="0"/>
-		<property name="subSourceId" value="0"/>
-		<property name="rowCount" value="100"/>
-		<property name="uniqueRecords" value="false"/>
+	<bean name="ReportWizard" class="com.mpower.domain.ReportWizard"
+		scope="prototype">
+		<property name="reportGenerator" ref="reportGenerator" />
+		<property name="reportType" value="tabular" />
+		<property name="srcId" value="0" />
+		<property name="dataSubSourceGroupId" value="0" />
+		<property name="subSourceId" value="0" />
+		<property name="rowCount" value="100" />
+		<property name="uniqueRecords" value="false" />
 	</bean>
 
-    <bean name="/ReportWizard.htm" class="com.mpower.controller.ReportWizardFormController">
-        <property name="commandName" value="reportsource"/>
-        <property name="commandClass" value="com.mpower.domain.ReportWizard"/>
-        <property name="reportSourceService" ref="reportSourceService"/>
-        <property name="reportSubSourceGroupService" ref="reportSubSourceGroupService"/>
-        <property name="reportSubSourceService" ref="reportSubSourceService"/>
-        <property name="reportFieldGroupService" ref="reportFieldGroupService"/>
-		<property name="jasperServerService" ref="JasperServerService"/>
-        <property name="reportFieldService" ref="reportFieldService"/>
-		<property name="reportWizardService" ref="reportWizardService"/>
-		<property name="reportCustomFilterDefinitionService" ref="reportCustomFilterDefinitionService"/>
+	<bean name="/ReportWizard.htm" class="com.mpower.controller.ReportWizardFormController">
+		<property name="commandName" value="reportsource" />
+		<property name="commandClass" value="com.mpower.domain.ReportWizard" />
+		<property name="reportSourceService" ref="reportSourceService" />
+		<property name="reportSubSourceGroupService" ref="reportSubSourceGroupService" />
+		<property name="reportSubSourceService" ref="reportSubSourceService" />
+		<property name="reportFieldGroupService" ref="reportFieldGroupService" />
+		<property name="jasperServerService" ref="JasperServerService" />
+		<property name="reportFieldService" ref="reportFieldService" />
+		<property name="reportWizardService" ref="reportWizardService" />
+		<property name="reportCustomFilterDefinitionService" ref="reportCustomFilterDefinitionService" />
 		<property name="reportCustomFilterHelper" ref="reportCustomFilterHelper" />
-		<property name="reportSegmentationTypeService" ref="reportSegmentationTypeService"/>
-		<property name="reportSegmentationResultsService" ref="reportSegmentationResultsService"/>
-		<property name="reportUnitDataSourceURI" value="/datasources/ReportWizardJdbcDS"/>
-        <property name="dynamicView" ref="dynamicReport"/>
-    	<property name="jdbcDataSource" ref="dataSource"/>
-    	<property name="userDetailsService" ref="jdbcAuthenticationDao"/>
-	<property name="pages">
-		<list>
-			<value>ReportSource</value>
-			<value>ReportFormat</value>
-			<value>ReportContent</value>
-			<value>ReportFilter</value>
-			<value>ReportSaveAs</value>
-			<value>ReportRedirect</value>
-			<value>ReportRedirect</value>
-			<value>RunSavedReport</value>
-			<value>RunReport</value>
-			<value>ReportSaveAsNewReport</value>
-			<value>ReportExecuteSegmentation</value>
-			<value>ReportSegmentationExecutionResults</value>
-			<value>ReportRedirect</value>
-		</list>
+		<property name="reportSegmentationTypeService" ref="reportSegmentationTypeService" />
+		<property name="reportSegmentationResultsService" ref="reportSegmentationResultsService" />
+		<property name="reportUnitDataSourceURI" value="/datasources/ReportWizardJdbcDS" />
+		<property name="dynamicView" ref="dynamicReport" />
+		<property name="jdbcDataSource" ref="dataSource" />
+		<property name="userDetailsService" ref="jdbcAuthenticationDao" />
+		<property name="virtualizer" ref="virtualizer" />
+		<property name="pages">
+			<list>
+				<value>ReportSource</value>
+				<value>ReportFormat</value>
+				<value>ReportContent</value>
+				<value>ReportFilter</value>
+				<value>ReportSaveAs</value>
+				<value>ReportRedirect</value>
+				<value>ReportRedirect</value>
+				<value>RunSavedReport</value>
+				<value>RunReport</value>
+				<value>ReportSaveAsNewReport</value>
+				<value>ReportExecuteSegmentation</value>
+				<value>ReportSegmentationExecutionResults</value>
+				<value>ReportRedirect</value>
+			</list>
 		</property>
 		<property name="validators">
 			<list>
-	            <ref bean="reportSourceValidator" />
-	            <ref bean="reportFormatValidator" />
-	            <ref bean="reportContentValidator" />
-	            <ref bean="reportCriteriaValidator" />
-	        </list>
-        </property>
+				<ref bean="reportSourceValidator" />
+				<ref bean="reportFormatValidator" />
+				<ref bean="reportContentValidator" />
+				<ref bean="reportCriteriaValidator" />
+			</list>
+		</property>
 	</bean>
 
-	<bean id ="reportSourceValidator" class="com.mpower.controller.validator.ReportSourceValidator">
-		<property name="page" value="0"/>
+	<bean id="reportSourceValidator" class="com.mpower.controller.validator.ReportSourceValidator">
+		<property name="page" value="0" />
 	</bean>
 
-	<bean id ="reportFormatValidator" class="com.mpower.controller.validator.ReportFormatValidator">
-		<property name="page" value="1"/>
+	<bean id="reportFormatValidator" class="com.mpower.controller.validator.ReportFormatValidator">
+		<property name="page" value="1" />
 	</bean>
 
-		<bean id ="reportContentValidator" class="com.mpower.controller.validator.ReportContentValidator">
-		<property name="page" value="2"/>
+	<bean id="reportContentValidator" class="com.mpower.controller.validator.ReportContentValidator">
+		<property name="page" value="2" />
 	</bean>
 
-	<bean id ="reportCriteriaValidator" class="com.mpower.controller.validator.ReportCriteriaValidator">
-		<property name="page" value="3"/>
+	<bean id="reportCriteriaValidator" class="com.mpower.controller.validator.ReportCriteriaValidator">
+		<property name="page" value="3" />
 	</bean>
 
 	<bean id="reportSegmentationResultsDao" class="com.mpower.dao.JPAReportSegmentationResultsDao">
@@ -195,50 +234,55 @@
 
 	<bean id="reportSegmentationResultsService" class="com.mpower.service.ReportSegmentationResultsServiceImpl">
 		<property name="reportSegmentationResultsDao" ref="reportSegmentationResultsDao" />
-        <property name="reportFieldService" ref="reportFieldService"/>
-		<property name="reportWizardService" ref="reportWizardService"/>
-		<property name="reportCustomFilterDefinitionService" ref="reportCustomFilterDefinitionService"/>
-		<property name="reportSubSourceService" ref="reportSubSourceService"/>
-		<property name="reportSegmentationTypeService" ref="reportSegmentationTypeService"/>
-		<property name="jasperServerService" ref="JasperServerService"/>
+		<property name="reportFieldService" ref="reportFieldService" />
+		<property name="reportWizardService" ref="reportWizardService" />
+		<property name="reportCustomFilterDefinitionService" ref="reportCustomFilterDefinitionService" />
+		<property name="reportSubSourceService" ref="reportSubSourceService" />
+		<property name="reportSegmentationTypeService" ref="reportSegmentationTypeService" />
+		<property name="jasperServerService" ref="JasperServerService" />
 	</bean>
 
-	<bean id="reportCustomFilterDefinitionLookup" class="com.mpower.util.ReportCustomFilterDefinitionLookup" >
+	<bean id="reportCustomFilterDefinitionLookup" class="com.mpower.util.ReportCustomFilterDefinitionLookup">
 	</bean>
 
-	<bean id="reportCustomFilterHelper" class="com.mpower.util.ReportCustomFilterHelper" >
-		<property name="reportCustomFilterDefinitionService" ref="reportCustomFilterDefinitionService"/>
-		<property name="reportCustomFilterDefinitionLookup" ref="reportCustomFilterDefinitionLookup"/>
+	<bean id="reportCustomFilterHelper" class="com.mpower.util.ReportCustomFilterHelper">
+		<property name="reportCustomFilterDefinitionService" ref="reportCustomFilterDefinitionService" />
+		<property name="reportCustomFilterDefinitionLookup" ref="reportCustomFilterDefinitionLookup" />
 	</bean>
 
-	<bean id="orangeLeapConstituentSegmentationList" class="com.mpower.service.customfilterdefinitionlookup.SegmentationList" >
-		<property name="reportWizardService" ref="reportWizardService"/>
-		<property name="reportSegmentationTypeService" ref="reportSegmentationTypeService"/>
-		<property name="segmentationType" value="Constituent Segmentation"/>
+	<bean id="orangeLeapConstituentSegmentationList"
+		class="com.mpower.service.customfilterdefinitionlookup.SegmentationList">
+		<property name="reportWizardService" ref="reportWizardService" />
+		<property name="reportSegmentationTypeService" ref="reportSegmentationTypeService" />
+		<property name="segmentationType" value="Constituent Segmentation" />
 	</bean>
 
-	<bean id="orangeLeapGiftSegmentationList" class="com.mpower.service.customfilterdefinitionlookup.SegmentationList" >
-		<property name="reportWizardService" ref="reportWizardService"/>
-		<property name="reportSegmentationTypeService" ref="reportSegmentationTypeService"/>
-		<property name="segmentationType" value="Gift Segmentation"/>
+	<bean id="orangeLeapGiftSegmentationList"
+		class="com.mpower.service.customfilterdefinitionlookup.SegmentationList">
+		<property name="reportWizardService" ref="reportWizardService" />
+		<property name="reportSegmentationTypeService" ref="reportSegmentationTypeService" />
+		<property name="segmentationType" value="Gift Segmentation" />
 	</bean>
 
-	<bean id="orangeLeapGiftDistributionSegmentationList" class="com.mpower.service.customfilterdefinitionlookup.SegmentationList" >
-		<property name="reportWizardService" ref="reportWizardService"/>
-		<property name="reportSegmentationTypeService" ref="reportSegmentationTypeService"/>
-		<property name="segmentationType" value="Gift Distribution Segmentation"/>
+	<bean id="orangeLeapGiftDistributionSegmentationList"
+		class="com.mpower.service.customfilterdefinitionlookup.SegmentationList">
+		<property name="reportWizardService" ref="reportWizardService" />
+		<property name="reportSegmentationTypeService" ref="reportSegmentationTypeService" />
+		<property name="segmentationType" value="Gift Distribution Segmentation" />
 	</bean>
 
-	<bean id="orangeLeapAdjustedGiftSegmentationList" class="com.mpower.service.customfilterdefinitionlookup.SegmentationList" >
-		<property name="reportWizardService" ref="reportWizardService"/>
-		<property name="reportSegmentationTypeService" ref="reportSegmentationTypeService"/>
-		<property name="segmentationType" value="Adjusted Gift Segmentation"/>
+	<bean id="orangeLeapAdjustedGiftSegmentationList"
+		class="com.mpower.service.customfilterdefinitionlookup.SegmentationList">
+		<property name="reportWizardService" ref="reportWizardService" />
+		<property name="reportSegmentationTypeService" ref="reportSegmentationTypeService" />
+		<property name="segmentationType" value="Adjusted Gift Segmentation" />
 	</bean>
 
-	<bean id="mpxAccountSegmentationList" class="com.mpower.service.customfilterdefinitionlookup.SegmentationList" >
-		<property name="reportWizardService" ref="reportWizardService"/>
-		<property name="reportSegmentationTypeService" ref="reportSegmentationTypeService"/>
-		<property name="segmentationType" value="Account Segmentation"/>
+	<bean id="mpxAccountSegmentationList"
+		class="com.mpower.service.customfilterdefinitionlookup.SegmentationList">
+		<property name="reportWizardService" ref="reportWizardService" />
+		<property name="reportSegmentationTypeService" ref="reportSegmentationTypeService" />
+		<property name="segmentationType" value="Account Segmentation" />
 	</bean>
 
 	<!-- Configures the Tiles layout system -->

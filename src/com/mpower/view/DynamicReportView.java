@@ -11,8 +11,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 
 import net.sf.jasperreports.engine.JRExporter;
+import net.sf.jasperreports.engine.JRParameter;
 import net.sf.jasperreports.engine.export.JRHtmlExporter;
 import net.sf.jasperreports.engine.export.JRHtmlExporterParameter;
+import net.sf.jasperreports.engine.fill.JRFileVirtualizer;
 
 import org.springframework.web.servlet.view.AbstractView;
 
@@ -37,7 +39,7 @@ public class DynamicReportView extends AbstractView {
 	private ReportWizard wiz;
 	ReportGenerator reportGenerator;
 	
-	
+	private JRFileVirtualizer virtualizer;
 
 	private ReportFieldService reportFieldService;
 	private ReportCustomFilterDefinitionService reportCustomFilterDefinitionService;
@@ -94,6 +96,7 @@ public class DynamicReportView extends AbstractView {
 		Statement statement = connection.createStatement();
 		
 		File tempFile = TempFileUtil.createTempFile("wiz", ".jrxml");
+		params.put(JRParameter.REPORT_VIRTUALIZER, virtualizer);
 		DynamicJasperHelper.generateJRXML(dr,new ClassicLayoutManager(), params, null, tempFile.getPath());
 
 		//
@@ -156,6 +159,14 @@ public class DynamicReportView extends AbstractView {
 
 	public void setReportGenerator(ReportGenerator reportGenerator) {
 		this.reportGenerator = reportGenerator;
+	}
+
+	public JRFileVirtualizer getVirtualizer() {
+		return virtualizer;
+	}
+
+	public void setVirtualizer(JRFileVirtualizer virtualizer) {
+		this.virtualizer = virtualizer;
 	}
 
 

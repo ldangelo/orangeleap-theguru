@@ -14,6 +14,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 
+import net.sf.jasperreports.engine.JRParameter;
+import net.sf.jasperreports.engine.fill.JRFileVirtualizer;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.security.context.SecurityContext;
@@ -97,7 +100,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 	private DataSource jdbcDataSource;
 	private String reportUnitDataSourceURI;
 	private UserDetailsService userDetailsService;
-
+	private JRFileVirtualizer virtualizer;
 	public ReportWizardFormController() {
 
 	}
@@ -547,8 +550,12 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 
 			File tempFile = TempFileUtil.createTempFile("wiz", ".jrxml");
 			logger.info("Temp File: " + tempFile);
+			wiz.getReportGenerator().getParams().put(JRParameter.REPORT_VIRTUALIZER, virtualizer);
 			DynamicJasperHelper.generateJRXML(dr,new ClassicLayoutManager(), wiz.getReportGenerator().getParams(), null, tempFile.getPath());
-
+			
+			// remove it just in case it get's reused from another class...
+			wiz.getReportGenerator().getParams().remove(JRParameter.REPORT_VIRTUALIZER);
+			
 		    //
 		    // modify the jrxml
 		    ModifyReportJRXML reportXMLModifier = new ModifyReportJRXML(wiz, reportFieldService);
@@ -673,8 +680,10 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 
 		File tempFile = TempFileUtil.createTempFile("wiz", ".jrxml");
 		logger.info("Temp File: " + tempFile);
+		wiz.getReportGenerator().getParams().put(JRParameter.REPORT_VIRTUALIZER, virtualizer);
 		DynamicJasperHelper.generateJRXML(dr,new ClassicLayoutManager(), wiz.getReportGenerator().getParams(), null, tempFile.getPath());
-
+		wiz.getReportGenerator().getParams().remove(JRParameter.REPORT_VIRTUALIZER);
+		
 		//
 	    // modify the jrxml
 	    ModifyReportJRXML reportXMLModifier = new ModifyReportJRXML(wiz, reportFieldService);
@@ -840,5 +849,13 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 
 	public ReportCustomFilterHelper getReportCustomFilterHelper() {
 		return reportCustomFilterHelper;
+	}
+
+	public JRFileVirtualizer getVirtualizer() {
+		return virtualizer;
+	}
+
+	public void setVirtualizer(JRFileVirtualizer virtualizer) {
+		this.virtualizer = virtualizer;
 	}
 }
