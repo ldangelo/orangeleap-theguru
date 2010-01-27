@@ -671,7 +671,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 
 		DynamicReport dr = wiz.getReportGenerator().Generate(wiz, jdbcDataSource, reportFieldService, reportCustomFilterDefinitionService);
 
-		File tempFile = File.createTempFile("wiz", ".jrxml");
+		File tempFile = TempFileUtil.createTempFile("wiz", ".jrxml");
 		logger.info("Temp File: " + tempFile);
 		DynamicJasperHelper.generateJRXML(dr,new ClassicLayoutManager(), wiz.getReportGenerator().getParams(), null, tempFile.getPath());
 

@@ -1,42 +1,31 @@
 package com.mpower.view;
 
-import java.awt.Color;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.Statement;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
-import javax.persistence.Query;
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 
 import net.sf.jasperreports.engine.JRExporter;
-import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.export.JRHtmlExporter;
 import net.sf.jasperreports.engine.export.JRHtmlExporterParameter;
 
-import org.springframework.ui.jasperreports.JasperReportsUtils;
 import org.springframework.web.servlet.view.AbstractView;
-
-import com.jaspersoft.jasperserver.api.metadata.xml.domain.impl.ResourceDescriptor;
-import com.mpower.domain.ReportField;
-import com.mpower.domain.ReportWizard;
-import com.mpower.domain.ReportFieldType;
-import com.mpower.service.ReportCustomFilterDefinitionService;
-import com.mpower.service.ReportFieldService;
-import com.mpower.util.ReportGenerator;
 
 import ar.com.fdvs.dj.core.DynamicJasperHelper;
 import ar.com.fdvs.dj.core.layout.ClassicLayoutManager;
 import ar.com.fdvs.dj.domain.DynamicReport;
+
+import com.jaspersoft.jasperserver.api.metadata.xml.domain.impl.ResourceDescriptor;
+import com.mpower.controller.TempFileUtil;
+import com.mpower.domain.ReportWizard;
+import com.mpower.service.ReportCustomFilterDefinitionService;
+import com.mpower.service.ReportFieldService;
+import com.mpower.util.ReportGenerator;
 
 
 
@@ -104,7 +93,7 @@ public class DynamicReportView extends AbstractView {
 		Connection connection = jdbcDataSource.getConnection();
 		Statement statement = connection.createStatement();
 		
-		File tempFile = File.createTempFile("wiz", ".jrxml");
+		File tempFile = TempFileUtil.createTempFile("wiz", ".jrxml");
 		DynamicJasperHelper.generateJRXML(dr,new ClassicLayoutManager(), params, null, tempFile.getPath());
 
 		//
