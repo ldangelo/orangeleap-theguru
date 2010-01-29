@@ -350,12 +350,8 @@ function applyMasks(filterTableRowSelector) {
 	// do not process custom filter rows
 	if (fieldtype != null) {
 		if (fieldtype != 'DATE') {
-			filterRow.find('img.ui-datepicker-trigger').hide();
+			filterRow.find('input').datepicker('destroy');
 		} else {
-			var datepickerIcons = filterRow.find('img.ui-datepicker-trigger');
-			if (datepickerIcons.length > 0) {
-				datepickerIcons.show();
-			}
 			filterRow.find('input[fieldtype=DATE]').datepicker({showOn: 'button', buttonImage: 'images/icons/calendar.png', buttonImageOnly: true, onClose : function(dateText, inst) {$(this).valid();}});
 		}
 	} else {
@@ -376,6 +372,7 @@ function applyMasks(filterTableRowSelector) {
 	var filterRowInputFields = filterRow.find('input');
 	if (filterRowInputFields.length > 0)
 		filterRowInputFields.valid();
+	filterRow.find('input[fieldtype=DATE]').addClass('hasDatepicker');
 }
 
 function replicateString(string, number) {
