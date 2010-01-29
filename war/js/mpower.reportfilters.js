@@ -348,15 +348,8 @@ function applyMasks(filterTableRowSelector) {
 
 	Date.format = 'mm/dd/yyyy';
 	// do not process custom filter rows
-	if (fieldtype != null) {
-		if (fieldtype != 'DATE') {
-			filterRow.find('input').datepicker('destroy');
-		} else {
-			filterRow.find('input[fieldtype=DATE]').datepicker({showOn: 'button', buttonImage: 'images/icons/calendar.png', buttonImageOnly: true, onClose : function(dateText, inst) {$(this).valid();}});
-		}
-	} else {
-		filterRow.find('input[fieldtype=DATE]').datepicker({showOn: 'button', buttonImage: 'images/icons/calendar.png', buttonImageOnly: true, onClose : function(dateText, inst) {$(this).valid();}});
-	}
+	filterRow.find('input').datepicker('destroy');
+	filterRow.find('input[fieldtype=DATE]').datepicker({showOn: 'button', buttonImage: 'images/icons/calendar.png', buttonImageOnly: true, onClose : function(dateText, inst) {$(this).valid();}});
 
 	var criteria = filterRow.find("[objectname$=reportStandardFilter.criteria]");
 	criteria.removeAttr('class');
