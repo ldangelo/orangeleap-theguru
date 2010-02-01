@@ -31,9 +31,7 @@ import ar.com.fdvs.dj.domain.DJChartOptions;
 import ar.com.fdvs.dj.domain.DJCrosstab;
 import ar.com.fdvs.dj.domain.DJCrosstabColumn;
 import ar.com.fdvs.dj.domain.DJCrosstabRow;
-import ar.com.fdvs.dj.domain.DJHyperLink;
 import ar.com.fdvs.dj.domain.DynamicReport;
-import ar.com.fdvs.dj.domain.StringExpression;
 import ar.com.fdvs.dj.domain.Style;
 import ar.com.fdvs.dj.domain.builders.ColumnBuilder;
 import ar.com.fdvs.dj.domain.builders.ColumnBuilderException;
@@ -49,11 +47,11 @@ import ar.com.fdvs.dj.domain.constants.VerticalAlign;
 import ar.com.fdvs.dj.domain.entities.DJGroup;
 import ar.com.fdvs.dj.domain.entities.columns.AbstractColumn;
 import ar.com.fdvs.dj.domain.entities.columns.PropertyColumn;
-import ar.com.fdvs.dj.domain.hyperlink.LiteralExpression;
 
 import com.jaspersoft.jasperserver.api.metadata.xml.domain.impl.ResourceDescriptor;
 import com.jaspersoft.jasperserver.irplugin.JServer;
 import com.jaspersoft.jasperserver.irplugin.wsclient.WSClient;
+import com.mpower.controller.TempFileUtil;
 import com.mpower.domain.ReportChartSettings;
 import com.mpower.domain.ReportCrossTabColumn;
 import com.mpower.domain.ReportCrossTabFields;
@@ -121,7 +119,7 @@ public class ReportGenerator implements java.io.Serializable {
 
 		//
 		// get the report template file from the server
-		File templateFile = File.createTempFile("template", ".jrxml");
+		File templateFile = TempFileUtil.createTempFile("template", ".jrxml");
 		ResourceDescriptor templateRD = new ResourceDescriptor();
 
 		templateRD.setWsType(ResourceDescriptor.TYPE_REPORTUNIT);
