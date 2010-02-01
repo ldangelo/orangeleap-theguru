@@ -194,7 +194,7 @@ public class ReportGenerator implements java.io.Serializable {
 			SummaryStyleBlue.setHorizontalAlign(HorizontalAlign.LEFT);
 		}
 
-		saveXMLtoFile(templateFile.getName(), document);
+		saveXMLtoFile(templateFile.getAbsolutePath(), document);
 
 	}
 
