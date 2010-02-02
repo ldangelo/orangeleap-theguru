@@ -536,8 +536,10 @@ public class ReportGenerator implements java.io.Serializable {
 			newField.setRecordCount(reportSelectedField.getCount());
 			newField.setGroupBy(reportSelectedField.getGroupBy());
 			newField.setSelected(true);
-			newField.setUrl(f.getUrl());
-			newField.setToolTip(f.getToolTip());
+			if (!wiz.getUniqueRecords()) {
+				newField.setUrl(f.getUrl());
+				newField.setToolTip(f.getToolTip());
+			}
 			//f.setDynamicColumnName(f.getColumnName() + "_" + columnIndex.toString());
 			//columnIndex++;
 			selectedReportFieldsList.add(newField);
