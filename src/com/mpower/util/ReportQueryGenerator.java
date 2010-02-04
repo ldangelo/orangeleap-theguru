@@ -543,9 +543,15 @@ public class ReportQueryGenerator {
 				whereClause += getFieldNameForSelectOrWhereClause(rf) + " IS NOT NULL";
 				break;
 			case 12:
-				whereClause += getFieldNameForSelectOrWhereClause(rf) + " IN (";
-				whereClause += buildPromptForCritiera(reportStandardFilter, controlName, rf);
-				whereClause += ") ";
+				if (reportStandardFilter.getPromptForCriteria() && reportStandardFilter.getComparison() == 12) {
+					//
+					// we are doing a one of and requesting a prompt so we need something like $X(In,fieldName,paramaterName)
+					whereClause += "$X(In," + getFieldNameForSelectOrWhereClause(rf) + "," + controlName +")";
+				} else {
+					whereClause += getFieldNameForSelectOrWhereClause(rf) + " IN (";
+					whereClause += buildPromptForCritiera(reportStandardFilter, controlName, rf);
+					whereClause += ") ";
+				}
 				break;
 			// Duration filters
 			case 20: // Current FY

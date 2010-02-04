@@ -287,6 +287,15 @@ public class ReportGenerator implements java.io.Serializable {
 				inputControls.put(controlName, ic);
 			}
 
+			if (filter.getReportStandardFilter().getPromptForCriteria()  && (filter.getReportStandardFilter().getComparison() == 12)) {
+				//
+				// we are prompting for a "oneof" so change the paramater type to java.util.List
+				params.remove(controlName);
+				params.put(controlName, "java.util.List");
+				drb.addParameter(controlName, "java.util.List");
+				break;
+			}
+
 			if ( rf.getFieldType() == ReportFieldType.DATE) {
 				if (filter.getReportStandardFilter().getPromptForCriteria()) {
 					params.put(controlName, "java.util.Date");
@@ -318,6 +327,8 @@ public class ReportGenerator implements java.io.Serializable {
 					drb.addParameter(controlName, "java.lang.Boolean");
 				}
 			}
+			
+		
 		}
 
 		logger.info(query);
