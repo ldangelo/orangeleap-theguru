@@ -25,7 +25,7 @@ import org.hibernate.annotations.SortType;
 public class ReportDataSource implements java.io.Serializable,
 		Comparable<ReportDataSource> {
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 
@@ -40,7 +40,10 @@ public class ReportDataSource implements java.io.Serializable,
 	@OneToMany(mappedBy="reportDataSource",cascade=CascadeType.ALL)
 	@IndexColumn(name="REPORTSUBSOURCEGROUP_ID")
 	private List<ReportDataSubSourceGroup> subSourceGroup;
-	
+
+	@Column(name = "SORT_ORDER")
+	private int sortOrder;
+
 	public List<ReportDataSubSourceGroup> getSubSourceGroup() {
 		return subSourceGroup;
 	}
@@ -85,5 +88,13 @@ public class ReportDataSource implements java.io.Serializable,
 			return -1;
 
 		return 0;
+	}
+
+	public void setSortOrder(int sortOrder) {
+		this.sortOrder = sortOrder;
+	}
+
+	public int getSortOrder() {
+		return sortOrder;
 	}
 }
