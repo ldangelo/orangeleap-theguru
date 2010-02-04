@@ -37,7 +37,7 @@ public class JPAReportDataSourceDao implements ReportDataSourceDao {
 	@SuppressWarnings("unchecked")
 	public List<ReportDataSource> getAll() {
 		Query q = em
-				.createQuery("SELECT reportdatasource from com.mpower.domain.ReportDataSource reportdatasource");
+				.createQuery("SELECT reportdatasource from com.mpower.domain.ReportDataSource reportdatasource order by reportdatasource.sortOrder, reportdatasource.Name");
 		List<ReportDataSource> lrds = q.getResultList();
 		List<ReportDataSource> ssrds = new LinkedList<ReportDataSource>();
 
