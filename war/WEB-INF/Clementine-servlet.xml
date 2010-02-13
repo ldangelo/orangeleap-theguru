@@ -84,6 +84,8 @@
 		<dwr:convert type="bean"
 			class="com.jaspersoft.jasperserver.api.metadata.xml.domain.impl.ResourceDescriptor" />
 		<dwr:convert type="bean"
+			class="com.jaspersoft.jasperserver.api.metadata.xml.domain.impl.ResourceProperty" />
+		<dwr:convert type="bean"
 			class="com.mpower.domain.dwr.ReportDataSubSourceGroup" />
 		<dwr:convert type="bean"
 			class="com.mpower.domain.dwr.ReportDataSubSource" />
