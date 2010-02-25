@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="TheGuru" basedir=".." default="deploy">
+
+	<property file="${basedir}/build/build.properties" />
+	<property file="${commonBuild.dir}/env.properties"/>
+	
+	<property name="target.tomcat.dir" value="/opt/orangeleap/instance_${instance}" />
+	<property name="build.deploy.file" value="${basedir}/build/build-deploy.xml" />
+	<property name="build.output.dir" value="${build.clementine.dir}" />
+
+	<target name="deploy" description="Deploy build output to instance">
+		<echo>------------------------------------------------------------------------------</echo>
+		<echo>Deploying to ${target.tomcat.dir} for ${instance} for MySQL port ${mysql.port}</echo>
+		<echo>------------------------------------------------------------------------------</echo>
+		<echo>env vars:</echo>
+		<echo>build.output.dir=${build.output.dir}</echo>
+		<echo>rules.build.output.dir=${rules.build.output.dir}</echo>
+		<echo>jasperserver.build.output.dir=${jasperserver.build.output.dir}</echo>
+		<!--<ant antfile="${build.deploy.file}" target="deploy" />-->
+    </target> 
+	
+</project>
