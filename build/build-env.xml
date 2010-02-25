@@ -49,7 +49,7 @@
 		<echo>jasperserver.build.output.dir=${jasperserver.build.output.dir}</echo>
 
 		<echo>build.output.dir=${build.output.dir}</echo>
-		<!--<ant antfile="${build.deploy.file}" target="deploy" />-->
+		<ant antfile="${build.deploy.file}" target="deploy" />
     </target> 
 	
 </project>
