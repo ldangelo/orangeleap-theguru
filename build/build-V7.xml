@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="TheGuru" basedir=".." default="deploy">
+
+	<property name="build.output.dir" value="/root/.hudson/jobs/V7-clementine/workspace/V7-clementine/build/stage" />
+	<property name="jasperserver.build.output.dir" value="/root/.hudson/jobs/V7-jasperserver-3.5/workspace/V7-jasperserver-3.5/build/stage" />
+	<property name="target.tomcat.dir" value="/opt/orangeleap/instance_V7" />
+	<property name="mysql.port" value="50706" />
+	<!--	<property name="mysql.host" value="10.0.2.162" /> -->
+	<property name="mysql.host" value="localhost" />
+	<property name="build.deploy.file" value="${basedir}/build/build-deploy.xml" />
+	<property name="instance" value="V7" />
+
+	<target name="deploy" description="Deploy build output to V7 instance" >
+		<ant antfile="${build.deploy.file}" target="deploy" />
+    </target>
+
+</project>
