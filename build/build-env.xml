@@ -1,21 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="TheGuru" basedir=".." default="deploy">
+<project name="orangeleap" basedir=".." default="deploy">
 
 	<property file="${basedir}/build/build.properties" />
+	<property file="${commonBuild.dir}/commonBuild.properties"/>
 	<property file="${commonBuild.dir}/env.properties"/>
 	
 	<property name="target.tomcat.dir" value="/opt/orangeleap/instance_${instance}" />
 	<property name="build.deploy.file" value="${basedir}/build/build-deploy.xml" />
-	<property name="build.output.dir" value="${build.clementine.dir}" />
+
+	<taskdef resource="net/sf/antcontrib/antcontrib.properties">
+		<classpath>
+			<pathelement location="${antcontrib.jar}" />
+		</classpath>
+	</taskdef>
 
 	<target name="deploy" description="Deploy build output to instance">
+		<if>
+			<equals arg1="${instance}" arg2="DEV" />
+			<then>
+				<property name="project.prefix" value="" />
+			</then>
+			<elseif>
+				<equals arg1="${instance}" arg2="QA" />
+				<then>
+					<property name="project.prefix" value="" />
+				</then>
+			</elseif>
+			<else>
+				<property name="project.prefix" value="${instance}-" />
+			</else>
+		</if>
+		<property name="build.tangerine.dir" value="${dir.prefix}/${project.prefix}tangerine/workspace/build/stage"/>
+		<property name="build.clementine.dir" value="${dir.prefix}/${project.prefix}clementine/workspace/build/stage"/>
+		<property name="rules.build.output.dir" value="${dir.prefix}/${project.prefix}orangeleap-customization/workspace/build/stage"/>
+		<property name="tang.build.output.dir" value="${dir.prefix}/${project.prefix}tang/workspace/dist"/>
+		<property name="jasperserver.build.output.dir" value="${dir.prefix}/${project.prefix}jasperserver-3.5/workspace/build/stage"/>
+
+		<property name="build.output.dir" value="${build.clementine.dir}"/>
+
 		<echo>------------------------------------------------------------------------------</echo>
 		<echo>Deploying to ${target.tomcat.dir} for ${instance} for MySQL port ${mysql.port}</echo>
 		<echo>------------------------------------------------------------------------------</echo>
 		<echo>env vars:</echo>
-		<echo>build.output.dir=${build.output.dir}</echo>
+		<echo>build.tangerine.dir=${build.tangerine.dir}</echo>
+		<echo>build.clementine.dir=${build.clementine.dir}</echo>
 		<echo>rules.build.output.dir=${rules.build.output.dir}</echo>
+		<echo>tang.build.output.dir=${tang.build.output.dir}</echo>
 		<echo>jasperserver.build.output.dir=${jasperserver.build.output.dir}</echo>
+
+		<echo>build.output.dir=${build.output.dir}</echo>
 		<!--<ant antfile="${build.deploy.file}" target="deploy" />-->
     </target> 
 	
