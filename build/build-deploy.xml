@@ -13,10 +13,12 @@
 
 	<target name="deploy" description="Deploy build output and populate database" depends="resolve"  >
 
-
-		<exec dir="/opt/orangeleap" executable="su" spawn="true">
-			<arg line="- hudson -c 'cd /opt/orangeleap;/opt/orangeleap/run.sh stop ${instance}'"/>
-	    </exec>
+		<echo>Stopping ${instance}</echo>
+		<exec executable="/bin/sh" dir="/opt/orangeleap/">
+			<arg value="/opt/orangeleap/run.sh"/>
+			<arg value="stop"/>
+			<arg value="${instance}"/>
+		</exec>
 		<sleep seconds="30" />
 
 		<!-- clear and recreate schemas -->
@@ -133,27 +135,19 @@
 		<delete dir="${target.tomcat.dir}/temp" />
 		<mkdir dir="${target.tomcat.dir}/temp" />
 
-		<exec dir="${target.tomcat.dir}" executable="chown" >
-			<arg line="-R hudson.hudson ${target.tomcat.dir}"/>
-		</exec>
-
-
 		<delete dir="${target.tomcat.dir}/webapps/clementine" />
 		<delete dir="${target.tomcat.dir}/webapps/jasperserver" />
 
 		<copy file="${build.output.dir}/clementine.war" todir="${target.tomcat.dir}/webapps" overwrite="true"  />
 		<copy file="${jasperserver.build.output.dir}/jasperserver.war" todir="${target.tomcat.dir}/webapps" overwrite="true"  />
 
-		<exec dir="/opt/orangeleap" executable="chown" >
-			<arg line="-R hudson.hudson ${target.tomcat.dir}/webapps"/>
-	    </exec>
-
-		<exec dir="/opt/orangeleap" executable="su" spawn="true">
-			<arg line="- hudson -c 'cd /opt/orangeleap;/opt/orangeleap/run.sh start ${instance}'"/>
-	    </exec>
-
-
-    </target>
+		<echo>Starting ${instance}</echo>
+		<exec executable="/bin/sh" dir="/opt/orangeleap/">
+			<arg value="/opt/orangeleap/run.sh"/>
+			<arg value="start"/>
+			<arg value="${instance}"/>
+		</exec>
+	</target>
 
 
 	<target name="create.load.schema" description="Create and loads the Guru database and loads the views and functions into the Orange Leap database." depends="resolve"  >
