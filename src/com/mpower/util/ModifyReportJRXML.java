@@ -892,6 +892,12 @@ public class ModifyReportJRXML {
 			String seriesExpField = seriesExp.getTextContent();
 			String newseriesExp = "(( " + seriesExpField + " != null) ? " + seriesExpField + ".toString() : \"null\" )";
 			seriesExp.setTextContent(newseriesExp);
+			//set the label expression
+			Node labelExp = document.getElementsByTagName("labelExpression").item(0);
+			String labelExpField = labelExp.getTextContent();
+			String newlabelExp = labelExpField + ".toString()";
+			labelExp.setTextContent(newlabelExp);
+
 		}
 		else if (chartType.compareToIgnoreCase("pie") == 0){
 			//get the keyExpression node

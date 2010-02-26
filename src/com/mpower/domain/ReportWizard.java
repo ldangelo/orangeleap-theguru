@@ -415,20 +415,26 @@ public class ReportWizard implements java.io.Serializable{
 		// Add default blank matrix columns, rows & measure
 		// to avoid persistent issues when a report is saved, and then changed
 		// from tabular/summary to matrix
-		ReportCrossTabColumn column = new ReportCrossTabColumn();
-		column.fieldId = -1l;
-		column.sortOrder = "ASC";
-		reportCrossTabFields.getReportCrossTabColumns().add(column);
+		if (this.getReportCrossTabFields().getReportCrossTabColumns().size() == 0) {
+			ReportCrossTabColumn column = new ReportCrossTabColumn();
+			column.fieldId = -1l;
+			column.sortOrder = "ASC";
+			reportCrossTabFields.getReportCrossTabColumns().add(column);
+		}
 
-		ReportCrossTabRow row = new ReportCrossTabRow();
-		row.fieldId = -1l;
-		row.sortOrder = "ASC";
-		reportCrossTabFields.getReportCrossTabRows().add(row);
+		if (this.getReportCrossTabFields().getReportCrossTabRows().size() == 0) {
+			ReportCrossTabRow row = new ReportCrossTabRow();
+			row.fieldId = -1l;
+			row.sortOrder = "ASC";
+			reportCrossTabFields.getReportCrossTabRows().add(row);
+		}
 
-	    ReportCrossTabMeasure measure = new ReportCrossTabMeasure();
-		column.fieldId = -1l;
-		column.calculation = "SUM";
-		reportCrossTabFields.getReportCrossTabMeasure().add(measure);
+		if (this.getReportCrossTabFields().getReportCrossTabMeasure().size() == 0) {
+		    ReportCrossTabMeasure measure = new ReportCrossTabMeasure();
+		    measure.fieldId = -1l;
+		    measure.calculation = "SUM";
+			reportCrossTabFields.getReportCrossTabMeasure().add(measure);
+		}
 	}
 
 	public Boolean IsFieldGroupByField(long fieldId) {

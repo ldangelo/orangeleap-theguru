@@ -181,6 +181,7 @@
 		<property name="reportSegmentationTypeService" ref="reportSegmentationTypeService" />
 		<property name="reportSegmentationResultsService" ref="reportSegmentationResultsService" />
 		<property name="reportUnitDataSourceURI" value="/datasources/ReportWizardJdbcDS" />
+		<property name="reportQueryCostService" ref="reportQueryCostService" />
 		<property name="dynamicView" ref="dynamicReport" />
 		<property name="jdbcDataSource" ref="dataSource" />
 		<property name="userDetailsService" ref="jdbcAuthenticationDao" />
@@ -229,8 +230,6 @@
 	</bean>
 
 	<bean id="reportSegmentationResultsDao" class="com.mpower.dao.JPAReportSegmentationResultsDao">
-		<property name="segmentationDataSourceDestination" ref="segmentationDataSource" />
-		<property name="segmentationDataSourceSource" ref="segmentationDataSource" />
 		<property name="resultSetFetchSize" value="500" />
 	</bean>
 
@@ -241,7 +240,20 @@
 		<property name="reportCustomFilterDefinitionService" ref="reportCustomFilterDefinitionService" />
 		<property name="reportSubSourceService" ref="reportSubSourceService" />
 		<property name="reportSegmentationTypeService" ref="reportSegmentationTypeService" />
+		<property name="jasperDatasourceUtil" ref="jasperDatasourceUtil" />
+	</bean>
+
+	<bean id="jasperDatasourceUtil" class="com.mpower.util.JasperDatasourceUtil" >
 		<property name="jasperServerService" ref="JasperServerService" />
+	</bean>
+
+	<bean id="reportQueryCostService" class="com.mpower.service.ReportQueryCostServiceImpl">
+		<property name="reportQueryCostDao" ref="reportQueryCostDao" />
+		<property name="reportFieldService" ref="reportFieldService" />
+		<property name="reportWizardService" ref="reportWizardService" />
+		<property name="reportCustomFilterDefinitionService" ref="reportCustomFilterDefinitionService" />
+		<property name="reportSubSourceService" ref="reportSubSourceService" />
+		<property name="jasperDatasourceUtil" ref="jasperDatasourceUtil" />
 	</bean>
 
 	<bean id="reportCustomFilterDefinitionLookup" class="com.mpower.util.ReportCustomFilterDefinitionLookup">

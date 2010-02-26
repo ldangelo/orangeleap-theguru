@@ -380,6 +380,8 @@ BEGIN
 	SET VAR_NEW_LINE = '\n';
 	SET VAR_TAB = '\t';
 
+	DELETE FROM THEGURU_GENERATED_VIEWS;
+	
 	-- Iterate through the views
 	OPEN CSR_VIEWS;
 
@@ -1012,6 +1014,7 @@ BEGIN
                     CONCAT(IFNULL(TABLECOLUMNPREFIX, ''), IFNULL(VAR_COLUMN_NAME, '')),
                     VAR_FIELD_LABEL,
                     CASE
+                    	WHEN VAR_FIELD_TYPE = 'CHECKBOX' THEN 6
                         WHEN VAR_COLUMN_TYPE = 'tinyint' THEN 2
                         WHEN VAR_COLUMN_TYPE = 'int' THEN 2
                         WHEN VAR_COLUMN_TYPE = 'smallint' THEN 2

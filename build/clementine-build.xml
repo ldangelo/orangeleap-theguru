@@ -11,7 +11,7 @@
 	<tstamp prefix="build" />
 
 	<import file="${commonBuild.dir}/ivyBuild.xml"/>
-	
+
 
 	<taskdef resource="net/sf/antcontrib/antcontrib.properties">
 		<classpath>
@@ -31,11 +31,24 @@
 		<copy todir="${deploy.path}" file="${stage.dir}/${app.name}.war" />
 	</target>
 
+	<target name="deploy-integrated-war-mpx" depends="build-integrated-war-mpx, deploy-integrated-war">
+	</target>
+
 	<target name="deploy-exploded-war" depends="build-exploded-war">
 		<copy todir="${deploy.path}/${app.name}">
 			<fileset dir="${stage.dir}/${app.name}.war" />
 		</copy>
 		<delete dir="${stage.dir}/${app.name}.war" quiet="true" />
+	</target>
+
+	<target name="deploy-exploded-war-mpx" depends="deploy-exploded-war">
+		<copy tofile="${deploy.path}/${app.name}/WEB-INF/applicationContext-security.xml" overwrite="true">
+			<fileset dir="." includes="config/mpx/applicationContext-security.xml" />
+		</copy>
+
+		<copy tofile="${deploy.path}/${app.name}/WEB-INF/web.xml" overwrite="true">
+			<fileset dir="." includes="config/mpx/web.xml" />
+		</copy>
 	</target>
 
 	<target name="undeploy-war">
@@ -54,6 +67,9 @@
 			<include name="**/*.*" />
 		</war>
 		<delete dir="${stage.dir}/war" />
+	</target>
+
+	<target name="build-integrated-war-mpx" depends="resolve, setup-war-mpx, build-integrated-war">
 	</target>
 
 	<target name="build-exploded-war" depends="resolve, setup-war">
@@ -87,7 +103,7 @@
 				<include name="${app.name}.jar" />
 			</fileset>
 		</copy>
-		
+
 		<copy todir="${stage.dir}/war/WEB-INF/lib" flatten="true">
 		    <path>
 				<pathelement path="${war.lib}"/> <!-- war.lib from ivyBuild.xml -->
@@ -95,7 +111,17 @@
 		</copy>
 
 		<copy todir="${stage.dir}/war/WEB-INF/lib" file="${config.dir}/jasperreport.dtd" />
-		
+
+	</target>
+
+	<target name="setup-war-mpx" depends="setup-war">
+		<copy tofile="${stage.dir}/war/WEB-INF/applicationContext-security.xml" overwrite="true">
+			<fileset dir="." includes="config/mpx/applicationContext-security.xml" />
+		</copy>
+
+		<copy tofile="${stage.dir}/war/WEB-INF/web.xml" overwrite="true">
+			<fileset dir="." includes="config/mpx/web.xml" />
+		</copy>
 	</target>
 
 	<target name="classes-jar" depends="setup">

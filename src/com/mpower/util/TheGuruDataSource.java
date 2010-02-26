@@ -41,19 +41,17 @@ public class TheGuruDataSource implements DataSource {
 			//new Exception().fillInStackTrace().printStackTrace();
 		}
 
-
-		String siteName = getSiteName();
-		boolean hasSite = siteName != null && siteName.trim().length() > 0;
-		if (hasSite) {
-			//logger.debug("getConnection() called for site " + siteName);
-		}
-
 		if (!splitDatabases) {
 
 			// We have split databases turned off - use default schema.
 			return conn;
 
 		} else {
+			String siteName = getSiteName();
+			boolean hasSite = siteName != null && siteName.trim().length() > 0;
+			if (hasSite) {
+				//logger.debug("getConnection() called for site " + siteName);
+			}
 
 			// We have split databases turned on - use site schema if one applies.
 

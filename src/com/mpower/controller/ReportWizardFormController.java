@@ -51,6 +51,7 @@ import com.mpower.domain.ReportCustomFilterDefinition;
 import com.mpower.domain.ReportDataSource;
 import com.mpower.domain.ReportDataSubSourceGroup;
 import com.mpower.domain.ReportDataSubSource;
+import com.mpower.domain.ReportDatabaseType;
 import com.mpower.domain.ReportField;
 import com.mpower.domain.ReportFieldGroup;
 import com.mpower.domain.ReportFilter;
@@ -59,6 +60,7 @@ import com.mpower.domain.ReportSelectedField;
 import com.mpower.domain.ReportWizard;
 import com.mpower.service.JasperServerService;
 import com.mpower.service.ReportCustomFilterDefinitionService;
+import com.mpower.service.ReportQueryCostService;
 import com.mpower.service.ReportSegmentationResultsService;
 import com.mpower.service.ReportSegmentationTypeService;
 import com.mpower.service.ReportFieldGroupService;
@@ -89,6 +91,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 	private ReportWizardService     reportWizardService;
 	private JasperServerService     jasperServerService;
 	private ReportFieldGroupService reportFieldGroupService;
+	private ReportQueryCostService reportQueryCostService;
 
 	private ReportFieldService      reportFieldService;
 	private ReportCustomFilterDefinitionService      reportCustomFilterDefinitionService;
@@ -362,13 +365,15 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 			userName = wiz.getUsername();
 			password = wiz.getPassword();
 		} else {
-			GuruSessionData sessiondata = SessionHelper.getGuruSessionData();
-			sessiondata.setUsername(userName);
-			sessiondata.setPassword(password);
-			if (password.equals("/") || password.length() == 0) {
+			// Check authenticationEnvironment property.  If it's MPX, load the password from the MPX database in case the password in the
+			// JIUser table does not match MPX.
+			if ("mpx".equalsIgnoreCase(System.getProperty("authenticationEnvironment"))) {
 				UserDetails userDetails = userDetailsService.loadUserByUsername(userName);
 				password = userDetails.getPassword();
 			}
+			GuruSessionData sessiondata = SessionHelper.getGuruSessionData();
+			sessiondata.setUsername(userName);
+			sessiondata.setPassword(password);
 			wiz.setUsername(userName);
 			wiz.setPassword(password);
 		}
@@ -496,7 +501,10 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		    if (wiz.getShowSqlQuery()) {
 		    	ReportQueryGenerator reportQueryGenerator = new ReportQueryGenerator(wiz, reportFieldService, reportCustomFilterDefinitionService);
 		    	refData.put("showSqlQuery", wiz.getShowSqlQuery());
-				refData.put("sqlQuery", reportQueryGenerator.getQueryString());
+		    	String query = reportQueryGenerator.getQueryString();
+				refData.put("sqlQuery", query);
+				if (wiz.getDataSubSource().getDatabaseType().equals(ReportDatabaseType.MYSQL) && wiz.getReportSelectedFields().size() > 0)
+					refData.put("queryCost", reportQueryCostService.getReportQueryCostByQuery(query, wiz.getDataSubSource().getJasperDatasourceName()));
 				wiz.setShowSqlQuery(false);
 		    }
 
@@ -552,10 +560,10 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 			logger.info("Temp File: " + tempFile);
 			wiz.getReportGenerator().getParams().put(JRParameter.REPORT_VIRTUALIZER, virtualizer);
 			DynamicJasperHelper.generateJRXML(dr,new ClassicLayoutManager(), wiz.getReportGenerator().getParams(), null, tempFile.getPath());
-			
+
 			// remove it just in case it get's reused from another class...
 			wiz.getReportGenerator().getParams().remove(JRParameter.REPORT_VIRTUALIZER);
-			
+
 		    //
 		    // modify the jrxml
 		    ModifyReportJRXML reportXMLModifier = new ModifyReportJRXML(wiz, reportFieldService);
@@ -683,7 +691,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		wiz.getReportGenerator().getParams().put(JRParameter.REPORT_VIRTUALIZER, virtualizer);
 		DynamicJasperHelper.generateJRXML(dr,new ClassicLayoutManager(), wiz.getReportGenerator().getParams(), null, tempFile.getPath());
 		wiz.getReportGenerator().getParams().remove(JRParameter.REPORT_VIRTUALIZER);
-		
+
 		//
 	    // modify the jrxml
 	    ModifyReportJRXML reportXMLModifier = new ModifyReportJRXML(wiz, reportFieldService);
@@ -857,5 +865,13 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 
 	public void setVirtualizer(JRFileVirtualizer virtualizer) {
 		this.virtualizer = virtualizer;
+	}
+
+	public void setReportQueryCostService(ReportQueryCostService reportQueryCostService) {
+		this.reportQueryCostService = reportQueryCostService;
+	}
+
+	public ReportQueryCostService getReportQueryCostService() {
+		return reportQueryCostService;
 	}
 }

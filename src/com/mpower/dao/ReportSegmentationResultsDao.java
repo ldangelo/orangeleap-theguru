@@ -4,10 +4,10 @@ import java.sql.SQLException;
 import java.util.List;
 
 import com.mpower.domain.ReportSegmentationResult;
-import com.mpower.util.ReportSegmentationDatasourceSettings;
+import com.mpower.util.ReportDatasourceSettings;
 
 public interface ReportSegmentationResultsDao {
-	public List<ReportSegmentationResult> readReportSegmentationResultsByReportId(Long reportId, ReportSegmentationDatasourceSettings reportSegmentationDatasourceDestination) throws SQLException;
-	public int deleteReportSegmentationResultsByReportId(Long reportId, ReportSegmentationDatasourceSettings reportSegmentationDatasourceDestination) throws SQLException;
-	public int executeSegmentationQuery(String query, ReportSegmentationDatasourceSettings reportSegmentationDatasourceSource, ReportSegmentationDatasourceSettings reportSegmentationDatasourceDestination) throws SQLException;
+	public List<ReportSegmentationResult> readReportSegmentationResultsByReportId(Long reportId, ReportDatasourceSettings reportSegmentationDatasourceDestination) throws SQLException;
+	public int deleteReportSegmentationResultsByReportId(Long reportId, ReportDatasourceSettings reportSegmentationDatasourceDestination) throws SQLException;
+	public int executeSegmentationQuery(String query, ReportDatasourceSettings reportSegmentationDatasourceSource, ReportDatasourceSettings reportSegmentationDatasourceDestination) throws SQLException;
 }

@@ -7,13 +7,12 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
-import com.jaspersoft.jasperserver.api.metadata.xml.domain.impl.ResourceDescriptor;
-import com.jaspersoft.jasperserver.api.metadata.xml.domain.impl.ResourceProperty;
 import com.mpower.dao.ReportSegmentationResultsDao;
 import com.mpower.domain.ReportSegmentationResult;
 import com.mpower.domain.ReportWizard;
+import com.mpower.util.JasperDatasourceUtil;
 import com.mpower.util.ReportQueryGenerator;
-import com.mpower.util.ReportSegmentationDatasourceSettings;
+import com.mpower.util.ReportDatasourceSettings;
 import com.mpower.util.SessionHelper;
 
 @Service("reportSegmentationResultsService")
@@ -26,12 +25,11 @@ public class ReportSegmentationResultsServiceImpl implements ReportSegmentationR
 	private ReportCustomFilterDefinitionService reportCustomFilterDefinitionService;
 	private ReportSegmentationTypeService reportSegmentationTypeService;
 	private ReportSubSourceService  reportSubSourceService;
-	private JasperServerService jasperServerService;
+	private JasperDatasourceUtil jasperDatasourceUtil;
 
 	public List<ReportSegmentationResult> readReportSegmentationResultsByReportId(Long reportId) throws Exception {
 		ReportWizard wiz = reportWizardService.Find(reportId);
-		ResourceDescriptor resource = jasperServerService.getDatasource(wiz.getDataSubSource().getSegmentationResultsDatasourceName());
-		ReportSegmentationDatasourceSettings reportSegmentationDatasourceDestination = getReportSegmentationDatasourceSettings(resource);
+		ReportDatasourceSettings reportSegmentationDatasourceDestination = jasperDatasourceUtil.getJasperDatasourceSettings(wiz.getDataSubSource().getSegmentationResultsDatasourceName());
 
 		return reportSegmentationResultsDao.readReportSegmentationResultsByReportId(reportId, reportSegmentationDatasourceDestination);
 	}
@@ -44,11 +42,9 @@ public class ReportSegmentationResultsServiceImpl implements ReportSegmentationR
 			wiz.setSegmentationQuery(reportQueryGenerator.getSegmentationQueryString(reportSegmentationTypeService.find(wiz.getReportSegmentationTypeId()).getColumnName()));
 		}
 
-		ResourceDescriptor resource = jasperServerService.getDatasource(reportSubSourceService.find(wiz.getSubSourceId()).getJasperDatasourceName());
-		ReportSegmentationDatasourceSettings reportSegmentationDatasourceSource = getReportSegmentationDatasourceSettings(resource);
+		ReportDatasourceSettings reportSegmentationDatasourceSource = jasperDatasourceUtil.getJasperDatasourceSettings(reportSubSourceService.find(wiz.getSubSourceId()).getJasperDatasourceName());
 
-		resource = jasperServerService.getDatasource(reportSubSourceService.find(wiz.getSubSourceId()).getSegmentationResultsDatasourceName());
-		ReportSegmentationDatasourceSettings reportSegmentationDatasourceDestination = getReportSegmentationDatasourceSettings(resource);
+		ReportDatasourceSettings reportSegmentationDatasourceDestination = jasperDatasourceUtil.getJasperDatasourceSettings(reportSubSourceService.find(wiz.getSubSourceId()).getSegmentationResultsDatasourceName());
 
 		reportSegmentationResultsDao.deleteReportSegmentationResultsByReportId(reportId, reportSegmentationDatasourceDestination);
 		Date lastRunDate = new Date();
@@ -58,24 +54,6 @@ public class ReportSegmentationResultsServiceImpl implements ReportSegmentationR
 		String lastRunByUserName = SessionHelper.getGuruSessionData().getUsername();
 	    reportWizardService.updateSegmentationExecutionInformation(reportId, lastRunByUserName, lastRunDate, resultCount, endTime-startTime);
 	    return resultCount;
-	}
-
-	private ReportSegmentationDatasourceSettings getReportSegmentationDatasourceSettings(
-			ResourceDescriptor resource) {
-		ReportSegmentationDatasourceSettings reportSegmentationDatasourceSource = new ReportSegmentationDatasourceSettings();
-		Iterator itProperties = resource.getProperties().iterator();
-		while (itProperties.hasNext()) {
-			ResourceProperty property = (ResourceProperty)itProperties.next();
-			if (property.getName().equals(ResourceDescriptor.PROP_DATASOURCE_CONNECTION_URL))
-				reportSegmentationDatasourceSource.setConnectionUrl(property.getValue());
-			else if (property.getName().equals(ResourceDescriptor.PROP_DATASOURCE_DRIVER_CLASS))
-				reportSegmentationDatasourceSource.setDriver(property.getValue());
-			else if (property.getName().equals(ResourceDescriptor.PROP_DATASOURCE_USERNAME))
-				reportSegmentationDatasourceSource.setUsername(property.getValue());
-			else if (property.getName().equals(ResourceDescriptor.PROP_DATASOURCE_PASSWORD))
-				reportSegmentationDatasourceSource.setPassword(property.getValue());
-		}
-		return reportSegmentationDatasourceSource;
 	}
 
 	public void setReportWizardService(ReportWizardService reportWizardService) {
@@ -121,19 +99,19 @@ public class ReportSegmentationResultsServiceImpl implements ReportSegmentationR
 		this.reportSegmentationTypeService = reportSegmentationTypeService;
 	}
 
-	public JasperServerService getJasperServerService() {
-		return jasperServerService;
-	}
-
-	public void setJasperServerService(JasperServerService jasperServerService) {
-		this.jasperServerService = jasperServerService;
-	}
-
 	public void setReportSubSourceService(ReportSubSourceService reportSubSourceService) {
 		this.reportSubSourceService = reportSubSourceService;
 	}
 
 	public ReportSubSourceService getReportSubSourceService() {
 		return reportSubSourceService;
+	}
+
+	public JasperDatasourceUtil getJasperDatasourceUtil() {
+		return jasperDatasourceUtil;
+	}
+
+	public void setJasperDatasourceUtil(JasperDatasourceUtil jasperDatasourceUtil) {
+		this.jasperDatasourceUtil = jasperDatasourceUtil;
 	}
 }

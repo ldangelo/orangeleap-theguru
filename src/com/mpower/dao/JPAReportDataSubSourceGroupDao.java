@@ -15,7 +15,7 @@ import com.mpower.domain.ReportDataSubSourceGroup;
 public class JPAReportDataSubSourceGroupDao implements ReportDataSubSourceGroupDao {
 	@PersistenceContext
 	private EntityManager em;
-	
+
 
 	public ReportDataSubSourceGroup copy(ReportDataSubSourceGroup dataSubSourceGroup) {
 		// TODO Auto-generated method stub
@@ -37,7 +37,7 @@ public class JPAReportDataSubSourceGroupDao implements ReportDataSubSourceGroupD
 
 	public List<ReportDataSubSourceGroup> getAll() {
 		Query q = em
-		.createQuery("SELECT reportdatasubsourcegroup from com.mpower.domain.ReportDataSubSourceGroup reportdatasubsourcegroup");
+		.createQuery("SELECT reportdatasubsourcegroup from com.mpower.domain.ReportDataSubSourceGroup reportdatasubsourcegroup order by reportdatasubsourcegroup.displayName");
 		List<ReportDataSubSourceGroup> lrds = q.getResultList();
 
 		return lrds;
@@ -47,10 +47,10 @@ public class JPAReportDataSubSourceGroupDao implements ReportDataSubSourceGroupD
 
 	public List<ReportDataSubSourceGroup> getAllByReportSourceId(Long id) {
 		Query q = em
-		.createQuery("select reportSubSourceGroup from ReportDataSubSourceGroup reportSubSourceGroup left join reportSubSourceGroup.reportDataSource as reportSource where reportSource.id = ?");
+		.createQuery("select reportSubSourceGroup from ReportDataSubSourceGroup reportSubSourceGroup left join reportSubSourceGroup.reportDataSource as reportSource where reportSource.id = ? order by reportSubSourceGroup.displayName");
 		q.setParameter(1, id);
 		List<ReportDataSubSourceGroup> lrds = q.getResultList();
-		
+
 		return lrds;
 	}
 

@@ -433,8 +433,8 @@ public class ReportGenerator implements java.io.Serializable {
 
 				//now add the measure to the crosstab builder
 				cb.addMeasure(column.getName(), valueClassName, cgvo, fMeasure.getDisplayName(), CrossTabTotalStyle );
+				columnIndex++;
 			}
-			columnIndex++;
 		}
 
 		//

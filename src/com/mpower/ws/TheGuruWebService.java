@@ -166,7 +166,7 @@ public class TheGuruWebService {
 
         			OrangeLeapAuthentication auth = new OrangeLeapAuthentication();
 
-        			JasperServerService jss = reportSegmentationResults.getJasperServerService();
+        			JasperServerService jss = reportSegmentationResults.getJasperDatasourceUtil().getJasperServerService();
         			jss.setUserName(auth.getUserName());
         			jss.setPassword(auth.getPassword());
 
@@ -207,7 +207,7 @@ public class TheGuruWebService {
 
         			OrangeLeapAuthentication auth = new OrangeLeapAuthentication();
 
-        			JasperServerService jss = reportSegmentationResults.getJasperServerService();
+        			JasperServerService jss = reportSegmentationResults.getJasperDatasourceUtil().getJasperServerService();
         			jss.setUserName(auth.getUserName());
         			jss.setPassword(auth.getPassword());
 
@@ -244,7 +244,7 @@ public class TheGuruWebService {
 
 			OrangeLeapAuthentication auth = new OrangeLeapAuthentication();
 
-			JasperServerService jss = reportSegmentationResults.getJasperServerService();
+			JasperServerService jss = reportSegmentationResults.getJasperDatasourceUtil().getJasperServerService();
 			jss.setUserName(auth.getUserName());
 			jss.setPassword(auth.getPassword());
 
@@ -289,7 +289,7 @@ public class TheGuruWebService {
 
 			OrangeLeapAuthentication auth = new OrangeLeapAuthentication();
 
-			JasperServerService jss = reportSegmentationResults.getJasperServerService();
+			JasperServerService jss = reportSegmentationResults.getJasperDatasourceUtil().getJasperServerService();
 			jss.setUserName(auth.getUserName());
 			jss.setPassword(auth.getPassword());
 

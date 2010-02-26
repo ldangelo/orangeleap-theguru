@@ -126,6 +126,7 @@
 		<div class="modalContent">
 			<TEXTAREA id="sqlQuery" ROWS="15" COLS="100">${sqlQuery}</TEXTAREA>
 		</div>
+		<c:if test="${queryCost != null && queryCost != 0}">Estimated query cost : ${queryCost}</c:if>
 		<div class="modalSideRight"></div>
 	  </div>
 	  <div class="modalBottomLeft"> 
