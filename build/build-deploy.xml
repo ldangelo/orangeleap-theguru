@@ -13,7 +13,7 @@
 
 	<target name="deploy" description="Deploy build output and populate database" depends="resolve"  >
 
-
+		<echo>Stopping ${instance}</echo>
 		<exec dir="/opt/orangeleap" executable="su" spawn="true">
 			<arg line="- hudson -c 'cd /opt/orangeleap;/opt/orangeleap/run.sh stop ${instance}'"/>
 	    </exec>
