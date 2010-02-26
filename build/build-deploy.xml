@@ -15,12 +15,12 @@
 
 
 		<exec dir="/opt/orangeleap" executable="su" spawn="true">
-			<arg line="- tomcat -c 'cd /opt/orangeleap;/opt/orangeleap/run.sh stop ${instance}'"/>
+			<arg line="- hudson -c 'cd /opt/orangeleap;/opt/orangeleap/run.sh stop ${instance}'"/>
 	    </exec>
 		<sleep seconds="30" />
 
 		<!-- clear and recreate schemas -->
-		<property name="overrideUrl1" value="jdbc:mysql://${mysql.host}:${mysql.port}/?${mysql.opts}" />
+		<property name="overrideUrl1" value="jdbc:mysql://localhost:${mysql.port}/?${mysql.opts}" />
         <script language="javascript"> <![CDATA[
            self.getProject().setProperty("mysql.db.url", overrideUrl1);
         ]]> </script>
@@ -38,14 +38,14 @@
 
 		<!-- populate theguru schema -->
 
-		<property name="overrideUrl2" value="jdbc:mysql://${mysql.host}:${mysql.port}/theguru?${mysql.opts}" />
+		<property name="overrideUrl2" value="jdbc:mysql://localhost:${mysql.port}/theguru?${mysql.opts}" />
         <script language="javascript"> <![CDATA[
            self.getProject().setProperty("mysql.db.url", overrideUrl2);
         ]]> </script>
 
 		<!-- Add the views to the Orangeleap schema-->
 
-		<property name="overrideUrl3" value="jdbc:mysql://${mysql.host}:${mysql.port}/orangeleap?${mysql.opts}" />
+		<property name="overrideUrl3" value="jdbc:mysql://localhost:${mysql.port}/orangeleap?${mysql.opts}" />
         <script language="javascript"> <![CDATA[
            self.getProject().setProperty("orangeleap.mysql.db.url", overrideUrl3);
         ]]> </script>
@@ -58,14 +58,14 @@
 		<!-- ******************************* -->
 		<!-- populate company1theguru schema -->
 
-		<property name="overrideUrl4" value="jdbc:mysql://${mysql.host}:${mysql.port}/company1theguru?${mysql.opts}" />
+		<property name="overrideUrl4" value="jdbc:mysql://localhost:${mysql.port}/company1theguru?${mysql.opts}" />
         <script language="javascript"> <![CDATA[
            self.getProject().setProperty("mysql.db.url", overrideUrl4);
         ]]> </script>
 
 		<!-- Add the views to the Orangeleap schema-->
 
-		<property name="overrideUrl5" value="jdbc:mysql://${mysql.host}:${mysql.port}/company1?${mysql.opts}" />
+		<property name="overrideUrl5" value="jdbc:mysql://localhost:${mysql.port}/company1?${mysql.opts}" />
         <script language="javascript"> <![CDATA[
            self.getProject().setProperty("orangeleap.mysql.db.url", overrideUrl5);
         ]]> </script>
@@ -81,14 +81,14 @@
 		<!-- ******************************* -->
 		<!-- populate demotheguru schema -->
 
-		<property name="overrideUrl10" value="jdbc:mysql://${mysql.host}:${mysql.port}/demotheguru?${mysql.opts}" />
+		<property name="overrideUrl10" value="jdbc:mysql://localhost:${mysql.port}/demotheguru?${mysql.opts}" />
         <script language="javascript"> <![CDATA[
            self.getProject().setProperty("mysql.db.url", overrideUrl10);
         ]]> </script>
 
 		<!-- Add the views to the Orangeleap schema-->
 
-		<property name="overrideUrl11" value="jdbc:mysql://${mysql.host}:${mysql.port}/demo?${mysql.opts}" />
+		<property name="overrideUrl11" value="jdbc:mysql://localhost:${mysql.port}/demo?${mysql.opts}" />
         <script language="javascript"> <![CDATA[
            self.getProject().setProperty("orangeleap.mysql.db.url", overrideUrl11);
         ]]> </script>
@@ -104,14 +104,14 @@
 		<!-- ******************************* -->
 		<!-- populate sandboxtheguru schema -->
 
-		<property name="overrideUrl12" value="jdbc:mysql://${mysql.host}:${mysql.port}/sandboxtheguru?${mysql.opts}" />
+		<property name="overrideUrl12" value="jdbc:mysql://localhost:${mysql.port}/sandboxtheguru?${mysql.opts}" />
         <script language="javascript"> <![CDATA[
            self.getProject().setProperty("mysql.db.url", overrideUrl12);
         ]]> </script>
 
 		<!-- Add the views to the Orangeleap schema-->
 
-		<property name="overrideUrl13" value="jdbc:mysql://${mysql.host}:${mysql.port}/sandbox?${mysql.opts}" />
+		<property name="overrideUrl13" value="jdbc:mysql://localhost:${mysql.port}/sandbox?${mysql.opts}" />
         <script language="javascript"> <![CDATA[
            self.getProject().setProperty("orangeleap.mysql.db.url", overrideUrl13);
         ]]> </script>
@@ -134,7 +134,7 @@
 		<mkdir dir="${target.tomcat.dir}/temp" />
 
 		<exec dir="${target.tomcat.dir}" executable="chown" >
-			<arg line="-R tomcat.tomcat ${target.tomcat.dir}"/>
+			<arg line="-R hudson.hudson ${target.tomcat.dir}"/>
 		</exec>
 
 
@@ -145,11 +145,11 @@
 		<copy file="${jasperserver.build.output.dir}/jasperserver.war" todir="${target.tomcat.dir}/webapps" overwrite="true"  />
 
 		<exec dir="/opt/orangeleap" executable="chown" >
-			<arg line="-R tomcat.tomcat ${target.tomcat.dir}/webapps"/>
+			<arg line="-R hudson.hudson ${target.tomcat.dir}/webapps"/>
 	    </exec>
 
 		<exec dir="/opt/orangeleap" executable="su" spawn="true">
-			<arg line="- tomcat -c 'cd /opt/orangeleap;/opt/orangeleap/run.sh start ${instance}'"/>
+			<arg line="- hudson -c 'cd /opt/orangeleap;/opt/orangeleap/run.sh start ${instance}'"/>
 	    </exec>
 
 
