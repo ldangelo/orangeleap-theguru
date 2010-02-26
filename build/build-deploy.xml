@@ -14,7 +14,7 @@
 	<target name="deploy" description="Deploy build output and populate database" depends="resolve"  >
 
 		<echo>Stopping ${instance}</echo>
-		<exec executable="/bin/sh" dir="/opt/orangeleap/">
+		<exec executable="/bin/sh" dir="/opt/orangeleap/" spawn="true">
 			<arg value="/opt/orangeleap/run.sh"/>
 			<arg value="stop"/>
 			<arg value="${instance}"/>
@@ -142,7 +142,7 @@
 		<copy file="${jasperserver.build.output.dir}/jasperserver.war" todir="${target.tomcat.dir}/webapps" overwrite="true"  />
 
 		<echo>Starting ${instance}</echo>
-		<exec executable="/bin/sh" dir="/opt/orangeleap/">
+		<exec executable="/bin/sh" dir="/opt/orangeleap/" spawn="true">
 			<arg value="/opt/orangeleap/run.sh"/>
 			<arg value="start"/>
 			<arg value="${instance}"/>
