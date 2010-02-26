@@ -2,7 +2,6 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="test"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/3"/>
 	<classpathentry kind="lib" path="lib/activation-1.1.1.jar"/>
 	<classpathentry kind="lib" path="lib/activemq-all-5.1.0-sources.jar"/>
@@ -177,5 +176,6 @@
 	<classpathentry kind="lib" path="lib/jasperserver-ireport-plugin-3.5.0.jar"/>
 	<classpathentry kind="lib" path="lib/jfreechart-1.0.0.jar"/>
 	<classpathentry kind="lib" path="lib/orangeleap-common-security-1.2.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
