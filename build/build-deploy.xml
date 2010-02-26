@@ -142,11 +142,13 @@
 		<copy file="${jasperserver.build.output.dir}/jasperserver.war" todir="${target.tomcat.dir}/webapps" overwrite="true"  />
 
 		<echo>Starting ${instance}</echo>
+		<!--
 		<exec executable="/bin/sh" dir="/opt/orangeleap/" timeout="15000">
 			<arg value="/opt/orangeleap/run.sh"/>
 			<arg value="start"/>
 			<arg value="${instance}"/>
 		</exec>
+		-->
 	</target>
 
 
