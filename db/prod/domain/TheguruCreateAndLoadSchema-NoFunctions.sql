@@ -15,13 +15,6 @@
 
 
 --
--- Create schema company1theguru
---
-
-CREATE DATABASE IF NOT EXISTS company1theguru;
-USE company1theguru;
-
---
 -- Definition of table `REPORTCHARTSETTINGS`
 --
 
