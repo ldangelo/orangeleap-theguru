@@ -3,6 +3,7 @@
 
 	<property file="${basedir}/build/build.properties" />
     <property file="${commonBuild.dir}/commonBuild.properties"/>
+    <property file="${commonBuild.dir}/env.properties"/>
 	<import file="${commonBuild.dir}/ivyBuild.xml"/>
 
 	<property name="mysql.opts" value="autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=UTF8" />
