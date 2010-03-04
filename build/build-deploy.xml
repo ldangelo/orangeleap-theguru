@@ -19,7 +19,7 @@
 			<arg value="stop"/>
 			<arg value="${instance}"/>
 		</exec>
-		<sleep seconds="30" />
+		<sleep seconds="60" />
 
 		<!-- clear and recreate schemas -->
 		<property name="overrideUrl1" value="jdbc:mysql://localhost:${mysql.port}/?${mysql.opts}" />
