@@ -216,7 +216,7 @@
            self.getProject().setProperty("localhost.mysql.db.url", overrideUrl11localhost);
         ]]> </script>
 
-		<property name="overrideJasperserverCreateAndLoadSchema5" value="JasperserverCreateAndLoadSchema_demo.sql" />
+		<property name="overrideJasperserverCreateAndLoadSchema5" value="JasperserverCreateAndLoadSchema_company1.sql" />
         <script language="javascript"> <![CDATA[
            self.getProject().setProperty("jasperserverCreateAndLoadSchema", overrideJasperserverCreateAndLoadSchema5);
         ]]> </script>
@@ -244,7 +244,7 @@
            self.getProject().setProperty("localhost.mysql.db.url", overrideUrl13localhost);
         ]]> </script>
 
-		<property name="overrideJasperserverCreateAndLoadSchema6" value="JasperserverCreateAndLoadSchema_sandbox.sql" />
+		<property name="overrideJasperserverCreateAndLoadSchema6" value="JasperserverCreateAndLoadSchema_company1.sql" />
         <script language="javascript"> <![CDATA[
            self.getProject().setProperty("jasperserverCreateAndLoadSchema", overrideJasperserverCreateAndLoadSchema6);
         ]]> </script>

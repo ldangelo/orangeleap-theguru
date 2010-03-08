@@ -95,7 +95,7 @@
            self.getProject().setProperty("orangeleap.mysql.db.url", overrideUrl11);
         ]]> </script>
 
-		<property name="overrideJasperserverCreateAndLoadSchema5" value="JasperserverCreateAndLoadSchema_demo.sql" />
+		<property name="overrideJasperserverCreateAndLoadSchema5" value="JasperserverCreateAndLoadSchema_company1.sql" />
         <script language="javascript"> <![CDATA[
            self.getProject().setProperty("jasperserverCreateAndLoadSchema", overrideJasperserverCreateAndLoadSchema5);
         ]]> </script>
@@ -118,7 +118,7 @@
            self.getProject().setProperty("orangeleap.mysql.db.url", overrideUrl13);
         ]]> </script>
 
-		<property name="overrideJasperserverCreateAndLoadSchema6" value="JasperserverCreateAndLoadSchema_sandbox.sql" />
+		<property name="overrideJasperserverCreateAndLoadSchema6" value="JasperserverCreateAndLoadSchema_company1.sql" />
         <script language="javascript"> <![CDATA[
            self.getProject().setProperty("jasperserverCreateAndLoadSchema", overrideJasperserverCreateAndLoadSchema6);
         ]]> </script>
