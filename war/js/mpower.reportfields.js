@@ -201,7 +201,7 @@ function setOptionsEnabled(rowSelector, index) {
 		//fieldRow.find('input[objectname$=count]').attr('disabled','true');
 		fieldRow.find('input[objectname$=sum]').removeAttr('disabled');
 		fieldRow.find('input[objectname$=average]').removeAttr('disabled');
-		if (field.find('option:selected').attr('fieldtype') != 'MONEY') {
+		if (field.find('option:selected').attr('fieldtype') != 'MONEY' && field.find('option:selected').attr('fieldtype') != 'INTEGER' ) {
 			fieldRow.find('input[fieldtype=summary]').attr('disabled', 'true');
 			fieldRow.find('select[fieldtype=summary]').attr('disabled', 'true');
 		} else {
