@@ -140,7 +140,7 @@ public class TheGuruWebService {
 			}
 		}
 
-		ReportSegmentationType segType = reportSegmentationType.find(wiz.getId());
+		ReportSegmentationType segType = reportSegmentationType.find(wiz.getReportSegmentationTypeId());
 		if (segType == null) seg.setType("Unknown");
 		else seg.setType(segType.getSegmentationType());
 		return seg;
