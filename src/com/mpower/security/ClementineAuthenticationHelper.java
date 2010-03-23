@@ -23,7 +23,15 @@ public class ClementineAuthenticationHelper implements AuthenticationHelper {
 	@Override
 	public void postProcess(Authentication authentication) {
 		Map<String, Object> info = OrangeLeapUsernamePasswordLocal.getOrangeLeapAuthInfo();
-		GuruSessionData sessiondata = SessionHelper.getGuruSessionData();
+		
+		//When coming in via the api we need to populate this however when via the UI you will get a 
+		// npe and since this data does not need to be populated for the UI I am just catching the exception
+		GuruSessionData sessiondata = null;
+		try{
+			sessiondata = SessionHelper.getGuruSessionData();
+		}catch(NullPointerException npe){
+			//do nothing
+		}
 		
 		if (authentication instanceof UsernamePasswordAuthenticationToken) {
 
@@ -34,20 +42,27 @@ public class ClementineAuthenticationHelper implements AuthenticationHelper {
 			}
 			token.setDetails(info);
 			info.put(OrangeLeapUsernamePasswordLocal.PASSWORD, authentication.getCredentials());
-			sessiondata.setPassword(authentication.getCredentials().toString());
+			if (sessiondata != null){
+				sessiondata.setPassword(authentication.getCredentials().toString());	
+			}
+			
 		} else if (authentication instanceof CasAuthenticationToken) {
 			CasAuthenticationToken token = (CasAuthenticationToken) authentication;
 			if (SecurityContextHolder.getContext().getAuthentication() == null)
 				SecurityContextHolder.getContext().setAuthentication(token);
 			token.setDetails(info);
 			info.put(OrangeLeapUsernamePasswordLocal.PASSWORD, ((LdapUserDetails)authentication.getPrincipal()).getPassword());
-			sessiondata.setPassword(((LdapUserDetails)authentication.getPrincipal()).getPassword());
+			if (sessiondata != null){
+				sessiondata.setPassword(((LdapUserDetails)authentication.getPrincipal()).getPassword());	
+			}
 		}
 		String userName = ((LdapUserDetails)authentication.getPrincipal()).getUsername();
 		String siteName = userName.substring(userName.indexOf('@') +1);
 
-		sessiondata.setUsername(userName);
-		
+		if (sessiondata != null){
+			sessiondata.setUsername(userName);
+		}
+
 		info.put(OrangeLeapUsernamePasswordLocal.USER_NAME,userName);
 		info.put(OrangeLeapUsernamePasswordLocal.SITE,siteName);
 		
