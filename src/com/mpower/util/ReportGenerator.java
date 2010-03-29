@@ -428,7 +428,7 @@ public class ReportGenerator implements java.io.Serializable {
 
 				//add the measure column to the dynamic report builder
 				AbstractColumn column = null;
-				column = buildColumn(drb,fMeasure, columnIndex);
+				column = buildColumn(drb, fMeasure, columnIndex, wiz);
 				drb.addColumn(column);
 
 				//now add the measure to the crosstab builder
@@ -448,7 +448,7 @@ public class ReportGenerator implements java.io.Serializable {
 				valueClassName = getValueClassName(fRow);
 				//add the row column to the dynamic report builder
 				AbstractColumn column = null;
-				column = buildColumn(drb,fRow, columnIndex);
+				column = buildColumn(drb, fRow, columnIndex, wiz);
 				drb.addColumn(column);
 				columnIndex++;
 
@@ -474,7 +474,7 @@ public class ReportGenerator implements java.io.Serializable {
 				valueClassName = getValueClassName(fCol);
 				//add the  column to the dynamic report builder
 				AbstractColumn column = null;
-				column = buildColumn(drb,fCol, columnIndex);
+				column = buildColumn(drb, fCol, columnIndex, wiz);
 				drb.addColumn(column);
 				columnIndex++;
 
@@ -569,7 +569,7 @@ public class ReportGenerator implements java.io.Serializable {
 		while (itFields.hasNext()){
 			ReportField f = (ReportField) itFields.next();
 			//Build and add the column
-			AbstractColumn column = buildColumn(drb, f, columnIndex);
+			AbstractColumn column = buildColumn(drb, f, columnIndex, wiz);
 			drb.addColumn(column);
 
 			//Build and add the group if it is a groupby field
@@ -713,7 +713,7 @@ public class ReportGenerator implements java.io.Serializable {
 		return group;
 	}
 
-	private AbstractColumn buildColumn(FastReportBuilder drb, ReportField f, Integer columnIndex) {
+	private AbstractColumn buildColumn(FastReportBuilder drb, ReportField f, Integer columnIndex, ReportWizard wiz) {
 		String valueClassName = null;
 		String pattern = null;
 		valueClassName = getValueClassName(f);
@@ -735,7 +735,7 @@ public class ReportGenerator implements java.io.Serializable {
 
 			//String link = new String();
 			//link = "\"http://localhost:8080/orangeleap/constituent.htm?constituentId=\" +  $F{CONSTITUENT_ACCOUNT_NUMBER_0}";
-			if (f.getUrl() != null) {
+			if (f.getUrl() != null && wiz.getReportType().compareToIgnoreCase("matrix") != 0) {
 				column.setTextLink(f.getUrl());
 				column.setToolTip(f.getToolTip());
 				drb.addField(f.getPrimaryKeys(), Long.class.getName());
