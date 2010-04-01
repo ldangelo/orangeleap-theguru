@@ -33,7 +33,7 @@
 		<property name="build.tangerine.dir" value="${dir.prefix}/${project.prefix}tangerine/workspace/build/stage"/>
 		<property name="build.clementine.dir" value="${dir.prefix}/${project.prefix}clementine/workspace/build/stage"/>
 		<property name="rules.build.output.dir" value="${dir.prefix}/${project.prefix}orangeleap-customization/workspace/build/stage"/>
-		<property name="tang.build.output.dir" value="${dir.prefix}/${project.prefix}tang/workspace/dist"/>
+		<property name="tang.build.output.dir" value="${dir.prefix}/${project.prefix}cas/workspace/dist"/>
 		<property name="jasperserver.build.output.dir" value="${dir.prefix}/${project.prefix}jasperserver-3.5/workspace/build/stage"/>
 
 		<property name="build.output.dir" value="${build.clementine.dir}"/>
