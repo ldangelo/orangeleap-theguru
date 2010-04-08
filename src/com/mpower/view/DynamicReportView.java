@@ -87,7 +87,7 @@ public class DynamicReportView extends AbstractView {
 
 
 
-		DynamicReport dr = reportGenerator.Generate(wiz, jdbcDataSource, reportFieldService, reportCustomFilterDefinitionService);
+		DynamicReport dr = reportGenerator.Generate(wiz, jdbcDataSource, reportFieldService, reportCustomFilterDefinitionService, false);
 		String query = dr.getQuery().getText();
 		
 		//

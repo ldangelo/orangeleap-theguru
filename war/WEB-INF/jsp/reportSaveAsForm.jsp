@@ -208,21 +208,28 @@ return true;
 	<input type="image" src="images/cancel_off.gif" value="Cancel"
 		name="_target${reportsource.previousPage}" ALT="Cancel"
 		onmouseover="this.src = 'images/cancel_on.gif';"
-		onmouseout="this.src = 'images/cancel_off.gif';"> <input
-		type="image" id="save" src="images/save_off.gif" value="Save"
+		onmouseout="this.src = 'images/cancel_off.gif';"> 
+	<input type="image" id="save" src="images/save_off.gif" value="Save"
 		name="_target5" ALT="Save"
 		onmouseover="this.src = 'images/save_on.gif';"
-		onmouseout="this.src = 'images/save_off.gif';"> <input
-		type="image" id="reportDataHiddenInput" name="_target0"
-		value="Report Data" style="display: none"> <input
-		type="image" id="reportFormatHiddenInput" name="_target1"
-		value="Report Format" style="display: none"> <input
-		type="image" id="reportContentHiddenInput" name="_target2"
-		value="Report Content" style="display: none"> <input
-		type="image" id="reportCriteriaHiddenInput" name="_target3"
-		value="Report Criteria" style="display: none"> <input
-		type="image" id="saveReportHiddenInput" name="_target4"
-		value="Save Report" style="display: none"> <!--
+		onmouseout="this.src = 'images/save_off.gif';">
+	<c:if test="${!useReportAsSegmentation}">		
+	<input type="image" id="run" src="images/save_and_run_off.gif" value="Save"
+		name="_target12" ALT="Save"
+		onmouseover="this.src = 'images/save_and_run_on.gif';"
+		onmouseout="this.src = 'images/save_and_run_off.gif';">
+	</c:if>		
+	<input type="image" id="reportDataHiddenInput" name="_target0"
+		value="Report Data" style="display: none">
+	<input type="image" id="reportFormatHiddenInput" name="_target1"
+		value="Report Format" style="display: none">
+	<input type="image" id="reportContentHiddenInput" name="_target2"
+		value="Report Content" style="display: none">
+	<input type="image" id="reportCriteriaHiddenInput" name="_target3"
+		value="Report Criteria" style="display: none">
+	<input type="image" id="saveReportHiddenInput" name="_target4"
+		value="Save Report" style="display: none"> 
+	<!--
     <div class="column" style="width: 10%">
       <button type="submit" name="_target${previousPage +1}" tabindex="4">Cancel</button>
     </div>

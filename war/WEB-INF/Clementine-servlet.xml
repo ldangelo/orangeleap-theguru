@@ -200,6 +200,7 @@
 				<value>ReportSaveAsNewReport</value>
 				<value>ReportExecuteSegmentation</value>
 				<value>ReportSegmentationExecutionResults</value>
+				<value>RunReportInBackgroundRedirect</value>
 				<value>ReportRedirect</value>
 			</list>
 		</property>

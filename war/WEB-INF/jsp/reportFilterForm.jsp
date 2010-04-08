@@ -67,12 +67,13 @@
 				<SELECT id="rowCountSelect" name="rowCountSelect" onchange="updateRowCountInput(this);">
 					<option value="-1"<c:if test="${rowCount == -1}"> selected="true" </c:if>>All</option>
 					<option value="10"<c:if test="${rowCount == 10}"> selected="true" </c:if>>10</option>
-					<option value="25"<c:if test="${rowCount == 25}"> selected="true" </c:if>>25</option>
-					<option value="50"<c:if test="${rowCount == 50}"> selected="true" </c:if>>50</option>
 					<option value="100"<c:if test="${rowCount == 100}"> selected="true" </c:if>>100</option>
-					<option value=""<c:if test="${rowCount != -1 && rowCount != 10 && rowCount != 25 &&	rowCount != 50 && rowCount != 100}"> selected="true" </c:if>>Custom</option>
+					<option value="500"<c:if test="${rowCount == 500}"> selected="true" </c:if>>500</option>
+					<option value="1000"<c:if test="${rowCount == 1000}"> selected="true" </c:if>>1000</option>
+					<option value="2000"<c:if test="${rowCount == 2000}"> selected="true" </c:if>>2000</option>
+					<option value=""<c:if test="${rowCount != -1 && rowCount != 10 && rowCount != 100 && rowCount != 500 && rowCount != 1000 && rowCount != 2000}"> selected="true" </c:if>>Custom</option>
 				</SELECT>
-				<input id="rowCount" name="rowCount" value="${rowCount}"<c:if test="${rowCount == -1 || rowCount == 10 || rowCount == 25 ||	rowCount == 50 || rowCount == 100}"> style="display:none" </c:if>/>
+				<input id="rowCount" name="rowCount" value="${rowCount}"<c:if test="${rowCount == -1 || rowCount == 10 || rowCount == 100 || rowCount == 500 || rowCount == 1000 || rowCount == 2000}"> style="display:none" </c:if>/>
 			</TD>
 		</TR>
 <!--		<TR>

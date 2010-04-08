@@ -162,7 +162,7 @@ public class ReportQueryGenerator {
 	 * @throws ParseException
 	 */
 	public String getQueryString() throws ParseException {
-		String query = buildSelectClause();
+		String query = buildSelectClause(false);
 		query += buildWhereClause(false);
 		query += buildOrderByClause();
 		if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.MYSQL
@@ -172,6 +172,30 @@ public class ReportQueryGenerator {
 		return query;
 	}
 
+	/**
+	 * Builds and returns a mySql or SQL Server query used for report previews (no sorting, only top 100 results).
+	 * <P>
+	 * {@code} String query = getQueryString();
+	 * @return String
+	 * @throws ParseException
+	 */
+	public String getPreviewQueryString() throws ParseException {
+		String query = buildSelectClause(true);
+		query += buildWhereClause(false);
+		// If queries take too long to run for the preview, the order by clause could be removed
+		// and this would prevent the complete result from having to be compiled in order for the 
+		// top rows to be returned.
+		query += buildOrderByClause();
+		if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.MYSQL) {
+			if (getReportWizard().getRowCount() == -1 || getReportWizard().getRowCount() > 2000)
+				query += " LIMIT 0, 2000";
+			else
+				query += " LIMIT 0," + getReportWizard().getRowCount();
+		}	
+		query += ";";
+		return query;
+	}
+	
 	/**
 	 * Builds and returns a mySql or SQL Server query.
 	 * <P>
@@ -194,17 +218,21 @@ public class ReportQueryGenerator {
 	/**
 	 * Builds and returns a select clause based on the selected report fields.
 	 * <P>
-	 * {@code} String selectClause = buildSelectClause();
+	 * {@code} String selectClause = buildSelectClause(false);
+	 * @param preview A value that indicates whether a preview SQL statment should be created.
 	 * @return String
 	 */
-	private String buildSelectClause() {
+	private String buildSelectClause(Boolean preview) {
 		String selectClause = "SELECT";
 
 		selectClause += " DISTINCT";
 
 		if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.SQLSERVER
-				&& getReportWizard().getRowCount() > 0)
-			selectClause += " TOP " + getReportWizard().getRowCount();
+				&& (getReportWizard().getRowCount() > 0	|| preview))
+			if (preview && getReportWizard().getRowCount() > 2000)
+				selectClause += " TOP 100";
+			else
+				selectClause += " TOP " + getReportWizard().getRowCount();
 
 		if (getReportWizard().getReportType().compareToIgnoreCase("matrix") == 0)
 		{

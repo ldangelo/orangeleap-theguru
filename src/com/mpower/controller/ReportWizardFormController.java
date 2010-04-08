@@ -235,7 +235,8 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 			}
 		}
 
-		if (request.getParameter("_target5") != null || request.getParameter("_target5.x") != null) {
+		if (request.getParameter("_target5") != null || request.getParameter("_target5.x") != null
+			|| request.getParameter("_target12") != null || request.getParameter("_target12.x") != null) {
 			//
 			// We are saving this report to jasperserver
 			try {
@@ -548,7 +549,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 
 //		 	 SuppressWarnings("unused")
 
-			DynamicReport dr = wiz.getReportGenerator().Generate(wiz, jdbcDataSource, reportFieldService, reportCustomFilterDefinitionService);
+			DynamicReport dr = wiz.getReportGenerator().Generate(wiz, jdbcDataSource, reportFieldService, reportCustomFilterDefinitionService, true);
 			//String query = dr.getQuery().getText();
 
 			//
@@ -654,6 +655,15 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 				refData.put("hasErrors", true);
 			}
 		}
+		
+		if (page == getPageIndexByName("RunReportInBackgroundRedirect")) {
+			String tempReportPath = wiz.getReportPath() + "/" + wiz.getReportSaveAsName();
+			String tempReportParentPath = wiz.getReportPath();			
+			refData.put("reportPath", tempReportPath);
+			refData.put("reportParentPath", tempReportParentPath);
+			refData.put("reportName", wiz.getReportName().replace(" ", "_").replace("'", "").replace("\"", ""));
+			refData.put("companyName", wiz.getCompany());
+		}
 		return refData;
 	}
 
@@ -684,7 +694,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		// First we must generate a jrxml file
 		//
 
-		DynamicReport dr = wiz.getReportGenerator().Generate(wiz, jdbcDataSource, reportFieldService, reportCustomFilterDefinitionService);
+		DynamicReport dr = wiz.getReportGenerator().Generate(wiz, jdbcDataSource, reportFieldService, reportCustomFilterDefinitionService, false);
 
 		File tempFile = TempFileUtil.createTempFile("wiz", ".jrxml");
 		logger.info("Temp File: " + tempFile);

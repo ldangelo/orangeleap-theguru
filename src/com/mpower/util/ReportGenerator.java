@@ -199,7 +199,7 @@ public class ReportGenerator implements java.io.Serializable {
 	}
 
 	public DynamicReport Generate(ReportWizard wiz,javax.sql.DataSource jdbcDataSource, ReportFieldService reportFieldService,
-			ReportCustomFilterDefinitionService reportCustomFilterDefinitionService) throws Exception {
+			ReportCustomFilterDefinitionService reportCustomFilterDefinitionService, Boolean preview) throws Exception {
 		resetInputControls();
 		File templateFile = getTemplateFile(wiz);
 		columnIndex = 0;
@@ -248,7 +248,11 @@ public class ReportGenerator implements java.io.Serializable {
 		//
 		ReportQueryGenerator reportQueryGenerator = new ReportQueryGenerator(wiz,
 				reportFieldService, reportCustomFilterDefinitionService);
-		String query = reportQueryGenerator.getQueryString();
+		String query = "";
+		if (preview)
+			query = reportQueryGenerator.getPreviewQueryString();
+		else
+			query = reportQueryGenerator.getQueryString();
 
 		List<ReportFilter> filters = wiz.getReportFilters();
 		Iterator<ReportFilter> itFilter = filters.iterator();
