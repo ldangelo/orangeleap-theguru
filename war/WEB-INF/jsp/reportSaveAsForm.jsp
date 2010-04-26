@@ -214,8 +214,8 @@ return true;
 		onmouseover="this.src = 'images/save_on.gif';"
 		onmouseout="this.src = 'images/save_off.gif';">
 	<c:if test="${!useReportAsSegmentation}">		
-	<input type="image" id="run" src="images/save_and_run_off.gif" value="Save"
-		name="_target12" ALT="Save"
+	<input type="image" id="run" src="images/save_and_run_off.gif" value="Finish"
+		name="_finish" ALT="Finish"
 		onmouseover="this.src = 'images/save_and_run_on.gif';"
 		onmouseout="this.src = 'images/save_and_run_off.gif';">
 	</c:if>		

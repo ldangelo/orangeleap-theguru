@@ -79,27 +79,26 @@ import com.mpower.util.SessionHelper;
 import com.mpower.view.DynamicReportView;
 
 public class ReportWizardFormController extends AbstractWizardFormController {
-	private ReportSubSourceGroupService  reportSubSourceGroupService;
-	private ReportSubSourceService  reportSubSourceService;
+	private ReportSubSourceGroupService reportSubSourceGroupService;
+	private ReportSubSourceService reportSubSourceService;
 
 	/** Logger for this class and subclasses */
 	protected final Log logger = LogFactory.getLog(getClass());
 
-	private DynamicReportView       dynamicView;
-	private ReportSourceService     reportSourceService;
-	private ReportWizard            wiz;
-	private ReportWizardService     reportWizardService;
-	private JasperServerService     jasperServerService;
+	private DynamicReportView dynamicView;
+	private ReportSourceService reportSourceService;
+	private ReportWizardService reportWizardService;
+	private JasperServerService jasperServerService;
 	private ReportFieldGroupService reportFieldGroupService;
 	private ReportQueryCostService reportQueryCostService;
 
-	private ReportFieldService      reportFieldService;
-	private ReportCustomFilterDefinitionService      reportCustomFilterDefinitionService;
+	private ReportFieldService reportFieldService;
+	private ReportCustomFilterDefinitionService reportCustomFilterDefinitionService;
 	private ReportCustomFilterHelper reportCustomFilterHelper;
 
-	private ReportSegmentationTypeService      reportSegmentationTypeService;
+	private ReportSegmentationTypeService reportSegmentationTypeService;
 	private ReportSegmentationResultsService reportSegmentationResultsService;
-	private SessionService          sessionService;
+	private SessionService sessionService;
 	private DataSource jdbcDataSource;
 	private String reportUnitDataSourceURI;
 	private UserDetailsService userDetailsService;
@@ -110,10 +109,10 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 
 	@Override
 	protected Object formBackingObject(HttpServletRequest request)
-	throws ServletException {
+			throws ServletException {
 		logger.info("**** in formBackingObject");
 		WebApplicationContext applicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(this.getServletContext());
-		wiz = (ReportWizard)applicationContext.getBean("ReportWizard");
+		ReportWizard wiz = (ReportWizard)applicationContext.getBean("ReportWizard");
 		wiz.setDataSources(reportSourceService.readSources());
 		SessionHelper.tl_data.get().removeAttribute("GURUSESSIONDATA");
 
@@ -175,17 +174,17 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 	}
 
 	@Override
-	 protected void validatePage(Object command, Errors errors, int page) {
-	        Validator[] validators = getValidators();
-	        for (int i=0; i<validators.length; i++) {
-	            Validator validator = validators[i];
-	            if (validator instanceof ReportWizardValidator) {
-	            	if (((ReportWizardValidator)validator).getPage() == page) {
-	                    validator.validate(command, errors);
-	                }
-	            }
-	        }
-	    }
+	protected void validatePage(Object command, Errors errors, int page) {
+		Validator[] validators = getValidators();
+		for (int i = 0; i < validators.length; i++) {
+			Validator validator = validators[i];
+			if (validator instanceof ReportWizardValidator) {
+				if (((ReportWizardValidator) validator).getPage() == page) {
+					validator.validate(command, errors);
+				}
+			}
+		}
+	}
 
 	@Override
 	protected void postProcessPage(HttpServletRequest request, Object command,
@@ -217,17 +216,17 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		}
 
 		//
-		//They hit the Run Report button so we need to validate first
+		// They hit the Run Report button so we need to validate first
 		if (request.getParameter("_target8") != null || request.getParameter("_target8.x") != null) {
 
 			try {
-		        Validator[] validators = getValidators();
-		        for (int i=0; i<validators.length; i++) {
-		            Validator validator = validators[i];
-		            if (validator instanceof ReportWizardValidator) {
-		                    validator.validate(command, errors);
-		                }
-		            }
+				Validator[] validators = getValidators();
+				for (int i = 0; i < validators.length; i++) {
+					Validator validator = validators[i];
+					if (validator instanceof ReportWizardValidator) {
+						validator.validate(command, errors);
+					}
+				}
 
 			} catch (Exception e) {
 				logger.error(e.getLocalizedMessage());
@@ -239,24 +238,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 			|| request.getParameter("_target12") != null || request.getParameter("_target12.x") != null) {
 			//
 			// We are saving this report to jasperserver
-			try {
-				ReportSaveValidator rsv = new ReportSaveValidator();
-				rsv.validate(wiz, errors);
-				Boolean saveValidationSuccess = true;
-				Iterator itErrors = errors.getAllErrors().iterator();
-				while (itErrors.hasNext()) {
-					ObjectError error = (ObjectError)itErrors.next();
-					if (error.getCode().contains("error.code")) {
-						saveValidationSuccess = false;
-						break;
-					}
-				}
-				if (saveValidationSuccess)
-					saveReport(wiz, errors);
-			} catch (Exception e) {
-				logger.error("Unable to save report: " + e.getLocalizedMessage());
-				errors.reject("error.save", "Unable to save report: " + e.getLocalizedMessage());
-			}
+			validateAndSaveReportWizard(errors, wiz);
 		}
 	}
 
@@ -268,7 +250,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 			Boolean returnToSavePage = false;
 			Iterator itErrors = errors.getAllErrors().iterator();
 			while (itErrors.hasNext()) {
-				ObjectError error = (ObjectError)itErrors.next();
+				ObjectError error = (ObjectError) itErrors.next();
 				if (error.getCode().length() != 0) {
 					returnToSavePage = true;
 					break;
@@ -287,7 +269,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 					return wiz.getPreviousPage();
 			}
 			else
-			    return wiz.getPreviousPage();
+				return wiz.getPreviousPage();
 		}
 
 		return super.getTargetPage(request, command, errors, currentPage);
@@ -310,11 +292,48 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 	@Override
 	protected ModelAndView processFinish(HttpServletRequest request,
 			HttpServletResponse arg1, Object arg2, BindException arg3)
-	throws Exception {
+			throws Exception {
+		ReportWizard wiz = (ReportWizard)arg2;
+		
+		if (validateAndSaveReportWizard(arg3, wiz)) {
+			Map<String, String> refData = new HashMap<String, String>();
+			String tempReportPath = wiz.getReportPath() + "/" + wiz.getReportSaveAsName();
+			String tempReportParentPath = wiz.getReportPath();
+			refData.put("reportPath", tempReportPath);
+			refData.put("reportParentPath", tempReportParentPath);
+			refData.put("reportName", wiz.getReportName().replace(" ", "_").replace("'", "").replace("\"", ""));
+			refData.put("companyName", wiz.getCompany());
+	
+			return new ModelAndView(getPages()[getPageIndexByName("RunReportInBackgroundRedirect")], refData);
+		} else {
+			return showPage(request, arg3, getPageIndexByName("ReportSaveAs"));
+		}
+	}
 
-
-		return new ModelAndView(getSuccessView(),"reportsouce",wiz);
-
+	private boolean validateAndSaveReportWizard(Errors errors, ReportWizard wiz) {
+		boolean result = false;
+		try {
+			ReportSaveValidator rsv = new ReportSaveValidator();
+			rsv.validate(wiz, errors);
+			Boolean saveValidationSuccess = true;
+			Iterator itErrors = errors.getAllErrors().iterator();
+			while (itErrors.hasNext()) {
+				ObjectError error = (ObjectError) itErrors.next();
+				if (error.getCode().contains("error.code")) {
+					saveValidationSuccess = false;
+					break;
+				}
+			}
+			if (saveValidationSuccess)
+			{
+				saveReport(wiz, errors);
+				result = true;
+			}
+		} catch (Exception e) {
+			logger.error("Unable to save report: " + e.getLocalizedMessage());
+			errors.reject("error.save", "Unable to save report: " + e.getLocalizedMessage());
+		}
+		return result;
 	}
 
 	private void LoadWizardLookupTables(ReportWizard wiz) {
@@ -348,12 +367,12 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		ReportWizard wiz = (ReportWizard) command;
 		Map refData = new HashMap();
 
-		refData.put("page",page);
+		refData.put("page", page);
 		refData.put("maxpages", getPages().length-6); // 6 pages that are not actual steps
 
 		// see if we went backwards
 		if (wiz.getPreviousPage() > page)
-			wiz.setPreviousPage(page -1);
+			wiz.setPreviousPage(page - 1);
 
 		refData.put("previouspage", wiz.getPreviousPage());
 
@@ -409,8 +428,8 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 			refData.put("userFound", true);
 			refData.put("subSourceGroupId", wiz.getDataSubSourceGroupId());
 			refData.put("subSourceId", wiz.getSubSourceId());
-//			wiz.getReportGenerator().setReportUserName(userName);
-//			wiz.getReportGenerator().setReportPassword(password);
+			// wiz.getReportGenerator().setReportUserName(userName);
+			// wiz.getReportGenerator().setReportPassword(password);
 
 			jasperServerService.setUserName(userName);
 			jasperServerService.setPassword(password);
@@ -494,20 +513,20 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		}
 
 		// filter screen
-		if(page==3) {
+		if (page == 3) {
 			ReportDataSubSource rdss = reportSubSourceService.find(wiz.getSubSourceId());
 			List<ReportFieldGroup>    lrfg = reportFieldGroupService.readFieldGroupBySubSourceId(rdss.getId());
 			wiz.setFieldGroups(lrfg);
 
-		    if (wiz.getShowSqlQuery()) {
+			if (wiz.getShowSqlQuery()) {
 		    	ReportQueryGenerator reportQueryGenerator = new ReportQueryGenerator(wiz, reportFieldService, reportCustomFilterDefinitionService);
-		    	refData.put("showSqlQuery", wiz.getShowSqlQuery());
-		    	String query = reportQueryGenerator.getQueryString();
+				refData.put("showSqlQuery", wiz.getShowSqlQuery());
+				String query = reportQueryGenerator.getQueryString();
 				refData.put("sqlQuery", query);
 				if (wiz.getDataSubSource().getDatabaseType().equals(ReportDatabaseType.MYSQL) && wiz.getReportSelectedFields().size() > 0)
 					refData.put("queryCost", reportQueryCostService.getReportQueryCostByQuery(query, wiz.getDataSubSource().getJasperDatasourceName()));
 				wiz.setShowSqlQuery(false);
-		    }
+			}
 
 			refData.put("fieldGroups", lrfg);
 			WebApplicationContext applicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(this.getServletContext());
@@ -517,45 +536,45 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		    	refData.put("useReportAsSegmentation", wiz.getUseReportAsSegmentation());
 			    refData.put("segmentationTypeId", wiz.getReportSegmentationTypeId());
 			    refData.put("segmentationTypeCount", reportSegmentationTypes.size());
-			    refData.put("segmentationTypes", reportSegmentationTypes);
-		    }
-		    wiz.setUseReportAsSegmentation(false);
+				refData.put("segmentationTypes", reportSegmentationTypes);
+			}
+			wiz.setUseReportAsSegmentation(false);
 
 			List<ReportFilter> tempFilters = reportCustomFilterHelper.refreshReportCustomFilters(applicationContext, wiz);
 			refData.put("selectedFilters", tempFilters);
 			// Clear out the selected fields because some items do not post back correctly
 			wiz.getReportFilters().clear();
 
-		    refData.put("rowCount", wiz.getRowCount());
+			refData.put("rowCount", wiz.getRowCount());
 		}
 
-		if (page==4) {
+		if (page == 4) {
 			refData.put("executeSegmentation", wiz.getExecuteSegmentation());
 			wiz.setExecuteSegmentation(false);
 		    refData.put("useReportAsSegmentation", wiz.getUseReportAsSegmentation());
 		}
 
 		// run a saved report
-		if (page==7) {
+		if (page == 7) {
 			//			wiz.setReportPath("/Reports/Clementine/" + wiz.getReportName().replace(" ", "_"));
 			refData.put("reportPath", wiz.getReportPath());
 		}
 
 		// running the report
-		if (page==8) {
+		if (page == 8) {
 			// if there are no fields selected, select the defaults
 			if (wiz.getReportSelectedFields().size() == 0)
 				wiz.populateDefaultReportFields();
 
-//		 	 SuppressWarnings("unused")
+			// SuppressWarnings("unused")
 
 			DynamicReport dr = wiz.getReportGenerator().Generate(wiz, jdbcDataSource, reportFieldService, reportCustomFilterDefinitionService, true);
-			//String query = dr.getQuery().getText();
+			// String query = dr.getQuery().getText();
 
 			//
 			// execute the query and pass it to generateJasperPrint
-			//Connection connection = jdbcDataSource.getConnection();
-			//Statement statement = connection.createStatement();
+			// Connection connection = jdbcDataSource.getConnection();
+			// Statement statement = connection.createStatement();
 
 			File tempFile = TempFileUtil.createTempFile("wiz", ".jrxml");
 			logger.info("Temp File: " + tempFile);
@@ -565,36 +584,36 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 			// remove it just in case it get's reused from another class...
 			wiz.getReportGenerator().getParams().remove(JRParameter.REPORT_VIRTUALIZER);
 
-		    //
-		    // modify the jrxml
+			//
+			// modify the jrxml
 		    ModifyReportJRXML reportXMLModifier = new ModifyReportJRXML(wiz, reportFieldService);
 
 		    // DJ adds a dataset that causes an error on the matrix reports so we need to remove it
-		    if (wiz.getReportType().compareToIgnoreCase("matrix") == 0)
-		    	reportXMLModifier.removeCrossTabDataSubset(tempFile.getPath());
+			if (wiz.getReportType().compareToIgnoreCase("matrix") == 0)
+				reportXMLModifier.removeCrossTabDataSubset(tempFile.getPath());
 
 		    // add the summary info/totals to the report - DJ only allows one per column and we need to allow multiple so
 			// 		we are altering the XML directly to add the summary calculations to the jasper report,
 		    //		this also handles adding the calculations to the groups created by DJ.
 			if (wiz.getReportType().compareToIgnoreCase("matrix") != 0 && wiz.HasSummaryFields() == true){
 				reportXMLModifier.AddGroupSummaryInfo(tempFile.getPath());
-			    reportXMLModifier.AddReportSummaryInfo(tempFile.getPath());
+				reportXMLModifier.AddReportSummaryInfo(tempFile.getPath());
 			}
 
-			//chart modifications
+			// chart modifications
 			List<ReportChartSettings> rptChartSettings = wiz.getReportChartSettings();
-		    Iterator itRptChartSettings = rptChartSettings.iterator();
-		    while (itRptChartSettings.hasNext()){
+			Iterator itRptChartSettings = rptChartSettings.iterator();
+			while (itRptChartSettings.hasNext()) {
 		    	ReportChartSettings rptChartSetting = (ReportChartSettings) itRptChartSettings.next();
-		    	String chartType = rptChartSetting.getChartType();
-		    	String chartLocation = rptChartSetting.getLocation();
-		    	//move the chart to the header or footer of the report
+				String chartType = rptChartSetting.getChartType();
+				String chartLocation = rptChartSetting.getLocation();
+				// move the chart to the header or footer of the report
 		    	reportXMLModifier.moveChartFromGroup(tempFile.getPath(), chartType, chartLocation);
 		    	//if the report is a chart only report (used for the Dashboard of OL) remove all unnecessary elements
-			    if (isChartOnlyReport(wiz, reportFieldService)){
+				if (isChartOnlyReport(wiz, reportFieldService)) {
 			    	reportXMLModifier.modifyChartOnlyReport(tempFile.getPath(), chartType, chartLocation);
-			    }
-		    }
+				}
+			}
 
 
 
@@ -655,10 +674,10 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 				refData.put("hasErrors", true);
 			}
 		}
-		
+
 		if (page == getPageIndexByName("RunReportInBackgroundRedirect")) {
 			String tempReportPath = wiz.getReportPath() + "/" + wiz.getReportSaveAsName();
-			String tempReportParentPath = wiz.getReportPath();			
+			String tempReportParentPath = wiz.getReportPath();
 			refData.put("reportPath", tempReportPath);
 			refData.put("reportParentPath", tempReportParentPath);
 			refData.put("reportName", wiz.getReportName().replace(" ", "_").replace("'", "").replace("\"", ""));
@@ -670,11 +689,11 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 	private boolean isChartOnlyReport(ReportWizard wiz,
 			ReportFieldService reportFieldService) {
 		Boolean chartOnly = false;
-		//iterate thru the chart settings to see if this report
-		//field is a chart field
+		// iterate thru the chart settings to see if this report
+		// field is a chart field
 		List<ReportChartSettings> chartSettings = wiz.getReportChartSettings();
 		Iterator<ReportChartSettings> itChartSettings = chartSettings.iterator();
-		while (itChartSettings.hasNext()){
+		while (itChartSettings.hasNext()) {
 			ReportChartSettings rcs = (ReportChartSettings) itChartSettings.next();
 			if (rcs.getLocation().compareTo("chartOnly") == 0) chartOnly = true; break;
 		}
@@ -703,35 +722,35 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		wiz.getReportGenerator().getParams().remove(JRParameter.REPORT_VIRTUALIZER);
 
 		//
-	    // modify the jrxml
+		// modify the jrxml
 	    ModifyReportJRXML reportXMLModifier = new ModifyReportJRXML(wiz, reportFieldService);
 
 	    // DJ adds a dataset that causes an error on the matrix reports so we need to remove it
-	    if (wiz.getReportType().compareToIgnoreCase("matrix") == 0)
-	    	reportXMLModifier.removeCrossTabDataSubset(tempFile.getPath());
+		if (wiz.getReportType().compareToIgnoreCase("matrix") == 0)
+			reportXMLModifier.removeCrossTabDataSubset(tempFile.getPath());
 
 	    // add the summary info/totals to the report - DJ only allows one per column and we need to allow multiple so
 		// 		we are altering the XML directly to add the summary calculations to the jasper report,
 	    //		this also handles adding the calculations to the groups created by DJ.
 		if (wiz.getReportType().compareToIgnoreCase("matrix") != 0 && wiz.HasSummaryFields() == true){
 			reportXMLModifier.AddGroupSummaryInfo(tempFile.getPath());
-		    reportXMLModifier.AddReportSummaryInfo(tempFile.getPath());
-		   }
+			reportXMLModifier.AddReportSummaryInfo(tempFile.getPath());
+		}
 
-		//chart modifications
+		// chart modifications
 		List<ReportChartSettings> rptChartSettings = wiz.getReportChartSettings();
-	    Iterator itRptChartSettings = rptChartSettings.iterator();
-	    while (itRptChartSettings.hasNext()){
+		Iterator itRptChartSettings = rptChartSettings.iterator();
+		while (itRptChartSettings.hasNext()) {
 	    	ReportChartSettings rptChartSetting = (ReportChartSettings) itRptChartSettings.next();
-	    	String chartType = rptChartSetting.getChartType();
-	    	String chartLocation = rptChartSetting.getLocation();
-	    	//move the chart to the header or footer of the report
+			String chartType = rptChartSetting.getChartType();
+			String chartLocation = rptChartSetting.getLocation();
+			// move the chart to the header or footer of the report
 	    	reportXMLModifier.moveChartFromGroup(tempFile.getPath(), chartType, chartLocation);
 	    	//if the report is a chart only report (used for the Dashboard of OL) remove all unnecessary elements
-		    if (isChartOnlyReport(wiz, reportFieldService)){
+			if (isChartOnlyReport(wiz, reportFieldService)) {
 		    	reportXMLModifier.modifyChartOnlyReport(tempFile.getPath(), chartType, chartLocation);
-		    }
-	    }
+			}
+		}
 
 		String reportComment = wiz.getDataSubSource().getDisplayName() + " Custom Report";
 		if (wiz.getReportComment() != null && wiz.getReportComment().length() > 0)
@@ -740,9 +759,9 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		String reportTitle = wiz.getDataSubSource().getDisplayName() + " Custom Report";
 		if (wiz.getReportName() != null && wiz.getReportName().length() > 0)
 			reportTitle = wiz.getReportName();
-		try{
+		try {
 			wiz.getReportGenerator().put(ResourceDescriptor.TYPE_REPORTUNIT, wiz.getReportSaveAsName(), reportTitle, reportComment,wiz.getReportPath(),tempFile, wiz.getReportGenerator().getParams(), wiz.getDataSubSource().getJasperDatasourceName());
-		}catch (Exception e){
+		} catch (Exception e) {
 			logger.error("Unable to save report: " + e.getLocalizedMessage());
 			errors.reject("error.save", "Unable to save report: " + e.getLocalizedMessage());
 		}
@@ -796,7 +815,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 	@Override
 	protected ModelAndView showForm(HttpServletRequest request,
 			HttpServletResponse response, BindException errors)
-	throws Exception {
+			throws Exception {
 
 		if (request.getParameter("_target9") != null || request.getParameter("_target9.x") != null) {
 			return showPage(request, errors, 9);
