@@ -22704,7 +22704,7 @@ CREATE TABLE `VERSIONLOG` (
   `SCRIPT` varchar(255) NOT NULL,
   `INSTALLDATE` datetime NOT NULL,
   PRIMARY KEY (`VERSION_ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=64 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=65 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `VERSIONLOG`
@@ -22774,7 +22774,8 @@ INSERT INTO `VERSIONLOG` (`VERSION_ID`,`SCRIPT`,`INSTALLDATE`) VALUES
  (60,'20100216_01_FE_GenerateViewsAndFieldDefinitions.sql','2010-03-02 08:41:33'),
  (61,'20100303_01_DU_ReportField_GiftSummary_TimePeriod.sql','2010-03-03 13:46:40'),
  (62,'20100317_01_IC_IDX_TheGuru_Field_Definitions.sql','2010-03-17 14:59:05'),
- (63,'20100317_02_FC_GenerateFieldDefinitions.sql','2010-03-17 14:59:05');
+ (63,'20100317_02_FC_GenerateFieldDefinitions.sql','2010-03-17 14:59:05'),
+ (64,'20100422_01_DU_ReportCustomFilterDefinition_ReportDataSubSource.sql','2010-04-26 09:57:08');
 /*!40000 ALTER TABLE `VERSIONLOG` ENABLE KEYS */;
 
 
