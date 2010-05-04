@@ -28,6 +28,7 @@ public class ClementineAuthenticationHelper implements AuthenticationHelper {
 		// npe and since this data does not need to be populated for the UI I am just catching the exception
 		GuruSessionData sessiondata = null;
 		try{
+			SessionHelper.tl_data.set(OrangeLeapRequestLocal.getRequest().getSession());
 			sessiondata = SessionHelper.getGuruSessionData();
 		}catch(NullPointerException npe){
 			//do nothing
