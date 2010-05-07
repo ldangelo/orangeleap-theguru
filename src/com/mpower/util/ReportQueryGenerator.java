@@ -305,7 +305,7 @@ public class ReportQueryGenerator {
 			if (reportField.getAliasName() == null || reportField.getAliasName().length() == 0)
 				columnName = reportField.getColumnName() + "_" + columnIndex;
 			else
-				columnName = reportField.getAliasName() + "_" + columnIndex;
+				columnName = "`" + reportField.getAliasName() + "_" + columnIndex + "`";
 			if (reportField == null || reportField.getId() == -1) continue;
 				if (addComma)
 					selectClause += ",";
@@ -354,7 +354,7 @@ public class ReportQueryGenerator {
 				if (reportField.getAliasName() == null || reportField.getAliasName().length() == 0)
 					columnName = reportField.getColumnName() + "_" + columnIndex;
 				else
-					columnName = reportField.getAliasName() + "_" + columnIndex;
+					columnName = "`" + reportField.getAliasName() + "_" + columnIndex + "`";
 					if (addComma)
 						selectClause = selectClause + ",";
 					else
@@ -378,7 +378,7 @@ public class ReportQueryGenerator {
 				if (reportField.getAliasName() == null || reportField.getAliasName().length() == 0)
 					columnName = reportField.getColumnName() + "_" + columnIndex;
 				else
-					columnName = reportField.getAliasName() + "_" + columnIndex;
+					columnName = "`" + reportField.getAliasName() + "_" + columnIndex + "`";
 					if (addComma)
 						selectClause = selectClause + ",";
 					else
@@ -397,7 +397,7 @@ public class ReportQueryGenerator {
 				if (reportField.getAliasName() == null || reportField.getAliasName().length() == 0)
 					columnName = reportField.getColumnName() + "_" + columnIndex;
 				else
-					columnName = reportField.getAliasName() + "_" + columnIndex;
+					columnName = "`" + reportField.getAliasName() + "_" + columnIndex + "`";
 					if (addComma)
 						selectClause = selectClause + ",";
 					else
@@ -486,7 +486,7 @@ public class ReportQueryGenerator {
 	private String buildStandardFilterWhereClause(ReportStandardFilter reportStandardFilter, int index) throws ParseException {
 		String whereClause = " (";
 		ReportField rf = reportFieldService.find(reportStandardFilter.getFieldId());
-		String controlName = rf.getAliasName() + Integer.toString(index);
+		String controlName = "`" + rf.getAliasName() + Integer.toString(index) + "`";
 
 		String sqlDateType = "";
 		if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.MYSQL)
