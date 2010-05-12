@@ -15,6 +15,7 @@ mkdir db-scripts/src/main
 mkdir db-scripts/src/main/resources
 cp war/WEB-INF/classes/ws-securityPolicy.xml src/main/resources
 cp theguru.properties src/main/config/jetty-local/
+cp theguru.properties src/test/resources
 cp -R src/com src/main/java/com
 cp -R test/com src/test/java/com
 cp -R war/* src/main/webapp
