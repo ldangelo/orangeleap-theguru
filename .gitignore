@@ -1,0 +1,13 @@
+/lib
+/bin
+/build/stage
+clementine.iws
+.classpath
+clementine.iml
+clementine.ipr
+/target
+/eclipse_config
+/db-scripts/target
+/logs
+pom.properties
+.settings/org.eclipse.jdt.core.prefs

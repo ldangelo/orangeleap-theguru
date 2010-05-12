@@ -62,7 +62,7 @@
 
 	<profiles>
 		<profile>
-			<id>mpx</id>
+			<id>mpxWar</id>
 			<build>
 				<plugins>
 					<plugin>
@@ -92,6 +92,90 @@
 						<artifactId>maven-war-plugin</artifactId>
 						<configuration>
 							<webXml>${pom.basedir}/src/main/config/mpx/web.xml</webXml>
+							<webResources>
+								<resource>
+									<directory>src/main/config/mpx</directory>
+									<targetPath>WEB-INF</targetPath>
+									<includes>
+										<include>applicationContext-security.xml</include>
+									</includes>
+								</resource>
+							</webResources>
+						</configuration>
+					</plugin>
+
+					<plugin>
+						<groupId>org.codehaus.cargo</groupId>
+						<artifactId>cargo-maven2-plugin</artifactId>
+						<configuration>
+							<wait>true</wait>
+							<container>
+								<containerId>tomcat6x</containerId>
+								<type>installed</type>
+								<home>${tomcat.path}</home> <!-- found in $USER_HOME/.m2/settings.xml -->
+							</container>
+							<deployer>
+								<type>installed</type>
+								<deployables>
+									<deployable>
+										<properties>
+											<context>clementine</context>
+										</properties>
+									</deployable>
+								</deployables>
+							</deployer>
+							<configuration>
+								<type>existing</type>
+								<home>${tomcat.path}</home>
+							</configuration>
+						</configuration>
+
+						<executions>
+							<execution>
+								<id>deploy</id>
+								<phase>install</phase>
+								<goals>
+									<goal>deployer-deploy</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
+		<profile>
+			<id>mpxExploded</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>delete tangerine.properties</id>
+								<phase>prepare-package</phase>
+								<goals>
+									<goal>run</goal>
+								</goals>
+								<configuration>
+									<tasks>
+										<delete failonerror="false" file="target/classes/theguru.properties"/>
+										<copy file="src/main/config/mpx/persistence.xml"
+										      todir="target/classes/META-INF"
+										      filtering="true" overwrite="true"/>
+									</tasks>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-war-plugin</artifactId>
+						<configuration>
+							<webXml>${pom.basedir}/src/main/config/mpx/web.xml</webXml>
+							<webappDirectory>${tomcat.path}/webapps/${project.artifactId}</webappDirectory>
 							<webResources>
 								<resource>
 									<directory>src/main/config/mpx</directory>
