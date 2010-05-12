@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>db-scripts</artifactId>
+	<name>The Guru (clementine) project to initialize DB schema &amp; data</name>
+	<description>
+		Drop, create, &amp; load schema, functions, and data;
+		run 'mvn initialize -DtheGuruSchema=company1theguru -DolSchema=company1 -DschemaSql=company1 -Dport=3006 -Dhost=localhost -DencryptedPwd=72AD91424DDA0085179A17174040A206' to override default properties.
+
+		Default properties are:
+		theGuruSchema=theguru
+		olSchema=orangeleap
+		schemaSql=theguru
+		port=3306
+		host=localhost
+		encryptedPwd=72AD91424DDA0085179A17174040A206
+	</description>
+
+	<parent>
+		<groupId>com.orangeleap</groupId>
+		<artifactId>masterPOM</artifactId>
+		<version>10.0-SNAPSHOT</version>
+		<relativePath>../../</relativePath>
+	</parent>
+
+	<!--
+		*******************************************
+
+		run 'mvn initialize -DtheGuruSchema=company1theguru -DolSchema=company1 -DschemaSql=company1 -Dport=3006 -Dhost=localhost -DencryptedPwd=72AD91424DDA0085179A17174040A206' to override default properties shown below
+
+		*******************************************
+	-->
+	<properties>
+		<theGuruSchema>theguru</theGuruSchema>
+		<olSchema>orangeleap</olSchema>
+		<schemaSql>theguru</schemaSql>
+		<port>3306</port>
+		<host>localhost</host>
+		<encryptedPwd>72AD91424DDA0085179A17174040A206</encryptedPwd>
+	</properties>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>display properties</id>
+						<phase>initialize</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<tasks>
+								<echo message="==========================================================================================================================="/>
+								<echo message="Executing SQL for: theGuruSchema=${theGuruSchema}, olSchema=${olSchema}, schemaSql=${schemaSql}, host=${host}, port=${port}"/>
+								<echo message="==========================================================================================================================="/>
+							</tasks>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>sql-maven-plugin</artifactId>
+
+				<configuration>
+					<driver>com.mysql.jdbc.Driver</driver>
+					<url>jdbc:mysql://${host}:${port}/</url>
+					<driverProperties>autoReconnect=true,useUnicode=true,characterEncoding=UTF8</driverProperties>
+					<username>orangeleap</username>
+					<password>orangeleap</password>
+					<encoding>UTF-8</encoding>
+					<autocommit>true</autocommit>
+				</configuration>
+
+				<executions>
+					<execution>
+						<id>drop &amp; create schema</id>
+						<phase>initialize</phase>
+						<goals>
+							<goal>execute</goal>
+						</goals>
+						<configuration>
+							<delimiter>;</delimiter>
+							<sqlCommand>
+								DROP schema IF EXISTS ${theGuruSchema};
+								create schema ${theGuruSchema};
+							</sqlCommand>
+						</configuration>
+					</execution>
+
+					<execution>
+						<id>load guru DB</id>
+						<phase>initialize</phase>
+						<goals>
+							<goal>execute</goal>
+						</goals>
+						<configuration>
+							<url>jdbc:mysql://${host}:${port}/${theGuruSchema}</url>
+							<delimiter>;</delimiter>
+							<srcFiles>
+								<srcFile>${basedir}/src/main/resources/db/prod/domain/TheguruCreateAndLoadSchema-NoFunctions.sql</srcFile>
+								<srcFile>${basedir}/src/main/resources/db/prod/domain/TheguruCreateFunctions-Part1.sql</srcFile>
+								<srcFile>${basedir}/src/main/resources/db/prod/domain/JasperserverCreateAndLoadSchema_${schemaSql}.sql</srcFile>
+							</srcFiles>
+						</configuration>
+					</execution>
+
+					<execution>
+						<id>update datasource</id>
+						<phase>initialize</phase>
+						<goals>
+							<goal>execute</goal>
+						</goals>
+						<configuration>
+							<url>jdbc:mysql://${host}:${port}/${theGuruSchema}</url>
+							<delimiter>;</delimiter>
+							<sqlCommand>
+								Update JIJdbcDatasource
+								Set connectionUrl = 'jdbc:mysql://${host}:${port}/${theGuruSchema}',
+								username = 'orangeleap',
+								password = '${encryptedPwd}'
+								Where id = (Select id from JIResource where JIResource.name = 'ReportWizardJdbcDS');
+
+								Update JIJdbcDatasource
+								Set connectionUrl = 'jdbc:mysql://${host}:${port}/${theGuruSchema}',
+								username = 'orangeleap',
+								password = '${encryptedPwd}'
+								Where id = (Select id from JIResource where JIResource.name = 'ReportWizardJdbcDSSegmentationResults');
+							</sqlCommand>
+						</configuration>
+					</execution>
+
+					<execution>
+						<id>load guru functions</id>
+						<phase>initialize</phase>
+						<goals>
+							<goal>execute</goal>
+						</goals>
+						<configuration>
+							<url>jdbc:mysql://${host}:${port}/${theGuruSchema}</url>
+							<delimiter>$$$$</delimiter>
+							<srcFiles>
+								<srcFile>${basedir}/src/main/resources/db/prod/domain/TheguruCreateFunctions-Part2.sql</srcFile>
+							</srcFiles>
+						</configuration>
+					</execution>
+
+					<execution>
+						<id>load OL functions</id>
+						<phase>initialize</phase>
+						<goals>
+							<goal>execute</goal>
+						</goals>
+						<configuration>
+							<url>jdbc:mysql://${host}:${port}/${olSchema}</url>
+							<delimiter>$$$$</delimiter>
+							<srcFiles>
+								<srcFile>${basedir}/src/main/resources/db/prod/domain/functions.sql</srcFile>
+							</srcFiles>
+						</configuration>
+					</execution>
+
+					<execution>
+						<id>load OL views</id>
+						<phase>initialize</phase>
+						<goals>
+							<goal>execute</goal>
+						</goals>
+						<configuration>
+							<url>jdbc:mysql://${host}:${port}/${olSchema}</url>
+							<delimiter>;</delimiter>
+							<srcFiles>
+								<srcFile>${basedir}/src/main/resources/db/prod/domain/orangeLeapReportViews.sql</srcFile>
+							</srcFiles>
+						</configuration>
+					</execution>
+
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+	
+</project>
