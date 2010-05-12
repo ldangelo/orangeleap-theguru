@@ -3,6 +3,7 @@ rm -rf src/test
 mkdir src/main
 mkdir src/test
 mkdir src/main/resources
+mkdir src/main/resources/META-INF
 mkdir src/main/config
 mkdir src/main/java
 mkdir src/main/webapp
@@ -21,7 +22,7 @@ cp -R test/com src/test/java/com
 cp -R war/* src/main/webapp
 cp -R config/mpx src/main/config
 #cp src/META-INF/persistence-container.xml src/main/resources/persistence.xml
-sed -e "s/@@DIALECT@@/org.hibernate.dialect.MySQLInnoDBDialect/g" src/META-INF/persistence-container.xml > src/main/resources/persistence.xml
+sed -e "s/@@DIALECT@@/org.hibernate.dialect.MySQLInnoDBDialect/g" src/META-INF/persistence-container.xml > src/main/resources/META-INF/persistence.xml
 #cp src/META-INF/persistence-container.xml src/main/config/mpx/persistence.xml 
 sed -e "s/@@DIALECT@@/org.hibernate.dialect.SQLServerDialect/g" src/META-INF/persistence-container.xml > src/main/config/mpx/persistence.xml
 #cp -R config/* src/main/resources

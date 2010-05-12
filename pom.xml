@@ -59,7 +59,80 @@
 			</plugin>
 		</plugins>
 	</build>
-	
+
+	<profiles>
+		<profile>
+			<id>mpx</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>delete tangerine.properties</id>
+								<phase>prepare-package</phase>
+								<goals>
+									<goal>run</goal>
+								</goals>
+								<configuration>
+									<tasks>
+										<delete failonerror="false" file="target/classes/theguru.properties"/>
+										<copy file="src/main/config/mpx/persistence.xml"
+										      todir="target/classes/META-INF"
+										      filtering="true" overwrite="true"/>
+									</tasks>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-war-plugin</artifactId>
+						<configuration>
+							<webXml>${pom.basedir}/src/main/config/mpx/web.xml</webXml>
+							<webResources>
+								<resource>
+									<directory>src/main/config/mpx</directory>
+									<targetPath>WEB-INF</targetPath>
+									<includes>
+										<include>applicationContext-security.xml</include>
+									</includes>
+								</resource>
+							</webResources>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
+		<profile>
+			<id>jetty</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>copy theguru.properties</id>
+								<phase>process-classes</phase>
+								<goals>
+									<goal>run</goal>
+								</goals>
+								<configuration>
+									<tasks>
+										<copy file="src/main/config/jetty-local/theguru.properties" todir="target/classes" filtering="true" overwrite="true" />
+									</tasks>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 
 	<dependencies>
 		<dependency>
@@ -279,7 +352,7 @@
 		<!--</dependency>-->
 		
 		<dependency>
-			<groupId>opensymphony</groupId>
+			<groupId>org.opensymphony.quartz</groupId>
 			<artifactId>quartz</artifactId>
 		</dependency>
 
@@ -330,12 +403,6 @@
 			<!--<artifactId>axis-ant</artifactId>-->
 			<!--<version>1.4</version>-->
 		<!--</dependency>-->
-
-		<dependency>
-			<groupId>com.sun.xml.wss</groupId>
-			<artifactId>xws-security</artifactId>
-			<classifier>FCS</classifier>
-		</dependency>
 
 		<dependency>
 			<groupId>com.sun.xml.messaging.saaj</groupId>
