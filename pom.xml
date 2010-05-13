@@ -191,6 +191,199 @@
 			</build>
 		</profile>
 
+		<!-- Deploy this war to an installed tomcat instance and restart tomcat -->
+		<profile>
+			<id>tomcat</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>delete old</id>
+								<phase>process-classes</phase>
+								<goals>
+									<goal>run</goal>
+								</goals>
+								<configuration>
+									<tasks>
+										<delete failonerror="false" file="target/classes/theguru.properties"/>
+										<delete failonerror="false" dir="${tomcat.path}/webapps/clementine"/>
+										<delete failonerror="false" dir="${tomcat.path}/work/Catalina/localhost/clementine"/>
+									</tasks>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+
+					<!-- http://dpillay.wordpress.com/2009/04/12/maven-cargo-tomcat-auto-deployment/ -->
+					<plugin>
+						<groupId>org.codehaus.cargo</groupId>
+						<artifactId>cargo-maven2-plugin</artifactId>
+						<configuration>
+							<wait>true</wait>
+							<container>
+								<containerId>tomcat6x</containerId>
+								<type>installed</type>
+								<timeout>240000</timeout>
+								<home>${tomcat.path}</home> <!-- found in $USER_HOME/.m2/settings.xml -->
+							</container>
+							<deployer>
+								<type>installed</type>
+								<deployables>
+									<deployable>
+										<properties>
+											<context>clementine</context>
+										</properties>
+									</deployable>
+								</deployables>
+							</deployer>
+							<configuration>
+								<type>existing</type>
+								<home>${tomcat.path}</home>
+								<properties>
+									<cargo.jvmargs>-Xshare:off -Dcatalina.home=${tomcat.path} -D${cas.alias} -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.port=8069 -Xdebug -Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=n -Xms128M -Xmx512m -XX:MaxPermSize=512M</cargo.jvmargs>
+								</properties>
+							</configuration>
+						</configuration>
+
+						<executions>
+							<execution>
+								<id>verify-deploy</id>
+								<phase>install</phase>
+								<goals>
+									<goal>deployer-deploy</goal>
+									<goal>start</goal>
+								</goals>
+							</execution>
+							<execution>
+								<id>clean-undeploy</id>
+								<phase>pre-clean</phase>
+								<goals>
+									<goal>stop</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+
+				</plugins>
+			</build>
+		</profile>
+
+		<!-- Deploy this war to an installed tomcat instance; does NOT start tomcat -->
+		<profile>
+			<id>deploy</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>delete old</id>
+								<phase>process-classes</phase>
+								<goals>
+									<goal>run</goal>
+								</goals>
+								<configuration>
+									<tasks>
+										<delete failonerror="false" file="target/classes/theguru.properties"/>
+										<delete failonerror="false" dir="${tomcat.path}/webapps/clementine"/>
+										<delete failonerror="false" dir="${tomcat.path}/work/Catalina/localhost/clementine"/>
+									</tasks>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+
+					<plugin>
+						<groupId>org.codehaus.cargo</groupId>
+						<artifactId>cargo-maven2-plugin</artifactId>
+						<configuration>
+							<wait>true</wait>
+							<container>
+								<containerId>tomcat6x</containerId>
+								<type>installed</type>
+								<home>${tomcat.path}</home> <!-- found in $USER_HOME/.m2/settings.xml -->
+							</container>
+							<deployer>
+								<type>installed</type>
+								<deployables>
+									<deployable>
+										<properties>
+											<context>clementine</context>
+										</properties>
+									</deployable>
+								</deployables>
+							</deployer>
+							<configuration>
+								<type>existing</type>
+								<home>${tomcat.path}</home>
+							</configuration>
+						</configuration>
+
+						<executions>
+							<execution>
+								<id>deploy</id>
+								<phase>install</phase>
+								<goals>
+									<goal>deployer-deploy</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
+		<!-- Start tomcat -->
+		<profile>
+			<id>start</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.cargo</groupId>
+						<artifactId>cargo-maven2-plugin</artifactId>
+						<configuration>
+							<container>
+								<containerId>tomcat6x</containerId>
+								<type>installed</type>
+								<home>${tomcat.path}</home> <!-- found in $USER_HOME/.m2/settings.xml -->
+							</container>
+							<deployer>
+								<type>installed</type>
+								<deployables>
+									<deployable>
+										<properties>
+											<context>clementine</context>
+										</properties>
+									</deployable>
+								</deployables>
+							</deployer>
+							<configuration>
+								<type>existing</type>
+								<home>${tomcat.path}</home>
+								<properties>
+									<cargo.jvmargs>-Xshare:off -Dcatalina.home=${tomcat.path} -D${cas.alias} -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.port=8069 -Xdebug -Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=n -Xms128M -Xmx512m -XX:MaxPermSize=512M</cargo.jvmargs>
+								</properties>
+							</configuration>
+						</configuration>
+
+						<executions>
+							<execution>
+								<id>start</id>
+								<phase>initialize</phase>
+								<goals>
+									<goal>start</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		
 		<profile>
 			<id>jetty</id>
 			<build>
