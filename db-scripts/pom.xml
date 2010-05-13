@@ -71,11 +71,10 @@
 				<configuration>
 					<driver>com.mysql.jdbc.Driver</driver>
 					<url>jdbc:mysql://${host}:${port}/</url>
-					<driverProperties>autoReconnect=true,useUnicode=true,characterEncoding=UTF8</driverProperties>
+					<driverProperties>autoReconnect=true,useUnicode=true</driverProperties>
 					<username>orangeleap</username>
 					<password>orangeleap</password>
 					<encoding>UTF-8</encoding>
-					<autocommit>true</autocommit>
 				</configuration>
 
 				<executions>
@@ -102,7 +101,7 @@
 						</goals>
 						<configuration>
 							<url>jdbc:mysql://${host}:${port}/${theGuruSchema}</url>
-							<delimiter>;</delimiter>
+							<!--<delimiter>;</delimiter>-->
 							<srcFiles>
 								<srcFile>${basedir}/src/main/resources/db/prod/domain/TheguruCreateAndLoadSchema-NoFunctions.sql</srcFile>
 								<srcFile>${basedir}/src/main/resources/db/prod/domain/TheguruCreateFunctions-Part1.sql</srcFile>
