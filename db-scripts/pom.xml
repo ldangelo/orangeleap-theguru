@@ -121,13 +121,13 @@
 							<delimiter>;</delimiter>
 							<sqlCommand>
 								Update JIJdbcDatasource
-								Set connectionUrl = 'jdbc:mysql://${host}:${port}/${theGuruSchema}',
+								Set connectionUrl = 'jdbc:mysql://${host}:${port}/${olSchema}',
 								username = 'orangeleap',
 								password = '${encryptedPwd}'
 								Where id = (Select id from JIResource where JIResource.name = 'ReportWizardJdbcDS');
 
 								Update JIJdbcDatasource
-								Set connectionUrl = 'jdbc:mysql://${host}:${port}/${theGuruSchema}',
+								Set connectionUrl = 'jdbc:mysql://${host}:${port}/${olSchema}',
 								username = 'orangeleap',
 								password = '${encryptedPwd}'
 								Where id = (Select id from JIResource where JIResource.name = 'ReportWizardJdbcDSSegmentationResults');
