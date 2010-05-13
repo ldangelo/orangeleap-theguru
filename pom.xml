@@ -522,7 +522,7 @@
 		</dependency>
 
 		<dependency>
-			<groupId>jfreechart</groupId>
+			<groupId>jfree</groupId>
 			<artifactId>jfreechart</artifactId>
 		</dependency>
 
@@ -675,6 +675,11 @@
 			<artifactId>axis2</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>xerces</groupId>
+			<artifactId>xercesImpl</artifactId>
+		</dependency>
+
 		<!--<dependency>-->
 			<!--<groupId>org.apache.axis</groupId>-->
 			<!--<artifactId>axis-ant</artifactId>-->
@@ -701,10 +706,10 @@
 			<artifactId>xbean-spring</artifactId>
 		</dependency>
 
-		<dependency>
-			<groupId>javax.wsdl</groupId>
-			<artifactId>wsdl4j</artifactId>
-		</dependency>
+		<!--<dependency>-->
+			<!--<groupId>javax.wsdl</groupId>-->
+			<!--<artifactId>wsdl4j</artifactId>-->
+		<!--</dependency>-->
 
 		<dependency>
 			<groupId>org.apache.commons.discovery</groupId>
@@ -751,7 +756,10 @@
 			<artifactId>joda-time</artifactId>
 		</dependency>
 
-
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jdbc</artifactId>
+		</dependency>
 
 		<!-- ########################   Provided ONLY below   #############################  -->
 		<dependency>
