@@ -17,6 +17,8 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -38,6 +40,7 @@ import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
  *
  */
 public class ModifyReportJRXML {
+	protected final Log logger = LogFactory.getLog(getClass());
 	private ReportWizard reportWizard;
 	private ReportFieldService reportFieldService;
 
@@ -370,7 +373,11 @@ public class ModifyReportJRXML {
 		localDirName = myURL.getPath().replaceAll("%20", " ");  //change %20 chars to spaces
 
 		//Get the current execution directory
-		localDirName = localDirName.substring(0,localDirName.lastIndexOf("clementine.jar"));  //clean off the file name
+		localDirName = localDirName.substring(0,localDirName.lastIndexOf("classes"));  //clean off the file name
+		localDirName += "lib/";
+		if ( ! localDirName.startsWith("file:/")) {
+			localDirName = "file:/" + localDirName;
+		}
 
 		return localDirName;
 	}

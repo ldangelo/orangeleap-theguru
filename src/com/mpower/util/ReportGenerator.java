@@ -331,8 +331,8 @@ public class ReportGenerator implements java.io.Serializable {
 					drb.addParameter(controlName, "java.lang.Boolean");
 				}
 			}
-			
-		
+
+
 		}
 
 		logger.info(query);
@@ -1118,8 +1118,11 @@ public class ReportGenerator implements java.io.Serializable {
 		localDirName = myURL.getPath().replaceAll("%20", " ");  //change %20 chars to spaces
 
 		//Get the current execution directory
-		localDirName = localDirName.substring(0,localDirName.lastIndexOf("clementine.jar"));  //clean off the file name
-
+		localDirName = localDirName.substring(0,localDirName.lastIndexOf("classes"));  //clean off the file name
+		localDirName += "lib/";
+		if ( ! localDirName.startsWith("file:/")) {
+			localDirName = "file:/" + localDirName;
+		}
 		return localDirName;
 	}
 
