@@ -79,7 +79,6 @@ public class ReportGenerator implements java.io.Serializable {
 //	private String reportUserName;
 //	private String reportPassword;
 //	private String reportCompany;
-	private String reportUnitDataSourceURI;
 	private Map params;
 	private Map inputControls;
 	private Integer columnIndex;
@@ -198,7 +197,7 @@ public class ReportGenerator implements java.io.Serializable {
 
 	}
 
-	public DynamicReport Generate(ReportWizard wiz,javax.sql.DataSource jdbcDataSource, ReportFieldService reportFieldService,
+	public DynamicReport Generate(ReportWizard wiz, ReportFieldService reportFieldService,
 			ReportCustomFilterDefinitionService reportCustomFilterDefinitionService, Boolean preview) throws Exception {
 		resetInputControls();
 		File templateFile = getTemplateFile(wiz);
@@ -1073,14 +1072,6 @@ public class ReportGenerator implements java.io.Serializable {
 //		logger.info("setReportCompany(" + company + ")");
 //		reportCompany = company;
 //	}
-
-	public String getReportUnitDataSourceURI() {
-		return reportUnitDataSourceURI;
-	}
-
-	public void setReportUnitDataSourceURI(String reportUnitDataSourceURI) {
-		this.reportUnitDataSourceURI = reportUnitDataSourceURI;
-	}
 
 	public void resetInputControls() {
 		params = new HashMap();

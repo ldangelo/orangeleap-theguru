@@ -16,7 +16,6 @@ import com.mpower.domain.ReportWizard;
 import com.mpower.util.JasperDatasourceUtil;
 import com.mpower.util.ReportQueryGenerator;
 import com.mpower.util.ReportDatasourceSettings;
-import com.mpower.util.SessionHelper;
 
 @Service("reportQueryCostService")
 public class ReportQueryCostServiceImpl implements ReportQueryCostService {
@@ -29,22 +28,22 @@ public class ReportQueryCostServiceImpl implements ReportQueryCostService {
 	private ReportSubSourceService  reportSubSourceService;
 	private JasperDatasourceUtil jasperDatasourceUtil;
 
-	public long getReportQueryCostByReportId(long reportId) throws Exception {
+	public long getReportQueryCostByReportId(long reportId, String username, String password) throws Exception {
 		long result = 0;
 		ReportWizard wiz = reportWizardService.Find(reportId);
 		ReportQueryGenerator reportQueryGenerator = new ReportQueryGenerator(wiz, reportFieldService, reportCustomFilterDefinitionService);
 		String query = reportQueryGenerator.getQueryString();
 
-		ReportDatasourceSettings reportDatasourceSettings = jasperDatasourceUtil.getJasperDatasourceSettings(reportSubSourceService.find(wiz.getSubSourceId()).getJasperDatasourceName());
+		ReportDatasourceSettings reportDatasourceSettings = jasperDatasourceUtil.getJasperDatasourceSettings(reportSubSourceService.find(wiz.getSubSourceId()).getJasperDatasourceName(), username, password);
 
 		result = reportQueryCostDao.getQueryCost("EXPLAIN " + query, reportDatasourceSettings);
 	    return result;
 	}
 
 
-	public long getReportQueryCostByQuery(String query, String jasperDatasourceName) throws Exception {
+	public long getReportQueryCostByQuery(String query, String jasperDatasourceName, String username, String password) throws Exception {
 		long result = 0;
-		ReportDatasourceSettings reportDatasourceSettings = jasperDatasourceUtil.getJasperDatasourceSettings(jasperDatasourceName);
+		ReportDatasourceSettings reportDatasourceSettings = jasperDatasourceUtil.getJasperDatasourceSettings(jasperDatasourceName, username, password);
 		result = reportQueryCostDao.getQueryCost("EXPLAIN " + query, reportDatasourceSettings);
 	    return result;
 	}

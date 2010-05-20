@@ -12,27 +12,14 @@ import com.orangeleap.common.security.CasUtil;
 //@Service("jasperServerService")
 public class JasperServerServiceImpl implements JasperServerService {
     protected final Log logger = LogFactory.getLog(getClass());
-    private String userName;
-    private String password;
     private String baseUri;
     private String repositoryUri;
 
     @Override
-    public String getPassword() {
-	return password;
-    }
-
-
-    @Override
-    public String getUserName() {
-	return userName;
-    }
-
-    @Override
-    public List list(String dir) throws Exception {
+    public List list(String dir, String username, String password) throws Exception {
 	logger.info("list(" + dir + ")");
 	JServer jserver = new JServer();
-	jserver.setUsername(userName);
+	jserver.setUsername(username);
 	jserver.setPassword(password);
 	jserver.setUrl(baseUri + repositoryUri);
 	ResourceDescriptor rd = new ResourceDescriptor();
@@ -44,12 +31,12 @@ public class JasperServerServiceImpl implements JasperServerService {
     }
 
     @Override
-    public ResourceDescriptor getDatasource(String datasourceName) throws Exception {
+    public ResourceDescriptor getDatasource(String datasourceName, String username, String password) throws Exception {
     	ResourceDescriptor result = null;
 
     	logger.info("getDatasource(" + datasourceName + ")");
     	JServer jserver = new JServer();
-		jserver.setUsername(userName);
+		jserver.setUsername(username);
 		jserver.setPassword(password);
 		jserver.setUrl(baseUri + repositoryUri);
 
@@ -65,22 +52,6 @@ public class JasperServerServiceImpl implements JasperServerService {
 		}
 		return result;
     }
-
-    @Override
-    public void setPassword(String pass) {
-	logger.info("setPassword(" + pass + ")");
-	password = pass;
-
-    }
-
-
-    @Override
-    public void setUserName(String username) {
-	logger.info("setUserName(" + username + ")");
-	userName = username;
-
-    }
-
 
 	public void setBaseUri(String baseUri) {
 		this.baseUri = baseUri;

@@ -27,7 +27,6 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.mpower.util.SessionHelper;
 import com.orangeleap.common.security.OrangeLeapSystemAuthenticationToken;
 
 public class InitializeRequestFilter extends OncePerRequestFilter {
@@ -46,7 +45,6 @@ public class InitializeRequestFilter extends OncePerRequestFilter {
 		HttpSession httpSession = request.getSession();
 		assert httpSession != null;
 		logger.debug("*** Setting Session");
-		SessionHelper.tl_data.set(httpSession);
 
 		// Check authenticationEnvironment property.  If it is MPX or STANDALONE, then
 		// we need to populate the security context.  If it is any other value or just not there,

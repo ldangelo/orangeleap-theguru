@@ -6,22 +6,11 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Stack;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import javax.sql.DataSource;
-
-import net.sf.jasperreports.engine.JRParameter;
-import net.sf.jasperreports.engine.fill.JRFileVirtualizer;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.security.context.SecurityContext;
-import org.springframework.security.context.SecurityContextHolder;
-import org.springframework.security.providers.UsernamePasswordAuthenticationToken;
 import org.springframework.security.userdetails.UserDetails;
 import org.springframework.security.userdetails.UserDetailsService;
 import org.springframework.util.Assert;
@@ -41,15 +30,10 @@ import ar.com.fdvs.dj.domain.DynamicReport;
 import com.jaspersoft.jasperserver.api.metadata.xml.domain.impl.ResourceDescriptor;
 import com.mpower.controller.validator.ReportSaveValidator;
 import com.mpower.controller.validator.ReportWizardValidator;
-import com.mpower.domain.GuruSessionData;
 import com.mpower.domain.ReportChartSettings;
 import com.mpower.domain.ReportCrossTabColumn;
 import com.mpower.domain.ReportCrossTabMeasure;
 import com.mpower.domain.ReportCrossTabRow;
-import com.mpower.domain.ReportCustomFilterCriteria;
-import com.mpower.domain.ReportCustomFilterDefinition;
-import com.mpower.domain.ReportDataSource;
-import com.mpower.domain.ReportDataSubSourceGroup;
 import com.mpower.domain.ReportDataSubSource;
 import com.mpower.domain.ReportDatabaseType;
 import com.mpower.domain.ReportField;
@@ -72,11 +56,9 @@ import com.mpower.service.ReportWizardService;
 import com.mpower.service.SessionService;
 import com.mpower.util.ModifyReportJRXML;
 import com.mpower.util.ReportCustomFilterHelper;
-import com.mpower.util.ReportGenerator;
 import com.mpower.util.ReportQueryGenerator;
+import com.mpower.util.ReportWizardFactory;
 import com.mpower.util.ReportWizardHelper;
-import com.mpower.util.SessionHelper;
-import com.mpower.view.DynamicReportView;
 
 public class ReportWizardFormController extends AbstractWizardFormController {
 	private ReportSubSourceGroupService reportSubSourceGroupService;
@@ -85,7 +67,6 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 	/** Logger for this class and subclasses */
 	protected final Log logger = LogFactory.getLog(getClass());
 
-	private DynamicReportView dynamicView;
 	private ReportSourceService reportSourceService;
 	private ReportWizardService reportWizardService;
 	private JasperServerService jasperServerService;
@@ -99,10 +80,9 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 	private ReportSegmentationTypeService reportSegmentationTypeService;
 	private ReportSegmentationResultsService reportSegmentationResultsService;
 	private SessionService sessionService;
-	private DataSource jdbcDataSource;
-	private String reportUnitDataSourceURI;
 	private UserDetailsService userDetailsService;
-	private JRFileVirtualizer virtualizer;
+	private ReportWizardFactory reportWizardFactory;
+	
 	public ReportWizardFormController() {
 
 	}
@@ -111,21 +91,11 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 	protected Object formBackingObject(HttpServletRequest request)
 			throws ServletException {
 		logger.info("**** in formBackingObject");
-		WebApplicationContext applicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(this.getServletContext());
-		ReportWizard wiz = (ReportWizard)applicationContext.getBean("ReportWizard");
+		ReportWizard wiz = reportWizardFactory.getReportWizard();
 		wiz.setDataSources(reportSourceService.readSources());
-		SessionHelper.tl_data.get().removeAttribute("GURUSESSIONDATA");
 
 		logger.info("Count " + wiz.getDataSources().size());
 		return wiz;
-	}
-
-	public DynamicReportView getDynamicView() {
-		return dynamicView;
-	}
-
-	public DataSource getJdbcDataSource() {
-		return jdbcDataSource;
 	}
 
 	public ReportFieldGroupService getReportFieldGroupService() {
@@ -147,9 +117,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 	public ReportSubSourceService getReportSubSourceService() {
 		return reportSubSourceService;
 	}
-	public String getReportUnitDataSourceURI() {
-		return reportUnitDataSourceURI;
-	}
+
 	public ReportWizardService getReportWizardService() {
 		return reportWizardService;
 	}
@@ -391,9 +359,6 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 				UserDetails userDetails = userDetailsService.loadUserByUsername(userName);
 				password = userDetails.getPassword();
 			}
-			GuruSessionData sessiondata = SessionHelper.getGuruSessionData();
-			sessiondata.setUsername(userName);
-			sessiondata.setPassword(password);
 			wiz.setUsername(userName);
 			wiz.setPassword(password);
 		}
@@ -431,18 +396,16 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 			// wiz.getReportGenerator().setReportUserName(userName);
 			// wiz.getReportGenerator().setReportPassword(password);
 
-			jasperServerService.setUserName(userName);
-			jasperServerService.setPassword(password);
 			//we want to allow the users logged in as a company to also see the default templates as well
 			if (wiz.getReportTemplateList() != null)
 				wiz.getReportTemplateList().clear();
 
 			if (!(wiz.getCompany().compareToIgnoreCase("default") == 0))
-				wiz.setReportTemplateList(jasperServerService.list("/Reports/Default/templates"));
+				wiz.setReportTemplateList(jasperServerService.list("/Reports/Default/templates", userName, password));
 			if (wiz.getReportTemplateList() != null)
-				wiz.getReportTemplateList().addAll(jasperServerService.list("/Reports/" + wiz.getCompany() + "/templates"));
+				wiz.getReportTemplateList().addAll(jasperServerService.list("/Reports/" + wiz.getCompany() + "/templates", userName, password));
 			else
-				wiz.setReportTemplateList(jasperServerService.list("/Reports/" + wiz.getCompany() + "/templates"));
+				wiz.setReportTemplateList(jasperServerService.list("/Reports/" + wiz.getCompany() + "/templates", userName, password));
 
 			if (wiz.getReportTemplateJRXML() == null || wiz.getReportTemplateJRXML().length() == 0) {
 				if (wiz.getReportTemplateList().size() > 0)
@@ -524,7 +487,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 				String query = reportQueryGenerator.getQueryString();
 				refData.put("sqlQuery", query);
 				if (wiz.getDataSubSource().getDatabaseType().equals(ReportDatabaseType.MYSQL) && wiz.getReportSelectedFields().size() > 0)
-					refData.put("queryCost", reportQueryCostService.getReportQueryCostByQuery(query, wiz.getDataSubSource().getJasperDatasourceName()));
+					refData.put("queryCost", reportQueryCostService.getReportQueryCostByQuery(query, wiz.getDataSubSource().getJasperDatasourceName(), wiz.getUsername(), wiz.getPassword()));
 				wiz.setShowSqlQuery(false);
 			}
 
@@ -568,7 +531,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 
 			// SuppressWarnings("unused")
 
-			DynamicReport dr = wiz.getReportGenerator().Generate(wiz, jdbcDataSource, reportFieldService, reportCustomFilterDefinitionService, true);
+			DynamicReport dr = wiz.getReportGenerator().Generate(wiz, reportFieldService, reportCustomFilterDefinitionService, true);
 			// String query = dr.getQuery().getText();
 
 			//
@@ -578,11 +541,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 
 			File tempFile = TempFileUtil.createTempFile("wiz", ".jrxml");
 			logger.info("Temp File: " + tempFile);
-			wiz.getReportGenerator().getParams().put(JRParameter.REPORT_VIRTUALIZER, virtualizer);
 			DynamicJasperHelper.generateJRXML(dr,new ClassicLayoutManager(), wiz.getReportGenerator().getParams(), null, tempFile.getPath());
-
-			// remove it just in case it get's reused from another class...
-			wiz.getReportGenerator().getParams().remove(JRParameter.REPORT_VIRTUALIZER);
 
 			//
 			// modify the jrxml
@@ -651,7 +610,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 			if (!hasErrors) {
 				try {
 					if (page == getPageIndexByName("ReportExecuteSegmentation")) {
-						int rowsAffected = reportSegmentationResultsService.executeSegmentation(wiz.getId());
+						int rowsAffected = reportSegmentationResultsService.executeSegmentation(wiz.getId(), wiz.getUsername(), wiz.getPassword());
 						ReportWizard tempWiz = reportWizardService.Find(wiz.getId());
 						wiz.setLastRunDateTime(tempWiz.getLastRunDateTime());
 						wiz.setLastRunByUserName(tempWiz.getLastRunByUserName());
@@ -713,13 +672,11 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		// First we must generate a jrxml file
 		//
 
-		DynamicReport dr = wiz.getReportGenerator().Generate(wiz, jdbcDataSource, reportFieldService, reportCustomFilterDefinitionService, false);
+		DynamicReport dr = wiz.getReportGenerator().Generate(wiz, reportFieldService, reportCustomFilterDefinitionService, false);
 
 		File tempFile = TempFileUtil.createTempFile("wiz", ".jrxml");
 		logger.info("Temp File: " + tempFile);
-		wiz.getReportGenerator().getParams().put(JRParameter.REPORT_VIRTUALIZER, virtualizer);
 		DynamicJasperHelper.generateJRXML(dr,new ClassicLayoutManager(), wiz.getReportGenerator().getParams(), null, tempFile.getPath());
-		wiz.getReportGenerator().getParams().remove(JRParameter.REPORT_VIRTUALIZER);
 
 		//
 		// modify the jrxml
@@ -769,14 +726,6 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		tempFile.delete();
 	}
 
-	public void setDynamicView(DynamicReportView dynamicView) {
-		this.dynamicView = dynamicView;
-	}
-
-	public void setJdbcDataSource(DataSource jdbcDataSource) {
-		this.jdbcDataSource = jdbcDataSource;
-	}
-
 	public void setReportFieldGroupService(
 			ReportFieldGroupService reportFieldGroupService) {
 		this.reportFieldGroupService = reportFieldGroupService;
@@ -798,10 +747,6 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 	public void setReportSubSourceService(
 			ReportSubSourceService reportSubSourceService) {
 		this.reportSubSourceService = reportSubSourceService;
-	}
-
-	public void setReportUnitDataSourceURI(String reportUnitDataSourceURI) {
-		this.reportUnitDataSourceURI = reportUnitDataSourceURI;
 	}
 
 	public void setReportWizardService(ReportWizardService reportWizardService) {
@@ -888,19 +833,19 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		return reportCustomFilterHelper;
 	}
 
-	public JRFileVirtualizer getVirtualizer() {
-		return virtualizer;
-	}
-
-	public void setVirtualizer(JRFileVirtualizer virtualizer) {
-		this.virtualizer = virtualizer;
-	}
-
 	public void setReportQueryCostService(ReportQueryCostService reportQueryCostService) {
 		this.reportQueryCostService = reportQueryCostService;
 	}
 
 	public ReportQueryCostService getReportQueryCostService() {
 		return reportQueryCostService;
+	}
+
+	public void setReportWizardFactory(ReportWizardFactory reportWizardFactory) {
+		this.reportWizardFactory = reportWizardFactory;
+	}
+
+	public ReportWizardFactory getReportWizardFactory() {
+		return reportWizardFactory;
 	}
 }

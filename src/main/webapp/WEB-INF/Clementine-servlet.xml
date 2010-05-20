@@ -123,46 +123,42 @@
 	<bean id="defaultHandlerMapping"
 		class="org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping" />
 
-	<bean id="virtualizer" class="net.sf.jasperreports.engine.fill.JRFileVirtualizer">
-		<constructor-arg>
-			<value>10</value>  <!-- 10 cached pages -->
-		</constructor-arg>
-		<constructor-arg>
-			<value>${theguru.temp.file.dir}</value>    <!-- Directory to store cache fields -->
-		</constructor-arg>
-	</bean>
+	<bean id="virtualizerFactory" class="com.mpower.util.JRFileVirtualizerFactory">
+		<property name="maxSize" value="10" /> <!-- 10 cached pages -->
+		<property name="directory" value="${theguru.temp.file.dir}" /> <!-- Directory to store cache fields -->
+	</bean>	
+	
+	<!-- 
 	<bean id="dynamicReport" class="com.mpower.view.DynamicReportView">
 		<property name="jdbcDataSource" ref="dataSource" />
 		<property name="reportFieldService" ref="reportFieldService" />
 		<property name="reportGenerator" ref="reportGenerator" />
 		<property name="virtualizer" ref="virtualizer" />
 	</bean>
+	-->
 
-	<bean id="reportGenerator" class="com.mpower.util.ReportGenerator"
-		scope="prototype">
+	<bean id="reportGeneratorFactory" class="com.mpower.util.ReportGeneratorFactory">
 		<property name="reportBaseURI"
 			value="http://${jasper.host}:${jasper.port}/${contextPrefix}jasperserver" />
 		<property name="reportServicesPath" value="/services/repository" />
-		<!--
-			<property name="reportUserName" value="jasperadmin"/> <property
-			name="reportPassword" value="jasperadmin"/>
-		-->
-		<property name="reportUnitDataSourceURI" value="/datasources/ReportWizardJdbcDS" />
+		<property name="virtualizerFactory" ref="virtualizerFactory" />
 	</bean>
 
+	<!-- 
 	<bean name="/dynamicReport.htm" class="com.mpower.controller.DynamicReportController">
 		<property name="dynamicView" ref="dynamicReport" />
 	</bean>
+	-->
 
-	<bean name="/ReportManager.htm" class="com.mpower.controller.ReportManagerFormController">
+<!-- 	<bean name="/ReportManager.htm" class="com.mpower.controller.ReportManagerFormController">
 		<property name="commandName" value="reportmanager" />
 		<property name="commandClass" value="com.mpower.domain.ReportManager" />
 		<property name="reportWizardService" ref="reportWizardService" />
 	</bean>
+-->
 
-	<bean name="ReportWizard" class="com.mpower.domain.ReportWizard"
-		scope="prototype">
-		<property name="reportGenerator" ref="reportGenerator" />
+	<bean name="reportWizardFactory" class="com.mpower.util.ReportWizardFactory">
+		<property name="reportGeneratorFactory" ref="reportGeneratorFactory" />
 		<property name="reportType" value="tabular" />
 		<property name="srcId" value="0" />
 		<property name="dataSubSourceGroupId" value="0" />
@@ -174,6 +170,7 @@
 	<bean name="/ReportWizard.htm" class="com.mpower.controller.ReportWizardFormController">
 		<property name="commandName" value="reportsource" />
 		<property name="commandClass" value="com.mpower.domain.ReportWizard" />
+		<property name="reportWizardFactory" ref="reportWizardFactory" />
 		<property name="reportSourceService" ref="reportSourceService" />
 		<property name="reportSubSourceGroupService" ref="reportSubSourceGroupService" />
 		<property name="reportSubSourceService" ref="reportSubSourceService" />
@@ -185,12 +182,8 @@
 		<property name="reportCustomFilterHelper" ref="reportCustomFilterHelper" />
 		<property name="reportSegmentationTypeService" ref="reportSegmentationTypeService" />
 		<property name="reportSegmentationResultsService" ref="reportSegmentationResultsService" />
-		<property name="reportUnitDataSourceURI" value="/datasources/ReportWizardJdbcDS" />
 		<property name="reportQueryCostService" ref="reportQueryCostService" />
-		<property name="dynamicView" ref="dynamicReport" />
-		<property name="jdbcDataSource" ref="dataSource" />
 		<property name="userDetailsService" ref="jdbcAuthenticationDao" />
-		<property name="virtualizer" ref="virtualizer" />
 		<property name="pages">
 			<list>
 				<value>ReportSource</value>

@@ -9,8 +9,8 @@ import com.mpower.service.JasperServerService;
 public class JasperDatasourceUtil {
 	private JasperServerService jasperServerService;
 
-	public ReportDatasourceSettings getJasperDatasourceSettings(String jasperDatasourceName) throws Exception {
-		ResourceDescriptor resource = jasperServerService.getDatasource(jasperDatasourceName);
+	public ReportDatasourceSettings getJasperDatasourceSettings(String jasperDatasourceName, String username, String password) throws Exception {
+		ResourceDescriptor resource = jasperServerService.getDatasource(jasperDatasourceName, username, password);
 		return getReportDatasourceSettings(resource);
 	}
 

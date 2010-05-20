@@ -34,9 +34,7 @@ function updateReports(dtnode) {
     //console.log("key = " + dtnode.data.key);
     jQuery("#reportPath").attr("value", dtnode.data.key);
 
-    JasperServerService.setUserName(username);
-    JasperServerService.setPassword(password);
-    JasperServerService.list(dtnode.data.key,addReports);
+    JasperServerService.list(dtnode.data.key, username, password, addReports);
   }
 
 function updateTree(results) {
@@ -63,9 +61,7 @@ function updateTree(results) {
 
 	    //
 	    // updateTree childnode
-	    JasperServerService.setUserName(username);
-	    JasperServerService.setPassword(password);
-	    JasperServerService.list(results[rs].uriString,updateTree);
+	    JasperServerService.list(results[rs].uriString, username, password, updateTree);
 	}
     }
 	if (reportPath != null && reportPath != '' && jQuery('#treeview').dynatree("getTree").selectKey(reportPath) != null) {
@@ -96,9 +92,6 @@ jQuery(function() {
     var username = jQuery("#username").attr("value");
     var password = jQuery("#password").attr("value");
 
-    JasperServerService.setUserName(username);
-    JasperServerService.setPassword(password);
-
     jQuery("#treeview").dynatree({
 	imagePath: "skin/",
 	onFocus: function(dtnode) { updateReports(dtnode); }
@@ -107,7 +100,7 @@ jQuery(function() {
     preventInvalidReportNameCharacters();
     removeInvalidReportNameCharacters();
 
-    JasperServerService.list("/",updateTree);
+    JasperServerService.list("/", username, password, updateTree);
 });
 
 function checkForReturn(e)

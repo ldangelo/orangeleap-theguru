@@ -167,11 +167,9 @@ public class TheGuruWebService {
         			OrangeLeapAuthentication auth = new OrangeLeapAuthentication();
 
         			JasperServerService jss = reportSegmentationResults.getJasperDatasourceUtil().getJasperServerService();
-        			jss.setUserName(auth.getUserName());
-        			jss.setPassword(auth.getPassword());
 
-        			reportSegmentationResults.executeSegmentation(wiz.getId());
-        			results = reportSegmentationResults.readReportSegmentationResultsByReportId(wiz.getId());
+        			reportSegmentationResults.executeSegmentation(wiz.getId(), auth.getUserName(), auth.getPassword());
+        			results = reportSegmentationResults.readReportSegmentationResultsByReportId(wiz.getId(), auth.getUserName(), auth.getPassword());
 
         			Iterator<ReportSegmentationResult> it2 = results.iterator();
         			while (it2.hasNext()) {
@@ -208,10 +206,8 @@ public class TheGuruWebService {
         			OrangeLeapAuthentication auth = new OrangeLeapAuthentication();
 
         			JasperServerService jss = reportSegmentationResults.getJasperDatasourceUtil().getJasperServerService();
-        			jss.setUserName(auth.getUserName());
-        			jss.setPassword(auth.getPassword());
 
-        			results = reportSegmentationResults.readReportSegmentationResultsByReportId(wiz.getId());
+        			results = reportSegmentationResults.readReportSegmentationResultsByReportId(wiz.getId(), auth.getUserName(), auth.getPassword());
 
         			Iterator<ReportSegmentationResult> it2 = results.iterator();
         			while (it2.hasNext()) {
@@ -245,12 +241,10 @@ public class TheGuruWebService {
 			OrangeLeapAuthentication auth = new OrangeLeapAuthentication();
 
 			JasperServerService jss = reportSegmentationResults.getJasperDatasourceUtil().getJasperServerService();
-			jss.setUserName(auth.getUserName());
-			jss.setPassword(auth.getPassword());
 
-        	reportSegmentationResults.executeSegmentation(wiz.getId());
+        	reportSegmentationResults.executeSegmentation(wiz.getId(), auth.getUserName(), auth.getPassword());
 
-        	results = reportSegmentationResults.readReportSegmentationResultsByReportId(wiz.getId());
+        	results = reportSegmentationResults.readReportSegmentationResultsByReportId(wiz.getId(), auth.getUserName(), auth.getPassword());
 
         	Iterator<ReportSegmentationResult> it2 = results.iterator();
         	while (it2.hasNext()) {
@@ -290,10 +284,8 @@ public class TheGuruWebService {
 			OrangeLeapAuthentication auth = new OrangeLeapAuthentication();
 
 			JasperServerService jss = reportSegmentationResults.getJasperDatasourceUtil().getJasperServerService();
-			jss.setUserName(auth.getUserName());
-			jss.setPassword(auth.getPassword());
 
-        	results = reportSegmentationResults.readReportSegmentationResultsByReportId(wiz.getId());
+        	results = reportSegmentationResults.readReportSegmentationResultsByReportId(wiz.getId(), auth.getUserName(), auth.getPassword());
 
         	Iterator<ReportSegmentationResult> it2 = results.iterator();
         	while (it2.hasNext()) {

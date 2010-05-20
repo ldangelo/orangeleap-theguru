@@ -15,7 +15,6 @@ import org.springframework.security.context.SecurityContext;
 import org.springframework.security.context.SecurityContextHolder;
 import org.springframework.security.providers.UsernamePasswordAuthenticationToken;
 
-import com.mpower.util.SessionHelper;
 import com.orangeleap.common.security.OrangeLeapUsernamePasswordLocal;
 
 public class TheGuruDataSource implements DataSource {
