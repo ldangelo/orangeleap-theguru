@@ -966,7 +966,7 @@ public class ReportQueryGenerator {
 						if (rg.getAliasName() == null || rg.getAliasName().length() == 0)
 							orderBy += " " + rg.getColumnName() + "_" + columnIndex;
 						else
-							orderBy += " " + rg.getAliasName() + "_" + columnIndex;
+							orderBy += " `" + rg.getAliasName() + "_" + columnIndex + "`";
 
 						addedFields.add(rg.getId());
 						if (rowField.getSortOrder().compareTo("") != 0)
@@ -999,7 +999,7 @@ public class ReportQueryGenerator {
 						if (rg.getAliasName() == null || rg.getAliasName().length() == 0)
 							orderBy += " " + rg.getColumnName() + "_" + columnIndex;
 						else
-							orderBy += " " + rg.getAliasName() + "_" + columnIndex;
+							orderBy += " `" + rg.getAliasName() + "_" + columnIndex + "`";
 
 						addedFields.add(rg.getId());
 						if (colField.getSortOrder().compareTo("") != 0)
@@ -1048,7 +1048,7 @@ public class ReportQueryGenerator {
 						if (rg.getAliasName() == null || rg.getAliasName().length() == 0)
 							orderBy += " " + rg.getColumnName() + "_" + columnIndex;
 						else
-							orderBy += " " + rg.getAliasName() + "_" + columnIndex;
+							orderBy += " `" + rg.getAliasName() + "_" + columnIndex + "`";
 
 						addedFields.add(rg.getId());
 						if (reportSelectedField.getSortOrder().compareTo("") != 0)
