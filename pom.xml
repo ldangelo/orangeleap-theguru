@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>clementine</artifactId>
+  <version>11.0-SNAPSHOT</version>
 	<packaging>war</packaging>
 	<name>The Guru (clementine) project</name>
 
@@ -45,7 +45,7 @@
 						</goals>
 						<configuration>
 							<tasks>
-								<replace file="${basedir}/target/classes/app.properties" token="$${build.info}" value="${project.version}-${maven.build.timestamp}"/>
+								<replace file="${basedir}/target/classes/app.properties" token="$${build.info}" value="${project.version}-${maven.build.timestamp}" />
 							</tasks>
 						</configuration>
 					</execution>
@@ -76,10 +76,8 @@
 								</goals>
 								<configuration>
 									<tasks>
-										<delete failonerror="false" file="target/classes/theguru.properties"/>
-										<copy file="src/main/config/mpx/persistence.xml"
-										      todir="target/classes/META-INF"
-										      filtering="true" overwrite="true"/>
+										<delete failonerror="false" file="target/classes/theguru.properties" />
+										<copy file="src/main/config/mpx/persistence.xml" todir="target/classes/META-INF" filtering="true" overwrite="true" />
 									</tasks>
 								</configuration>
 							</execution>
@@ -159,10 +157,8 @@
 								</goals>
 								<configuration>
 									<tasks>
-										<delete failonerror="false" file="target/classes/theguru.properties"/>
-										<copy file="src/main/config/mpx/persistence.xml"
-										      todir="target/classes/META-INF"
-										      filtering="true" overwrite="true"/>
+										<delete failonerror="false" file="target/classes/theguru.properties" />
+										<copy file="src/main/config/mpx/persistence.xml" todir="target/classes/META-INF" filtering="true" overwrite="true" />
 									</tasks>
 								</configuration>
 							</execution>
@@ -207,9 +203,9 @@
 								</goals>
 								<configuration>
 									<tasks>
-										<delete failonerror="false" file="target/classes/theguru.properties"/>
-										<delete failonerror="false" dir="${tomcat.path}/webapps/clementine"/>
-										<delete failonerror="false" dir="${tomcat.path}/work/Catalina/localhost/clementine"/>
+										<delete failonerror="false" file="target/classes/theguru.properties" />
+										<delete failonerror="false" dir="${tomcat.path}/webapps/clementine" />
+										<delete failonerror="false" dir="${tomcat.path}/work/Catalina/localhost/clementine" />
 									</tasks>
 								</configuration>
 							</execution>
@@ -287,9 +283,9 @@
 								</goals>
 								<configuration>
 									<tasks>
-										<delete failonerror="false" file="target/classes/theguru.properties"/>
-										<delete failonerror="false" dir="${tomcat.path}/webapps/clementine"/>
-										<delete failonerror="false" dir="${tomcat.path}/work/Catalina/localhost/clementine"/>
+										<delete failonerror="false" file="target/classes/theguru.properties" />
+										<delete failonerror="false" dir="${tomcat.path}/webapps/clementine" />
+										<delete failonerror="false" dir="${tomcat.path}/work/Catalina/localhost/clementine" />
 									</tasks>
 								</configuration>
 							</execution>
