@@ -1065,7 +1065,7 @@ public class ReportQueryGenerator {
 	
 	private String getFieldNameTextQualifier(){
 		if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.MYSQL) {
-			return "'";
+			return "`";
 		} else if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.SQLSERVER) {
 			return "\"";
 		} else {
