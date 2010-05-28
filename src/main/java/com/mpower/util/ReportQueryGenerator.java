@@ -305,7 +305,7 @@ public class ReportQueryGenerator {
 			if (reportField.getAliasName() == null || reportField.getAliasName().length() == 0)
 				columnName = reportField.getColumnName() + "_" + columnIndex;
 			else
-				columnName = "`" + reportField.getAliasName() + "_" + columnIndex + "`";
+				columnName = getFieldNameTextQualifier() + reportField.getAliasName() + "_" + columnIndex + getFieldNameTextQualifier();
 			if (reportField == null || reportField.getId() == -1) continue;
 				if (addComma)
 					selectClause += ",";
@@ -354,7 +354,7 @@ public class ReportQueryGenerator {
 				if (reportField.getAliasName() == null || reportField.getAliasName().length() == 0)
 					columnName = reportField.getColumnName() + "_" + columnIndex;
 				else
-					columnName = "`" + reportField.getAliasName() + "_" + columnIndex + "`";
+					columnName = getFieldNameTextQualifier() + reportField.getAliasName() + "_" + columnIndex + getFieldNameTextQualifier();
 					if (addComma)
 						selectClause = selectClause + ",";
 					else
@@ -378,7 +378,7 @@ public class ReportQueryGenerator {
 				if (reportField.getAliasName() == null || reportField.getAliasName().length() == 0)
 					columnName = reportField.getColumnName() + "_" + columnIndex;
 				else
-					columnName = "`" + reportField.getAliasName() + "_" + columnIndex + "`";
+					columnName = getFieldNameTextQualifier() + reportField.getAliasName() + "_" + columnIndex + getFieldNameTextQualifier();
 					if (addComma)
 						selectClause = selectClause + ",";
 					else
@@ -397,7 +397,7 @@ public class ReportQueryGenerator {
 				if (reportField.getAliasName() == null || reportField.getAliasName().length() == 0)
 					columnName = reportField.getColumnName() + "_" + columnIndex;
 				else
-					columnName = "`" + reportField.getAliasName() + "_" + columnIndex + "`";
+					columnName = getFieldNameTextQualifier() + reportField.getAliasName() + "_" + columnIndex + getFieldNameTextQualifier();
 					if (addComma)
 						selectClause = selectClause + ",";
 					else
@@ -486,7 +486,7 @@ public class ReportQueryGenerator {
 	private String buildStandardFilterWhereClause(ReportStandardFilter reportStandardFilter, int index) throws ParseException {
 		String whereClause = " (";
 		ReportField rf = reportFieldService.find(reportStandardFilter.getFieldId());
-		String controlName = "`" + rf.getAliasName() + Integer.toString(index) + "`";
+		String controlName = rf.getAliasName() + Integer.toString(index);
 
 		String sqlDateType = "";
 		if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.MYSQL)
@@ -845,14 +845,14 @@ public class ReportQueryGenerator {
 		String result = "";
 		if (reportField.getFieldType() == ReportFieldType.DATE) {
 			if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.MYSQL) {
-				result = "CAST(" + reportField.getColumnName() + " AS DATE)";
+				result = "CAST(`" + reportField.getColumnName() + "` AS DATE)";
 			}
 			else if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.SQLSERVER) {
 				result = "DATEADD(DAY, DATEDIFF(DAY, 0, " + reportField.getColumnName() + "), 0)";
 			}
 		}
 		else {
-			result = reportField.getColumnName();
+			result = getFieldNameTextQualifier() + reportField.getColumnName() + getFieldNameTextQualifier();
 		}
 		return result;
 	}
@@ -966,7 +966,7 @@ public class ReportQueryGenerator {
 						if (rg.getAliasName() == null || rg.getAliasName().length() == 0)
 							orderBy += " " + rg.getColumnName() + "_" + columnIndex;
 						else
-							orderBy += " `" + rg.getAliasName() + "_" + columnIndex + "`";
+							orderBy += " " + getFieldNameTextQualifier() + rg.getAliasName() + "_" + columnIndex + getFieldNameTextQualifier();
 
 						addedFields.add(rg.getId());
 						if (rowField.getSortOrder().compareTo("") != 0)
@@ -999,7 +999,7 @@ public class ReportQueryGenerator {
 						if (rg.getAliasName() == null || rg.getAliasName().length() == 0)
 							orderBy += " " + rg.getColumnName() + "_" + columnIndex;
 						else
-							orderBy += " `" + rg.getAliasName() + "_" + columnIndex + "`";
+							orderBy += " " + getFieldNameTextQualifier() + rg.getAliasName() + "_" + columnIndex + getFieldNameTextQualifier();
 
 						addedFields.add(rg.getId());
 						if (colField.getSortOrder().compareTo("") != 0)
@@ -1048,7 +1048,7 @@ public class ReportQueryGenerator {
 						if (rg.getAliasName() == null || rg.getAliasName().length() == 0)
 							orderBy += " " + rg.getColumnName() + "_" + columnIndex;
 						else
-							orderBy += " `" + rg.getAliasName() + "_" + columnIndex + "`";
+							orderBy += " " + getFieldNameTextQualifier() + rg.getAliasName() + "_" + columnIndex + getFieldNameTextQualifier();
 
 						addedFields.add(rg.getId());
 						if (reportSelectedField.getSortOrder().compareTo("") != 0)
@@ -1061,5 +1061,15 @@ public class ReportQueryGenerator {
 			}
 		}
 		return orderBy;
+	}
+	
+	private String getFieldNameTextQualifier(){
+		if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.MYSQL) {
+			return "'";
+		} else if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.SQLSERVER) {
+			return "\"";
+		} else {
+			return "";
+		}
 	}
 }
