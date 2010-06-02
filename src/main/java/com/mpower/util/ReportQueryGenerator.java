@@ -845,14 +845,14 @@ public class ReportQueryGenerator {
 		String result = "";
 		if (reportField.getFieldType() == ReportFieldType.DATE) {
 			if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.MYSQL) {
-				result = "CAST(`" + reportField.getColumnName() + "` AS DATE)";
+				result = "CAST(" + reportField.getColumnName() + " AS DATE)";
 			}
 			else if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.SQLSERVER) {
 				result = "DATEADD(DAY, DATEDIFF(DAY, 0, " + reportField.getColumnName() + "), 0)";
 			}
 		}
 		else {
-			result = getFieldNameTextQualifier() + reportField.getColumnName() + getFieldNameTextQualifier();
+			result = reportField.getColumnName();
 		}
 		return result;
 	}
