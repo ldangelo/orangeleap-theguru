@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:sws="http://www.springframework.org/schema/web-services"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	 http://www.springframework.org/schema/oxm http://www.springframework.org/schema/oxm/spring-oxm-1.5.xsd
+	 http://www.springframework.org/schema/web-services http://www.springframework.org/schema/web-services/web-services-1.5.xsd
+	 http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-2.0.xsd">
+   <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+ 				<value>classpath:theguru.properties</value>
+           </list>
+        </property>
+    </bean>
+	<bean id="messageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory" />
+
+	<bean id="messageReceiver"
+		class="org.springframework.ws.soap.server.SoapMessageDispatcher" />
+
+	<bean id="theguru"
+		class="org.springframework.ws.wsdl.wsdl11.DynamicWsdl11Definition">
+		<property name="builder">
+			<bean
+				class="org.springframework.ws.wsdl.wsdl11.builder.XsdBasedSoap11Wsdl4jDefinitionBuilder">
+				<property name="schema" value="/WEB-INF/theguru.xsd" />
+				<property name="portTypeName" value="theguru" />
+				<property name="locationUri" value="/services/1.0/" />
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="schema" class="org.springframework.xml.xsd.SimpleXsdSchema">
+		<property name="xsd" value="/WEB-INF/theguru.xsd" />
+	</bean>
+
+	<bean id="constituentEndpoint" class="com.mpower.ws.TheGuruWebService">
+		<property name="reportWizard" ref="reportWizardService"/>
+		<property name="reportSegmentationResults" ref="reportSegmentationResultsService"/>
+		<property name="reportSegmentationType" ref="reportSegmentationTypeService"/>
+	</bean>
+
+
+	<bean id="wsSecurityInterceptor"
+		class="org.springframework.ws.soap.security.xwss.XwsSecurityInterceptor">
+		<property name="policyConfiguration" value="classpath:ws-securityPolicy.xml" />
+		<property name="callbackHandlers">
+			<list>
+				<ref bean="springSecurityHandler" />
+			</list>
+		</property>
+	</bean>
+
+	<bean id="springSecurityHandler"
+		class="org.springframework.ws.soap.security.xwss.callback.SpringPlainTextPasswordValidationCallbackHandler">
+		<property name="authenticationManager" ref="authenticationManager" />
+	</bean>
+
+	<bean
+		class="org.springframework.ws.server.endpoint.adapter.GenericMarshallingMethodEndpointAdapter">
+		<constructor-arg ref="marshaller" />
+	</bean>
+
+	<sws:marshalling-endpoints />
+
+	<bean id="marshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
+		<property name="contextPath" value="com.mpower.ws.axis" />
+	</bean>
+
+	<bean id="validatingInterceptor"
+		class="org.springframework.ws.soap.server.endpoint.interceptor.PayloadValidatingInterceptor">
+		<property name="schema" value="/WEB-INF/theguru.xsd" />
+		<property name="validateRequest" value="true" />
+		<property name="validateResponse" value="true" />
+	</bean>
+
+	<bean
+		class="org.springframework.ws.server.endpoint.mapping.PayloadRootAnnotationMethodEndpointMapping">
+		<property name="interceptors">
+			<list>
+				<ref bean="wsSecurityInterceptor" />
+				<ref bean="validatingInterceptor" />
+			</list>
+		</property>
+	</bean>
+
+
+</beans>

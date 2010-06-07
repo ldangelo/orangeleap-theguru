@@ -25,8 +25,16 @@
 		<antcall target="deploy-exploded-war" />
 	</target>
 
+	<target name="1.1 Deploy Exploded War - MPX/Stand Alone" description="Deploys the exploded war.">
+		<antcall target="deploy-exploded-war-mpx" />
+	</target>
+
 	<target name="2. Deploy War" description="Deploys the unexploded war.">
 		<antcall target="deploy-integrated-war" />
+	</target>
+
+	<target name="2.1 Deploy War - MPX/Stand Alone" description="Deploys the unexploded war.">
+		<antcall target="deploy-integrated-war-mpx" />
 	</target>
 
 	<target name="3. Undeploy War" description="Undeploys war file(s).">
@@ -208,7 +216,7 @@
            self.getProject().setProperty("localhost.mysql.db.url", overrideUrl11localhost);
         ]]> </script>
 
-		<property name="overrideJasperserverCreateAndLoadSchema5" value="JasperserverCreateAndLoadSchema_demo.sql" />
+		<property name="overrideJasperserverCreateAndLoadSchema5" value="JasperserverCreateAndLoadSchema_company1.sql" />
         <script language="javascript"> <![CDATA[
            self.getProject().setProperty("jasperserverCreateAndLoadSchema", overrideJasperserverCreateAndLoadSchema5);
         ]]> </script>
@@ -236,7 +244,7 @@
            self.getProject().setProperty("localhost.mysql.db.url", overrideUrl13localhost);
         ]]> </script>
 
-		<property name="overrideJasperserverCreateAndLoadSchema6" value="JasperserverCreateAndLoadSchema_sandbox.sql" />
+		<property name="overrideJasperserverCreateAndLoadSchema6" value="JasperserverCreateAndLoadSchema_company1.sql" />
         <script language="javascript"> <![CDATA[
            self.getProject().setProperty("jasperserverCreateAndLoadSchema", overrideJasperserverCreateAndLoadSchema6);
         ]]> </script>
@@ -329,7 +337,7 @@
 	  <exec dir="${jasperserver.bin}\scripts\" executable="cmd" os="Windows XP" >
 	    <arg value="/c"/>
 	    <arg value="js-import.bat" />
-	    <arg value="--input-zip"/>
+	  	<arg value="--input-zip"/>
 	    <arg value="${basedir}\jasperserver\repository.zip"/>
 	  </exec>
 

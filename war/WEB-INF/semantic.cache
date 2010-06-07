@@ -1,9 +1,0 @@
-;; Object WEB-INF/
-;; SEMANTICDB Tags save file
-(semanticdb-project-database-file "WEB-INF/"
-  :tables (list 
-    )
-  :file "semantic.cache"
-  :semantic-tag-version "2.0pre4"
-  :semanticdb-version "2.0pre4"
-  )

@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	   targetNamespace="http://www.orangeleap.com/theguru/services/1.0"
+	   xmlns:tns="http://www.orangeleap.com/theguru/services/1.0"
+	   elementFormDefault="qualified">
+
+   <xs:complexType name="segmentation">
+     <xs:sequence>
+     	<xs:element name="name" type="xs:string"/>
+     	<xs:element name="description" type="xs:string"/>
+     	<xs:element name="id" type="xs:long"/>
+     	<xs:element name="type" type="xs:string"/>
+     	<xs:element name="executionUser" type="xs:string"/>
+     	<xs:element name="executionCount" type="xs:long"/>
+     	<xs:element name="executionDate" type="xs:dateTime"/>
+     </xs:sequence>
+    </xs:complexType>
+
+<xs:element name="GetSegmentationByIdRequest">
+	<xs:complexType>
+		<xs:sequence>
+				<xs:element name="id" type="xs:long"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:element>
+
+<xs:element name="GetSegmentationByIdResponse">
+	<xs:complexType>
+		<xs:sequence>
+		      <xs:element name="entityid" type="xs:long" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:element>
+
+<xs:element name="ExecuteSegmentationByIdRequest">
+	<xs:complexType>
+		<xs:sequence>
+			<xs:element name="id" type="xs:long"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:element>
+
+<xs:element name="ExecuteSegmentationByIdResponse">
+	<xs:complexType>
+		<xs:sequence>
+		      <xs:element name="entityid" type="xs:long" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:element>
+
+<xs:element name="ExecuteSegmentationByNameRequest">
+	<xs:complexType>
+		<xs:sequence>
+			<xs:element name="name" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:element>
+
+<xs:element name="ExecuteSegmentationByNameResponse">
+	<xs:complexType>
+		<xs:sequence>
+		      <xs:element name="entityid" type="xs:long" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:element>
+
+<xs:element name="GetSegmentationByNameRequest">
+  <xs:complexType>
+		<xs:sequence>
+		    <xs:element name="name" type="xs:string" />
+	    </xs:sequence>
+  </xs:complexType>
+</xs:element>
+
+<xs:element name="GetSegmentationByNameResponse">
+  <xs:complexType>
+    <xs:sequence>
+      <xs:element name="entityid" type="xs:long" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:element>
+
+<xs:element name="GetSegmentationListRequest">
+    <xs:complexType>
+        <xs:sequence>
+            <xs:element name="dummy" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+</xs:element>
+
+<xs:element name="GetSegmentationListResponse">
+    <xs:complexType>
+    <xs:sequence>
+        <xs:element name="segmentation" type="tns:segmentation" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+    </xs:complexType>
+</xs:element>
+
+<xs:element name="GetSegmentationListByTypeRequest">
+	<xs:complexType>
+		<xs:sequence>
+			<xs:element name="type" type="xs:string" minOccurs="1"
+				maxOccurs="1" />
+			<xs:element name="startIndex" type="xs:int" maxOccurs="1" minOccurs="0"></xs:element>
+			<xs:element name="resultCount" type="xs:int" maxOccurs="1" minOccurs="0"></xs:element>
+			<xs:element name="sortField" maxOccurs="1" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="id"></xs:enumeration>
+						<xs:enumeration value="reportName"></xs:enumeration>
+						<xs:enumeration value="lastRunByUserName"></xs:enumeration>
+						<xs:enumeration value="lastRunDateTime"></xs:enumeration>
+						<xs:enumeration value="executionTime"></xs:enumeration>
+						<xs:enumeration value="resultCount"></xs:enumeration>
+						<xs:enumeration value="reportPath"></xs:enumeration>
+						<xs:enumeration value="reportComment"></xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="sortDirection" maxOccurs="1"
+				minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="ASC"></xs:enumeration>
+						<xs:enumeration value="DESC"></xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+</xs:element>
+
+<xs:element name="GetSegmentationListByTypeResponse">
+    <xs:complexType>
+    <xs:sequence>
+        <xs:element name="segmentation" type="tns:segmentation" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+    </xs:complexType>
+</xs:element>
+
+<xs:element name="GetSegmentationCountByTypeRequest">
+	<xs:complexType>
+		<xs:sequence>
+			<xs:element name="type" type="xs:string" minOccurs="1"
+				maxOccurs="1" />
+		</xs:sequence>
+	</xs:complexType>
+</xs:element>
+
+<xs:element name="GetSegmentationCountByTypeResponse">
+    <xs:complexType>
+    <xs:sequence>
+        <xs:element name="count" type="xs:long" minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+    </xs:complexType>
+</xs:element>
+
+</xs:schema>
