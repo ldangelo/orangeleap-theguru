@@ -150,6 +150,7 @@
 						</configuration>
 					</execution>
 
+	<!-- This has been moved to tangerine and renamed to theguru-functions.sql
 					<execution>
 						<id>load OL functions</id>
 						<phase>initialize</phase>
@@ -164,7 +165,7 @@
 							</srcFiles>
 						</configuration>
 					</execution>
-
+	-->
 					<execution>
 						<id>load OL views</id>
 						<phase>initialize</phase>
