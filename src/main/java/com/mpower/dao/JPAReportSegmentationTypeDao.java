@@ -40,9 +40,9 @@ public class JPAReportSegmentationTypeDao implements ReportSegmentationTypeDao {
 	}
 
 	public List<ReportSegmentationType> getAllBySegmentationTypeName(String segmentationTypeName) {
-		Query q = em.createQuery("select reportSegmentationType from ReportSegmentationType reportSegmentationType where reportSegmentationType.segmentationType = ?");
+		Query q = em.createQuery("select reportSegmentationType from ReportSegmentationType reportSegmentationType where reportSegmentationType.segmentationType Like :segmentationTypeName");
 
-		q.setParameter(1, segmentationTypeName);
+		q.setParameter("segmentationTypeName", segmentationTypeName + "%");
 		List<ReportSegmentationType> lrcfd = q.getResultList();
 
 		return lrcfd;

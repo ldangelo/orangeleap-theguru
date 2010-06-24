@@ -1,6 +1,8 @@
 <%@ include file="/WEB-INF/jsp/include.jsp" %>
 <tiles:useAttribute name="primaryNav" />
 <tiles:useAttribute name="secondaryNav" />
+<div id="greeting">
+</div>
 <!--
 <div id="banner">
 	<ol>
@@ -46,7 +48,8 @@
 </li>
 </ul>
 
-
+<p>
+<u>
 <c:choose>
 <c:when test="${page == 0}">
 	 Step ${page+1} of 5: Select report data source
@@ -72,7 +75,8 @@
 	 Segmentation Results
 </c:when>
 </c:choose>
-
+</u>
+</p>
 
 
 		<div class="clearBoth"></div>
