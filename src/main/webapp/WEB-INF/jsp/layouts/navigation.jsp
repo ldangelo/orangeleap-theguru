@@ -71,6 +71,10 @@
 	 Step ${page+1} of 5: Save report
 </c:when>
 
+<c:when test="${page == 8}">
+	 Report Preview
+</c:when>
+
 <c:when test="${page == 10}">
 	 Segmentation Results
 </c:when>
