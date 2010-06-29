@@ -870,7 +870,7 @@ public class ReportQueryGenerator {
 			result = "DATE_ADD(CURDATE(),INTERVAL " + Integer.toString(days) + " DAY)";
 		}
 		else if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.SQLSERVER) {
-			result = "DATEADD(DD, " + Integer.toString(days) + ", GETDATE())";
+			result = "DATEADD(DAY, DATEDIFF(DAY, 0, GETDATE()), " + Integer.toString(days) + ")";
 		}
 		return result;
 	}
