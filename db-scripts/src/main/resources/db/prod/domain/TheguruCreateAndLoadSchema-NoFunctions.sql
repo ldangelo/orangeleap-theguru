@@ -343,7 +343,7 @@ CREATE TABLE `REPORTCUSTOMFILTERDEFINITION` (
   `DISPLAY_TEXT` longtext,
   `SQL_TEXT` longtext,
   PRIMARY KEY (`REPORTCUSTOMFILTERDEFINITION_ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=630002 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=806001 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `REPORTCUSTOMFILTERDEFINITION`
@@ -389,7 +389,14 @@ INSERT INTO `REPORTCUSTOMFILTERDEFINITION` (`REPORTCUSTOMFILTERDEFINITION_ID`,`D
  (610000,'Segmentation - Gift is in segmentation / report <br> {lookupReferenceBean:orangeLeapGiftSegmentationList}','Segmentation - Gift is in segmentation / report','EXISTS (SELECT * FROM THEGURU_SEGMENTATION_RESULT SEGTABLE WHERE SEGTABLE.REPORT_ID = {0} AND SEGTABLE.ENTITY_ID = [VIEWNAME].GIFT_GIFT_ID)'),
  (620000,'Segmentation - Gift Distribution is in segmentation / report <br> {lookupReferenceBean:orangeLeapGiftDistributionSegmentationList}','Segmentation - Gift Distribution is in segmentation / report','EXISTS (SELECT * FROM THEGURU_SEGMENTATION_RESULT SEGTABLE WHERE SEGTABLE.REPORT_ID = {0} AND SEGTABLE.ENTITY_ID = [VIEWNAME].GIFT_GIFT_ID)'),
  (630000,'Segmentation - Gift Adjustment is in segmentation / report <br> {lookupReferenceBean:orangeLeapAdjustedGiftSegmentationList}','Segmentation - Gift Adjustment is in segmentation / report','EXISTS (SELECT * FROM THEGURU_SEGMENTATION_RESULT SEGTABLE WHERE SEGTABLE.REPORT_ID = {0} AND SEGTABLE.ENTITY_ID = [VIEWNAME].ADJUSTED_GIFT_ADJUSTED_GIFT_ID)'),
- (630001,'Segmentation - Gift Adjustment is in segmentation / report <br> {lookupReferenceBean:orangeLeapAdjustedGiftSegmentationList}','Segmentation - Gift Adjustment is in segmentation / report','EXISTS (SELECT * FROM THEGURU_SEGMENTATION_RESULT SEGTABLE WHERE SEGTABLE.REPORT_ID = {0} AND SEGTABLE.ENTITY_ID = [VIEWNAME].VW_AGD_ADJUSTED_GIFT_ADJUSTED_GIFT_ID)');
+ (630001,'Segmentation - Gift Adjustment is in segmentation / report <br> {lookupReferenceBean:orangeLeapAdjustedGiftSegmentationList}','Segmentation - Gift Adjustment is in segmentation / report','EXISTS (SELECT * FROM THEGURU_SEGMENTATION_RESULT SEGTABLE WHERE SEGTABLE.REPORT_ID = {0} AND SEGTABLE.ENTITY_ID = [VIEWNAME].VW_AGD_ADJUSTED_GIFT_ADJUSTED_GIFT_ID)'),
+ (800000,'Zip Radius - Constituent\'s current address is within <input class=\"customCriteria\" objectname=\"reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[0].criteria\" value=\"{0}\"/>miles of zip code <input class=\"customCriteria\" objectname=\"reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[1].criteria\" value=\"{1}\"/>in <select class=\"customCriteria\" objectname=\"reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[2].criteria\" populateSelectOptions=\"AJAX\" requestType=\"PICKLISTITEMS\" criteria1Name=\"PICKLISTNAME\" criteria1Value=\"country\" criteria2Name=\"DEFAULTVALUE\" criteria2Value=\"{3}\"><option value=\"{3}\">Loading...</option></select>','Zip Radius - Constituent\'s current address is within [ZIPRADIUS] miles of zip code [ZIPCODE] in [COUNTRY]','[VIEWNAME].ADDRESS_CURRENT_POSTAL_CODE_KEY IN ({lookupReferenceBean:orangeLeapPostalCodeRadius})'),
+ (801000,'Zip Radius - Constituent\'s address is within <input class=\"customCriteria\" objectname=\"reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[0].criteria\" value=\"{0}\"/>miles of zip code <input class=\"customCriteria\" objectname=\"reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[1].criteria\" value=\"{1}\"/>in <select class=\"customCriteria\" objectname=\"reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[2].criteria\" populateSelectOptions=\"AJAX\" requestType=\"PICKLISTITEMS\" criteria1Name=\"PICKLISTNAME\" criteria1Value=\"country\" criteria2Name=\"DEFAULTVALUE\" criteria2Value=\"{3}\"><option value=\"{3}\">Loading...</option></select>','Zip Radius - Constituent\'s address is within [ZIPRADIUS] miles of zip code [ZIPCODE] in [COUNTRY]','[VIEWNAME].ADDRESS_POSTAL_CODE_KEY IN ({lookupReferenceBean:orangeLeapPostalCodeRadius})'),
+ (802000,'Zip Radius - Constituent\'s gift adjustment payment address is within <input class=\"customCriteria\" objectname=\"reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[0].criteria\" value=\"{0}\"/>miles of zip code <input class=\"customCriteria\" objectname=\"reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[1].criteria\" value=\"{1}\"/>in <select class=\"customCriteria\" objectname=\"reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[2].criteria\" populateSelectOptions=\"AJAX\" requestType=\"PICKLISTITEMS\" criteria1Name=\"PICKLISTNAME\" criteria1Value=\"country\" criteria2Name=\"DEFAULTVALUE\" criteria2Value=\"{3}\"><option value=\"{3}\">Loading...</option></select>','Zip Radius - Constituent\'s gift adjustment payment address is within [ZIPRADIUS] miles of zip code [ZIPCODE] in [COUNTRY]','[VIEWNAME].ADJUSTED_GIFT_PAYMENT_ADDRESS_POSTAL_CODE_KEY IN ({lookupReferenceBean:orangeLeapPostalCodeRadius})'),
+ (803000,'Zip Radius - Constituent\'s gift payment address is within <input class=\"customCriteria\" objectname=\"reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[0].criteria\" value=\"{0}\"/>miles of zip code <input class=\"customCriteria\" objectname=\"reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[1].criteria\" value=\"{1}\"/>in <select class=\"customCriteria\" objectname=\"reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[2].criteria\" populateSelectOptions=\"AJAX\" requestType=\"PICKLISTITEMS\" criteria1Name=\"PICKLISTNAME\" criteria1Value=\"country\" criteria2Name=\"DEFAULTVALUE\" criteria2Value=\"{3}\"><option value=\"{3}\">Loading...</option></select>','Zip Radius - Constituent\'s gift payment address is within [ZIPRADIUS] miles of zip code [ZIPCODE] in [COUNTRY]','[VIEWNAME].GIFT_PAYMENT_ADDRESS_POSTAL_CODE_KEY IN ({lookupReferenceBean:orangeLeapPostalCodeRadius})'),
+ (804000,'Zip Radius - Constituent\'s payment address is within <input class=\"customCriteria\" objectname=\"reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[0].criteria\" value=\"{0}\"/>miles of zip code <input class=\"customCriteria\" objectname=\"reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[1].criteria\" value=\"{1}\"/>in <select class=\"customCriteria\" objectname=\"reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[2].criteria\" populateSelectOptions=\"AJAX\" requestType=\"PICKLISTITEMS\" criteria1Name=\"PICKLISTNAME\" criteria1Value=\"country\" criteria2Name=\"DEFAULTVALUE\" criteria2Value=\"{3}\"><option value=\"{3}\">Loading...</option></select>','Zip Radius - Constituent\'s payment address is within [ZIPRADIUS] miles of zip code [ZIPCODE] in [COUNTRY]','[VIEWNAME].PAYMENT_SOURCE_ADDRESS_POSTAL_CODE_KEY IN ({lookupReferenceBean:orangeLeapPostalCodeRadius})'),
+ (805000,'Zip Radius - Constituent\'s recurring gift payment address is within <input class=\"customCriteria\" objectname=\"reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[0].criteria\" value=\"{0}\"/>miles of zip code <input class=\"customCriteria\" objectname=\"reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[1].criteria\" value=\"{1}\"/>in <select class=\"customCriteria\" objectname=\"reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[2].criteria\" populateSelectOptions=\"AJAX\" requestType=\"PICKLISTITEMS\" criteria1Name=\"PICKLISTNAME\" criteria1Value=\"country\" criteria2Name=\"DEFAULTVALUE\" criteria2Value=\"{3}\"><option value=\"{3}\">Loading...</option></select>','Zip Radius - Constituent\'s recurring gift payment address is within [ZIPRADIUS] miles of zip code [ZIPCODE] in [COUNTRY]','[VIEWNAME].RECURRING_GIFT_PAYMENT_ADDRESS_POSTAL_CODE_KEY IN ({lookupReferenceBean:orangeLeapPostalCodeRadius})'),
+ (806000,'Zip Radius - Constituent\'s touch point address is within <input class=\"customCriteria\" objectname=\"reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[0].criteria\" value=\"{0}\"/>miles of zip code <input class=\"customCriteria\" objectname=\"reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[1].criteria\" value=\"{1}\"/>in <select class=\"customCriteria\" objectname=\"reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[2].criteria\" populateSelectOptions=\"AJAX\" requestType=\"PICKLISTITEMS\" criteria1Name=\"PICKLISTNAME\" criteria1Value=\"country\" criteria2Name=\"DEFAULTVALUE\" criteria2Value=\"{3}\"><option value=\"{3}\">Loading...</option></select>','Zip Radius - Constituent\'s touch point address is within [ZIPRADIUS] miles of zip code [ZIPCODE] in [COUNTRY]','[VIEWNAME].TOUCHPOINT_ADDRESS_POSTAL_CODE_KEY IN ({lookupReferenceBean:orangeLeapPostalCodeRadius})');
 /*!40000 ALTER TABLE `REPORTCUSTOMFILTERDEFINITION` ENABLE KEYS */;
 
 
@@ -660,7 +667,38 @@ INSERT INTO `REPORTCUSTOMFILTERDEFINITION_REPORTDATASUBSOURCE` (`reportCustomFil
  (630001,25,25,630027),
  (630001,62,62,630063),
  (630001,63,63,630064),
- (630001,64,64,630065);
+ (630001,64,64,630065),
+ (800000,51,51,800051),
+ (800000,52,52,800052),
+ (800000,53,53,800053),
+ (800000,62,62,800062),
+ (800000,63,63,800063),
+ (800000,64,64,800064),
+ (800000,65,65,800065),
+ (800000,66,66,800066),
+ (800000,67,67,800067),
+ (800000,68,68,800068),
+ (800000,69,69,800069),
+ (800000,70,70,800070),
+ (800000,71,71,800071),
+ (800000,72,72,800072),
+ (800000,73,73,800073),
+ (800000,75,75,800075),
+ (801000,52,52,801052),
+ (801000,73,73,801073),
+ (801000,75,75,801075),
+ (802000,56,56,802056),
+ (803000,54,54,803054),
+ (803000,55,55,803055),
+ (803000,62,62,803062),
+ (803000,63,63,803063),
+ (804000,61,61,804061),
+ (804000,69,69,804069),
+ (805000,59,59,805059),
+ (805000,60,60,805060),
+ (805000,67,67,805067),
+ (805000,68,68,805068),
+ (806000,75,75,806075);
 /*!40000 ALTER TABLE `REPORTCUSTOMFILTERDEFINITION_REPORTDATASUBSOURCE` ENABLE KEYS */;
 
 
@@ -24381,7 +24419,7 @@ CREATE TABLE `VERSIONLOG` (
   `SCRIPT` varchar(255) NOT NULL,
   `INSTALLDATE` datetime NOT NULL,
   PRIMARY KEY (`VERSION_ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=73 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=75 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `VERSIONLOG`
@@ -24460,7 +24498,9 @@ INSERT INTO `VERSIONLOG` (`VERSION_ID`,`SCRIPT`,`INSTALLDATE`) VALUES
  (69,'20100616_01_FC_GenerateViewsAndFieldDefinitions.sql','2010-06-23 12:53:49'),
  (70,'20100616_02_DU_CustomTableData.sql','2010-06-23 12:53:49'),
  (71,'20100629_01_DU_ReportCustomFilterDefinition.sql','2010-06-29 10:39:20'),
- (72,'20100629_02_DU_TheGuruAdditionalFieldDefinitions.sql','2010-06-29 13:16:41');
+ (72,'20100629_02_DU_TheGuruAdditionalFieldDefinitions.sql','2010-06-29 13:16:41'),
+ (73,'20100629_03_FC_GenerateViewsAndFieldDefinitions.sql','2010-07-14 09:09:52'),
+ (74,'20100706_01_DU_ZipRadiusCustomCriteria.sql','2010-07-14 09:09:56');
 /*!40000 ALTER TABLE `VERSIONLOG` ENABLE KEYS */;
 
 
