@@ -429,6 +429,13 @@
 
 		<dependency>
 			<groupId>com.orangeleap</groupId>
+			<artifactId>soap-dep</artifactId>
+			<type>pom</type>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.orangeleap</groupId>
 			<artifactId>commons-dep</artifactId>
 			<type>pom</type>
 			<version>${project.version}</version>
