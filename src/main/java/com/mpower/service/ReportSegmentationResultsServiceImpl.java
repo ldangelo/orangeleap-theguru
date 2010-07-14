@@ -6,6 +6,9 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Service;
 import com.mpower.dao.ReportSegmentationResultsDao;
 import com.mpower.domain.ReportSegmentationResult;
@@ -15,7 +18,7 @@ import com.mpower.util.ReportQueryGenerator;
 import com.mpower.util.ReportDatasourceSettings;
 
 @Service("reportSegmentationResultsService")
-public class ReportSegmentationResultsServiceImpl implements ReportSegmentationResultsService {
+public class ReportSegmentationResultsServiceImpl implements ReportSegmentationResultsService, ApplicationContextAware {
 	@Resource(name = "reportSegmentationResultsDao")
 	private ReportSegmentationResultsDao reportSegmentationResultsDao;
 
@@ -25,6 +28,7 @@ public class ReportSegmentationResultsServiceImpl implements ReportSegmentationR
 	private ReportSegmentationTypeService reportSegmentationTypeService;
 	private ReportSubSourceService  reportSubSourceService;
 	private JasperDatasourceUtil jasperDatasourceUtil;
+	private ApplicationContext applicationContext;
 
 	public List<ReportSegmentationResult> readReportSegmentationResultsByReportId(Long reportId, String username, String password) throws Exception {
 		ReportWizard wiz = reportWizardService.Find(reportId);
@@ -37,7 +41,7 @@ public class ReportSegmentationResultsServiceImpl implements ReportSegmentationR
 		ReportWizard wiz = reportWizardService.Find(reportId);
 		if (wiz.getSegmentationQuery() == null || wiz.getSegmentationQuery().length() == 0)
 		{
-			ReportQueryGenerator reportQueryGenerator = new ReportQueryGenerator(wiz, reportFieldService, reportCustomFilterDefinitionService);
+			ReportQueryGenerator reportQueryGenerator = new ReportQueryGenerator(wiz, reportFieldService, reportCustomFilterDefinitionService, applicationContext);
 			wiz.setSegmentationQuery(reportQueryGenerator.getSegmentationQueryString(reportSegmentationTypeService.find(wiz.getReportSegmentationTypeId()).getColumnName()));
 		}
 
@@ -112,5 +116,10 @@ public class ReportSegmentationResultsServiceImpl implements ReportSegmentationR
 
 	public void setJasperDatasourceUtil(JasperDatasourceUtil jasperDatasourceUtil) {
 		this.jasperDatasourceUtil = jasperDatasourceUtil;
+	}
+
+	@Override
+	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+		this.applicationContext = applicationContext;		
 	}
 }

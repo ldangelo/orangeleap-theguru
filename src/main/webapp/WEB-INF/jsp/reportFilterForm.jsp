@@ -1,5 +1,8 @@
 
 <%@ include file="/WEB-INF/jsp/include.jsp"%>
+<script type='text/javascript' src='dwr/interface/OrangeLeapService.js'></script>
+<script type='text/javascript' src='dwr/engine.js'></script>
+<script type='text/javascript' src='dwr/util.js'></script>
 <script type="text/javascript" src="js/mpower.reportfilters.js"></script>
 
 <form:form method="post" commandName="reportsource">

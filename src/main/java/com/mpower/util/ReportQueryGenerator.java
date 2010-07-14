@@ -8,7 +8,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-
+import org.springframework.context.ApplicationContext;
 import com.mpower.domain.ReportCrossTabColumn;
 import com.mpower.domain.ReportCrossTabFields;
 import com.mpower.domain.ReportCrossTabMeasure;
@@ -24,6 +24,7 @@ import com.mpower.domain.ReportStandardFilter;
 import com.mpower.domain.ReportWizard;
 import com.mpower.service.ReportCustomFilterDefinitionService;
 import com.mpower.service.ReportFieldService;
+import com.mpower.service.customfiltercriterialookup.ReportCustomFilterCriteriaLookupService;
 
 /**
  * <p>
@@ -33,17 +34,19 @@ public class ReportQueryGenerator {
 	private ReportWizard reportWizard;
 	private ReportFieldService reportFieldService;
 	private ReportCustomFilterDefinitionService reportCustomFilterDefinitionService;
+	private ApplicationContext applicationContext;
 
-    /**
+	/**
      * Constructor for the <tt>QueryGenerator</tt>.
      * @param reportWizard ReportWizard that contains the various report options.
      * @param reportFieldService ReportFieldService the QueryGenerator will use to retrieve field information from the database.
      */
     public ReportQueryGenerator(ReportWizard reportWizard, ReportFieldService reportFieldService,
-    		ReportCustomFilterDefinitionService reportCustomFilterDefinitionService) {
+    		ReportCustomFilterDefinitionService reportCustomFilterDefinitionService, ApplicationContext applicationContext) {
     	this.setReportWizard(reportWizard);
     	this.setReportFieldService(reportFieldService);
     	this.setReportCustomFilterDefinitionService(reportCustomFilterDefinitionService);
+    	this.setApplicationContext(applicationContext);
     }
 
     public enum DatePart {
@@ -152,6 +155,14 @@ public class ReportQueryGenerator {
 	public void setReportCustomFilterDefinitionService(
 			ReportCustomFilterDefinitionService reportCustomFilterDefinitionService) {
 		this.reportCustomFilterDefinitionService = reportCustomFilterDefinitionService;
+	}
+
+    public ApplicationContext getApplicationContext() {
+		return applicationContext;
+	}
+
+	public void setApplicationContext(ApplicationContext applicationContext) {
+		this.applicationContext = applicationContext;
 	}
 
 	/**
@@ -733,8 +744,27 @@ public class ReportQueryGenerator {
 				for (int index = 0; index < criteriaSize; index++) {
 					filterString = filterString.replace("{" + Integer.toString(index) + "}", filter.getReportCustomFilterCriteria().get(index).getCriteria());
 				}
-				whereClause += filterString;
+				
+				String lookupReferenceBeanString = "{lookupReferenceBean:";
+				int stringIndex = filterString.indexOf("{", 0);
+				while (stringIndex > 0)
+				{
+					int beginIndex = filterString.indexOf("{", stringIndex);
+					int endIndex = filterString.indexOf("}", beginIndex) + 1;
+					String field = filterString.substring(beginIndex, endIndex);
+					// If it is a lookup reference, get the bean name and call the lookup.
+					if (field.startsWith(lookupReferenceBeanString)) {
+						String beanName = field.replace("{lookupReferenceBean:", "").replace("}", "");
+						ReportCustomFilterCriteriaLookupService reportCustomFilterCriteriaLookupService = (ReportCustomFilterCriteriaLookupService)applicationContext.getBean(beanName);
+
+						filterString = filterString.substring(0, beginIndex)
+							+ reportCustomFilterCriteriaLookupService.getLookupSql(filter)
+							+ filterString.substring(endIndex);
+					}
+					stringIndex = filterString.indexOf("{", stringIndex + 1);
+				}
 			}
+			whereClause += filterString;
 		}
 		return whereClause;
 	}

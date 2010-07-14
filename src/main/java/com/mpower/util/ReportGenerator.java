@@ -20,6 +20,7 @@ import net.sf.jasperreports.engine.design.JRDesignExpression;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.context.ApplicationContext;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -198,7 +199,7 @@ public class ReportGenerator implements java.io.Serializable {
 	}
 
 	public DynamicReport Generate(ReportWizard wiz, ReportFieldService reportFieldService,
-			ReportCustomFilterDefinitionService reportCustomFilterDefinitionService, Boolean preview) throws Exception {
+			ReportCustomFilterDefinitionService reportCustomFilterDefinitionService, Boolean preview, ApplicationContext applicationContext) throws Exception {
 		resetInputControls();
 		File templateFile = getTemplateFile(wiz);
 		columnIndex = 0;
@@ -246,7 +247,7 @@ public class ReportGenerator implements java.io.Serializable {
 		//Build query
 		//
 		ReportQueryGenerator reportQueryGenerator = new ReportQueryGenerator(wiz,
-				reportFieldService, reportCustomFilterDefinitionService);
+				reportFieldService, reportCustomFilterDefinitionService, applicationContext);
 		String query = "";
 		if (preview)
 			query = reportQueryGenerator.getPreviewQueryString();
