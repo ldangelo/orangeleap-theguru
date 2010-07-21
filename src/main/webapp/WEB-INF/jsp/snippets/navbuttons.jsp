@@ -4,11 +4,11 @@
 <table>
 <tr>
 <td align="Left" width=360>
-<c:if test="${page > 0}">
+
 <input type="image" src="images/preview_off.gif" value="Preview Report" ALT="Preview Report" name="_target8" onmouseover="this.src = 'images/preview_on.gif';" onmouseout="this.src = 'images/preview_off.gif';">
 <!-- <input type="image" src="images/export_details_off.gif" value="Export Details" name="_target8" ALT="Export" onmouseover="this.src = 'images/export_details_on.gif';" onmouseout="this.src = 'images/export_details_off.gif';">-->
 <!-- <input type="image" src="images/save_as_off.gif" value="Save As" name="_target4" ALT="Save" onmouseover="this.src = 'images/save_as_on.gif';" onmouseout="this.src = 'images/save_as_off.gif';">  -->
-</c:if>
+
 </td>
 
 <td align="Right" width=360>
