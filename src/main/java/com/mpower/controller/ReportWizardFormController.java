@@ -763,7 +763,9 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 			HttpServletResponse response, BindException errors)
 			throws Exception {
 
-		if (request.getParameter("_target9") != null || request.getParameter("_target9.x") != null) {
+		if (request.getParameter("_target8") != null || request.getParameter("_target8.x") != null) {
+			return showPage(request, errors, 8);
+		} else if (request.getParameter("_target9") != null || request.getParameter("_target9.x") != null) {
 			return showPage(request, errors, 9);
 		}
 		else if (request.getParameter("_target10") != null || request.getParameter("_target10.x") != null) {
