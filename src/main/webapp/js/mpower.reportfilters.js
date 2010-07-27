@@ -36,7 +36,7 @@ $(document).ready(function()
 	}
 	// Validate for 2 decimal for money
 	jQuery.validator.addMethod("money", function(value, element) {
-	    return this.optional(element) || /^\$?(?:\d+|\d{1,3}(?:,\d{3})*)(?:\.\d{1,2}){0,1}$/.test(value);
+	    return this.optional(element) || /^-?\$?(?:\d+|\d{1,3}(?:,\d{3})*)(?:\.\d{1,2}){0,1}$/.test(value);
 	}, "Must be in the format 0.99");
 
 	repopulateAJAXCustomFilters();
