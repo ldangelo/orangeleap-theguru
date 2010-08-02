@@ -33,7 +33,7 @@ public class OrangeLeapWebServiceClientV2 extends OrangeLeapAuthentication imple
 		OrangeLeapService orangeLeapService;
 		String siteName = "orangeleap";
 		if (System.getProperty("contextPrefix").replace("-", "").length() > 0)
-			siteName += System.getProperty("contextPrefix").replace("-", "");
+			siteName = System.getProperty("contextPrefix").replace("-", "");
 		try {
 			String url = System.getProperty("casClient.serverUrl") +  "/" + siteName + "/services2.0/orangeleap.wsdl";
 			String targetNamespace = "http://www.orangeleap.com/orangeleap/services2.0/";
