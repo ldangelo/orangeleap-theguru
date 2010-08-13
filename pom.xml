@@ -8,7 +8,7 @@
 	<parent>
 		<groupId>com.orangeleap</groupId>
 		<artifactId>masterPOM</artifactId>
-  		<version>11.0-SNAPSHOT</version>
+  		<version>12.0-SNAPSHOT</version>
 		<relativePath>../</relativePath>
 	</parent>
 
@@ -423,6 +423,13 @@
 		<dependency>
 			<groupId>com.orangeleap</groupId>
 			<artifactId>cache-dep</artifactId>
+			<type>pom</type>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.orangeleap</groupId>
+			<artifactId>soap-dep</artifactId>
 			<type>pom</type>
 			<version>${project.version}</version>
 		</dependency>

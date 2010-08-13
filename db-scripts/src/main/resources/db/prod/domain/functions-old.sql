@@ -1,3 +1,21 @@
+-- ***********************************************************************************************************
+-- ***********************************************************************************************************
+-- This has been moved to tangerine and renamed to theguru-functions.sql
+-- You should now maintain theguru-functions.sql in tangerine and also write an update script in tangerine as
+-- well.
+-- ***********************************************************************************************************
+-- ***********************************************************************************************************
+
+
+
+
+
+
+
+
+
+
+
 
 -- ******************* Un-comment out the below line when running this script in mySql Query Browser ***************************************
 -- DELIMITER $$
@@ -29,6 +47,23 @@ BEGIN
 		AND FIELD_NAME = FIELDNAME
 		AND CURDATE() BETWEEN START_DATE AND END_DATE;
 
+	RETURN FIELDVALUE;
+END$$
+
+-- Create function to retrieve date custom fields
+DROP FUNCTION IF EXISTS GETCUSTOMDATEFIELD$$
+
+CREATE FUNCTION `GETCUSTOMDATEFIELD`(ENTITYID INT, ENTITYTYPE VARCHAR(255), FIELDNAME VARCHAR(255))
+	RETURNS VARCHAR(255)
+	DETERMINISTIC
+BEGIN
+	DECLARE FIELDVALUE VARCHAR(255);
+	SELECT DATE(FIELD_DATE_VALUE) INTO FIELDVALUE
+		FROM CUSTOM_FIELD
+		WHERE ENTITY_ID = ENTITYID
+    	AND ENTITY_TYPE = ENTITYTYPE
+		AND FIELD_NAME = FIELDNAME
+		AND CURDATE() BETWEEN START_DATE AND END_DATE;
 	RETURN FIELDVALUE;
 END$$
 

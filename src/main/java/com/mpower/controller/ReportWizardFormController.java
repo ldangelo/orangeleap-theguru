@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.context.ApplicationContext;
 import org.springframework.security.userdetails.UserDetails;
 import org.springframework.security.userdetails.UserDetailsService;
 import org.springframework.util.Assert;
@@ -480,9 +481,10 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 			ReportDataSubSource rdss = reportSubSourceService.find(wiz.getSubSourceId());
 			List<ReportFieldGroup>    lrfg = reportFieldGroupService.readFieldGroupBySubSourceId(rdss.getId());
 			wiz.setFieldGroups(lrfg);
-
+			WebApplicationContext applicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(this.getServletContext());
+			
 			if (wiz.getShowSqlQuery()) {
-		    	ReportQueryGenerator reportQueryGenerator = new ReportQueryGenerator(wiz, reportFieldService, reportCustomFilterDefinitionService);
+		    	ReportQueryGenerator reportQueryGenerator = new ReportQueryGenerator(wiz, reportFieldService, reportCustomFilterDefinitionService, applicationContext);
 				refData.put("showSqlQuery", wiz.getShowSqlQuery());
 				String query = reportQueryGenerator.getQueryString();
 				refData.put("sqlQuery", query);
@@ -492,7 +494,6 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 			}
 
 			refData.put("fieldGroups", lrfg);
-			WebApplicationContext applicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(this.getServletContext());
 		    refData.put("customFilters", reportCustomFilterHelper.getReportCustomFilterDefinitions(applicationContext, wiz));
 		    if (rdss.getSegmentationResultsDatasourceName() != null && rdss.getSegmentationResultsDatasourceName().length() > 0) {
 		    	List<ReportSegmentationType> reportSegmentationTypes = rdss.getReportSegmentationTypes();
@@ -530,8 +531,8 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 				wiz.populateDefaultReportFields();
 
 			// SuppressWarnings("unused")
-
-			DynamicReport dr = wiz.getReportGenerator().Generate(wiz, reportFieldService, reportCustomFilterDefinitionService, true);
+			WebApplicationContext applicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(this.getServletContext());
+			DynamicReport dr = wiz.getReportGenerator().Generate(wiz, reportFieldService, reportCustomFilterDefinitionService, true, applicationContext);
 			// String query = dr.getQuery().getText();
 
 			//
@@ -661,10 +662,10 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 
 	protected void saveReport(ReportWizard wiz, Errors errors) throws Exception {
 		reportWizardService.save(wiz);
-
+		WebApplicationContext applicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(this.getServletContext());
 		// If the report is to be used as a segmentation, generate the segmentation SQL, set it on the wiz and save again since the segmentation query will require the report wizard ID
 		if (wiz.getUseReportAsSegmentation()) {
-			ReportQueryGenerator reportQueryGenerator = new ReportQueryGenerator(wiz, reportFieldService, reportCustomFilterDefinitionService);
+			ReportQueryGenerator reportQueryGenerator = new ReportQueryGenerator(wiz, reportFieldService, reportCustomFilterDefinitionService, applicationContext);
 			wiz.setSegmentationQuery(reportQueryGenerator.getSegmentationQueryString(reportSegmentationTypeService.find(wiz.getReportSegmentationTypeId()).getColumnName()));
 			reportWizardService.save(wiz);
 		}
@@ -672,7 +673,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		// First we must generate a jrxml file
 		//
 
-		DynamicReport dr = wiz.getReportGenerator().Generate(wiz, reportFieldService, reportCustomFilterDefinitionService, false);
+		DynamicReport dr = wiz.getReportGenerator().Generate(wiz, reportFieldService, reportCustomFilterDefinitionService, false, applicationContext);
 
 		File tempFile = TempFileUtil.createTempFile("wiz", ".jrxml");
 		logger.info("Temp File: " + tempFile);
@@ -762,7 +763,9 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 			HttpServletResponse response, BindException errors)
 			throws Exception {
 
-		if (request.getParameter("_target9") != null || request.getParameter("_target9.x") != null) {
+		if (request.getParameter("_target8") != null || request.getParameter("_target8.x") != null) {
+			return showPage(request, errors, 8);
+		} else if (request.getParameter("_target9") != null || request.getParameter("_target9.x") != null) {
 			return showPage(request, errors, 9);
 		}
 		else if (request.getParameter("_target10") != null || request.getParameter("_target10.x") != null) {

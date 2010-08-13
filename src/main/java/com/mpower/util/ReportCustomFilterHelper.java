@@ -66,7 +66,7 @@ public class ReportCustomFilterHelper {
 					+ displayHtml.substring(endIndex);
 			} else {
 				if (selectedValues != null)
-				  displayHtml = displayHtml.substring(0, beginIndex) + selectedValue + displayHtml.substring(endIndex);
+				  displayHtml = displayHtml.replace(field, selectedValue);
 			}
 
 			stringIndex = displayHtml.indexOf("{", stringIndex + 1);

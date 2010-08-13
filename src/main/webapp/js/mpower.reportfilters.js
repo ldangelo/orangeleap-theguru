@@ -36,9 +36,10 @@ $(document).ready(function()
 	}
 	// Validate for 2 decimal for money
 	jQuery.validator.addMethod("money", function(value, element) {
-	    return this.optional(element) || /^\$?(?:\d+|\d{1,3}(?:,\d{3})*)(?:\.\d{1,2}){0,1}$/.test(value);
+	    return this.optional(element) || /^-?\$?(?:\d+|\d{1,3}(?:,\d{3})*)(?:\.\d{1,2}){0,1}$/.test(value);
 	}, "Must be in the format 0.99");
 
+	repopulateAJAXCustomFilters();
    }
 );
 
@@ -95,7 +96,37 @@ function populateCustomFilterRow(customFilterSelectId, selectedFiltersId) {
 	cell.append(newInput);
 
 	customFilterSelect.parent().replaceWith(cell);
+	processCustomFilterAjaxRequests(cell);
 	cleanUpFilterTable(selectedFiltersId);
+}
+
+function repopulateAJAXCustomFilters() {
+	$('#report_filters_add').find('tr[index!=-1]').each(function() {
+		var filterTableRow = $(this);
+		processCustomFilterAjaxRequests(filterTableRow);
+	});
+}
+
+function processCustomFilterAjaxRequests(customFilterCell) {
+	var cell = $(customFilterCell);
+	cell.find("select[populateSelectOptions='AJAX']").each(function() {
+		var select = $(this);
+		var requestType = $(this).attr('requestType');
+		var criteriaArray = {};
+		var cont = true;
+		var index = 0;
+		while (cont) {
+			index++;	
+			var criteriaName = select.attr("criteria" + index + "Name");
+			var criteriaValue = select.attr("criteria" + index + "Value");
+			if (criteriaName != null && criteriaValue != null) {
+				criteriaArray[criteriaName] = criteriaValue;
+			} else {
+				cont = false;
+			}
+		}
+		OrangeLeapService.getOrangeLeapDataAsSelectOptions(requestType, criteriaArray, function(options) { $(select).find('option').remove(); $(select).append(options); });
+	});
 }
 
 function cloneFilterRow(filterSelectId, selectedFiltersId) {

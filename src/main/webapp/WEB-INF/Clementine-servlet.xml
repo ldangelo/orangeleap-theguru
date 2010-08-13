@@ -80,6 +80,11 @@
 		<property name="reportSubSource" ref="reportSubSourceService" />
 		<dwr:remote javascript="ReportSubSourceService" />
 	</bean>
+	
+	<bean id="OrangeLeapService" class="com.mpower.service.DWROrangeLeapServiceImpl">
+		<dwr:remote javascript="OrangeLeapService" />
+	</bean>
+	
 	<dwr:configuration>
 		<dwr:convert type="bean"
 			class="com.jaspersoft.jasperserver.api.metadata.xml.domain.impl.ResourceDescriptor" />
@@ -89,6 +94,8 @@
 			class="com.mpower.domain.dwr.ReportDataSubSourceGroup" />
 		<dwr:convert type="bean"
 			class="com.mpower.domain.dwr.ReportDataSubSource" />
+		<dwr:convert type="bean"
+			class="com.mpower.domain.dwr.OrangeLeapPicklistItem" />			
 	</dwr:configuration>
 
 
@@ -296,6 +303,9 @@
 		<property name="reportWizardService" ref="reportWizardService" />
 		<property name="reportSegmentationTypeService" ref="reportSegmentationTypeService" />
 		<property name="segmentationType" value="Account Segmentation" />
+	</bean>
+
+	<bean id="orangeLeapPostalCodeRadius" class="com.mpower.service.customfiltercriterialookup.OrangeLeapPostalCodeRadius">
 	</bean>
 
 	<!-- Configures the Tiles layout system -->

@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 import com.mpower.dao.ReportQueryCostDao;
@@ -28,10 +29,10 @@ public class ReportQueryCostServiceImpl implements ReportQueryCostService {
 	private ReportSubSourceService  reportSubSourceService;
 	private JasperDatasourceUtil jasperDatasourceUtil;
 
-	public long getReportQueryCostByReportId(long reportId, String username, String password) throws Exception {
+	public long getReportQueryCostByReportId(ApplicationContext applicationContext, long reportId, String username, String password) throws Exception {
 		long result = 0;
 		ReportWizard wiz = reportWizardService.Find(reportId);
-		ReportQueryGenerator reportQueryGenerator = new ReportQueryGenerator(wiz, reportFieldService, reportCustomFilterDefinitionService);
+		ReportQueryGenerator reportQueryGenerator = new ReportQueryGenerator(wiz, reportFieldService, reportCustomFilterDefinitionService, applicationContext);
 		String query = reportQueryGenerator.getQueryString();
 
 		ReportDatasourceSettings reportDatasourceSettings = jasperDatasourceUtil.getJasperDatasourceSettings(reportSubSourceService.find(wiz.getSubSourceId()).getJasperDatasourceName(), username, password);
