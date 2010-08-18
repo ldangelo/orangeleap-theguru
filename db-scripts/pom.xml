@@ -129,7 +129,7 @@
 								Where id = (Select id from JIResource where JIResource.name = 'ReportWizardJdbcDS');
 
 								Update JIJdbcDatasource
-								Set connectionUrl = CONCAT('jdbc:mysql://${host}:${port}/${olSchema}', '?useCursorFetch', CHAR(61), 'true', CHAR(38), 'useServerPrepStmts', CHAR(61), 'true', CHAR(38), 'create', CHAR(61), 'true', CHAR(38), 'maxAllowedPacket', CHAR(61), '167772160),
+								Set connectionUrl = CONCAT('jdbc:mysql://${host}:${port}/${olSchema}', '?useCursorFetch', CHAR(61), 'true', CHAR(38), 'useServerPrepStmts', CHAR(61), 'true', CHAR(38), 'create', CHAR(61), 'true', CHAR(38), 'maxAllowedPacket', CHAR(61), '167772160'),
 								username = 'orangeleap',
 								password = '${encryptedPwd}'
 								Where id = (Select id from JIResource where JIResource.name = 'ReportWizardJdbcDSSegmentationResults');
