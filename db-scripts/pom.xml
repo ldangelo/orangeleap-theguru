@@ -106,7 +106,7 @@
 							<srcFiles>
 								<srcFile>${basedir}/src/main/resources/db/prod/domain/TheguruCreateAndLoadSchema-NoFunctions.sql</srcFile>
 								<srcFile>${basedir}/src/main/resources/db/prod/domain/TheguruCreateFunctions-Part1.sql</srcFile>
-								<srcFile>${basedir}/src/main/resources/db/prod/domain/JasperserverCreateAndLoadSchema_${schemaSql}.sql</srcFile>
+								<srcFile>${basedir}/src/main/resources/db/prod/domain/JasperserverCreateAndLoadSchema_company1.sql</srcFile>
 							</srcFiles>
 						</configuration>
 					</execution>
