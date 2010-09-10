@@ -58,6 +58,7 @@ import com.mpower.domain.ReportCrossTabColumn;
 import com.mpower.domain.ReportCrossTabFields;
 import com.mpower.domain.ReportCrossTabMeasure;
 import com.mpower.domain.ReportCrossTabRow;
+import com.mpower.domain.ReportDatabaseType;
 import com.mpower.domain.ReportField;
 import com.mpower.domain.ReportFieldType;
 import com.mpower.domain.ReportFilter;
@@ -66,6 +67,7 @@ import com.mpower.domain.ReportWizard;
 import com.mpower.service.ReportCustomFilterDefinitionService;
 import com.mpower.service.ReportFieldService;
 import com.orangeleap.common.security.CasUtil;
+import com.sun.jmx.snmp.Timestamp;
 import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
 
 public class ReportGenerator implements java.io.Serializable {
@@ -345,6 +347,85 @@ public class ReportGenerator implements java.io.Serializable {
 		return dr;
 	}
 
+	public DynamicReport GenerateSegmentationReport(ReportWizard wiz, String segmentationQuery) throws Exception {
+		resetInputControls();
+		File templateFile = getTemplateFile(wiz);
+		columnIndex = 0;
+		initStyles();
+
+		//
+		//Build the main report
+		//
+		String reportTitle = wiz.getDataSubSource().getDisplayName() + " Custom Report";
+		if (wiz.getReportName() != null && wiz.getReportName().length() > 0)
+			reportTitle = wiz.getReportName();
+
+		FastReportBuilder drb = new FastReportBuilder();
+		Integer margin = new Integer(20);
+
+		drb
+		.setTitleStyle(titleStyle)
+		.setTitle(reportTitle)					//defines the title of the report
+		.setDetailHeight(new Integer(15))
+		.setLeftMargin(margin).setRightMargin(margin).setTopMargin(margin).setBottomMargin(margin)
+		.setAllowDetailSplit(false)
+		.setIgnorePagination(false)
+		.setUseFullPageWidth(true)
+		.setWhenNoDataShowNoDataSection();
+
+
+		// Add segmentation result fields		
+		try {
+			AbstractColumn column = ColumnBuilder.getInstance()
+			.setColumnProperty("SEGMENTATION_ID", Long.class.getName())
+			.setTitle("Segmentation ID").setPattern("")
+			.build();
+			column.setName("SEGMENTATION_ID");
+			drb.addColumn(column);
+			
+			column = ColumnBuilder.getInstance()
+			.setColumnProperty("LAST_RUN_DATETIME", java.sql.Timestamp.class.getName())
+			.setTitle("Execution Date / Time").setPattern("MM/dd/yyyy HH:mm:ss")
+			.build();
+			column.setName("LAST_RUN_DATETIME");
+			drb.addColumn(column);
+			
+			column = ColumnBuilder.getInstance()
+			.setColumnProperty("EXECUTION_TIME", Long.class.getName())
+			.setTitle("Execution Time (in milliseconds)").setPattern("")
+			.build();
+			column.setName("EXECUTION_TIME");
+			drb.addColumn(column);
+			
+			column = ColumnBuilder.getInstance()
+			.setColumnProperty("RESULT_COUNT", Long.class.getName())
+			.setTitle("Result Count").setPattern("")
+			.build();
+			column.setName("RESULT_COUNT");
+			drb.addColumn(column);
+		} catch (ColumnBuilderException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		//
+		//Set query
+		//
+		String executeSegmentationQuery = "";
+		if (wiz.getDataSubSource().getDatabaseType() == ReportDatabaseType.MYSQL)
+			executeSegmentationQuery = "CALL EXECUTE_THEGURU_SEGMENTATION(" + wiz.getId() + ",'" + segmentationQuery + "');";
+		else if (wiz.getDataSubSource().getDatabaseType() == ReportDatabaseType.SQLSERVER)
+			executeSegmentationQuery = "EXEC EXECUTE_THEGURU_SEGMENTATION " + wiz.getId() + ",'" + segmentationQuery + "'";
+		logger.info(executeSegmentationQuery);
+
+		drb.setQuery(executeSegmentationQuery, DJConstants.QUERY_LANGUAGE_SQL);
+		drb.setTemplateFile(templateFile.getAbsolutePath());
+
+		DynamicReport dr = drb.build();
+
+		return dr;
+	}
+	
 	/**
 	 * Creates a crosstab Report using DynamicJasper.
 	 * <P>

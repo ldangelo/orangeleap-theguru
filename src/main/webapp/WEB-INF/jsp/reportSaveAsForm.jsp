@@ -185,12 +185,6 @@ return true;
 	<div class="clearColumns"></div>
 	</div>
 
-	<c:if test="${useReportAsSegmentation}">
-	<div class="columns">
-	<input type="checkbox" id="executeSegmentation" name="executeSegmentation" <c:if test="${executeSegmentation}">checked="checked"</c:if> >Execute segmentation job after saving</select>
-	</div>
-	</c:if>
-
 	<div style="height: 20px;">
 	<p></p>
 	</div>
@@ -206,12 +200,10 @@ return true;
 		name="_target5" ALT="Save"
 		onmouseover="this.src = 'images/save_on.gif';"
 		onmouseout="this.src = 'images/save_off.gif';">
-	<c:if test="${!useReportAsSegmentation}">		
 	<input type="image" id="run" src="images/save_and_run_off.gif" value="Finish"
 		name="_finish" ALT="Finish"
 		onmouseover="this.src = 'images/save_and_run_on.gif';"
 		onmouseout="this.src = 'images/save_and_run_off.gif';">
-	</c:if>		
 	<input type="image" id="reportDataHiddenInput" name="_target0"
 		value="Report Data" style="display: none">
 	<input type="image" id="reportFormatHiddenInput" name="_target1"
