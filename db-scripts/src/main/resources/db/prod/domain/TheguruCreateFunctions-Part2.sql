@@ -2400,10 +2400,10 @@ BEGIN
 	
 	-- Round down so that age will not increment before anniversary date
 	-- Multiply by 1000, Floor it and then divide by 1000 to get the proper number of decimal places
-	-- Update - Function should now just return an integer and not include the decimal places.  The function now returns an integer
-	-- which will remove the decimal places.
 	SET RESULT = CAST(YEARDIFF + (FLOOR(((DAYOFYEAR(DATE_2) - DAYOFYEAR(DATE_3)) / 365.25) * 1000) / 1000) AS DECIMAL(5, 3));
-
+	-- Update - Function should now just return an integer and not include the decimal places.  
+	SET RESULT = FLOOR(RESULT);
+	
 	RETURN RESULT;
 END$$
 /*!50003 SET SESSION SQL_MODE=@TEMP_SQL_MODE */  $$
