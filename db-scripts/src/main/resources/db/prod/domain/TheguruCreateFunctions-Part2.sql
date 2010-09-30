@@ -2373,6 +2373,41 @@ END;$$
 /*!50003 SET SESSION SQL_MODE=@TEMP_SQL_MODE */  $$
 
 
+--
+-- Definition of function `AGE`
+--
+
+/*!50003 SET @TEMP_SQL_MODE=@@SQL_MODE, SQL_MODE='' */ $$
+CREATE DEFINER=`root`@`localhost` FUNCTION `AGE`(DATE_1 DATETIME, DATE_2 DATETIME)
+	RETURNS INTEGER
+	DETERMINISTIC
+BEGIN
+	DECLARE YEARDIFF INT;
+	DECLARE DATE_3 DATETIME;
+	DECLARE RESULT DECIMAL(5, 3);
+
+	SET YEARDIFF = EXTRACT(YEAR from DATE_2) - EXTRACT(YEAR from DATE_1);
+
+	-- Birthday is not always on same day of year, so day of year diff must be done with same year.
+	SET DATE_3 = DATE_ADD(DATE_1, INTERVAL YEARDIFF YEAR);
+
+	-- If the date is 2/29 and the new day and month on the new date don't match, add a day.  
+	-- In MySQL, adding a year to 2/29/2000 results in 2/28/2001 when this calculation needs it to 
+	-- be 3/1/2001 since that is the 60th day of the year
+	IF (MONTH(DATE_1) = 2 AND DAY(DATE_1) = 29 AND (MONTH(DATE_1) <> MONTH(DATE_3) OR DAY(DATE_1) <> DAY(DATE_3))) THEN
+		SET DATE_3 = DATE_ADD(DATE_3, INTERVAL 1 DAY);
+	END IF;
+	
+	-- Round down so that age will not increment before anniversary date
+	-- Multiply by 1000, Floor it and then divide by 1000 to get the proper number of decimal places
+	-- Update - Function should now just return an integer and not include the decimal places.  The function now returns an integer
+	-- which will remove the decimal places.
+	SET RESULT = CAST(YEARDIFF + (FLOOR(((DAYOFYEAR(DATE_2) - DAYOFYEAR(DATE_3)) / 365.25) * 1000) / 1000) AS DECIMAL(5, 3));
+
+	RETURN RESULT;
+END$$
+/*!50003 SET SESSION SQL_MODE=@TEMP_SQL_MODE */  $$
+
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */$$
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */$$
