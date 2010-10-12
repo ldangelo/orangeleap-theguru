@@ -89,6 +89,9 @@ public class ReportField implements java.io.Serializable,
 	@Column(name = "TOOLTIP")
 	private String   toolTip;
 	
+	@Column(name = "PICKLIST_NAME_ID")
+	private String picklistNameId;
+	
 
 	public Boolean getPerformSummary() {
 		return performSummary;
@@ -293,5 +296,13 @@ public class ReportField implements java.io.Serializable,
 
 	public void setToolTip(String toolTip) {
 		this.toolTip = toolTip;
+	}
+
+	public void setPicklistNameId(String picklistNameId) {
+		this.picklistNameId = picklistNameId;
+	}
+
+	public String getPicklistNameId() {
+		return picklistNameId;
 	}
 }
