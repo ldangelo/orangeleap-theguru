@@ -443,13 +443,6 @@
 
 		<dependency>
 			<groupId>com.orangeleap</groupId>
-			<artifactId>drools-dep</artifactId>
-			<type>pom</type>
-			<version>${project.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.orangeleap</groupId>
 			<artifactId>hibernate-dep</artifactId>
 			<type>pom</type>
 			<version>${project.version}</version>
