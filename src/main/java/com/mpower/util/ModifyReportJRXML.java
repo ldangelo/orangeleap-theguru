@@ -27,6 +27,7 @@ import org.xml.sax.SAXException;
 
 import ar.com.fdvs.dj.domain.DJChart;
 
+import com.mpower.domain.ReportChartSettings;
 import com.mpower.domain.ReportField;
 import com.mpower.domain.ReportSelectedField;
 import com.mpower.domain.ReportWizard;
@@ -886,33 +887,112 @@ public class ModifyReportJRXML {
 	 * @param document The jrxml document.
 	 */
 
-	public void correctNullDataInChart(String chartType, Document document){
-		//
-		if (chartType.compareToIgnoreCase("bar") == 0){
+	public void correctNullDataInChart(String chartType, Document document, List<ReportChartSettings> rcsList){
+		//TODO: right now we just allow one chart per report but when we change for multiple charts this will need to be refactored
+		//to iterate thru the list
+		ReportChartSettings rcs = rcsList.get(0);
+		
+		if (!chartType.toLowerCase().contains("pie")){
 			//get the categoryExpression node
-			Node categoryExp = document.getElementsByTagName("categoryExpression").item(0);
-			String categoryExpField = categoryExp.getTextContent();
-			String newcategoryExp = "(( " + categoryExpField + " != null) ? " + categoryExpField + ".toString() : \"null\" )";
-			categoryExp.setTextContent(newcategoryExp);
+			Node categoryExp = null;
+			if (chartType.equalsIgnoreCase("timeSeries") || chartType.equalsIgnoreCase("scatter") || chartType.toLowerCase().startsWith("xy")){
+				return; 
+				//You can not have null dates in the group by field
+				//so for now you need to add criteria in the guru to exclude null dates
+				//when using timeSeries, scatter or xy charts
+				//categoryExp = document.getElementsByTagName("timePeriodExpression").item(0);
+			}else {
+				categoryExp = document.getElementsByTagName("categoryExpression").item(0);
+			}
+			//String categoryExpField = categoryExp.getTextContent();
+			//String newcategoryExp = "(( " + categoryExpField + " != null) ? " + categoryExpField + ".toString() : \"null\" )";
+			categoryExp.setTextContent(correctNullDataField(categoryExp.getTextContent(), "null"));
 			//get the seriesExpression node
-			Node seriesExp = document.getElementsByTagName("seriesExpression").item(0);
-			String seriesExpField = seriesExp.getTextContent();
-			String newseriesExp = "(( " + seriesExpField + " != null) ? " + seriesExpField + ".toString() : \"null\" )";
-			seriesExp.setTextContent(newseriesExp);
+			NodeList seriesNodes = document.getElementsByTagName("seriesExpression");
+			for (int i = 0; i < seriesNodes.getLength(); i++){
+				Node seriesExp = document.getElementsByTagName("seriesExpression").item(i);
+				//String seriesExpField = seriesExp.getTextContent();
+				//String newseriesExp = "(( " + seriesExpField + " != null) ? " + seriesExpField + ".toString() : \"null\" )";
+				seriesExp.setTextContent(correctNullDataField(seriesExp.getTextContent(), "null"));
+			}
 			//set the label expression
 			Node labelExp = document.getElementsByTagName("labelExpression").item(0);
 			String labelExpField = labelExp.getTextContent();
 			String newlabelExp = labelExpField + ".toString()";
 			labelExp.setTextContent(newlabelExp);
 
-		}
-		else if (chartType.compareToIgnoreCase("pie") == 0){
+		}else if (chartType.toLowerCase().contains("pie")){
 			//get the keyExpression node
 			Node keyExp = document.getElementsByTagName("keyExpression").item(0);
-			String keyExpField = keyExp.getTextContent();
-			String newkeyExp = "(( " + keyExpField + " != null) ? " + keyExpField + ".toString()  : \"null\" )";
-			keyExp.setTextContent(newkeyExp);
+			//String keyExpField = keyExp.getTextContent();
+			//String newkeyExp = "(( " + keyExpField + " != null) ? " + keyExpField + ".toString()  : \"null\" )";
+			keyExp.setTextContent(correctNullDataField(keyExp.getTextContent(), "null"));
 		}
+		
+		addChartLabels(chartType, document, rcs);
+	}
+	
+	public void addChartLabels(String chartType, Document document, ReportChartSettings rcs){
+		
+		//set the label expression
+		Node labelExp = document.getElementsByTagName("labelExpression").item(0);
+		String labelExpField = labelExp.getTextContent();
+		String newlabelExp = labelExpField + ".toString()";
+		labelExp.setTextContent(newlabelExp);
+		
+		//set title expression
+		Node titleExp = document.getElementsByTagName("titleExpression").item(0);
+		titleExp.setTextContent("\"" + rcs.getChartTitle() + "\"");
+		
+		//set subtitle expression
+		if (rcs.getChartSubTitle() != null && !rcs.getChartSubTitle().isEmpty()){
+			Node subTitleExp = document.getElementsByTagName("subtitleExpression").item(0);
+			if (subTitleExp == null){
+				subTitleExp = document.createElement("subtitleExpression");
+				subTitleExp.setTextContent("\"" + rcs.getChartSubTitle() + "\"");
+				Node subTitleNodeParent = document.getElementsByTagName("chartSubtitle").item(0);
+				subTitleNodeParent.appendChild(subTitleExp);
+			}else {
+				subTitleExp.setTextContent("\"" + rcs.getChartSubTitle() + "\"");	
+			}	
+		}
+		
+		
+		//set categoryAxisLabelExpression
+		if (rcs.getCategoryAxisLabel() != null && !rcs.getCategoryAxisLabel().isEmpty()){
+			Node categoryAxisLabelExp = document.getElementsByTagName("categoryAxisLabelExpression").item(0);
+			if (categoryAxisLabelExp == null){
+				//add the node as it is not there
+				//it goes before categoryAxisFormat node
+				Node categoryAxisFormatNode = document.getElementsByTagName("categoryAxisFormat").item(0);
+				categoryAxisLabelExp = document.createElement("categoryAxisLabelExpression");
+				categoryAxisLabelExp.setTextContent("\"" + rcs.getCategoryAxisLabel() + "\"");
+				Node categoryAxisFormatNodeParent = document.getElementsByTagName(categoryAxisFormatNode.getParentNode().getNodeName()).item(0);
+				categoryAxisFormatNodeParent.insertBefore(categoryAxisLabelExp, categoryAxisFormatNode);
+			}else{
+				categoryAxisLabelExp.setTextContent("\"" + rcs.getCategoryAxisLabel() + "\"");	
+			}
+		}		
+		
+		//set valueAxisLabelExpression
+		if (rcs.getValueAxisLabel() != null && !rcs.getValueAxisLabel().isEmpty()){
+			Node valueAxisLabelExp = document.getElementsByTagName("valueAxisLabelExpression").item(0);
+			if (valueAxisLabelExp == null){
+				//add the node as it is not there
+				//it goes before valueAxisFormat node
+				Node valueAxisFormatNode = document.getElementsByTagName("valueAxisFormat").item(0);
+				valueAxisLabelExp = document.createElement("valueAxisLabelExpression");
+				valueAxisLabelExp.setTextContent("\"" + rcs.getValueAxisLabel() + "\"");
+				Node valueAxisFormatNodeParent = document.getElementsByTagName(valueAxisFormatNode.getParentNode().getNodeName()).item(0);
+				valueAxisFormatNodeParent.insertBefore(valueAxisLabelExp, valueAxisFormatNode);
+			}else{
+				valueAxisLabelExp.setTextContent("\"" + rcs.getValueAxisLabel() + "\"");	
+			}
+		}	
+	}
+	
+	public String correctNullDataField(String infield, String replaceNullWith){
+		return "(( " + infield + " != null) ? " + infield + ".toString()  : \" "+ replaceNullWith +"\" )";
 	}
 
 	/**
@@ -920,11 +1000,11 @@ public class ModifyReportJRXML {
 	 * was a result of the upgrade to Jasperserver 3.5 and will hopefully go
 	 * away when we upgrade dyamic jasper.
 	 *
-	 * @param chartType The type of chart. Currently we only support Bar and Pie.
+	 * @param chartType The type of chart. 
 	 * @param document The jrxml document.
 	 */
 	public void correctPieChartEvaluationTime(String chartType, Document document){
-			if (chartType.compareToIgnoreCase("pie") == 0){
+		if (chartType.toLowerCase().contains("pie")){
 			//get the chart node
 			Element chartElement = (Element)document.getElementsByTagName("chart").item(0);
 			//change the attribute evaluationTime from "Group" to "Report"
@@ -940,25 +1020,19 @@ public class ModifyReportJRXML {
 	 * @param chartType The type of chart. Currently we only support Bar and Pie.
 	 * @param location The location you want to put the chart.  (header or footer)
 	 */
-	public void moveChartFromGroup(String fileName, String chartType, String location) throws ParserConfigurationException, SAXException, IOException{
+	public void moveChartFromGroup(String fileName, String chartType, String location, List<ReportChartSettings> rcsList) throws ParserConfigurationException, SAXException, IOException{
 
 
 		//Find the chart node copy it
-		String chart = null;
-		if (chartType.compareToIgnoreCase("bar") == 0)
-			chart = "barChart";
-		else if (chartType.compareToIgnoreCase("pie") == 0)
-			chart = "pieChart";
-		else
-			chart = null;
+		String chart = getChartNodeName(chartType);
 		if (chart != null){
 			Document document = loadXMLDocument(fileName);
 
 			//correct the "category series is null" and "key is null" errors
 			//before moving chart
-			correctNullDataInChart(chartType, document);
+			correctNullDataInChart(chartType, document, rcsList);
 			//correct bug with pie chart due to upgrade to JS 3.5
-			if (chart.compareToIgnoreCase("pieChart") == 0)
+			if (chart.toLowerCase().contains("pie"))
 				correctPieChartEvaluationTime(chartType, document);
 			Node chartNode = document.getElementsByTagName(chart).item(0);
 			if (chartNode != null){
@@ -1026,6 +1100,41 @@ public class ModifyReportJRXML {
 		}
 	}
 
+	private String getChartNodeName(String chartType) {
+		String chart;
+		if (chartType.compareToIgnoreCase("area") == 0)
+			chart = "areaChart";
+		else if (chartType.compareToIgnoreCase("bar") == 0)
+			chart = "barChart";
+		else if (chartType.compareToIgnoreCase("bar3d") == 0)
+			chart = "bar3DChart";
+		else if (chartType.compareToIgnoreCase("line") == 0)
+			chart = "lineChart";
+		else if (chartType.compareToIgnoreCase("pie") == 0)
+			chart = "pieChart";			
+		else if (chartType.compareToIgnoreCase("pie3d") == 0)
+			chart = "pie3DChart";
+		else if (chartType.compareToIgnoreCase("scatter") == 0)
+			chart = "scatterChart";
+		else if (chartType.compareToIgnoreCase("stackedarea") == 0)
+			chart = "stackedAreaChart";
+		else if (chartType.compareToIgnoreCase("stackedbar") == 0)
+			chart = "stackedBarChart";
+		else if (chartType.compareToIgnoreCase("stackedbar3d") == 0)
+			chart = "stackedBar3DChart";
+		else if (chartType.compareToIgnoreCase("timeseries") == 0)
+			chart = "timeSeriesChart";
+		else if (chartType.compareToIgnoreCase("xyarea") == 0)
+			chart = "xyAreaChart";
+		else if (chartType.compareToIgnoreCase("xybar") == 0)
+			chart = "xyBarChart";
+		else if (chartType.compareToIgnoreCase("xyline") == 0)
+			chart = "xyLineChart";
+		else
+			chart = null;
+		return chart;
+	}
+
 	/**
 	 * Removes all elements from the report except the chart and
 	 * places the chart in the summary section of the report.
@@ -1035,14 +1144,7 @@ public class ModifyReportJRXML {
 	 * @param location The location you want to put the chart.  (header or footer)
 	 */
 	public void modifyChartOnlyReport(String fileName, String chartType, String location) throws ParserConfigurationException, SAXException, IOException{
-		String chart = null;
-		if (chartType.compareToIgnoreCase("bar") == 0)
-			chart = "barChart";
-		else if (chartType.compareToIgnoreCase("pie") == 0)
-			chart = "pieChart";
-		else
-			chart = null;
-
+		String chart = getChartNodeName(chartType);
 
 		if (chart != null){
 			Document document = loadXMLDocument(fileName);

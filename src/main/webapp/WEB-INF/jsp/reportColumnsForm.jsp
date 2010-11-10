@@ -84,29 +84,80 @@
 	<hr width="100%" size=1 color="black">
 	<table id="chartSettings" class="tablesorter" bgcolor=#E0E0E0>
 		<tr>
-			<th>Chart Type</th>
-			<th>Location</th>
-			<th>Field for X-Axis/Value</th>
-			<th>Field for Y-Axis/Wedge</th>
-			<th>Operation for Y-Axis/Wedge</th>
+			<th>Chart</th>
+			<th></th>
+			<th></th>
+			<th></th>
+			<th></th>
+			<th></th>
 		</tr>
 		<TR rowIndex="0">
-			<TD><SELECT id="reportChartSettings[0].chartType"
+			<TD>Type <br/><SELECT id="reportChartSettings[0].chartType"
 				name="reportChartSettings[0].chartType" >
-				<option label="" value="-1"
-					<c:if test="${reportChartSettings[0].chartType == '-1'}">
-						selected="true"
-					</c:if>>No Chart</option>
-				<option label="Bar Chart" value="Bar"
-					<c:if test="${reportChartSettings[0].chartType == 'Bar'}">
-						selected="true"
-					</c:if>>Bar Chart</option>
-				<option label="Pie Chart" value="Pie"
-					<c:if test="${reportChartSettings[0].chartType == 'Pie'}">
-						selected="true"
-					</c:if>>Pie Chart</option>
+			<option label="" value="-1"
+				<c:if test="${reportChartSettings[0].chartType == '-1'}">
+					selected="true"
+				</c:if>>No Chart</option>
+			<option label="Area" value="Area"
+				<c:if test="${reportChartSettings[0].chartType == 'Area'}">
+					selected="true"
+				</c:if>>Area</option>
+			<option label="Bar" value="Bar"
+				<c:if test="${reportChartSettings[0].chartType == 'Bar'}">
+					selected="true"
+				</c:if>>Bar</option>
+			<option label="Bar 3D" value="Bar3D"
+				<c:if test="${reportChartSettings[0].chartType == 'Bar 3D'}">
+					selected="true"
+				</c:if>>Bar 3D</option>
+			<option label="Line" value="Line"
+				<c:if test="${reportChartSettings[0].chartType == 'Line'}">
+					selected="true"
+				</c:if>>Line</option>
+			<option label="Pie" value="Pie"
+				<c:if test="${reportChartSettings[0].chartType == 'Pie'}">
+					selected="true"
+				</c:if>>Pie</option>
+			<option label="Pie 3D" value="Pie3D"
+				<c:if test="${reportChartSettings[0].chartType == 'Pie 3D'}">
+					selected="true"
+				</c:if>>Pie 3D</option>
+			<option label="Scatter" value="Scatter"
+				<c:if test="${reportChartSettings[0].chartType == 'Scatter'}">
+					selected="true"
+				</c:if>>Scatter</option>
+			<option label="Stacked Area" value="StackedArea"
+				<c:if test="${reportChartSettings[0].chartType == 'Stacked Area'}">
+					selected="true"
+				</c:if>>Stacked Area</option>
+			<option label="Stacked Bar" value="StackedBar"
+				<c:if test="${reportChartSettings[0].chartType == 'Stacked Bar'}">
+					selected="true"
+				</c:if>>Stacked Bar</option>
+			<option label="Stacked Bar 3D" value="StackedBar3D"
+				<c:if test="${reportChartSettings[0].chartType == 'Stacked Bar 3D'}">
+					selected="true"
+				</c:if>>Stacked Bar 3D</option>
+			<option label="Time Series" value="TimeSeries"
+				<c:if test="${reportChartSettings[0].chartType == 'Time Series'}">
+					selected="true"
+				</c:if>>Time Series</option>
+			<option label="XY Area" value="XYArea"
+				<c:if test="${reportChartSettings[0].chartType == 'XY Area'}">
+					selected="true"
+				</c:if>>XY Area</option>
+			<option label="XY Bar" value="XYBar"
+				<c:if test="${reportChartSettings[0].chartType == 'XY Bar'}">
+					selected="true"
+				</c:if>>XY Bar</option>
+			<option label="XY Line" value="XYLine"
+				<c:if test="${reportChartSettings[0].chartType == 'XY Line'}">
+					selected="true"
+				</c:if>>XY Line</option>
 			</SELECT></TD>
-			<TD><SELECT id="reportChartSettings[0].location"
+
+
+			<TD>Location <br/> <SELECT id="reportChartSettings[0].location"
 				name="reportChartSettings[0].location">
 				<OPTION label="Header" value="header"
 					<c:if test="${reportChartSettings[0].location == 'header'}">
@@ -125,26 +176,42 @@
 				>Chart Only</OPTION>
 
 			</SELECT></TD>
-			<TD><SELECT id="reportChartSettings[0].fieldIdx"
+			<TD>Category (x-axis)<br/><SELECT id="reportChartSettings[0].fieldIdx"
 				name="reportChartSettings[0].fieldIdx" >
 				<c:forEach var="f" items="${reportGroupByFields}" varStatus="inner"><c:if test="${f != null }"><option label="${f.displayName}" value="${f.id}"<c:if test="${reportChartSettings[0].fieldIdx == f.id}"> selected="true"</c:if>>${f.displayName}</option></c:if>
 				</c:forEach></SELECT></TD>
-			<TD><SELECT id="reportChartSettings[0].fieldIdy"
-				name="reportChartSettings[0].fieldIdy"
+			<TD>Series (y-axis) <br/><SELECT id="reportChartSettings[0].reportChartSettingsSeries[0].series"
+				name="reportChartSettings[0].reportChartSettingsSeries[0].series"
 				onchange="fillChartCalcOptions(this); " >
-				<option label="Default Selected" value="${reportChartSettings[0].fieldIdy}" >Default</option>
+				<option label="Default Selected" value="${reportChartSettings[0].reportChartSettingsSeries[0].series}" >Default</option>
 			</SELECT></TD>
-
-			<TD><SELECT id="reportChartSettings[0].operation"
-				name="reportChartSettings[0].operation">
+			<TD>Operation for Series <br/><SELECT id="reportChartSettings[0].operation"
+				name="reportChartSettings[0].reportChartSettingsSeries[0].operation">
 				<option label="Record Count" value="RecordCount" moneyonly="false"
-					<c:if test="${reportChartSettings[0].operation == 'RecordCount'}">
+					<c:if test="${reportChartSettings[0].reportChartSettingsSeries[0].operation == 'RecordCount'}">
 						selected="true"
 					</c:if>>Record Count</option>
 				<option label="Sum" value="Sum" moneyonly="true"
-					<c:if test="${reportChartSettings[0].operation == 'Sum'}">
+					<c:if test="${reportChartSettings[0].reportChartSettingsSeries[0].operation == 'Sum'}">
 						selected="true"
 					</c:if>>Sum</option></SELECT></TD>
+
+		<TR>
+			<TD>Title <br/><input type="text" name="reportChartSettings[0].chartTitle" id="reportChartSettings[0].chartTitle"
+			<c:if test="${reportChartSettings[0].chartTitle != null}"> value="${reportChartSettings[0].chartTitle}"</c:if>>
+			</TD>
+			<TD>Subtitle <br/><input type="text" name="reportChartSettings[0].chartSubTitle" id="reportChartSettings[0].chartSubTitle"
+			<c:if test="${reportChartSettings[0].chartSubTitle != null}"> value="${reportChartSettings[0].chartSubTitle}"</c:if>>
+			</TD>
+			<TD>Category(x) Axis Label <br/><input type="text" name="reportChartSettings[0].categoryAxisLabel" id="reportChartSettings[0].categoryAxisLabel"
+			<c:if test="${reportChartSettings[0].categoryAxisLabel != null}"> value="${reportChartSettings[0].categoryAxisLabel}"</c:if>>
+			</TD>				
+			<TD>Value(y) Axis Label <br/><input type="text" name="reportChartSettings[0].valueAxisLabel" id="reportChartSettings[0].valueAxisLabel"
+			<c:if test="${reportChartSettings[0].valueAxisLabel != null}"> value="${reportChartSettings[0].valueAxisLabel}"</c:if>>
+			</TD>	
+			<TD></TD>			
+		</TR>					
+
 		</TR>
 	</table>
 </div>

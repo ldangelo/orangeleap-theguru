@@ -566,7 +566,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 				String chartType = rptChartSetting.getChartType();
 				String chartLocation = rptChartSetting.getLocation();
 				// move the chart to the header or footer of the report
-		    	reportXMLModifier.moveChartFromGroup(tempFile.getPath(), chartType, chartLocation);
+		    	reportXMLModifier.moveChartFromGroup(tempFile.getPath(), chartType, chartLocation, wiz.getReportChartSettings());
 		    	//if the report is a chart only report (used for the Dashboard of OL) remove all unnecessary elements
 				if (isChartOnlyReport(wiz, reportFieldService)) {
 			    	reportXMLModifier.modifyChartOnlyReport(tempFile.getPath(), chartType, chartLocation);
@@ -708,7 +708,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 				String chartType = rptChartSetting.getChartType();
 				String chartLocation = rptChartSetting.getLocation();
 				// move the chart to the header or footer of the report
-		    	reportXMLModifier.moveChartFromGroup(tempFile.getPath(), chartType, chartLocation);
+		    	reportXMLModifier.moveChartFromGroup(tempFile.getPath(), chartType, chartLocation, wiz.getReportChartSettings());
 		    	//if the report is a chart only report (used for the Dashboard of OL) remove all unnecessary elements
 				if (isChartOnlyReport(wiz, reportFieldService)) {
 			    	reportXMLModifier.modifyChartOnlyReport(tempFile.getPath(), chartType, chartLocation);

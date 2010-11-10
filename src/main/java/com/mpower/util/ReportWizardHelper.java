@@ -2,6 +2,7 @@ package com.mpower.util;
 
 import java.util.Iterator;
 import com.mpower.domain.ReportChartSettings;
+import com.mpower.domain.ReportChartSettingsSeries;
 import com.mpower.domain.ReportCrossTabColumn;
 import com.mpower.domain.ReportCrossTabMeasure;
 import com.mpower.domain.ReportCrossTabRow;
@@ -26,7 +27,32 @@ public class ReportWizardHelper {
 		emptyWizard.setLastRunByUserName(savedWizard.getLastRunByUserName());
 
 		emptyWizard.getReportChartSettings().clear();
-		emptyWizard.getReportChartSettings().addAll(savedWizard.getReportChartSettings());
+		for (ReportChartSettings reportChartSettings : savedWizard.getReportChartSettings()) {
+			ReportChartSettings rcs = new ReportChartSettings();
+			rcs.setCategory(reportChartSettings.getCategory());
+			rcs.setCategoryAxisLabel(reportChartSettings.getCategoryAxisLabel());
+			rcs.setChartSubTitle(reportChartSettings.getChartSubTitle());
+			rcs.setChartType(reportChartSettings.getChartType());
+			rcs.setChartTitle(reportChartSettings.getChartTitle());
+			rcs.setFieldIdx(reportChartSettings.getFieldIdx());
+			rcs.setLocation(reportChartSettings.getLocation());
+			rcs.setValueAxisLabel(reportChartSettings.getValueAxisLabel());
+			for (ReportChartSettingsSeries reportChartSettingsSeries : reportChartSettings.getReportChartSettingsSeries()) {
+				ReportChartSettingsSeries rcss = new ReportChartSettingsSeries();
+				rcss.setOperation(reportChartSettingsSeries.getOperation());
+				rcss.setSeries(reportChartSettingsSeries.getSeries());
+				rcss.setSeriesColumn(reportChartSettingsSeries.getSeriesColumn());
+				rcss.setSeriesLabel(reportChartSettingsSeries.getSeriesLabel());
+				if (copyIds)
+					rcss.setId(reportChartSettingsSeries.getId());
+				rcs.getReportChartSettingsSeries().add(rcss);
+			}
+			
+			if (copyIds)
+				rcs.setId(reportChartSettings.getId());
+			emptyWizard.getReportChartSettings().add(rcs);
+		}
+
 		emptyWizard.setReportComment(savedWizard.getReportComment());
 		if (copyIds)
 			emptyWizard.getReportCrossTabFields().setId(savedWizard.getReportCrossTabFields().getId());
