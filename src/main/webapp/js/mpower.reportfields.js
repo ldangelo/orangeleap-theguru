@@ -133,7 +133,7 @@ function cleanUpFieldTable(fieldTableSelector) {
 	var xAxisSelect = $('#reportChartSettings\\[0\\]\\.fieldIdx');
 	var xAxisFieldId = xAxisSelect.find('option:selected').attr('value');
 	xAxisSelect.find('option').remove();
-	var yAxisSelect = $('#reportChartSettings\\[0\\]\\.fieldIdy');
+	var yAxisSelect = $('#reportChartSettings\\[0\\]\\.reportChartSettingsSeries\\[0\\]\\.series');
 	var yAxisFieldId = yAxisSelect.find('option:selected').attr('value');
 	yAxisSelect.find('option').remove();
 
@@ -210,7 +210,7 @@ function setOptionsEnabled(rowSelector, index) {
 			fieldRow.find('input[objectname$=max]').removeAttr('disabled');
 			fieldRow.find('input[objectname$=min]').removeAttr('disabled');
 	    }
-		$('#reportChartSettings\\[0\\]\\.fieldIdy').append(field.find('option:selected').clone(true));
+		$('#reportChartSettings\\[0\\]\\.reportChartSettingsSeries\\[0\\]\\.series').append(field.find('option:selected').clone(true));
 	}
 }
 
