@@ -3,7 +3,6 @@ package com.mpower.util;
 import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -17,10 +16,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.design.JRDesignChart;
-import net.sf.jasperreports.engine.design.JRDesignExpression;
-import net.sf.jasperreports.engine.design.JRDesignGroup;
-import net.sf.jasperreports.engine.design.JRDesignVariable;
 
 import org.apache.axis.types.Day;
 import org.apache.commons.logging.Log;
@@ -32,9 +27,19 @@ import org.xml.sax.SAXException;
 
 import ar.com.fdvs.dj.core.DJConstants;
 import ar.com.fdvs.dj.domain.DJCalculation;
+import ar.com.fdvs.dj.domain.DJCrosstab;
+import ar.com.fdvs.dj.domain.DJCrosstabColumn;
+import ar.com.fdvs.dj.domain.DJCrosstabRow;
+import ar.com.fdvs.dj.domain.DynamicReport;
+import ar.com.fdvs.dj.domain.Style;
+import ar.com.fdvs.dj.domain.builders.ChartBuilderException;
+import ar.com.fdvs.dj.domain.builders.ColumnBuilder;
+import ar.com.fdvs.dj.domain.builders.ColumnBuilderException;
+import ar.com.fdvs.dj.domain.builders.CrosstabBuilder;
+import ar.com.fdvs.dj.domain.builders.CrosstabColumnBuilder;
+import ar.com.fdvs.dj.domain.builders.CrosstabRowBuilder;
+import ar.com.fdvs.dj.domain.builders.FastReportBuilder;
 import ar.com.fdvs.dj.domain.chart.DJChart;
-import ar.com.fdvs.dj.domain.chart.DJChartOptions;
-import ar.com.fdvs.dj.domain.chart.NumberExpression;
 import ar.com.fdvs.dj.domain.chart.builder.DJAreaChartBuilder;
 import ar.com.fdvs.dj.domain.chart.builder.DJBar3DChartBuilder;
 import ar.com.fdvs.dj.domain.chart.builder.DJBarChartBuilder;
@@ -50,21 +55,6 @@ import ar.com.fdvs.dj.domain.chart.builder.DJXYAreaChartBuilder;
 import ar.com.fdvs.dj.domain.chart.builder.DJXYBarChartBuilder;
 import ar.com.fdvs.dj.domain.chart.builder.DJXYLineChartBuilder;
 import ar.com.fdvs.dj.domain.chart.plot.DJAxisFormat;
-import ar.com.fdvs.dj.domain.DJCrosstab;
-import ar.com.fdvs.dj.domain.DJCrosstabColumn;
-import ar.com.fdvs.dj.domain.DJCrosstabRow;
-import ar.com.fdvs.dj.domain.DJLabel;
-import ar.com.fdvs.dj.domain.DynamicJasperDesign;
-import ar.com.fdvs.dj.domain.DynamicReport;
-import ar.com.fdvs.dj.domain.StringExpression;
-import ar.com.fdvs.dj.domain.Style;
-import ar.com.fdvs.dj.domain.builders.ChartBuilderException;
-import ar.com.fdvs.dj.domain.builders.ColumnBuilder;
-import ar.com.fdvs.dj.domain.builders.ColumnBuilderException;
-import ar.com.fdvs.dj.domain.builders.CrosstabBuilder;
-import ar.com.fdvs.dj.domain.builders.CrosstabColumnBuilder;
-import ar.com.fdvs.dj.domain.builders.CrosstabRowBuilder;
-import ar.com.fdvs.dj.domain.builders.FastReportBuilder;
 import ar.com.fdvs.dj.domain.constants.Border;
 import ar.com.fdvs.dj.domain.constants.Font;
 import ar.com.fdvs.dj.domain.constants.GroupLayout;
@@ -92,9 +82,8 @@ import com.mpower.domain.ReportSelectedField;
 import com.mpower.domain.ReportWizard;
 import com.mpower.service.ReportCustomFilterDefinitionService;
 import com.mpower.service.ReportFieldService;
-import com.orangeleap.common.security.CasUtil;
-import com.sun.jmx.snmp.Timestamp;
 import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
+import com.orangeleap.common.security.CasUtil;
 
 public class ReportGenerator implements java.io.Serializable {
 	protected final Log logger = LogFactory.getLog(getClass());
@@ -710,37 +699,11 @@ public class ReportGenerator implements java.io.Serializable {
 	}
 	
 	private FastReportBuilder addCharts(ReportWizard wiz, FastReportBuilder drb) throws ChartBuilderException{
-		//List<DJChart> djChartList =  new ArrayList<DJChart>();
+
 		List<ReportChartSettings> chartSettings = wiz.getReportChartSettings();
 		Iterator<ReportChartSettings> itChartSettings = chartSettings.iterator();
 		while (itChartSettings.hasNext()){
 			ReportChartSettings rcs = (ReportChartSettings) itChartSettings.next();
-			//set some formatting on the x and y axis's
-	         DJAxisFormat categoryAxisFormat = new DJAxisFormat("category");
-	         categoryAxisFormat.setLabelFont(Font.ARIAL_SMALL);
-	         categoryAxisFormat.setLabelColor(Color.DARK_GRAY);
-	         categoryAxisFormat.setTickLabelFont(Font.ARIAL_SMALL);
-	         categoryAxisFormat.setTickLabelColor(Color.DARK_GRAY);
-	         categoryAxisFormat.setTickLabelMask("");
-	         categoryAxisFormat.setLineColor(Color.DARK_GRAY);
-
-	         DJAxisFormat valueAxisFormat = new DJAxisFormat("value");
-	         //valueAxisFormat.setLabelExpression("\"vaLable\"");
-	         valueAxisFormat.setLabelFont(Font.ARIAL_SMALL);
-	         valueAxisFormat.setLabelColor(Color.DARK_GRAY);
-	         valueAxisFormat.setTickLabelFont(Font.ARIAL_SMALL);
-	         valueAxisFormat.setTickLabelColor(Color.DARK_GRAY);
-	         valueAxisFormat.setTickLabelMask("#,##0.0");
-	         valueAxisFormat.setLineColor(Color.DARK_GRAY);
-
-	         valueAxisFormat.setLabelExpression(new StringExpression() {
-				private static final long serialVersionUID = 1L;
-
-				public Object evaluate(Map fields, Map variables, Map parameters) {
-	        		 return "test junk";
-	        	 }
-	        });
-	         
 			DJChart chart = null;	         
 	        
 			//create the new chart
@@ -754,42 +717,23 @@ public class ReportGenerator implements java.io.Serializable {
 				//djChartBuilder.setValueAxisFormat(valueAxisFormat);
 				
 				for (ReportChartSettingsSeries rcss : rcs.getReportChartSettingsSeries()) {
-					
-					StringExpression strExp = new StringExpression() {
-						 			public Object evaluate(Map fields, Map variables, Map parameters) {				
-						 				return "http://thisIsAURL?count=";
-						 			}};
-
-					String label = rcss.getSeriesLabel().length() > 0 ? rcss.getSeriesLabel() : rcss.getSeriesColumn().getTitle();
-					//StringExpression strExp = (StringExpression) "rest";
-					djChartBuilder.addSerie(rcss.getSeriesColumn(), "strExp");
+					djChartBuilder.addSerie(rcss.getSeriesColumn());
 					djChartBuilder.setOperation(getDJChartOperation(rcss));
 					
 		         }
 				chart = djChartBuilder.build();
 				drb.addChart(chart);
-				//djChartList.add(jrChart);
 			}else if (rcs.getChartType().equalsIgnoreCase("Bar")){
 				DJBarChartBuilder djChartBuilder = new DJBarChartBuilder();
 				rcs.getCategory().setBlankWhenNull(true); //eliminates null 'key' argument 
 				djChartBuilder.setCategory((PropertyColumn) rcs.getCategory());
-				djChartBuilder.setValueAxisFormat(valueAxisFormat);
+
 				for (ReportChartSettingsSeries rcss : rcs.getReportChartSettingsSeries()) {
 					djChartBuilder.addSerie(rcss.getSeriesColumn());
 					djChartBuilder.setOperation(getDJChartOperation(rcss));
 		         }
-				
-				  djChartBuilder.setTitle(new StringExpression() {
-						private static final long serialVersionUID = 1L;
-
-						public Object evaluate(Map fields, Map variables, Map parameters) {
-			        		 return "test junk";
-			        	 }
-			        });				
-				
 				chart = djChartBuilder.build();
 				drb.addChart(chart);
-				//djChartList.add(jrChart);
 			}else if (rcs.getChartType().equalsIgnoreCase("Bar3D")){
 				DJBar3DChartBuilder djChartBuilder = new DJBar3DChartBuilder();
 				rcs.getCategory().setBlankWhenNull(true); //eliminates null 'key' argument 
@@ -801,7 +745,6 @@ public class ReportGenerator implements java.io.Serializable {
 				 }
 				chart = djChartBuilder.build();
 				drb.addChart(chart);
-				//djChartList.add(jrChart);
 			}else if (rcs.getChartType().equalsIgnoreCase("Line")){
 				DJLineChartBuilder djChartBuilder = new DJLineChartBuilder();
 				rcs.getCategory().setBlankWhenNull(true); //eliminates null 'key' argument 
@@ -813,7 +756,6 @@ public class ReportGenerator implements java.io.Serializable {
 				 }
 				chart = djChartBuilder.build();
 				drb.addChart(chart);
-				//djChartList.add(jrChart);
 			}else if (rcs.getChartType().equalsIgnoreCase("Pie")){
 				DJPieChartBuilder djChartBuilder = new DJPieChartBuilder();
 				rcs.getCategory().setBlankWhenNull(true); //eliminates null 'key' argument 
@@ -825,7 +767,6 @@ public class ReportGenerator implements java.io.Serializable {
 				 }
 				chart = djChartBuilder.build();
 				drb.addChart(chart);
-				//djChartList.add(jrChart);
 			}else if (rcs.getChartType().equalsIgnoreCase("Pie3D")){
 				DJPie3DChartBuilder djChartBuilder = new DJPie3DChartBuilder();
 				rcs.getCategory().setBlankWhenNull(true); //eliminates null 'key' argument 
@@ -837,7 +778,6 @@ public class ReportGenerator implements java.io.Serializable {
 				 }
 				chart = djChartBuilder.build();
 				drb.addChart(chart);
-				//djChartList.add(jrChart);
 			}else if (rcs.getChartType().equalsIgnoreCase("Scatter")){
 				DJScatterChartBuilder djChartBuilder = new DJScatterChartBuilder();
 				rcs.getCategory().setBlankWhenNull(true); //eliminates null 'key' argument 
@@ -849,7 +789,6 @@ public class ReportGenerator implements java.io.Serializable {
 				 }
 				chart = djChartBuilder.build();
 				drb.addChart(chart);
-				//djChartList.add(jrChart);
 			}else if (rcs.getChartType().equalsIgnoreCase("StackedArea")){
 				DJStackedAreaChartBuilder djChartBuilder = new DJStackedAreaChartBuilder();
 				rcs.getCategory().setBlankWhenNull(true); //eliminates null 'key' argument 
@@ -861,7 +800,6 @@ public class ReportGenerator implements java.io.Serializable {
 				 }
 				chart = djChartBuilder.build();
 				drb.addChart(chart);
-				//djChartList.add(jrChart);
 			}else if (rcs.getChartType().equalsIgnoreCase("StackedBar")){
 				DJStackedBarChartBuilder djChartBuilder = new DJStackedBarChartBuilder();
 				rcs.getCategory().setBlankWhenNull(true); //eliminates null 'key' argument 
@@ -873,7 +811,6 @@ public class ReportGenerator implements java.io.Serializable {
 				 }
 				chart = djChartBuilder.build();
 				drb.addChart(chart);
-				//djChartList.add(jrChart);
 			}else if (rcs.getChartType().equalsIgnoreCase("StackedBar3D")){
 				DJStackedBar3DChartBuilder djChartBuilder = new DJStackedBar3DChartBuilder();
 				rcs.getCategory().setBlankWhenNull(true); //eliminates null 'key' argument 
@@ -885,7 +822,6 @@ public class ReportGenerator implements java.io.Serializable {
 				 }
 				chart = djChartBuilder.build();
 				drb.addChart(chart);
-				//djChartList.add(jrChart);
 			}else if (rcs.getChartType().equalsIgnoreCase("TimeSeries")){
 				DJTimeSeriesChartBuilder djChartBuilder = new DJTimeSeriesChartBuilder();
 				rcs.getCategory().setBlankWhenNull(true); //eliminates null 'key' argument
@@ -897,7 +833,6 @@ public class ReportGenerator implements java.io.Serializable {
 				 }
 				chart = djChartBuilder.build();
 				drb.addChart(chart);
-				//djChartList.add(jrChart);
 			}else if (rcs.getChartType().equalsIgnoreCase("XYArea")){
 				DJXYAreaChartBuilder djChartBuilder = new DJXYAreaChartBuilder();
 				rcs.getCategory().setBlankWhenNull(true); //eliminates null 'key' argument 
@@ -909,7 +844,6 @@ public class ReportGenerator implements java.io.Serializable {
 				 }
 				chart = djChartBuilder.build();
 				drb.addChart(chart);
-				//djChartList.add(jrChart);
 			}else if (rcs.getChartType().equalsIgnoreCase("XYBar")){
 				DJXYBarChartBuilder djChartBuilder = new DJXYBarChartBuilder();
 				rcs.getCategory().setBlankWhenNull(true); //eliminates null 'key' argument 
@@ -921,7 +855,6 @@ public class ReportGenerator implements java.io.Serializable {
 				 }
 				chart = djChartBuilder.build();
 				drb.addChart(chart);
-				//djChartList.add(jrChart);
 			}else if (rcs.getChartType().equalsIgnoreCase("XYLine")){
 				DJXYLineChartBuilder djChartBuilder = new DJXYLineChartBuilder();
 				rcs.getCategory().setBlankWhenNull(true); //eliminates null 'key' argument 
@@ -933,7 +866,6 @@ public class ReportGenerator implements java.io.Serializable {
 				 }
 				chart = djChartBuilder.build();
 				drb.addChart(chart);
-				//djChartList.add(jrChart);
 			}	
 		}
 		return drb;
@@ -946,70 +878,7 @@ public class ReportGenerator implements java.io.Serializable {
 		//default
 		return DJChart.CALCULATION_COUNT;
 	}
-/*
-	private DJChart setChartCriteria(DJChart chart, ReportWizard wiz) {
-		List<ReportChartSettings> chartSettings = wiz.getReportChartSettings();
-		Iterator itChartSettings = chartSettings.iterator();
-		while (itChartSettings.hasNext()){
-			ReportChartSettings rcs = (ReportChartSettings) itChartSettings.next();
-			if (rcs.getChartType().compareTo("-1") == 0) continue;
-			DJChartOptions options = new DJChartOptions();
-			options.setPosition(DJChartOptions.POSITION_HEADER);
-			options.setShowLabels(true);
 
-
-			//set chart type
-			if (rcs.getChartType().compareTo("Bar") == 0){
-				chart.setType(DJChart.BAR_CHART);
-
-				//Add the x axis label
-				String xAxisLabel = null;
-				if  (chart.getColumnsGroup().getColumnToGroupBy().getName() != null){
-					xAxisLabel = "\"" + chart.getColumnsGroup().getColumnToGroupBy().getTitle().toString() + "\"";
-				}
-
-				if (xAxisLabel != null){
-					JRDesignExpression categoryAxisLabelExpression = new JRDesignExpression();
-					categoryAxisLabelExpression.setValueClass(String.class);
-					categoryAxisLabelExpression.setText(xAxisLabel);
-//					options.setCategoryAxisLabelExpression(categoryAxisLabelExpression);
-				}
-
-				//Add the y axis label
-				String yAxisLabel = null;
-				String calc = "";
-				if (rcs.getOperation().toString().compareToIgnoreCase("recordCount") == 0)
-					calc = "Count";
-				else if (rcs.getOperation().toString().compareToIgnoreCase("sum") == 0)
-					calc = "Sum";
-				AbstractColumn yAxisColumn = (AbstractColumn) chart.getColumns().get(0);
-				if  (yAxisColumn != null){
-					yAxisLabel = "\"" + yAxisColumn.getTitle().toString() + " " + calc + "\"";
-				}else
-					yAxisLabel = rcs.getOperation().toString();
-
-				if (yAxisLabel != null){
-					JRDesignExpression valueAxisLabelExpression = new JRDesignExpression();
-					valueAxisLabelExpression.setValueClass(String.class);
-					valueAxisLabelExpression.setText(yAxisLabel);
-//					options.setValueAxisLabelExpression(valueAxisLabelExpression);
-				}
-
-			}
-
-			if (rcs.getChartType().compareTo("Pie") == 0) {
-				chart.setType(DJChart.PIE_CHART);
-			}
-
-			//set chart operation
-			if (rcs.getOperation().compareTo("RecordCount") == 0) chart.setOperation(DJChart.CALCULATION_COUNT);
-			if (rcs.getOperation().compareTo("Sum") == 0) chart.setOperation(DJChart.CALCULATION_SUM);
-
-			chart.setOptions(options);
-		}
-		return chart;
-	}
-*/
 	private void setChartColumns(AbstractColumn column, ReportField f, ReportFieldService reportFieldService, ReportWizard wiz) {
 
 		List<ReportChartSettings> chartSettings = wiz.getReportChartSettings();
@@ -1039,24 +908,7 @@ public class ReportGenerator implements java.io.Serializable {
 		}
 		
 	}
-/*
-	private Boolean isChartColumn(ReportField f, ReportWizard wiz, ReportFieldService reportFieldService) {
-		Boolean chartColumn = false;
-		//iterate thru the chart settings to see if this report
-		//field is a chart field
-		List<ReportChartSettings> chartSettings = wiz.getReportChartSettings();
-		Iterator itChartSettings = chartSettings.iterator();
-		while (itChartSettings.hasNext()){
-			ReportChartSettings rcs = (ReportChartSettings) itChartSettings.next();
-			if (rcs.getChartType().compareTo("-1") == 0) continue;
-			ReportField rfx = reportFieldService.find(rcs.getFieldIdx());
-			ReportField rfy = reportFieldService.find(rcs.getFieldIdy());
-			if (rfx.getId() == f.getId() || rfy.getId() == f.getId())
-				chartColumn = true;
-		}
-		return chartColumn;
-	}
-*/
+
 	private DJGroup buildGroup(AbstractColumn column) {
 		DJGroup group = new DJGroup();
 		group.setColumnToGroupBy((PropertyColumn) column);
@@ -1124,43 +976,7 @@ public class ReportGenerator implements java.io.Serializable {
 		return groupsBuilt;
 	}
 */
-/*
-	private List<DJChart> buildCharts(List<DJGroup> groupByColumnsBuilt, List<AbstractColumn> allColumns, ReportWizard wiz,ReportFieldService reportFieldService) throws ChartBuilderException{
-		List<DJChart> chartsBuilt = new LinkedList<DJChart>();
-		List<ReportChartSettings> chartSettings = wiz.getReportChartSettings();
-		Iterator itChartSettings = chartSettings.iterator();
-		while (itChartSettings.hasNext()){
-			ReportChartSettings rcs = (ReportChartSettings) itChartSettings.next();
-			if (rcs.getChartType().compareTo("-1") == 0) continue;
-			ReportField rfx = reportFieldService.find(rcs.getFieldIdx());
-			DJGroup cg = getReportDJGroup(rfx, groupByColumnsBuilt);
-			ReportField rfy = reportFieldService.find(rcs.getFieldIdy());
-			List<AbstractColumn> columns = getReportAbstractColumn(rfy, allColumns);
 
-			//DJChartBuilder cb = new DJChartBuilder();
-			DJChart chart = new DJChart();
-			DJChartOptions options = new DJChartOptions();
-
-			options.setPosition(DJChartOptions.POSITION_HEADER);
-			options.setShowLabels(true);
-			chart.setOptions(options);
-			chart.setColumnsGroup(cg);
-			chart.setColumns(columns);
-
-
-			//set chart type
-			if (rcs.getChartType().compareTo("Bar") == 0) chart.setType(DJChart.BAR_CHART);
-			if (rcs.getChartType().compareTo("Pie") == 0) chart.setType(DJChart.PIE_CHART);
-
-			//set chart operation
-			if (rcs.getOperation().compareTo("RecordCount") == 0) chart.setOperation(DJChart.CALCULATION_COUNT);
-			if (rcs.getOperation().compareTo("Sum") == 0) chart.setOperation(DJChart.CALCULATION_SUM);
-
-			chartsBuilt.add(chart);
-		}//end while itChartSettings
-		return chartsBuilt;
-	}
-*/
 	private List<AbstractColumn> getReportAbstractColumn(ReportField rfy, List<AbstractColumn> allColumns) {
 		List<AbstractColumn> columns = new LinkedList<AbstractColumn>();
 		Iterator itCol = allColumns.iterator();

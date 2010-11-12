@@ -934,15 +934,18 @@ public class ModifyReportJRXML {
 	
 	public void addChartLabels(String chartType, Document document, ReportChartSettings rcs){
 		
-		//set the label expression
-		Node labelExp = document.getElementsByTagName("labelExpression").item(0);
-		String labelExpField = labelExp.getTextContent();
-		String newlabelExp = labelExpField + ".toString()";
-		labelExp.setTextContent(newlabelExp);
-		
 		//set title expression
-		Node titleExp = document.getElementsByTagName("titleExpression").item(0);
-		titleExp.setTextContent("\"" + rcs.getChartTitle() + "\"");
+		if (rcs.getChartTitle() != null && !rcs.getChartTitle().isEmpty()){
+			Node titleExp = document.getElementsByTagName("titleExpression").item(0);
+			if (titleExp == null){
+				titleExp = document.createElement("titleExpression");
+				titleExp.setTextContent("\"" + rcs.getChartTitle() + "\"");
+				Node subTitleNodeParent = document.getElementsByTagName("chartTitle").item(0);
+				subTitleNodeParent.appendChild(titleExp);
+			}else {
+				titleExp.setTextContent("\"" + rcs.getChartTitle() + "\"");	
+			}	
+		}
 		
 		//set subtitle expression
 		if (rcs.getChartSubTitle() != null && !rcs.getChartSubTitle().isEmpty()){
@@ -957,38 +960,39 @@ public class ModifyReportJRXML {
 			}	
 		}
 		
-		
-		//set categoryAxisLabelExpression
-		if (rcs.getCategoryAxisLabel() != null && !rcs.getCategoryAxisLabel().isEmpty()){
-			Node categoryAxisLabelExp = document.getElementsByTagName("categoryAxisLabelExpression").item(0);
-			if (categoryAxisLabelExp == null){
-				//add the node as it is not there
-				//it goes before categoryAxisFormat node
-				Node categoryAxisFormatNode = document.getElementsByTagName("categoryAxisFormat").item(0);
-				categoryAxisLabelExp = document.createElement("categoryAxisLabelExpression");
-				categoryAxisLabelExp.setTextContent("\"" + rcs.getCategoryAxisLabel() + "\"");
-				Node categoryAxisFormatNodeParent = document.getElementsByTagName(categoryAxisFormatNode.getParentNode().getNodeName()).item(0);
-				categoryAxisFormatNodeParent.insertBefore(categoryAxisLabelExp, categoryAxisFormatNode);
-			}else{
-				categoryAxisLabelExp.setTextContent("\"" + rcs.getCategoryAxisLabel() + "\"");	
-			}
-		}		
-		
-		//set valueAxisLabelExpression
-		if (rcs.getValueAxisLabel() != null && !rcs.getValueAxisLabel().isEmpty()){
-			Node valueAxisLabelExp = document.getElementsByTagName("valueAxisLabelExpression").item(0);
-			if (valueAxisLabelExp == null){
-				//add the node as it is not there
-				//it goes before valueAxisFormat node
-				Node valueAxisFormatNode = document.getElementsByTagName("valueAxisFormat").item(0);
-				valueAxisLabelExp = document.createElement("valueAxisLabelExpression");
-				valueAxisLabelExp.setTextContent("\"" + rcs.getValueAxisLabel() + "\"");
-				Node valueAxisFormatNodeParent = document.getElementsByTagName(valueAxisFormatNode.getParentNode().getNodeName()).item(0);
-				valueAxisFormatNodeParent.insertBefore(valueAxisLabelExp, valueAxisFormatNode);
-			}else{
-				valueAxisLabelExp.setTextContent("\"" + rcs.getValueAxisLabel() + "\"");	
-			}
-		}	
+		if (!chartType.toLowerCase().contains("pie")){
+			//set categoryAxisLabelExpression
+			if (rcs.getCategoryAxisLabel() != null && !rcs.getCategoryAxisLabel().isEmpty()){
+				Node categoryAxisLabelExp = document.getElementsByTagName("categoryAxisLabelExpression").item(0);
+				if (categoryAxisLabelExp == null){
+					//add the node as it is not there
+					//it goes before categoryAxisFormat node
+					Node categoryAxisFormatNode = document.getElementsByTagName("categoryAxisFormat").item(0);
+					categoryAxisLabelExp = document.createElement("categoryAxisLabelExpression");
+					categoryAxisLabelExp.setTextContent("\"" + rcs.getCategoryAxisLabel() + "\"");
+					Node categoryAxisFormatNodeParent = document.getElementsByTagName(categoryAxisFormatNode.getParentNode().getNodeName()).item(0);
+					categoryAxisFormatNodeParent.insertBefore(categoryAxisLabelExp, categoryAxisFormatNode);
+				}else{
+					categoryAxisLabelExp.setTextContent("\"" + rcs.getCategoryAxisLabel() + "\"");	
+				}
+			}		
+			
+			//set valueAxisLabelExpression
+			if (rcs.getValueAxisLabel() != null && !rcs.getValueAxisLabel().isEmpty()){
+				Node valueAxisLabelExp = document.getElementsByTagName("valueAxisLabelExpression").item(0);
+				if (valueAxisLabelExp == null){
+					//add the node as it is not there
+					//it goes before valueAxisFormat node
+					Node valueAxisFormatNode = document.getElementsByTagName("valueAxisFormat").item(0);
+					valueAxisLabelExp = document.createElement("valueAxisLabelExpression");
+					valueAxisLabelExp.setTextContent("\"" + rcs.getValueAxisLabel() + "\"");
+					Node valueAxisFormatNodeParent = document.getElementsByTagName(valueAxisFormatNode.getParentNode().getNodeName()).item(0);
+					valueAxisFormatNodeParent.insertBefore(valueAxisLabelExp, valueAxisFormatNode);
+				}else{
+					valueAxisLabelExp.setTextContent("\"" + rcs.getValueAxisLabel() + "\"");	
+				}
+			}	
+		}
 	}
 	
 	public String correctNullDataField(String infield, String replaceNullWith){
