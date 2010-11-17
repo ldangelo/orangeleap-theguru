@@ -1047,23 +1047,12 @@ public class ReportGenerator implements java.io.Serializable {
 		tmpDataSourceDescriptor.setReferenceUri(jasperDatasourceName);
 		tmpDataSourceDescriptor.setIsReference(true);
 		rd.getChildren().add(tmpDataSourceDescriptor);
-
-		ResourceDescriptor jrxmlDescriptor = new ResourceDescriptor();
-		jrxmlDescriptor.setWsType(ResourceDescriptor.TYPE_JRXML);
-		jrxmlDescriptor.setName(name);
-		jrxmlDescriptor.setLabel(label);
-		jrxmlDescriptor.setDescription(desc);
-		jrxmlDescriptor.setIsNew(true);
-		jrxmlDescriptor.setHasData(true);
-		jrxmlDescriptor.setMainReport(true);
-
-		rd.getChildren().add(jrxmlDescriptor);
-		rd.setResourceProperty(
-				ResourceDescriptor.PROP_RU_ALWAYS_PROPMT_CONTROLS, true);
-		// Check if the report already exists and delete it if it does
-		WSClient wsClient = getServer().getWSClient();
+		
 		boolean reportExists = false;
 
+		WSClient wsClient = getServer().getWSClient();
+		
+		// Check if the report already exists
 		// wsClient.list(rd) throws an exception if the report does not exist
 		try {
 			List reportList = wsClient.list(rd);
@@ -1071,8 +1060,21 @@ public class ReportGenerator implements java.io.Serializable {
 		} catch (Exception e) {
 			reportExists = false;
 		}
-		if (reportExists)
-			wsClient.delete(rd);
+		
+		ResourceDescriptor jrxmlDescriptor = new ResourceDescriptor();
+		jrxmlDescriptor.setWsType(ResourceDescriptor.TYPE_JRXML);
+		jrxmlDescriptor.setName(name);
+		jrxmlDescriptor.setLabel(label);
+		jrxmlDescriptor.setDescription(desc);
+		jrxmlDescriptor.setIsNew(!reportExists);
+		jrxmlDescriptor.setHasData(true);
+		jrxmlDescriptor.setMainReport(true);
+
+		rd.setIsNew(!reportExists);
+		rd.getChildren().add(jrxmlDescriptor);
+		rd.setResourceProperty(
+				ResourceDescriptor.PROP_RU_ALWAYS_PROPMT_CONTROLS, true);
+		
 		ResourceDescriptor reportDescriptor = wsClient.addOrModifyResource(rd, report);
 
 		//
