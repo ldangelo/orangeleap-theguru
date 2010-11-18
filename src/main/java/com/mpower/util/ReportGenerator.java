@@ -662,7 +662,7 @@ public class ReportGenerator implements java.io.Serializable {
 	private FastReportBuilder addColumnsAndGroups(List<ReportField> reportFieldsOrderedList, ReportWizard wiz, FastReportBuilder drb, ReportFieldService reportFieldService)throws ColumnBuilderException{
 		//List<AbstractColumn> columnsBuilt = new LinkedList<AbstractColumn>();
 		Iterator<ReportField> itFields = reportFieldsOrderedList.iterator();
-		Boolean chartExists = (wiz.getReportChartSettings() != null && wiz.getReportChartSettings().get(0).getChartType().compareTo("-1") != 0 ) ? true : false;
+		Boolean chartExists = (wiz.getReportChartSettings() != null && wiz.getReportChartSettings().get(0).getChartType() != null && wiz.getReportChartSettings().get(0).getChartType().compareTo("-1") != 0 ) ? true : false;
 		Integer columnIndex = 0;
 
 		while (itFields.hasNext()){
