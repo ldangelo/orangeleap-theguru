@@ -29,7 +29,8 @@ public class JPAReportQueryCostDao implements ReportQueryCostDao {
 			ResultSet resultSet = statement.executeQuery(query);
 			while (resultSet.next()) {
 				long rows = resultSet.getLong("rows");
-				result *= rows;
+				if (rows != 0)
+					result *= rows;
 			}
 		} catch (SQLException exception) {
 			exception.printStackTrace();

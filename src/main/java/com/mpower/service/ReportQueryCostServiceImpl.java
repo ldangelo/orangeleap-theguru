@@ -37,7 +37,11 @@ public class ReportQueryCostServiceImpl implements ReportQueryCostService {
 
 		ReportDatasourceSettings reportDatasourceSettings = jasperDatasourceUtil.getJasperDatasourceSettings(reportSubSourceService.find(wiz.getSubSourceId()).getJasperDatasourceName(), username, password);
 
-		result = reportQueryCostDao.getQueryCost("EXPLAIN " + query, reportDatasourceSettings);
+		try {
+			result = reportQueryCostDao.getQueryCost("EXPLAIN " + query, reportDatasourceSettings);
+		} catch (Exception exception) {
+			exception.printStackTrace();
+		}
 	    return result;
 	}
 
@@ -45,7 +49,11 @@ public class ReportQueryCostServiceImpl implements ReportQueryCostService {
 	public long getReportQueryCostByQuery(String query, String jasperDatasourceName, String username, String password) throws Exception {
 		long result = 0;
 		ReportDatasourceSettings reportDatasourceSettings = jasperDatasourceUtil.getJasperDatasourceSettings(jasperDatasourceName, username, password);
-		result = reportQueryCostDao.getQueryCost("EXPLAIN " + query, reportDatasourceSettings);
+		try {
+			result = reportQueryCostDao.getQueryCost("EXPLAIN " + query, reportDatasourceSettings);
+		} catch (Exception exception) {
+			exception.printStackTrace();
+		}
 	    return result;
 	}
 
