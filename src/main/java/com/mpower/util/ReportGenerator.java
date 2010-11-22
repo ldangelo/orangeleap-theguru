@@ -1077,6 +1077,19 @@ public class ReportGenerator implements java.io.Serializable {
 		
 		ResourceDescriptor reportDescriptor = wsClient.addOrModifyResource(rd, report);
 
+		// Delete any input controls previously created for the report
+		reportDescriptor = wsClient.get(reportDescriptor, null);
+		for (Object child : reportDescriptor.getChildren()) {
+			ResourceDescriptor childResource = (ResourceDescriptor)child;
+			if (childResource.getWsType().equals(ResourceDescriptor.TYPE_INPUT_CONTROL)) {
+				try {
+					wsClient.delete((ResourceDescriptor)child, rd.getUriString());
+				} catch (Exception exception) {
+					// do nothing
+				}
+			}
+		}
+		
 		//
 		// if there are parameters for this report then add the input controls
 		Iterator it = inputControls.entrySet().iterator();
