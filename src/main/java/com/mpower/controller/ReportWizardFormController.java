@@ -726,7 +726,8 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		if (wiz.getReportName() != null && wiz.getReportName().length() > 0)
 			reportTitle = wiz.getReportName();
 		try {
-			wiz.getReportGenerator().put(ResourceDescriptor.TYPE_REPORTUNIT, wiz.getReportSaveAsName(), reportTitle, reportComment,wiz.getReportPath(),tempFile, wiz.getReportGenerator().getParams(), wiz.getDataSubSource().getJasperDatasourceName());
+			wiz.getReportGenerator().put(ResourceDescriptor.TYPE_REPORTUNIT, wiz.getReportSaveAsName(), reportTitle, reportComment,wiz.getReportPath(),tempFile, wiz.getReportGenerator().getParams(), 
+					wiz.getUseReportAsSegmentation() ? wiz.getDataSubSource().getSegmentationResultsDatasourceName() : wiz.getDataSubSource().getJasperDatasourceName());
 		} catch (Exception e) {
 			logger.error("Unable to save report: " + e.getLocalizedMessage());
 			errors.reject("error.save", "Unable to save report: " + e.getLocalizedMessage());
