@@ -95,7 +95,7 @@
 		onchange="toggleUseReportAsSegmentation(jQuery('#useReportAsSegmentation').attr('checked'));"
 		<c:if test="${useReportAsSegmentation}">checked="true"</c:if>/>Use report as segmentation (disables Prompt for Value options)</TH></TR>
 	</table>
-	<div id="segmentationTypeDiv" name="segmentationTypeDiv" <c:if test="${!useReportAsSegmentation}">style="display:none"> </c:if>
+	<div id="segmentationTypeDiv" name="segmentationTypeDiv" <c:if test="${!useReportAsSegmentation}">style="display:none" </c:if>>
 		<select id="reportSegmentationTypeId" name="reportSegmentationTypeId" >
 		<c:forEach var="segmentationType" items="${segmentationTypes}" varStatus="outer"><c:if test="${segmentationType != null}"><option label="${segmentationType.segmentationType}" value="${segmentationType.id}" <c:if test="${segmentationType.id == segmentationTypeId}">selected="true" </c:if>>${segmentationType.segmentationType}</option></c:if></c:forEach>
 		</select>
