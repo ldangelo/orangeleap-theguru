@@ -12,9 +12,9 @@ import org.springframework.security.providers.UsernamePasswordAuthenticationToke
 import org.springframework.security.providers.cas.CasAuthenticationToken;
 import org.springframework.security.userdetails.ldap.LdapUserDetails;
 
+import com.orangeleap.common.security.AuthenticationHelper;
 import com.orangeleap.common.security.OrangeLeapRequestLocal;
 import com.orangeleap.common.security.OrangeLeapUsernamePasswordLocal;
-import com.orangeleap.common.security.OrangeLeapAuthenticationProvider.AuthenticationHelper;
 
 public class ClementineAuthenticationHelper implements AuthenticationHelper {
 
