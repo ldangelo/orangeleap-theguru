@@ -915,23 +915,20 @@ public class ReportQueryGenerator {
 	 * @return String
 	 */
 	private String getSqlCalendarDurationCriteriaFromCurrentDate(DatePart datePart, String columnName, int duration) {
-		String result = "";
+		String result = "( ";
 		if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.MYSQL) {
-			result = "( " + datePart.mySQL() + "(" + columnName + ") = " + datePart.mySQL() + "(CURDATE()) + " + Integer.toString(duration);
-			if (datePart == DatePart.YEAR){
-				result += " AND YEAR(" + columnName + ") = (YEAR(CURDATE()) + " + Integer.toString(duration) + " ))";
-			}else{
-				result += " AND YEAR(" + columnName + ") = YEAR(CURDATE()) )";
+			result += datePart.mySQL() + "(" + columnName + ") = " + datePart.mySQL() + "(DATE_ADD(CURDATE(), INTERVAL " + Integer.toString(duration) + " " + datePart.mySQL() + "))";
+			if (datePart != DatePart.YEAR){
+				result += " AND YEAR(" + columnName + ") = YEAR(DATE_ADD(CURDATE(), INTERVAL " + Integer.toString(duration) + " " + datePart.mySQL() + "))";
 			}
 		}
 		else if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.SQLSERVER) {
-			result = "( DATEPART(" + datePart.SQL() + ", " + columnName + ") = (DATEPART(" + datePart.SQL() + ", GETDATE()) + " + Integer.toString(duration) + ")";
-			if (datePart == DatePart.YEAR){
-				result += " AND YEAR(" + columnName + ") = (YEAR(GETDATE()) + " + Integer.toString(duration) + " )) " ;
-			}else{
-				result += " AND YEAR(" + columnName + ") = YEAR(GETDATE()) ) " ;
+			result += "DATEPART(" + datePart.SQL() + ", " + columnName + ") = (DATEPART(" + datePart.SQL() + ", DATEADD(" + datePart.SQL() + ", " + Integer.toString(duration) + ", GETDATE())))";
+			if (datePart != DatePart.YEAR){
+				result += " AND YEAR(" + columnName + ") = YEAR( DATEADD(" + datePart.SQL() + ", " + Integer.toString(duration) +  ", GETDATE()))" ;
 			}
 		}
+		result += " )";			
 		return result;
 	}
 
