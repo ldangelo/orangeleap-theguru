@@ -17,6 +17,7 @@ import org.springframework.context.ApplicationContextAware;
 import com.mpower.ws.orangeleapV3.client.OrangeLeapService;
 import com.orangeleap.common.security.CasUtil;
 import com.orangeleap.common.security.OrangeLeapAuthentication;
+import com.orangeleap.common.security.shib.ShibSoapInterceptor;
 
 public class OrangeLeapWebServiceClientV3 extends OrangeLeapAuthentication implements ApplicationContextAware {
 	private static ApplicationContext ctx = null;
@@ -65,6 +66,10 @@ public class OrangeLeapWebServiceClientV3 extends OrangeLeapAuthentication imple
 
 		WSS4JOutInterceptor wssOut = new WSS4JOutInterceptor(outProps);
 		cxfEndpoint.getOutInterceptors().add(wssOut);
+		
+		ShibSoapInterceptor soapint = new ShibSoapInterceptor(this.getUserName());
+		cxfEndpoint.getOutInterceptors().add(soapint);
+		
 		return orangeLeapPort;
 	}
 }
