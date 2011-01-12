@@ -12,6 +12,7 @@ import org.springframework.security.context.HttpSessionContextIntegrationFilter;
 import org.springframework.security.context.SecurityContextHolder;
 import org.springframework.security.providers.UsernamePasswordAuthenticationToken;
 import org.springframework.security.providers.cas.CasAuthenticationToken;
+import org.springframework.security.providers.preauth.PreAuthenticatedAuthenticationToken;
 import org.springframework.security.userdetails.ldap.LdapUserDetails;
 
 import com.orangeleap.common.security.AuthenticationHelper;
@@ -41,7 +42,14 @@ public class ClementineAuthenticationHelper implements AuthenticationHelper {
 				SecurityContextHolder.getContext().setAuthentication(token);
 			token.setDetails(info);
 			info.put(OrangeLeapUsernamePasswordLocal.PASSWORD, ((LdapUserDetails)authentication.getPrincipal()).getPassword());
+		} else if (authentication instanceof PreAuthenticatedAuthenticationToken) {
+			PreAuthenticatedAuthenticationToken token = (PreAuthenticatedAuthenticationToken) authentication;
+			if (SecurityContextHolder.getContext().getAuthentication() == null)
+				SecurityContextHolder.getContext().setAuthentication(token);
+			token.setDetails(info);
+			info.put(OrangeLeapUsernamePasswordLocal.PASSWORD, "");
 		}
+		
 		String userName = ((LdapUserDetails)authentication.getPrincipal()).getUsername();
 		String siteName = userName.substring(userName.indexOf('@') +1);
 
