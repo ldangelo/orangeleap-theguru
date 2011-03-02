@@ -193,10 +193,12 @@ public class ReportQueryGenerator {
 	public String getPreviewQueryString() throws ParseException {
 		String query = buildSelectClause(true);
 		query += buildWhereClause(false);
-		// If queries take too long to run for the preview, the order by clause could be removed
-		// and this would prevent the complete result from having to be compiled in order for the 
-		// top rows to be returned.
-		query += buildOrderByClause();
+		// If queries take too long to run for the preview, the order by clause could be left off of the query
+		// by setting theguru.preview.includeorderbyclause to false.  This would prevent the complete result from 
+		// having to be compiled in order for the top rows to be returned.
+		String includeOrderBy = System.getProperty("theguru.preview.includeorderbyclause");
+		if (includeOrderBy == null || !includeOrderBy.equalsIgnoreCase("false"))
+			query += buildOrderByClause();
 		if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.MYSQL) {
 			if (getReportWizard().getRowCount() == -1 || getReportWizard().getRowCount() > 2000)
 				query += " LIMIT 0, 2000";
