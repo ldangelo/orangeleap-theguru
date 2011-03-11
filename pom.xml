@@ -9,7 +9,7 @@
 		<groupId>com.orangeleap</groupId>
 		<artifactId>masterPOM</artifactId>
   		<version>13.0-SNAPSHOT</version>
-		<relativePath>../</relativePath>
+		<relativePath/>
 	</parent>
 
 	<build>
