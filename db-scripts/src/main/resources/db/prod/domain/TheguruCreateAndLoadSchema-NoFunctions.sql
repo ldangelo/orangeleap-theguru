@@ -436,7 +436,7 @@ INSERT INTO `REPORTCUSTOMFILTERDEFINITION` (`REPORTCUSTOMFILTERDEFINITION_ID`,`D
  (600000,'Segmentation - Account is in segmentation / report <br> {lookupReferenceBean:orangeLeapConstituentSegmentationList}','Segmentation - Account is in segmentation / report','EXISTS (SELECT * FROM THEGURU_SEGMENTATION_RESULT SEGTABLE WHERE SEGTABLE.REPORT_ID = {0} AND SEGTABLE.ENTITY_ID = [VIEWNAME].CONSTITUENT_CONSTITUENT_ID)'),
  (600001,'Segmentation - Account is in segmentation / report <br> {lookupReferenceBean:orangeLeapConstituentSegmentationList}','Segmentation - Account is in segmentation / report','EXISTS (SELECT * FROM THEGURU_SEGMENTATION_RESULT SEGTABLE WHERE SEGTABLE.REPORT_ID = {0} AND SEGTABLE.ENTITY_ID = VW_CONSTITUENTS.CONSTITUENT_CONSTITUENT_ID)'),
  (610000,'Segmentation - Gift is in segmentation / report <br> {lookupReferenceBean:orangeLeapGiftSegmentationList}','Segmentation - Gift is in segmentation / report','EXISTS (SELECT * FROM THEGURU_SEGMENTATION_RESULT SEGTABLE WHERE SEGTABLE.REPORT_ID = {0} AND SEGTABLE.ENTITY_ID = [VIEWNAME].GIFT_GIFT_ID)'),
- (620000,'Segmentation - Gift Distribution is in segmentation / report <br> {lookupReferenceBean:orangeLeapGiftDistributionSegmentationList}','Segmentation - Gift Distribution is in segmentation / report','EXISTS (SELECT * FROM THEGURU_SEGMENTATION_RESULT SEGTABLE WHERE SEGTABLE.REPORT_ID = {0} AND SEGTABLE.ENTITY_ID = [VIEWNAME].GIFT_GIFT_ID)'),
+ (620000,'Segmentation - Gift Distribution is in segmentation / report <br> {lookupReferenceBean:orangeLeapGiftDistributionSegmentationList}','Segmentation - Gift Distribution is in segmentation / report','EXISTS (SELECT * FROM THEGURU_SEGMENTATION_RESULT SEGTABLE WHERE SEGTABLE.REPORT_ID = {0} AND SEGTABLE.ENTITY_ID = [VIEWNAME].DISTRO_LINE_DISTRO_LINE_ID)'),
  (630000,'Segmentation - Gift Adjustment is in segmentation / report <br> {lookupReferenceBean:orangeLeapAdjustedGiftSegmentationList}','Segmentation - Gift Adjustment is in segmentation / report','EXISTS (SELECT * FROM THEGURU_SEGMENTATION_RESULT SEGTABLE WHERE SEGTABLE.REPORT_ID = {0} AND SEGTABLE.ENTITY_ID = [VIEWNAME].ADJUSTED_GIFT_ADJUSTED_GIFT_ID)'),
  (630001,'Segmentation - Gift Adjustment is in segmentation / report <br> {lookupReferenceBean:orangeLeapAdjustedGiftSegmentationList}','Segmentation - Gift Adjustment is in segmentation / report','EXISTS (SELECT * FROM THEGURU_SEGMENTATION_RESULT SEGTABLE WHERE SEGTABLE.REPORT_ID = {0} AND SEGTABLE.ENTITY_ID = [VIEWNAME].VW_AGD_ADJUSTED_GIFT_ADJUSTED_GIFT_ID)'),
  (800000,'Zip Radius - Constituent\'s current address is within <input class=\"customCriteria\" objectname=\"reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[0].criteria\" value=\"{0}\"/>miles of zip code <input class=\"customCriteria\" objectname=\"reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[1].criteria\" value=\"{1}\"/>in <select class=\"customCriteria\" objectname=\"reportFilters[INDEXREPLACEMENT].reportCustomFilter.reportCustomFilterCriteria[2].criteria\" populateSelectOptions=\"AJAX\" requestType=\"PICKLISTITEMS\" criteria1Name=\"PICKLISTNAME\" criteria1Value=\"country\" criteria2Name=\"DEFAULTVALUE\" criteria2Value=\"{3}\"><option value=\"{3}\">Loading...</option></select>','Zip Radius - Constituent\'s current address is within [ZIPRADIUS] miles of zip code [ZIPCODE] in [COUNTRY]','[VIEWNAME].ADDRESS_CURRENT_POSTAL_CODE_KEY IN ({lookupReferenceBean:orangeLeapPostalCodeRadius})'),
@@ -30630,7 +30630,7 @@ CREATE TABLE `VERSIONLOG` (
   `SCRIPT` varchar(255) NOT NULL,
   `INSTALLDATE` datetime NOT NULL,
   PRIMARY KEY (`VERSION_ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=110 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=111 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `VERSIONLOG`
@@ -30745,7 +30745,8 @@ INSERT INTO `VERSIONLOG` (`VERSION_ID`,`SCRIPT`,`INSTALLDATE`) VALUES
  (106,'20110111_01_FC_GENERATE_FIELD_DEFINITIONS.sql','2011-01-11 15:32:45'),
  (107,'20110111_02_DU_ReportCustomFilterDefinition_ReportDataSubSource.sql','2011-01-11 15:32:45'),
  (108,'20110210_01_DU_ADJUSTED_GIFT_ADJUSTED_STATUS.sql','2011-02-10 15:38:21'),
- (109,'20110304_01_TC_QRTZ_PREVIEW_Tables.sql','2011-03-11 13:27:50');
+ (109,'20110304_01_TC_QRTZ_PREVIEW_Tables.sql','2011-03-11 13:27:50'),
+ (110,'20110323_01_DU_GIFT_DISTRIBUTION_CUSTOM_FILTER.sql','2011-03-23 16:31:26');
 /*!40000 ALTER TABLE `VERSIONLOG` ENABLE KEYS */;
 
 
