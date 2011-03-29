@@ -30600,7 +30600,7 @@ CREATE TABLE `REPORTSEGMENTATIONTYPE` (
   `COLUMN_NAME` varchar(255) DEFAULT NULL,
   `SEGMENTATIONTYPE` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`REPORTSEGMENTATIONTYPE_ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `REPORTSEGMENTATIONTYPE`
@@ -30612,7 +30612,18 @@ INSERT INTO `REPORTSEGMENTATIONTYPE` (`REPORTSEGMENTATIONTYPE_ID`,`COLUMN_NAME`,
  (2,'GIFT_GIFT_ID','Gift Segmentation'),
  (3,'DISTRO_LINE_DISTRO_LINE_ID','Gift Distribution Segmentation'),
  (4,'ADJUSTED_GIFT_ADJUSTED_GIFT_ID','Adjusted Gift Segmentation'),
- (5,'VW_AGD_ADJUSTED_GIFT_ADJUSTED_GIFT_ID','Adjusted Gift Segmentation');
+ (5,'VW_AGD_ADJUSTED_GIFT_ADJUSTED_GIFT_ID','Adjusted Gift Segmentation'),
+ (6,'GETCONSTITUENTACCOUNTNUMBER(GETCUSTOMFIELD(PLEDGE_DISTRO_LINE_DISTRO_LINE_ID, \'distributionline\', \'onBehalfOf\'))','Constituent Segmentation - Associated Pledge Distribution Information - On Behalf Of'),
+ (7,'GETCONSTITUENTACCOUNTNUMBER(GETCUSTOMFIELD(VW_RGD_DISTRO_LINE_DISTRO_LINE_ID, \'distributionline\', \'onBehalfOf\'))','Constituent Segmentation - Associated Recurring Gift Distribution Information - On Behalf Of'),
+ (8,'GETCONSTITUENTACCOUNTNUMBER(GETCUSTOMFIELD(VW_AGD_DISTRO_LINE_DISTRO_LINE_ID, \'distributionline\', \'onBehalfOf\'))','Constituent Segmentation - Adjustment Distribution Information - On Behalf Of'),
+ (9,'GETCONSTITUENTACCOUNTNUMBER(GETCUSTOMFIELD(DISTRO_LINE_DISTRO_LINE_ID, \'distributionline\', \'onBehalfOf\'))','Constituent Segmentation - Donation Distribution Information - On Behalf Of'),
+ (10,'GETCONSTITUENTACCOUNTNUMBER(GETCUSTOMFIELD(PLEDGE_DISTRO_LINE_DISTRO_LINE_ID, \'distributionline\', \'onBehalfOf\'))','Constituent Segmentation - Associated Donation Distribution Information - On Behalf Of'),
+ (11,'GETCONSTITUENTACCOUNTNUMBER(GETCUSTOMFIELD(PLEDGE_GIFT_IN_KIND_DETAIL_GIK_DETAIL_ID, \'giftinkinddetail\', \'onBehalfOf\'))','Constituent Segmentation - Associated Gift In Kind Details - On Behalf Of'),
+ (12,'GETCONSTITUENTACCOUNTNUMBER(GETCUSTOMFIELD(DISTRO_LINE_DISTRO_LINE_ID, \'distributionline\', \'onBehalfOf\'))','Constituent Segmentation - Pledge Distribution Information - On Behalf Of'),
+ (13,'GETCONSTITUENTACCOUNTNUMBER(GETCUSTOMFIELD(GIFT_IN_KIND_DETAIL_GIK_DETAIL_ID, \'giftinkinddetail\', \'onBehalfOf\'))','Constituent Segmentation - Pledge Detail Information (Non-Monetary Pledges) - On Behalf Of'),
+ (14,'GETCONSTITUENTACCOUNTNUMBER(GETCUSTOMFIELD(DISTRO_LINE_DISTRO_LINE_ID, \'distributionline\', \'onBehalfOf\'))','Constituent Segmentation - Recurring Gift Distribution Information - On Behalf Of'),
+ (15,'GETCONSTITUENTACCOUNTNUMBER(GETCUSTOMFIELD(GIFT_IN_KIND_DETAIL_GIK_DETAIL_ID, \'giftinkinddetail\', \'onBehalfOf\'))','Constituent Segmentation - Gift In Kind Details - On Behalf Of'),
+ (16,'GETCONSTITUENTACCOUNTNUMBER(GETCUSTOMFIELD(DISTRO_LINE_DISTRO_LINE_ID, \'distributionline\', \'onBehalfOf\'))','Constituent Segmentation - Adjustment Distribution Information - On Behalf Of');
 /*!40000 ALTER TABLE `REPORTSEGMENTATIONTYPE` ENABLE KEYS */;
 
 
@@ -30702,7 +30713,37 @@ INSERT INTO `REPORTSEGMENTATIONTYPE_REPORTDATASUBSOURCE` (`reportSegmentationTyp
  (5,25,25,5),
  (5,62,62,5),
  (5,63,63,5),
- (5,64,64,5);
+ (5,64,64,5),
+ (6,54,54,6),
+ (6,55,55,6),
+ (6,62,62,6),
+ (6,63,63,6),
+ (7,54,54,7),
+ (7,55,55,7),
+ (7,62,62,7),
+ (7,63,63,7),
+ (8,62,62,8),
+ (8,63,63,8),
+ (8,64,64,8),
+ (9,55,55,9),
+ (9,63,63,9),
+ (10,57,57,10),
+ (10,58,58,10),
+ (10,65,65,10),
+ (10,66,66,10),
+ (11,57,57,11),
+ (11,58,58,11),
+ (11,65,65,11),
+ (11,66,66,11),
+ (12,58,58,12),
+ (12,66,66,12),
+ (13,58,58,13),
+ (13,66,66,13),
+ (14,60,60,14),
+ (14,68,68,14),
+ (15,77,77,15),
+ (15,79,79,15),
+ (16,56,56,16);
 /*!40000 ALTER TABLE `REPORTSEGMENTATIONTYPE_REPORTDATASUBSOURCE` ENABLE KEYS */;
 
 
@@ -31708,7 +31749,7 @@ CREATE TABLE `VERSIONLOG` (
   `SCRIPT` varchar(255) NOT NULL,
   `INSTALLDATE` datetime NOT NULL,
   PRIMARY KEY (`VERSION_ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=112 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=113 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `VERSIONLOG`
@@ -31825,7 +31866,8 @@ INSERT INTO `VERSIONLOG` (`VERSION_ID`,`SCRIPT`,`INSTALLDATE`) VALUES
  (108,'20110210_01_DU_ADJUSTED_GIFT_ADJUSTED_STATUS.sql','2011-02-10 15:38:21'),
  (109,'20110304_01_TC_QRTZ_PREVIEW_Tables.sql','2011-03-11 13:27:50'),
  (110,'20110323_01_DU_GIFT_DISTRIBUTION_CUSTOM_FILTER.sql','2011-03-23 16:31:26'),
- (111,'20110328_01_DU_THEGURU_VIEW_CONSTITUENT_CONTACTINFORMATION.sql','2011-03-29 14:50:05');
+ (111,'20110328_01_DU_THEGURU_VIEW_CONSTITUENT_CONTACTINFORMATION.sql','2011-03-29 14:50:05'),
+ (112,'20110328_02_DU_SEGMENTATION_TYPE_ON_BEHALF_OF.sql','2011-03-29 15:34:04');
 /*!40000 ALTER TABLE `VERSIONLOG` ENABLE KEYS */;
 
 
