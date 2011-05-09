@@ -29,6 +29,8 @@ public class ReportSegmentationResultsServiceImpl implements ReportSegmentationR
 	private ReportSubSourceService  reportSubSourceService;
 	private JasperDatasourceUtil jasperDatasourceUtil;
 	private ApplicationContext applicationContext;
+	private TheGuruViewService theGuruViewService;
+	private TheGuruViewJoinService theGuruViewJoinService;	
 
 	public List<ReportSegmentationResult> readReportSegmentationResultsByReportId(Long reportId, String username, String password) throws Exception {
 		ReportWizard wiz = reportWizardService.Find(reportId);
@@ -41,7 +43,8 @@ public class ReportSegmentationResultsServiceImpl implements ReportSegmentationR
 		ReportWizard wiz = reportWizardService.Find(reportId);
 		if (wiz.getSegmentationQuery() == null || wiz.getSegmentationQuery().length() == 0)
 		{
-			ReportQueryGenerator reportQueryGenerator = new ReportQueryGenerator(wiz, reportFieldService, reportCustomFilterDefinitionService, applicationContext);
+			ReportQueryGenerator reportQueryGenerator = new ReportQueryGenerator(wiz, reportFieldService, reportCustomFilterDefinitionService, applicationContext,
+					theGuruViewService, theGuruViewJoinService);
 			wiz.setSegmentationQuery(reportQueryGenerator.getSegmentationQueryString(reportSegmentationTypeService.find(wiz.getReportSegmentationTypeId()).getColumnName()));
 		}
 
@@ -121,5 +124,21 @@ public class ReportSegmentationResultsServiceImpl implements ReportSegmentationR
 	@Override
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 		this.applicationContext = applicationContext;		
+	}
+
+	public void setTheGuruViewService(TheGuruViewService theGuruViewService) {
+		this.theGuruViewService = theGuruViewService;
+	}
+
+	public TheGuruViewService getTheGuruViewService() {
+		return theGuruViewService;
+	}
+
+	public void setTheGuruViewJoinService(TheGuruViewJoinService theGuruViewJoinService) {
+		this.theGuruViewJoinService = theGuruViewJoinService;
+	}
+
+	public TheGuruViewJoinService getTheGuruViewJoinService() {
+		return theGuruViewJoinService;
 	}
 }

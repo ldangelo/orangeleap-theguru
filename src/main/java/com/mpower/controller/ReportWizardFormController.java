@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.context.ApplicationContext;
 import org.springframework.security.userdetails.UserDetails;
 import org.springframework.security.userdetails.UserDetailsService;
 import org.springframework.util.Assert;
@@ -55,6 +54,8 @@ import com.mpower.service.ReportSubSourceGroupService;
 import com.mpower.service.ReportSubSourceService;
 import com.mpower.service.ReportWizardService;
 import com.mpower.service.SessionService;
+import com.mpower.service.TheGuruViewJoinService;
+import com.mpower.service.TheGuruViewService;
 import com.mpower.util.ModifyReportJRXML;
 import com.mpower.util.ReportCustomFilterHelper;
 import com.mpower.util.ReportQueryGenerator;
@@ -75,6 +76,8 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 	private ReportQueryCostService reportQueryCostService;
 
 	private ReportFieldService reportFieldService;
+	private TheGuruViewService theGuruViewService;
+	private TheGuruViewJoinService theGuruViewJoinService;
 	private ReportCustomFilterDefinitionService reportCustomFilterDefinitionService;
 	private ReportCustomFilterHelper reportCustomFilterHelper;
 
@@ -174,6 +177,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 			wiz.setReportSegmentationTypeId(0);
 			wiz.setUseReportAsSegmentation(false);
 			wiz.setSegmentationQuery("");
+			wiz.setUseDynamicSQLGeneration(false);
 			wiz.getReportFilters().clear();
 			wiz.getReportChartSettings().clear();
 			wiz.getReportCrossTabFields().getReportCrossTabColumns().clear();
@@ -484,7 +488,8 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 			WebApplicationContext applicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(this.getServletContext());
 			
 			if (wiz.getShowSqlQuery()) {
-		    	ReportQueryGenerator reportQueryGenerator = new ReportQueryGenerator(wiz, reportFieldService, reportCustomFilterDefinitionService, applicationContext);
+		    	ReportQueryGenerator reportQueryGenerator = new ReportQueryGenerator(wiz, reportFieldService, reportCustomFilterDefinitionService, applicationContext,
+		    			theGuruViewService, theGuruViewJoinService);
 				refData.put("showSqlQuery", wiz.getShowSqlQuery());
 				String query = reportQueryGenerator.getQueryString();
 				refData.put("sqlQuery", query);
@@ -510,6 +515,9 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 			wiz.getReportFilters().clear();
 
 			refData.put("rowCount", wiz.getRowCount());
+			
+			refData.put("showDynamicSQLOption", wiz.getDataSubSource().getAllowDynamicSqlGeneration());
+			refData.put("useDynamicSQLGeneration", wiz.getUseDynamicSQLGeneration());
 		}
 
 		// Save report
@@ -530,7 +538,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 
 			// SuppressWarnings("unused")
 			WebApplicationContext applicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(this.getServletContext());
-			DynamicReport dr = wiz.getReportGenerator().Generate(wiz, reportFieldService, reportCustomFilterDefinitionService, true, applicationContext);
+			DynamicReport dr = wiz.getReportGenerator().Generate(wiz, reportFieldService, reportCustomFilterDefinitionService, true, applicationContext, theGuruViewService, theGuruViewJoinService);
 			// String query = dr.getQuery().getText();
 
 			//
@@ -664,7 +672,8 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		DynamicReport dr;
 		// If the report is to be used as a segmentation, generate the segmentation SQL, set it on the wiz and save again since the segmentation query will require the report wizard ID
 		if (wiz.getUseReportAsSegmentation()) {
-			ReportQueryGenerator reportQueryGenerator = new ReportQueryGenerator(wiz, reportFieldService, reportCustomFilterDefinitionService, applicationContext);
+			ReportQueryGenerator reportQueryGenerator = new ReportQueryGenerator(wiz, reportFieldService, reportCustomFilterDefinitionService, applicationContext,
+					theGuruViewService, theGuruViewJoinService);
 			String segmentationQuery = reportQueryGenerator.getSegmentationQueryString(reportSegmentationTypeService.find(wiz.getReportSegmentationTypeId()).getColumnName()); 
 			wiz.setSegmentationQuery(segmentationQuery);
 			reportWizardService.save(wiz);
@@ -676,7 +685,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 			//
 			// First we must generate a jrxml file
 			//
-			dr = wiz.getReportGenerator().Generate(wiz, reportFieldService, reportCustomFilterDefinitionService, false, applicationContext);
+			dr = wiz.getReportGenerator().Generate(wiz, reportFieldService, reportCustomFilterDefinitionService, false, applicationContext, theGuruViewService, theGuruViewJoinService);
 		}
 
 		File tempFile = TempFileUtil.createTempFile("wiz", ".jrxml");
@@ -859,5 +868,21 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 
 	public ReportWizardFactory getReportWizardFactory() {
 		return reportWizardFactory;
+	}
+
+	public void setTheGuruViewService(TheGuruViewService theGuruViewService) {
+		this.theGuruViewService = theGuruViewService;
+	}
+
+	public TheGuruViewService getTheGuruViewService() {
+		return theGuruViewService;
+	}
+
+	public void setTheGuruViewJoinService(TheGuruViewJoinService theGuruViewJoinService) {
+		this.theGuruViewJoinService = theGuruViewJoinService;
+	}
+
+	public TheGuruViewJoinService getTheGuruViewJoinService() {
+		return theGuruViewJoinService;
 	}
 }

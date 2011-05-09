@@ -82,6 +82,8 @@ import com.mpower.domain.ReportSelectedField;
 import com.mpower.domain.ReportWizard;
 import com.mpower.service.ReportCustomFilterDefinitionService;
 import com.mpower.service.ReportFieldService;
+import com.mpower.service.TheGuruViewJoinService;
+import com.mpower.service.TheGuruViewService;
 import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
 import com.orangeleap.common.security.CasUtil;
 
@@ -216,7 +218,8 @@ public class ReportGenerator implements java.io.Serializable {
 	}
 
 	public DynamicReport Generate(ReportWizard wiz, ReportFieldService reportFieldService,
-			ReportCustomFilterDefinitionService reportCustomFilterDefinitionService, Boolean preview, ApplicationContext applicationContext) throws Exception {
+			ReportCustomFilterDefinitionService reportCustomFilterDefinitionService, Boolean preview, ApplicationContext applicationContext,
+			TheGuruViewService theGuruViewService, TheGuruViewJoinService theGuruViewJoinService) throws Exception {
 		resetInputControls();
 		File templateFile = getTemplateFile(wiz);
 		columnIndex = 0;
@@ -264,7 +267,7 @@ public class ReportGenerator implements java.io.Serializable {
 		//Build query
 		//
 		ReportQueryGenerator reportQueryGenerator = new ReportQueryGenerator(wiz,
-				reportFieldService, reportCustomFilterDefinitionService, applicationContext);
+				reportFieldService, reportCustomFilterDefinitionService, applicationContext, theGuruViewService, theGuruViewJoinService);
 		String query = "";
 		if (preview)
 			query = reportQueryGenerator.getPreviewQueryString();

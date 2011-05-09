@@ -21,6 +21,7 @@ public class ReportWizardHelper {
 		emptyWizard.setUseReportAsSegmentation(savedWizard.getUseReportAsSegmentation());
 		emptyWizard.setSegmentationQuery(savedWizard.getSegmentationQuery());
 		emptyWizard.setReportSegmentationTypeId(savedWizard.getReportSegmentationTypeId());
+		emptyWizard.setUseDynamicSQLGeneration(savedWizard.getUseDynamicSQLGeneration());
 		emptyWizard.setExecutionTime(savedWizard.getExecutionTime());
 		emptyWizard.setResultCount(savedWizard.getResultCount());
 		emptyWizard.setLastRunDateTime(savedWizard.getLastRunDateTime());

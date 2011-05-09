@@ -190,6 +190,8 @@
 		<property name="reportSegmentationTypeService" ref="reportSegmentationTypeService" />
 		<property name="reportSegmentationResultsService" ref="reportSegmentationResultsService" />
 		<property name="reportQueryCostService" ref="reportQueryCostService" />
+		<property name="theGuruViewService" ref="theGuruViewService" />
+		<property name="theGuruViewJoinService" ref="theGuruViewJoinService" />
 		<property name="userDetailsService" ref="jdbcAuthenticationDao" />
 		<property name="pages">
 			<list>
@@ -244,8 +246,10 @@
 		<property name="reportFieldService" ref="reportFieldService" />
 		<property name="reportWizardService" ref="reportWizardService" />
 		<property name="reportCustomFilterDefinitionService" ref="reportCustomFilterDefinitionService" />
-		<property name="reportSubSourceService" ref="reportSubSourceService" />
+		<property name="reportSubSourceService" ref="reportSubSourceService" />		
 		<property name="reportSegmentationTypeService" ref="reportSegmentationTypeService" />
+		<property name="theGuruViewService" ref="theGuruViewService" />
+		<property name="theGuruViewJoinService" ref="theGuruViewJoinService" />		
 		<property name="jasperDatasourceUtil" ref="jasperDatasourceUtil" />
 	</bean>
 
@@ -259,6 +263,8 @@
 		<property name="reportWizardService" ref="reportWizardService" />
 		<property name="reportCustomFilterDefinitionService" ref="reportCustomFilterDefinitionService" />
 		<property name="reportSubSourceService" ref="reportSubSourceService" />
+		<property name="theGuruViewService" ref="theGuruViewService" />
+		<property name="theGuruViewJoinService" ref="theGuruViewJoinService" />		
 		<property name="jasperDatasourceUtil" ref="jasperDatasourceUtil" />
 	</bean>
 

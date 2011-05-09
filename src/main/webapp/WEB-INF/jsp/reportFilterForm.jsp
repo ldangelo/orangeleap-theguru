@@ -103,6 +103,13 @@
 		<br>
 	</div>
 	</c:if>
+	
+	<c:if test="${showDynamicSQLOption}" >
+		<select id="useDynamicSQLGeneration" name="useDynamicSQLGeneration" >
+			<option label="Use Dynamic SQL Generation" value="true" <c:if test="${useDynamicSQLGeneration}">selected="true" </c:if>>Use Dynamic SQL Generation</option>
+			<option label="Use View Based SQL Generation" value="false" <c:if test="${!useDynamicSQLGeneration}">selected="true" </c:if>>Use View Based SQL Generation</option>
+		</select>	
+	</c:if>
 	<table class="tablesorter" id="showSqlQueryTable">
 		<th>
 			<span id="showSqlQuerySpan" style="cursor: pointer;text-decoration:underline;" onclick="showSqlQueryClick();" >Show SQL Query</span>

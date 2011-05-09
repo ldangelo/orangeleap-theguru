@@ -28,11 +28,14 @@ public class ReportQueryCostServiceImpl implements ReportQueryCostService {
 	private ReportCustomFilterDefinitionService reportCustomFilterDefinitionService;
 	private ReportSubSourceService  reportSubSourceService;
 	private JasperDatasourceUtil jasperDatasourceUtil;
+	private TheGuruViewService theGuruViewService;
+	private TheGuruViewJoinService theGuruViewJoinService;
 
 	public long getReportQueryCostByReportId(ApplicationContext applicationContext, long reportId, String username, String password) throws Exception {
 		long result = 0;
 		ReportWizard wiz = reportWizardService.Find(reportId);
-		ReportQueryGenerator reportQueryGenerator = new ReportQueryGenerator(wiz, reportFieldService, reportCustomFilterDefinitionService, applicationContext);
+		ReportQueryGenerator reportQueryGenerator = new ReportQueryGenerator(wiz, reportFieldService, reportCustomFilterDefinitionService, applicationContext,
+				theGuruViewService, theGuruViewJoinService);
 		String query = reportQueryGenerator.getQueryString();
 
 		ReportDatasourceSettings reportDatasourceSettings = jasperDatasourceUtil.getJasperDatasourceSettings(reportSubSourceService.find(wiz.getSubSourceId()).getJasperDatasourceName(), username, password);
@@ -105,5 +108,25 @@ public class ReportQueryCostServiceImpl implements ReportQueryCostService {
 	public void setReportQueryCostDao(
 			ReportQueryCostDao reportQueryCostDao) {
 		this.reportQueryCostDao = reportQueryCostDao;
+	}
+
+
+	public void setTheGuruViewService(TheGuruViewService theGuruViewService) {
+		this.theGuruViewService = theGuruViewService;
+	}
+
+
+	public TheGuruViewService getTheGuruViewService() {
+		return theGuruViewService;
+	}
+
+
+	public void setTheGuruViewJoinService(TheGuruViewJoinService theGuruViewJoinService) {
+		this.theGuruViewJoinService = theGuruViewJoinService;
+	}
+
+
+	public TheGuruViewJoinService getTheGuruViewJoinService() {
+		return theGuruViewJoinService;
 	}
 }

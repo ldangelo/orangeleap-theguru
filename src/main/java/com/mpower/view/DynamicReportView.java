@@ -27,6 +27,8 @@ import com.mpower.controller.TempFileUtil;
 import com.mpower.domain.ReportWizard;
 import com.mpower.service.ReportCustomFilterDefinitionService;
 import com.mpower.service.ReportFieldService;
+import com.mpower.service.TheGuruViewJoinService;
+import com.mpower.service.TheGuruViewService;
 import com.mpower.util.ReportGenerator;
 
 
@@ -43,6 +45,8 @@ public class DynamicReportView extends AbstractView {
 
 	private ReportFieldService reportFieldService;
 	private ReportCustomFilterDefinitionService reportCustomFilterDefinitionService;
+	private TheGuruViewService theGuruViewService;
+	private TheGuruViewJoinService theGuruViewJoinService;
 	
 	public DynamicReportView() {
 		// TODO Auto-generated constructor stub
@@ -87,7 +91,7 @@ public class DynamicReportView extends AbstractView {
 
 
 
-		DynamicReport dr = reportGenerator.Generate(wiz, reportFieldService, reportCustomFilterDefinitionService, false, null);
+		DynamicReport dr = reportGenerator.Generate(wiz, reportFieldService, reportCustomFilterDefinitionService, false, null, theGuruViewService, theGuruViewJoinService);
 		String query = dr.getQuery().getText();
 		
 		//
@@ -167,6 +171,22 @@ public class DynamicReportView extends AbstractView {
 
 	public void setVirtualizer(JRFileVirtualizer virtualizer) {
 		this.virtualizer = virtualizer;
+	}
+
+	public void setTheGuruViewService(TheGuruViewService theGuruViewService) {
+		this.theGuruViewService = theGuruViewService;
+	}
+
+	public TheGuruViewService getTheGuruViewService() {
+		return theGuruViewService;
+	}
+
+	public void setTheGuruViewJoinService(TheGuruViewJoinService theGuruViewJoinService) {
+		this.theGuruViewJoinService = theGuruViewJoinService;
+	}
+
+	public TheGuruViewJoinService getTheGuruViewJoinService() {
+		return theGuruViewJoinService;
 	}
 
 
