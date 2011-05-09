@@ -28,6 +28,7 @@ import org.xml.sax.SAXException;
 import ar.com.fdvs.dj.domain.DJChart;
 
 import com.mpower.domain.ReportChartSettings;
+import com.mpower.domain.ReportChartSettingsSeries;
 import com.mpower.domain.ReportField;
 import com.mpower.domain.ReportSelectedField;
 import com.mpower.domain.ReportWizard;
@@ -929,9 +930,30 @@ public class ModifyReportJRXML {
 			keyExp.setTextContent(correctNullDataField(keyExp.getTextContent(), "null"));
 		}
 		
+		correctChartVariableForCountOperation(chartType, document, rcs);
 		addChartLabels(chartType, document, rcs);
 	}
 	
+	public void correctChartVariableForCountOperation(String chartType, Document document, ReportChartSettings rcs){
+		
+		for (ReportChartSettingsSeries thisRcs : rcs.getReportChartSettingsSeries()){
+			if (thisRcs.getOperation() != null && thisRcs.getOperation().equals("RecordCount") ){
+				NodeList variableNodeList = document.getElementsByTagName("variable");
+				for (int index = 0; index < variableNodeList.getLength(); index++) {
+					Node variableNode = variableNodeList.item(index);
+					String nodeName = variableNode.getAttributes().getNamedItem("name").getNodeValue();
+					if (nodeName.contains("CHART")
+						&& nodeName.contains(thisRcs.getSeriesColumn().getTitle())
+						&& nodeName.contains(rcs.getCategory().getName())) {
+							 variableNode.getAttributes().getNamedItem("class").setNodeValue("java.lang.Number");
+						
+					}
+				}
+				
+			}
+		}
+
+	}
 	public void addChartLabels(String chartType, Document document, ReportChartSettings rcs){
 		
 		//set title expression
