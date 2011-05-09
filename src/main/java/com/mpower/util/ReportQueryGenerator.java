@@ -1547,8 +1547,8 @@ public class ReportQueryGenerator {
 					picklistItemName = dynamicReportQuery.tableAliases.get(dynamicReportQuery.fieldTableKeys.get(reportField.getId())) + "." + picklistItemName; 
 				
 				dynamicReportQuery.fromClause += "LEFT JOIN PICKLIST AS " + picklistTableTableAlias + " ON "
-					+ picklistTableTableAlias + ".PICKLIST_NAME_ID = " + picklistNameId
-					+ dynamicReportQuery.crlf;						
+					+ picklistTableTableAlias + ".PICKLIST_NAME = " + picklistNameId
+					+ dynamicReportQuery.crlf;
 				dynamicReportQuery.fromClause += "LEFT JOIN PICKLIST_ITEM AS " + picklistItemTableTableAlias + " ON "
 					+ picklistItemTableTableAlias + ".PICKLIST_ID = "
 					+ picklistTableTableAlias + ".PICKLIST_ID AND " + picklistItemTableTableAlias + ".ITEM_NAME = "
