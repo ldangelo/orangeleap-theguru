@@ -303,6 +303,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 				result = true;
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			logger.error("Unable to save report: " + e.getLocalizedMessage());
 			errors.reject("error.save", "Unable to save report: " + e.getLocalizedMessage());
 		}
