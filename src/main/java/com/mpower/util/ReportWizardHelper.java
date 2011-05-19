@@ -39,14 +39,16 @@ public class ReportWizardHelper {
 			rcs.setLocation(reportChartSettings.getLocation());
 			rcs.setValueAxisLabel(reportChartSettings.getValueAxisLabel());
 			for (ReportChartSettingsSeries reportChartSettingsSeries : reportChartSettings.getReportChartSettingsSeries()) {
-				ReportChartSettingsSeries rcss = new ReportChartSettingsSeries();
-				rcss.setOperation(reportChartSettingsSeries.getOperation());
-				rcss.setSeries(reportChartSettingsSeries.getSeries());
-				rcss.setSeriesColumn(reportChartSettingsSeries.getSeriesColumn());
-				rcss.setSeriesLabel(reportChartSettingsSeries.getSeriesLabel());
-				if (copyIds)
-					rcss.setId(reportChartSettingsSeries.getId());
-				rcs.getReportChartSettingsSeries().add(rcss);
+				if (reportChartSettingsSeries != null) {
+					ReportChartSettingsSeries rcss = new ReportChartSettingsSeries();
+					rcss.setOperation(reportChartSettingsSeries.getOperation());
+					rcss.setSeries(reportChartSettingsSeries.getSeries());
+					rcss.setSeriesColumn(reportChartSettingsSeries.getSeriesColumn());
+					rcss.setSeriesLabel(reportChartSettingsSeries.getSeriesLabel());
+					if (copyIds)
+						rcss.setId(reportChartSettingsSeries.getId());
+					rcs.getReportChartSettingsSeries().add(rcss);
+				}
 			}
 			
 			if (copyIds)
