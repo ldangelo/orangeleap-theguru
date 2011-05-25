@@ -897,6 +897,8 @@ public class ModifyReportJRXML {
 			//get the categoryExpression node
 			Node categoryExp = null;
 			if (chartType.equalsIgnoreCase("timeSeries") || chartType.equalsIgnoreCase("scatter") || chartType.toLowerCase().startsWith("xy")){
+				correctChartVariableForCountOperation(chartType, document, rcs);
+				addChartLabels(chartType, document, rcs);
 				return; 
 				//You can not have null dates in the group by field
 				//so for now you need to add criteria in the guru to exclude null dates
