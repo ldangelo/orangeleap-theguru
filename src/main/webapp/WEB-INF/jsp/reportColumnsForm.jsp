@@ -107,7 +107,7 @@
 					selected="true"
 				</c:if>>Bar</option>
 			<option label="Bar 3D" value="Bar3D"
-				<c:if test="${reportChartSettings[0].chartType == 'Bar 3D'}">
+				<c:if test="${reportChartSettings[0].chartType == 'Bar3D'}">
 					selected="true"
 				</c:if>>Bar 3D</option>
 			<option label="Line" value="Line"
@@ -119,7 +119,7 @@
 					selected="true"
 				</c:if>>Pie</option>
 			<option label="Pie 3D" value="Pie3D"
-				<c:if test="${reportChartSettings[0].chartType == 'Pie 3D'}">
+				<c:if test="${reportChartSettings[0].chartType == 'Pie3D'}">
 					selected="true"
 				</c:if>>Pie 3D</option>
 			<option label="Scatter" value="Scatter"
@@ -127,31 +127,31 @@
 					selected="true"
 				</c:if>>Scatter</option>
 			<option label="Stacked Area" value="StackedArea"
-				<c:if test="${reportChartSettings[0].chartType == 'Stacked Area'}">
+				<c:if test="${reportChartSettings[0].chartType == 'StackedArea'}">
 					selected="true"
 				</c:if>>Stacked Area</option>
 			<option label="Stacked Bar" value="StackedBar"
-				<c:if test="${reportChartSettings[0].chartType == 'Stacked Bar'}">
+				<c:if test="${reportChartSettings[0].chartType == 'StackedBar'}">
 					selected="true"
 				</c:if>>Stacked Bar</option>
 			<option label="Stacked Bar 3D" value="StackedBar3D"
-				<c:if test="${reportChartSettings[0].chartType == 'Stacked Bar 3D'}">
+				<c:if test="${reportChartSettings[0].chartType == 'StackedBar3D'}">
 					selected="true"
 				</c:if>>Stacked Bar 3D</option>
 			<option label="Time Series" value="TimeSeries"
-				<c:if test="${reportChartSettings[0].chartType == 'Time Series'}">
+				<c:if test="${reportChartSettings[0].chartType == 'TimeSeries'}">
 					selected="true"
 				</c:if>>Time Series</option>
 			<option label="XY Area" value="XYArea"
-				<c:if test="${reportChartSettings[0].chartType == 'XY Area'}">
+				<c:if test="${reportChartSettings[0].chartType == 'XYArea'}">
 					selected="true"
 				</c:if>>XY Area</option>
 			<option label="XY Bar" value="XYBar"
-				<c:if test="${reportChartSettings[0].chartType == 'XY Bar'}">
+				<c:if test="${reportChartSettings[0].chartType == 'XYBar'}">
 					selected="true"
 				</c:if>>XY Bar</option>
 			<option label="XY Line" value="XYLine"
-				<c:if test="${reportChartSettings[0].chartType == 'XY Line'}">
+				<c:if test="${reportChartSettings[0].chartType == 'XYLine'}">
 					selected="true"
 				</c:if>>XY Line</option>
 			</SELECT></TD>
