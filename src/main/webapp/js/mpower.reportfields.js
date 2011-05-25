@@ -10,6 +10,7 @@ function initializeFieldScreen() {
 	$('#fieldGroups').find("option:first").attr('selected', true);
 	updateDisplayedFields();
 	cleanUpFieldTable('#report_fields_add');
+	fillChartCalcOptions('#reportChartSettings\\[0\\]\\.reportChartSettingsSeries\\[0\\]\\.series');
 	$('#report_fields_add').find("tr[index!=-1]").each(function() {
 		var row = $(this);
 		row.find(".deleteButton").click(function(){
@@ -194,8 +195,28 @@ function setOptionsEnabled(rowSelector, index) {
 			fieldRow.find('input[objectname$=average]').attr('disabled', true);
 		}
 		// add the group by field to the x axis chart options
-		if(index ==0)
+		if(index ==0) {
 			$('#reportChartSettings\\[0\\]\\.fieldIdx').append(field.find('option:selected').clone(true));
+			var fieldType = field.find('option:selected').attr('fieldtype');
+			if (fieldType != 'MONEY' && fieldType != 'INTEGER' && fieldType != 'DOUBLE') {
+				var currentChartType = $('#reportChartSettings\\[0\\]\\.chartType').find('option:selected').attr('value');
+				if (currentChartType == 'Scatter' || currentChartType == 'XYArea'
+				|| currentChartType == 'XYBar' || currentChartType == 'XYLine') {
+					$('#reportChartSettings\\[0\\]\\.chartType').find("option:selected").attr('selected', false);
+					$('#reportChartSettings\\[0\\]\\.chartType').find("option:visible:first").attr('selected', true);
+				}
+				// hide Scatter, XY Area, XY Bar, & XY Line
+				$('#reportChartSettings\\[0\\]\\.chartType').find("option[value='Scatter']").hide();
+				$('#reportChartSettings\\[0\\]\\.chartType').find("option[value='XYArea']").hide();
+				$('#reportChartSettings\\[0\\]\\.chartType').find("option[value='XYBar']").hide();
+				$('#reportChartSettings\\[0\\]\\.chartType').find("option[value='XYLine']").hide();
+			} else {
+				$('#reportChartSettings\\[0\\]\\.chartType').find("option[value='Scatter']").show();
+				$('#reportChartSettings\\[0\\]\\.chartType').find("option[value='XYArea']").show();
+				$('#reportChartSettings\\[0\\]\\.chartType').find("option[value='XYBar']").show();
+				$('#reportChartSettings\\[0\\]\\.chartType').find("option[value='XYLine']").show();
+			}
+		}
 	} else {
 		//fieldRow.find('input [objectname$=count]').removeAttr('disabled');
 		//fieldRow.find('input[objectname$=count]').attr('disabled', true);
