@@ -984,9 +984,22 @@ public class ModifyReportJRXML {
 			}	
 		}
 		
-		if (!chartType.toLowerCase().contains("pie")){
-			//set categoryAxisLabelExpression
-			if (rcs.getCategoryAxisLabel() != null && !rcs.getCategoryAxisLabel().isEmpty()){
+		if ((!chartType.toLowerCase().contains("pie")) && (rcs.getCategoryAxisLabel() != null && !rcs.getCategoryAxisLabel().isEmpty())){
+			if (chartType.equalsIgnoreCase("timeSeries")){
+				Node timeAxisLabelExpression = document.getElementsByTagName("timeAxisLabelExpression").item(0);
+				if (timeAxisLabelExpression == null){
+					//add the node as it is not there
+					//it goes before timeAxisFormat node
+					Node timeAxisFormatNode = document.getElementsByTagName("timeAxisFormat").item(0);
+					timeAxisLabelExpression = document.createElement("timeAxisLabelExpression");
+					timeAxisLabelExpression.setTextContent("\"" + rcs.getCategoryAxisLabel() + "\"");
+					Node categoryAxisFormatNodeParent = document.getElementsByTagName(timeAxisFormatNode.getParentNode().getNodeName()).item(0);
+					categoryAxisFormatNodeParent.insertBefore(timeAxisLabelExpression, timeAxisFormatNode);
+				}else{
+					timeAxisLabelExpression.setTextContent("\"" + rcs.getCategoryAxisLabel() + "\"");	
+				}
+			}else {   
+				//set categoryAxisLabelExpression
 				Node categoryAxisLabelExp = document.getElementsByTagName("categoryAxisLabelExpression").item(0);
 				if (categoryAxisLabelExp == null){
 					//add the node as it is not there
