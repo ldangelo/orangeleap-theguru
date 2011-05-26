@@ -216,6 +216,19 @@ function setOptionsEnabled(rowSelector, index) {
 				$('#reportChartSettings\\[0\\]\\.chartType').find("option[value='XYBar']").show();
 				$('#reportChartSettings\\[0\\]\\.chartType').find("option[value='XYLine']").show();
 			}
+			if (fieldType != 'DATE') {
+				var currentChartType = $('#reportChartSettings\\[0\\]\\.chartType').find('option:selected').attr('value');
+				if (currentChartType == 'TimeSeries') {
+					$('#reportChartSettings\\[0\\]\\.chartType').val($('#reportChartSettings\\[0\\]\\.chartType').find('option:visible:first').val());
+				}
+				// hide Time Series chart type
+				$('#reportChartSettings\\[0\\]\\.chartType').find("option[value='TimeSeries']").hide();
+				$('#reportChartSettings\\[0\\]\\.chartType').find("option[value='XYArea']").hide();
+				$('#reportChartSettings\\[0\\]\\.chartType').find("option[value='XYBar']").hide();
+				$('#reportChartSettings\\[0\\]\\.chartType').find("option[value='XYLine']").hide();
+			} else {
+				$('#reportChartSettings\\[0\\]\\.chartType').find("option[value='TimeSeries']").show();
+			}			
 		}
 	} else {
 		//fieldRow.find('input [objectname$=count]').removeAttr('disabled');
