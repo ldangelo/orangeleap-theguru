@@ -11,6 +11,7 @@ function initializeFieldScreen() {
 	updateDisplayedFields();
 	cleanUpFieldTable('#report_fields_add');
 	fillChartCalcOptions('#reportChartSettings\\[0\\]\\.reportChartSettingsSeries\\[0\\]\\.series');
+	displayChartTypeWarning();
 	$('#report_fields_add').find("tr[index!=-1]").each(function() {
 		var row = $(this);
 		row.find(".deleteButton").click(function(){
@@ -202,8 +203,7 @@ function setOptionsEnabled(rowSelector, index) {
 				var currentChartType = $('#reportChartSettings\\[0\\]\\.chartType').find('option:selected').attr('value');
 				if (currentChartType == 'Scatter' || currentChartType == 'XYArea'
 				|| currentChartType == 'XYBar' || currentChartType == 'XYLine') {
-					$('#reportChartSettings\\[0\\]\\.chartType').find("option:selected").attr('selected', false);
-					$('#reportChartSettings\\[0\\]\\.chartType').find("option:visible:first").attr('selected', true);
+					$('#reportChartSettings\\[0\\]\\.chartType').val($('#reportChartSettings\\[0\\]\\.chartType').find('option:visible:first').val());
 				}
 				// hide Scatter, XY Area, XY Bar, & XY Line
 				$('#reportChartSettings\\[0\\]\\.chartType').find("option[value='Scatter']").hide();
@@ -233,13 +233,15 @@ function setOptionsEnabled(rowSelector, index) {
 	    }
 		$('#reportChartSettings\\[0\\]\\.reportChartSettingsSeries\\[0\\]\\.series').append(field.find('option:selected').clone(true));
 	}
+	fillChartCalcOptions('#reportChartSettings\\[0\\]\\.reportChartSettingsSeries\\[0\\]\\.series');
 }
 
 function fillChartCalcOptions(fieldSelectId) {
 	var fieldSelect = $(fieldSelectId);
 	var filterRow = fieldSelect.parent().parent();
 	var calculation =  $("[id$=operation]");
-	if (fieldSelect.find("option:selected").attr('fieldType') == "MONEY")
+	var fieldType = fieldSelect.find("option:selected").attr('fieldType');
+	if (fieldType == 'MONEY' || fieldType == 'INTEGER' || fieldType == 'DOUBLE')
 		calculation.find("option[moneyonly=true]").show();
 	else
 	{
@@ -259,6 +261,15 @@ function checkForReturn(selector)
 		}
 		checkForReturn(selector);
 	});
+}
+
+function displayChartTypeWarning() {
+	var currentChartType = $('#reportChartSettings\\[0\\]\\.chartType').find('option:selected').attr('value');
+	if (currentChartType == 'Scatter' || currentChartType == 'XYArea'
+	|| currentChartType == 'XYBar' || currentChartType == 'XYLine'
+	|| currentChartType == 'TimeSeries') {
+		alert('The selected chart type does not support NULL values for the Category (x-axis) field.  Please make sure to add criteria to the report that requires the select Category field to have a value ("has any value" comparison).');
+	}
 }
 
 $.expr[':'].Contains = function(obj, index, meta, stack){

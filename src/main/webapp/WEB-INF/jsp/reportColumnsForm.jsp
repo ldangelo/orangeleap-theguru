@@ -93,7 +93,8 @@
 		</tr>
 		<TR rowIndex="0">
 			<TD>Type <br/><SELECT id="reportChartSettings[0].chartType"
-				name="reportChartSettings[0].chartType" >
+				name="reportChartSettings[0].chartType" 
+				onchange="displayChartTypeWarning();" >
 			<option label="" value="-1"
 				<c:if test="${reportChartSettings[0].chartType == '-1'}">
 					selected="true"
