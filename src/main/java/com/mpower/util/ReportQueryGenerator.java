@@ -208,7 +208,7 @@ public class ReportQueryGenerator {
 	public String getQueryString() throws ParseException {
 		String query = "";
 		if (getReportWizard().getDataSubSource().getDatabaseType().equals(ReportDatabaseType.MYSQL) && getReportWizard().getUseDynamicSQLGeneration()) {
-			query = buildDynamicMySQLStatment(false);
+			query = buildDynamicMySQLStatment(false, false, null);
 		} else {
 			query = buildSelectClause(false);
 			query += buildWhereClause(false);
@@ -231,7 +231,7 @@ public class ReportQueryGenerator {
 	public String getPreviewQueryString() throws ParseException {
 		String query = "";
 		if (getReportWizard().getDataSubSource().getDatabaseType().equals(ReportDatabaseType.MYSQL) && getReportWizard().getUseDynamicSQLGeneration()) {
-			query = buildDynamicMySQLStatment(true);
+			query = buildDynamicMySQLStatment(true, false, null);
 		} else {
 			query = buildSelectClause(true);
 			query += buildWhereClause(false);
@@ -261,14 +261,19 @@ public class ReportQueryGenerator {
 	 * @throws ParseException
 	 */
 	public String getSegmentationQueryString(String columnName) throws ParseException {
-		String query = buildSegmentationSelectClause(reportWizard.getId(), columnName);
-		query += buildSegmentationWhereClause(columnName);
-		query += System.getProperty("line.separator") + "ORDER BY " + columnName;
-		if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.MYSQL
+		String query = "";
+		if (getReportWizard().getDataSubSource().getDatabaseType().equals(ReportDatabaseType.MYSQL) && getReportWizard().getUseDynamicSQLGeneration()) {
+			query = buildDynamicMySQLStatment(false, true, columnName);
+		} else {
+			query = buildSegmentationSelectClause(reportWizard.getId(), columnName);
+			query += buildSegmentationWhereClause(columnName);
+			query += System.getProperty("line.separator") + "ORDER BY " + columnName;
+			if (getReportWizard().getDataSubSource().getDatabaseType() == ReportDatabaseType.MYSQL
 				&& getReportWizard().getRowCount() > 0)
-			query += " LIMIT 0," + getReportWizard().getRowCount();
-		query += ";";
-		return query;
+				query += " LIMIT 0," + getReportWizard().getRowCount();
+			query += ";";
+		}
+		return query;		
 	}
 
 	/**
@@ -1206,14 +1211,23 @@ public class ReportQueryGenerator {
 		}
 	}
 
-	private String buildDynamicMySQLStatment(boolean preview) throws ParseException {
+	private String buildDynamicMySQLStatment(boolean preview, boolean segmentation, String columnName) throws ParseException {
 		DynamicReportQuery dynamicReportQuery = new DynamicReportQuery();
 
 		String viewName = getReportWizard().getDataSubSource().getViewName();
 		TheGuruView theGuruView = getTheGuruViewService().readTheGuruViewByViewName(viewName);
 
+		ReportField segmentationReportField = null;
 		// Build table keys for all selected fields
-		if (getReportWizard().getReportType().compareToIgnoreCase("matrix") == 0) {
+		if (segmentation) {
+			for (ReportField wizardReportField : getReportWizard().getFields()) {
+				if (wizardReportField.getColumnName().equals(columnName)) {
+					segmentationReportField = wizardReportField;
+					break;
+				}
+			}
+			populateTableKeyForReportFieldId(dynamicReportQuery, theGuruView, segmentationReportField.getId());			
+		} else if (getReportWizard().getReportType().compareToIgnoreCase("matrix") == 0) {
 			for (ReportCrossTabMeasure reportCrossTabMeasure : getReportWizard().getReportCrossTabFields().getReportCrossTabMeasure()) {
 				if (reportCrossTabMeasure != null && reportCrossTabMeasure.getFieldId() != -1){
 					populateTableKeyForReportFieldId(dynamicReportQuery, theGuruView, reportCrossTabMeasure.getFieldId());
@@ -1316,8 +1330,11 @@ public class ReportQueryGenerator {
 		}
 		
 		// Add fields
-		if (getReportWizard().getReportType().compareToIgnoreCase("matrix") == 0)
-		{
+		if (segmentation) {
+			dynamicReportQuery.selectClause += dynamicReportQuery.crlf 
+				+ getReportWizard().getId().toString() + " AS REPORT_ID," + dynamicReportQuery.crlf
+				+ getSourceColumnNameFromReportField(segmentationReportField, dynamicReportQuery) + " AS ENTITYID" + dynamicReportQuery.crlf; 
+		} else if (getReportWizard().getReportType().compareToIgnoreCase("matrix") == 0) {
 			dynamicReportQuery.selectClause += buildSelectFieldsForMatrix(dynamicReportQuery) + dynamicReportQuery.crlf;
 		} else {
 			dynamicReportQuery.selectClause += buildSelectFieldsForNonMatrix(dynamicReportQuery) + dynamicReportQuery.crlf;
@@ -1384,6 +1401,15 @@ public class ReportQueryGenerator {
 			else
 				dynamicReportQuery.whereClause = "";
 
+		// Add criteria to require segmentation field is not null
+		if (segmentation) {
+			if (dynamicReportQuery.whereClause.length() > 0)
+				dynamicReportQuery.whereClause += "AND ";
+			else
+				dynamicReportQuery.whereClause += "WHERE ";
+			dynamicReportQuery.whereClause += "(" + getSourceColumnNameFromReportField(segmentationReportField, dynamicReportQuery) + " IS NOT NULL)" + dynamicReportQuery.crlf;
+		}
+		
 		// Build Order By clause
 		String includeOrderBy = System.getProperty("theguru.preview.includeorderbyclause");
 		if (includeOrderBy == null || !includeOrderBy.equalsIgnoreCase("false"))
@@ -1422,9 +1448,7 @@ public class ReportQueryGenerator {
 		return query;
 	}
 
-	private void populateTableKeyForReportFieldId(
-			DynamicReportQuery dynamicReportQuery, TheGuruView theGuruView,
-			Long reportFieldId) {
+	private void populateTableKeyForReportFieldId(DynamicReportQuery dynamicReportQuery, TheGuruView theGuruView, Long reportFieldId) {
 		ReportField reportField = getReportFieldService().find(reportFieldId);
 		String tableKey = getTableKeyForReportField(reportField, theGuruView);
 		if (!dynamicReportQuery.fieldTableKeys.containsKey(reportField.getId()))
