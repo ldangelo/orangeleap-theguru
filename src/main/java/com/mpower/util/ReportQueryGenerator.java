@@ -569,7 +569,7 @@ public class ReportQueryGenerator {
 			} else if (filter.getFilterType() == 2) {
 				hasCriteria = true;
 				afterGroup = false;
-				whereClause += buildCustomFilterWhereClause(filter.getReportCustomFilter());
+				whereClause += buildCustomFilterWhereClause(filter.getReportCustomFilter(), null);
 			}
 		}
 		if (!hasCriteria)
@@ -835,13 +835,41 @@ public class ReportQueryGenerator {
 	 * @return String
 	 * @throws ParseException
 	 */
-	private String buildCustomFilterWhereClause(ReportCustomFilter filter) throws ParseException {
+	private String buildCustomFilterWhereClause(ReportCustomFilter filter, DynamicReportQuery dynamicReportQuery) throws ParseException {
 		String whereClause = " ";
 		ReportCustomFilterDefinition reportCustomFilterDefinition = getReportCustomFilterDefinitionService().find(filter.getCustomFilterDefinitionId());
 		if (reportCustomFilterDefinition != null) {
 			String filterString = reportCustomFilterDefinition.getSqlText();
 			if (filterString.length() != 0) {
-				filterString = filterString.replace("[VIEWNAME]", getReportWizard().getDataSubSource().getViewName());
+				if (getReportWizard().getUseDynamicSQLGeneration()) {
+					while (filterString.indexOf("[VIEWNAME]") != -1) {
+						int replacementStartIndex = filterString.indexOf("[VIEWNAME]");
+						int replacementEndIndex = filterString.indexOf(" ", replacementStartIndex);						
+						int replacementTempIndex = filterString.indexOf(")", replacementStartIndex);
+						
+						if (replacementTempIndex != -1 && replacementTempIndex < replacementEndIndex)
+							replacementEndIndex = replacementTempIndex;
+						
+						replacementTempIndex = filterString.indexOf(",", replacementStartIndex);
+						if (replacementTempIndex != -1 && replacementTempIndex < replacementEndIndex)
+							replacementEndIndex = replacementTempIndex;
+						
+						String columnName = filterString.substring(replacementStartIndex, replacementEndIndex).replace("[VIEWNAME].", "");
+						
+						ReportField customFilterField = null;
+						for (ReportField wizardReportField : getReportWizard().getFields()) {
+							if (wizardReportField.getColumnName().equals(columnName)) {
+								customFilterField = wizardReportField;
+								break;
+							}
+						}
+
+						columnName = getSourceColumnNameFromReportField(customFilterField, dynamicReportQuery);
+						filterString = filterString.substring(0, replacementStartIndex) + columnName + filterString.substring(replacementEndIndex); 
+					}
+				} else {
+					filterString = filterString.replace("[VIEWNAME]", getReportWizard().getDataSubSource().getViewName());
+				}
 				int criteriaSize = filter.getReportCustomFilterCriteria().size();
 				for (int index = 0; index < criteriaSize; index++) {
 					filterString = filterString.replace("{" + Integer.toString(index) + "}", filter.getReportCustomFilterCriteria().get(index).getCriteria());
@@ -1265,11 +1293,41 @@ public class ReportQueryGenerator {
 				if (!dynamicReportQuery.tableKeysFromFields.contains(tableKey))
 					dynamicReportQuery.tableKeysFromFields.add(tableKey);
 			} else if (reportFilter.getFilterType() == 2) {
-				//TODO handle customfilter fields
+				ReportCustomFilterDefinition reportCustomFilterDefinition = getReportCustomFilterDefinitionService().find(reportFilter.getReportCustomFilter().getCustomFilterDefinitionId());
+				String filterString = reportCustomFilterDefinition.getSqlText();
+				while (filterString.indexOf("[VIEWNAME]") != -1) {
+					int replacementStartIndex = filterString.indexOf("[VIEWNAME]");
+					int replacementEndIndex = filterString.indexOf(" ", replacementStartIndex);						
+					int replacementTempIndex = filterString.indexOf(")", replacementStartIndex);
+					
+					if (replacementTempIndex != -1 && replacementTempIndex < replacementEndIndex)
+						replacementEndIndex = replacementTempIndex;
+					
+					replacementTempIndex = filterString.indexOf(",", replacementStartIndex);
+					if (replacementTempIndex != -1 && replacementTempIndex < replacementEndIndex)
+						replacementEndIndex = replacementTempIndex;
+
+					String sourceColumnName = filterString.substring(replacementStartIndex, replacementEndIndex).replace("[VIEWNAME].", "");
+					
+					ReportField customFilterField = null;
+					for (ReportField wizardReportField : getReportWizard().getFields()) {
+						if (wizardReportField.getColumnName().equals(sourceColumnName)) {
+							customFilterField = wizardReportField;
+							break;
+						}
+					}
+
+					String tableKey = getTableKeyForReportField(customFilterField, theGuruView);
+					if (!dynamicReportQuery.fieldTableKeys.containsKey(customFilterField.getId()))
+						dynamicReportQuery.fieldTableKeys.put(customFilterField.getId(), tableKey);
+					if (!dynamicReportQuery.tableKeysFromFields.contains(tableKey))
+						dynamicReportQuery.tableKeysFromFields.add(tableKey);
+					
+					filterString = filterString.substring(0, replacementStartIndex) + filterString.substring(replacementEndIndex); 
+				}
 			}
 		}
 		
-		//HashMap<String, TheGuruViewJoin> requiredJoins = buildRequiredJoins(tableKeysFromFields, allViews, allJoins, allJoinTableKeysInOrder, joinTableKeys, viewTableKeys);
 		buildRequiredJoins(dynamicReportQuery);
 		
 		// Assign all aliases first
@@ -1302,7 +1360,6 @@ public class ReportQueryGenerator {
 					}					
 				} else {
 					String joinCriteria = theGuruViewJoin.getJoinCriteria();
-					//joinCriteria = processJoinCriteria(tableKey, joinCriteria, theGuruViewJoin, allViews, allJoins, allJoinTableKeysInOrder, joinTableKeys, viewTableKeys, tableAliases);
 					joinCriteria = processJoinCriteria(tableKey, joinCriteria, theGuruViewJoin, dynamicReportQuery);
 					dynamicReportQuery.fromClause += dynamicReportQuery.crlf + theGuruViewJoin.getJoinType() + " JOIN " + theGuruViewJoin.getJoinTable() 
 						+ " AS " + dynamicReportQuery.tableAliases.get(tableKey) + " ON " + joinCriteria;
@@ -1341,7 +1398,6 @@ public class ReportQueryGenerator {
 		}		
 
 		// Add where clause
-		//String whereClause = "";
 		if (dynamicReportQuery.joinWhereClause.equals("WHERE (" + dynamicReportQuery.crlf)) {
 			dynamicReportQuery.joinWhereClause = "";
 			dynamicReportQuery.whereClause = "WHERE (" + dynamicReportQuery.crlf;
@@ -1390,7 +1446,7 @@ public class ReportQueryGenerator {
 			} else if (reportFilter.getFilterType() == 2) {
 				hasCriteria = true;
 				afterGroup = false;
-				dynamicReportQuery.whereClause += buildCustomFilterWhereClause(reportFilter.getReportCustomFilter()) + dynamicReportQuery.crlf;
+				dynamicReportQuery.whereClause += buildCustomFilterWhereClause(reportFilter.getReportCustomFilter(), dynamicReportQuery) + dynamicReportQuery.crlf;
 			}	
 		}
 				
@@ -1414,7 +1470,6 @@ public class ReportQueryGenerator {
 		String includeOrderBy = System.getProperty("theguru.preview.includeorderbyclause");
 		if (includeOrderBy == null || !includeOrderBy.equalsIgnoreCase("false"))
 		{
-			//dynamicReportQuery.orderByClause = "ORDER BY" + dynamicReportQuery.crlf;
 			if (getReportWizard().getReportType().compareTo("matrix") == 0) {
 				// Matrix Reports
 				dynamicReportQuery.orderByClause = getOrderByClauseForMatrix().replace(dynamicReportQuery.crlf, "") + dynamicReportQuery.crlf;
