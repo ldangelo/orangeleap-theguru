@@ -157,8 +157,8 @@
 
 	
 	<session-config>
-	             <!-- 12 hours -->
-      <session-timeout>720</session-timeout> 
+	             <!-- 2 hours -->
+      <session-timeout>120</session-timeout> 
     </session-config>
 
 </web-app>

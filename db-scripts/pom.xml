@@ -21,7 +21,7 @@
 	<parent>
 		<groupId>com.orangeleap</groupId>
 		<artifactId>masterPOM</artifactId>
-		<version>10.0-SNAPSHOT</version>
+		<version>13.0-SNAPSHOT</version>
 		<relativePath>../../</relativePath>
 	</parent>
 
@@ -71,7 +71,7 @@
 				<configuration>
 					<driver>com.mysql.jdbc.Driver</driver>
 					<url>jdbc:mysql://${host}:${port}/</url>
-					<driverProperties>autoReconnect=true,useUnicode=true</driverProperties>
+					<driverProperties>autoReconnect=true,useUnicode=true,useCursorFetch=true,useServerPrepStmts=true,create=true,maxAllowedPacket=167772160</driverProperties>
 					<username>orangeleap</username>
 					<password>orangeleap</password>
 					<encoding>UTF-8</encoding>
@@ -101,11 +101,12 @@
 						</goals>
 						<configuration>
 							<url>jdbc:mysql://${host}:${port}/${theGuruSchema}</url>
+							<driverProperties>autoReconnect=true,useUnicode=true,useCursorFetch=true,useServerPrepStmts=true,create=true,maxAllowedPacket=167772160</driverProperties>
 							<!--<delimiter>;</delimiter>-->
 							<srcFiles>
 								<srcFile>${basedir}/src/main/resources/db/prod/domain/TheguruCreateAndLoadSchema-NoFunctions.sql</srcFile>
 								<srcFile>${basedir}/src/main/resources/db/prod/domain/TheguruCreateFunctions-Part1.sql</srcFile>
-								<srcFile>${basedir}/src/main/resources/db/prod/domain/JasperserverCreateAndLoadSchema_${schemaSql}.sql</srcFile>
+								<srcFile>${basedir}/src/main/resources/db/prod/domain/JasperserverCreateAndLoadSchema_company1.sql</srcFile>
 							</srcFiles>
 						</configuration>
 					</execution>
@@ -118,16 +119,17 @@
 						</goals>
 						<configuration>
 							<url>jdbc:mysql://${host}:${port}/${theGuruSchema}</url>
+							<driverProperties>autoReconnect=true,useUnicode=true,useCursorFetch=true,useServerPrepStmts=true,create=true,maxAllowedPacket=167772160</driverProperties>
 							<delimiter>;</delimiter>
 							<sqlCommand>
 								Update JIJdbcDatasource
-								Set connectionUrl = 'jdbc:mysql://${host}:${port}/${olSchema}',
+								Set connectionUrl = CONCAT('jdbc:mysql://${host}:${port}/${olSchema}', '?useCursorFetch', CHAR(61), 'true', CHAR(38), 'useServerPrepStmts', CHAR(61), 'true', CHAR(38), 'create', CHAR(61), 'true', CHAR(38), 'maxAllowedPacket', CHAR(61), '167772160'),
 								username = 'orangeleap',
 								password = '${encryptedPwd}'
 								Where id = (Select id from JIResource where JIResource.name = 'ReportWizardJdbcDS');
 
 								Update JIJdbcDatasource
-								Set connectionUrl = 'jdbc:mysql://${host}:${port}/${olSchema}',
+								Set connectionUrl = CONCAT('jdbc:mysql://${host}:${port}/${olSchema}', '?useCursorFetch', CHAR(61), 'true', CHAR(38), 'useServerPrepStmts', CHAR(61), 'true', CHAR(38), 'create', CHAR(61), 'true', CHAR(38), 'maxAllowedPacket', CHAR(61), '167772160'),
 								username = 'orangeleap',
 								password = '${encryptedPwd}'
 								Where id = (Select id from JIResource where JIResource.name = 'ReportWizardJdbcDSSegmentationResults');
@@ -143,6 +145,7 @@
 						</goals>
 						<configuration>
 							<url>jdbc:mysql://${host}:${port}/${theGuruSchema}</url>
+							<driverProperties>autoReconnect=true,useUnicode=true,useCursorFetch=true,useServerPrepStmts=true,create=true,maxAllowedPacket=167772160</driverProperties>
 							<delimiter>$$$$</delimiter>
 							<srcFiles>
 								<srcFile>${basedir}/src/main/resources/db/prod/domain/TheguruCreateFunctions-Part2.sql</srcFile>
@@ -159,6 +162,7 @@
 						</goals>
 						<configuration>
 							<url>jdbc:mysql://${host}:${port}/${olSchema}</url>
+							<driverProperties>autoReconnect=true,useUnicode=true,useCursorFetch=true,useServerPrepStmts=true,create=true,maxAllowedPacket=167772160</driverProperties>
 							<delimiter>$$$$</delimiter>
 							<srcFiles>
 								<srcFile>${basedir}/src/main/resources/db/prod/domain/functions.sql</srcFile>
@@ -174,6 +178,7 @@
 						</goals>
 						<configuration>
 							<url>jdbc:mysql://${host}:${port}/${olSchema}</url>
+							<driverProperties>autoReconnect=true,useUnicode=true,useCursorFetch=true,useServerPrepStmts=true,create=true,maxAllowedPacket=167772160</driverProperties>
 							<delimiter>;</delimiter>
 							<srcFiles>
 								<srcFile>${basedir}/src/main/resources/db/prod/domain/orangeLeapReportViews.sql</srcFile>

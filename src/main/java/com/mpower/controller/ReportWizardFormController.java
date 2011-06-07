@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.context.ApplicationContext;
 import org.springframework.security.userdetails.UserDetails;
 import org.springframework.security.userdetails.UserDetailsService;
 import org.springframework.util.Assert;
@@ -55,6 +54,8 @@ import com.mpower.service.ReportSubSourceGroupService;
 import com.mpower.service.ReportSubSourceService;
 import com.mpower.service.ReportWizardService;
 import com.mpower.service.SessionService;
+import com.mpower.service.TheGuruViewJoinService;
+import com.mpower.service.TheGuruViewService;
 import com.mpower.util.ModifyReportJRXML;
 import com.mpower.util.ReportCustomFilterHelper;
 import com.mpower.util.ReportQueryGenerator;
@@ -75,6 +76,8 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 	private ReportQueryCostService reportQueryCostService;
 
 	private ReportFieldService reportFieldService;
+	private TheGuruViewService theGuruViewService;
+	private TheGuruViewJoinService theGuruViewJoinService;
 	private ReportCustomFilterDefinitionService reportCustomFilterDefinitionService;
 	private ReportCustomFilterHelper reportCustomFilterHelper;
 
@@ -174,6 +177,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 			wiz.setReportSegmentationTypeId(0);
 			wiz.setUseReportAsSegmentation(false);
 			wiz.setSegmentationQuery("");
+			wiz.setUseDynamicSQLGeneration(false);
 			wiz.getReportFilters().clear();
 			wiz.getReportChartSettings().clear();
 			wiz.getReportCrossTabFields().getReportCrossTabColumns().clear();
@@ -299,6 +303,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 				result = true;
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			logger.error("Unable to save report: " + e.getLocalizedMessage());
 			errors.reject("error.save", "Unable to save report: " + e.getLocalizedMessage());
 		}
@@ -484,12 +489,17 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 			WebApplicationContext applicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(this.getServletContext());
 			
 			if (wiz.getShowSqlQuery()) {
-		    	ReportQueryGenerator reportQueryGenerator = new ReportQueryGenerator(wiz, reportFieldService, reportCustomFilterDefinitionService, applicationContext);
+		    	ReportQueryGenerator reportQueryGenerator = new ReportQueryGenerator(wiz, reportFieldService, reportCustomFilterDefinitionService, applicationContext,
+		    			theGuruViewService, theGuruViewJoinService);
 				refData.put("showSqlQuery", wiz.getShowSqlQuery());
-				String query = reportQueryGenerator.getQueryString();
-				refData.put("sqlQuery", query);
-				if (wiz.getDataSubSource().getDatabaseType().equals(ReportDatabaseType.MYSQL) && wiz.getReportSelectedFields().size() > 0)
-					refData.put("queryCost", reportQueryCostService.getReportQueryCostByQuery(query, wiz.getDataSubSource().getJasperDatasourceName(), wiz.getUsername(), wiz.getPassword()));
+				try {
+					String query = reportQueryGenerator.getQueryString();
+					refData.put("sqlQuery", query);
+					if (wiz.getDataSubSource().getDatabaseType().equals(ReportDatabaseType.MYSQL) && wiz.getReportSelectedFields().size() > 0)
+						refData.put("queryCost", reportQueryCostService.getReportQueryCostByQuery(query, wiz.getDataSubSource().getJasperDatasourceName(), wiz.getUsername(), wiz.getPassword()));					
+				} catch (Exception exception) {
+					refData.put("sqlQuery", "An exception occurred while attempting to build the SQL statement." + System.getProperty("line.separator") + exception.getMessage());
+				}
 				wiz.setShowSqlQuery(false);
 			}
 
@@ -510,12 +520,13 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 			wiz.getReportFilters().clear();
 
 			refData.put("rowCount", wiz.getRowCount());
+			
+			refData.put("showDynamicSQLOption", wiz.getDataSubSource().getAllowDynamicSqlGeneration());
+			refData.put("useDynamicSQLGeneration", wiz.getUseDynamicSQLGeneration());
 		}
 
+		// Save report
 		if (page == 4) {
-			refData.put("executeSegmentation", wiz.getExecuteSegmentation());
-			wiz.setExecuteSegmentation(false);
-		    refData.put("useReportAsSegmentation", wiz.getUseReportAsSegmentation());
 		}
 
 		// run a saved report
@@ -532,7 +543,7 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 
 			// SuppressWarnings("unused")
 			WebApplicationContext applicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(this.getServletContext());
-			DynamicReport dr = wiz.getReportGenerator().Generate(wiz, reportFieldService, reportCustomFilterDefinitionService, true, applicationContext);
+			DynamicReport dr = wiz.getReportGenerator().Generate(wiz, reportFieldService, reportCustomFilterDefinitionService, true, applicationContext, theGuruViewService, theGuruViewJoinService);
 			// String query = dr.getQuery().getText();
 
 			//
@@ -551,6 +562,22 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		    // DJ adds a dataset that causes an error on the matrix reports so we need to remove it
 			if (wiz.getReportType().compareToIgnoreCase("matrix") == 0)
 				reportXMLModifier.removeCrossTabDataSubset(tempFile.getPath());
+			
+			// chart modifications
+			List<ReportChartSettings> rptChartSettings = wiz.getReportChartSettings();
+			Iterator itRptChartSettings = rptChartSettings.iterator();
+			while (itRptChartSettings.hasNext()) {
+		    	ReportChartSettings rptChartSetting = (ReportChartSettings) itRptChartSettings.next();
+				String chartType = rptChartSetting.getChartType();
+				String chartLocation = rptChartSetting.getLocation();
+				// move the chart to the header or footer of the report
+		    	reportXMLModifier.moveChartFromGroup(tempFile.getPath(), chartType, chartLocation, wiz.getReportChartSettings());
+		    	//if the report is a chart only report (used for the Dashboard of OL) remove all unnecessary elements
+				if (isChartOnlyReport(wiz, reportFieldService)) {
+			    	reportXMLModifier.modifyChartOnlyReport(tempFile.getPath(), chartType, chartLocation);
+				}
+			}
+
 
 		    // add the summary info/totals to the report - DJ only allows one per column and we need to allow multiple so
 			// 		we are altering the XML directly to add the summary calculations to the jasper report,
@@ -560,20 +587,6 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 				reportXMLModifier.AddReportSummaryInfo(tempFile.getPath());
 			}
 
-			// chart modifications
-			List<ReportChartSettings> rptChartSettings = wiz.getReportChartSettings();
-			Iterator itRptChartSettings = rptChartSettings.iterator();
-			while (itRptChartSettings.hasNext()) {
-		    	ReportChartSettings rptChartSetting = (ReportChartSettings) itRptChartSettings.next();
-				String chartType = rptChartSetting.getChartType();
-				String chartLocation = rptChartSetting.getLocation();
-				// move the chart to the header or footer of the report
-		    	reportXMLModifier.moveChartFromGroup(tempFile.getPath(), chartType, chartLocation);
-		    	//if the report is a chart only report (used for the Dashboard of OL) remove all unnecessary elements
-				if (isChartOnlyReport(wiz, reportFieldService)) {
-			    	reportXMLModifier.modifyChartOnlyReport(tempFile.getPath(), chartType, chartLocation);
-				}
-			}
 
 
 
@@ -663,17 +676,24 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 	protected void saveReport(ReportWizard wiz, Errors errors) throws Exception {
 		reportWizardService.save(wiz);
 		WebApplicationContext applicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(this.getServletContext());
+		DynamicReport dr;
 		// If the report is to be used as a segmentation, generate the segmentation SQL, set it on the wiz and save again since the segmentation query will require the report wizard ID
 		if (wiz.getUseReportAsSegmentation()) {
-			ReportQueryGenerator reportQueryGenerator = new ReportQueryGenerator(wiz, reportFieldService, reportCustomFilterDefinitionService, applicationContext);
-			wiz.setSegmentationQuery(reportQueryGenerator.getSegmentationQueryString(reportSegmentationTypeService.find(wiz.getReportSegmentationTypeId()).getColumnName()));
+			ReportQueryGenerator reportQueryGenerator = new ReportQueryGenerator(wiz, reportFieldService, reportCustomFilterDefinitionService, applicationContext,
+					theGuruViewService, theGuruViewJoinService);
+			String segmentationQuery = reportQueryGenerator.getSegmentationQueryString(reportSegmentationTypeService.find(wiz.getReportSegmentationTypeId()).getColumnName()); 
+			wiz.setSegmentationQuery(segmentationQuery);
 			reportWizardService.save(wiz);
+			//
+			// First we must generate a jrxml file
+			//			
+			dr = wiz.getReportGenerator().GenerateSegmentationReport(wiz, segmentationQuery.replace("'", "''"));			
+		} else {
+			//
+			// First we must generate a jrxml file
+			//
+			dr = wiz.getReportGenerator().Generate(wiz, reportFieldService, reportCustomFilterDefinitionService, false, applicationContext, theGuruViewService, theGuruViewJoinService);
 		}
-		//
-		// First we must generate a jrxml file
-		//
-
-		DynamicReport dr = wiz.getReportGenerator().Generate(wiz, reportFieldService, reportCustomFilterDefinitionService, false, applicationContext);
 
 		File tempFile = TempFileUtil.createTempFile("wiz", ".jrxml");
 		logger.info("Temp File: " + tempFile);
@@ -690,26 +710,30 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 	    // add the summary info/totals to the report - DJ only allows one per column and we need to allow multiple so
 		// 		we are altering the XML directly to add the summary calculations to the jasper report,
 	    //		this also handles adding the calculations to the groups created by DJ.
-		if (wiz.getReportType().compareToIgnoreCase("matrix") != 0 && wiz.HasSummaryFields() == true){
+		if (!wiz.getUseReportAsSegmentation() && wiz.getReportType().compareToIgnoreCase("matrix") != 0 && wiz.HasSummaryFields() == true){
 			reportXMLModifier.AddGroupSummaryInfo(tempFile.getPath());
 			reportXMLModifier.AddReportSummaryInfo(tempFile.getPath());
 		}
 
-		// chart modifications
-		List<ReportChartSettings> rptChartSettings = wiz.getReportChartSettings();
-		Iterator itRptChartSettings = rptChartSettings.iterator();
-		while (itRptChartSettings.hasNext()) {
-	    	ReportChartSettings rptChartSetting = (ReportChartSettings) itRptChartSettings.next();
-			String chartType = rptChartSetting.getChartType();
-			String chartLocation = rptChartSetting.getLocation();
-			// move the chart to the header or footer of the report
-	    	reportXMLModifier.moveChartFromGroup(tempFile.getPath(), chartType, chartLocation);
-	    	//if the report is a chart only report (used for the Dashboard of OL) remove all unnecessary elements
-			if (isChartOnlyReport(wiz, reportFieldService)) {
-		    	reportXMLModifier.modifyChartOnlyReport(tempFile.getPath(), chartType, chartLocation);
+		if (!wiz.getUseReportAsSegmentation()) {
+			// chart modifications
+			List<ReportChartSettings> rptChartSettings = wiz.getReportChartSettings();
+			Iterator itRptChartSettings = rptChartSettings.iterator();
+			while (itRptChartSettings.hasNext()) {
+		    	ReportChartSettings rptChartSetting = (ReportChartSettings) itRptChartSettings.next();
+		    	if(rptChartSetting.getChartType() != null){
+					String chartType = rptChartSetting.getChartType();
+					String chartLocation = rptChartSetting.getLocation();
+					// move the chart to the header or footer of the report
+			    	reportXMLModifier.moveChartFromGroup(tempFile.getPath(), chartType, chartLocation, wiz.getReportChartSettings());
+			    	//if the report is a chart only report (used for the Dashboard of OL) remove all unnecessary elements
+					if (isChartOnlyReport(wiz, reportFieldService)) {
+				    	reportXMLModifier.modifyChartOnlyReport(tempFile.getPath(), chartType, chartLocation);
+					}
+		    	}
 			}
 		}
-
+		
 		String reportComment = wiz.getDataSubSource().getDisplayName() + " Custom Report";
 		if (wiz.getReportComment() != null && wiz.getReportComment().length() > 0)
 			reportComment = wiz.getReportComment();
@@ -718,7 +742,8 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		if (wiz.getReportName() != null && wiz.getReportName().length() > 0)
 			reportTitle = wiz.getReportName();
 		try {
-			wiz.getReportGenerator().put(ResourceDescriptor.TYPE_REPORTUNIT, wiz.getReportSaveAsName(), reportTitle, reportComment,wiz.getReportPath(),tempFile, wiz.getReportGenerator().getParams(), wiz.getDataSubSource().getJasperDatasourceName());
+			wiz.getReportGenerator().put(ResourceDescriptor.TYPE_REPORTUNIT, wiz.getReportSaveAsName(), reportTitle, reportComment,wiz.getReportPath(),tempFile, wiz.getReportGenerator().getParams(), 
+					wiz.getUseReportAsSegmentation() ? wiz.getDataSubSource().getSegmentationResultsDatasourceName() : wiz.getDataSubSource().getJasperDatasourceName());
 		} catch (Exception e) {
 			logger.error("Unable to save report: " + e.getLocalizedMessage());
 			errors.reject("error.save", "Unable to save report: " + e.getLocalizedMessage());
@@ -850,5 +875,21 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 
 	public ReportWizardFactory getReportWizardFactory() {
 		return reportWizardFactory;
+	}
+
+	public void setTheGuruViewService(TheGuruViewService theGuruViewService) {
+		this.theGuruViewService = theGuruViewService;
+	}
+
+	public TheGuruViewService getTheGuruViewService() {
+		return theGuruViewService;
+	}
+
+	public void setTheGuruViewJoinService(TheGuruViewJoinService theGuruViewJoinService) {
+		this.theGuruViewJoinService = theGuruViewJoinService;
+	}
+
+	public TheGuruViewJoinService getTheGuruViewJoinService() {
+		return theGuruViewJoinService;
 	}
 }

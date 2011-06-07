@@ -174,6 +174,9 @@ public class ReportWizard implements java.io.Serializable{
 
 	@Column(name="SHOWSQLQUERY")
 	private boolean showSqlQuery;
+	
+	@Column(name="USE_DYNAMIC_SQL_GENERATION")
+	private Boolean useDynamicSQLGeneration;	
 
 	@Transient
 	private long previousDataSubSourceGroupId = -1;
@@ -193,6 +196,7 @@ public class ReportWizard implements java.io.Serializable{
 		useReportAsSegmentation = false;
 		segmentationQuery = "";
 		reportSegmentationTypeId = 0;
+		useDynamicSQLGeneration = false;
 
 /*		reportType = "tabular";
 		srcId = 0;
@@ -731,5 +735,13 @@ public class ReportWizard implements java.io.Serializable{
 
 	public String getLastRunByUserName() {
 		return lastRunByUserName;
+	}
+
+	public void setUseDynamicSQLGeneration(Boolean useDynamicSQLGeneration) {
+		this.useDynamicSQLGeneration = useDynamicSQLGeneration;
+	}
+
+	public Boolean getUseDynamicSQLGeneration() {
+		return useDynamicSQLGeneration;
 	}
 }

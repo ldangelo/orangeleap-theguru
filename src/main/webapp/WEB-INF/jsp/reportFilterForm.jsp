@@ -92,16 +92,23 @@
 	<c:if test="${segmentationTypeCount > 0}" >
 	<table id="report_segmentation_options" class="tablesorter" >
 		<TR><TH><input type="checkbox" id="useReportAsSegmentation" name="useReportAsSegmentation" value="true"
-		onchange="toggleUseReportAsSegmentation($('#useReportAsSegmentation').attr('checked'));"
+		onchange="toggleUseReportAsSegmentation(jQuery('#useReportAsSegmentation').attr('checked'));"
 		<c:if test="${useReportAsSegmentation}">checked="true"</c:if>/>Use report as segmentation (disables Prompt for Value options)</TH></TR>
 	</table>
-	<div id="segmentationTypeDiv" name="segmentationTypeDiv" <c:if test="${!useReportAsSegmentation}">style="display:none"> </c:if>
+	<div id="segmentationTypeDiv" name="segmentationTypeDiv" <c:if test="${!useReportAsSegmentation}">style="display:none" </c:if>>
 		<select id="reportSegmentationTypeId" name="reportSegmentationTypeId" >
 		<c:forEach var="segmentationType" items="${segmentationTypes}" varStatus="outer"><c:if test="${segmentationType != null}"><option label="${segmentationType.segmentationType}" value="${segmentationType.id}" <c:if test="${segmentationType.id == segmentationTypeId}">selected="true" </c:if>>${segmentationType.segmentationType}</option></c:if></c:forEach>
 		</select>
 		<br>
 		<br>
 	</div>
+	</c:if>
+	
+	<c:if test="${showDynamicSQLOption}" >
+		<select id="useDynamicSQLGeneration" name="useDynamicSQLGeneration" >
+			<option label="Use Dynamic SQL Generation" value="true" <c:if test="${useDynamicSQLGeneration}">selected="true" </c:if>>Use Dynamic SQL Generation</option>
+			<option label="Use View Based SQL Generation" value="false" <c:if test="${!useDynamicSQLGeneration}">selected="true" </c:if>>Use View Based SQL Generation</option>
+		</select>	
 	</c:if>
 	<table class="tablesorter" id="showSqlQueryTable">
 		<th>

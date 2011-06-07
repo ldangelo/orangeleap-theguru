@@ -1,38 +1,38 @@
-$(document).ready(function()
+jQuery(document).ready(function()
    {
 	/* This code block is your window.onload.  Please don't set window.onload directly. */
 
 	// filter screen
-	$('#report_filters_add').find('table').fadeIn('fast');
+	jQuery('#report_filters_add').find('table').fadeIn('fast');
 	cleanUpFilterTable('#report_filters_add');
 
-	$('#report_filters_add').find("tr[index!=-1]").each(function() {
-		var row = $(this);
+	jQuery('#report_filters_add').find("tr[index!=-1]").each(function() {
+		var row = jQuery(this);
 		var filterType = row.find('input:hidden[name*=filterType]').val();
 		if (filterType != 4) {
 			row.find(".deleteButton").click(function(){
-					deleteFilterRow($(this).parent().parent().parent().parent().parent().parent());
+					deleteFilterRow(jQuery(this).parent().parent().parent().parent().parent().parent());
 			});
 		} else {
 			row.find('.deleteButton').attr("style", "cursor: auto;");
 			row.find('.deleteButton').attr('src', 'images/icons/blankSpace.png');
 		}
 		row.find(".moveUpButton").click(function(){
-			moveFilterRow($(this).parent().parent().parent().parent().parent().parent(), -1);
+			moveFilterRow(jQuery(this).parent().parent().parent().parent().parent().parent(), -1);
 		}).show();
 		row.find(".moveDownButton").click(function(){
-			moveFilterRow($(this).parent().parent().parent().parent().parent().parent(), 1);
+			moveFilterRow(jQuery(this).parent().parent().parent().parent().parent().parent(), 1);
 		}).show();
 		row.find(".addButton").click(function(){
-			insertFilterRow($(this).parent().parent().parent().parent().parent().parent());
+			insertFilterRow(jQuery(this).parent().parent().parent().parent().parent().parent());
 		});
    	});
-	if ($('#sqlQuery').length > 0) {
-		var targetOffset = $('#showSqlQuerySpan').offset().top;
+	if (jQuery('#sqlQuery').length > 0) {
+		var targetOffset = jQuery('#showSqlQuerySpan').offset().top;
 		scrollTo(0,targetOffset);
 
-		$('#dialog').jqm({overlay: 50, onShow: MPower.centerDialog}).jqDrag('.dragHandle');
-		$('#dialog').jqmShow();
+		jQuery('#dialog').jqm({overlay: 50, onShow: MPower.centerDialog}).jqDrag('.dragHandle');
+		jQuery('#dialog').jqmShow();
 	}
 	// Validate for 2 decimal for money
 	jQuery.validator.addMethod("money", function(value, element) {
@@ -56,7 +56,7 @@ var MPower = {
 
 
 function togglePromptForCriteriaTextBox(checkBox) {
-	var promptForCriteria = $(checkBox);
+	var promptForCriteria = jQuery(checkBox);
 	if (promptForCriteria.attr('checked'))
 		promptForCriteria.parent().parent().find("[objectname$=reportStandardFilter.criteria]").attr("disabled", "true");
 	else
@@ -66,13 +66,13 @@ function togglePromptForCriteriaTextBox(checkBox) {
 
 
 function populateCustomFilterRow(customFilterSelectId, selectedFiltersId) {
-	var customFilterSelect = $(customFilterSelectId);
+	var customFilterSelect = jQuery(customFilterSelectId);
 	// Get the index and increment it
-	var customFiltersIndexValue = parseInt($(selectedFiltersId).attr('index'));
+	var customFiltersIndexValue = parseInt(jQuery(selectedFiltersId).attr('index'));
 
 	// Create a new row
-	var row = $('<tr />');
-	var cell = $('<td />');
+	var row = jQuery('<tr />');
+	var cell = jQuery('<td />');
 
 	var findExp = new RegExp("{[0-9]*}","gi");
 	var displayHtml = customFilterSelect.find("option:selected").attr('displayhtml');
@@ -80,7 +80,7 @@ function populateCustomFilterRow(customFilterSelectId, selectedFiltersId) {
 	cell.append(displayHtml.replace(findExp, ""));
 
 	// Add hidden field for filter id
-	var newInput = $('<input type="hidden" />')
+	var newInput = jQuery('<input type="hidden" />')
 		.attr('objectname', 'reportFilters[INDEXREPLACEMENT].reportCustomFilter.customFilterDefinitionId')
 		.attr('name', 'reportFilters[' + customFiltersIndexValue + '].reportCustomFilter.customFilterDefinitionId')
 		.attr('id', 'reportFilters[' + customFiltersIndexValue + '].reportCustomFilter.customFilterDefinitionId')
@@ -88,7 +88,7 @@ function populateCustomFilterRow(customFilterSelectId, selectedFiltersId) {
 	cell.append(newInput);
 
 	// Add hidden field for default display html
-	newInput = $('<input type="hidden" />')
+	newInput = jQuery('<input type="hidden" />')
 		.attr('objectname', 'reportFilters[INDEXREPLACEMENT].reportCustomFilter.displayHtml')
 		.attr('name', 'reportFilters[' + customFiltersIndexValue + '].reportCustomFilter.displayHtml')
 		.attr('id', 'reportFilters[' + customFiltersIndexValue + '].reportCustomFilter.displayHtml')
@@ -101,17 +101,17 @@ function populateCustomFilterRow(customFilterSelectId, selectedFiltersId) {
 }
 
 function repopulateAJAXCustomFilters() {
-	$('#report_filters_add').find('tr[index!=-1]').each(function() {
-		var filterTableRow = $(this);
+	jQuery('#report_filters_add').find('tr[index!=-1]').each(function() {
+		var filterTableRow = jQuery(this);
 		processCustomFilterAjaxRequests(filterTableRow);
 	});
 }
 
 function processCustomFilterAjaxRequests(customFilterCell) {
-	var cell = $(customFilterCell);
+	var cell = jQuery(customFilterCell);
 	cell.find("select[populateSelectOptions='AJAX']").each(function() {
-		var select = $(this);
-		var requestType = $(this).attr('requestType');
+		var select = jQuery(this);
+		var requestType = jQuery(this).attr('requestType');
 		var criteriaArray = {};
 		var cont = true;
 		var index = 0;
@@ -125,30 +125,30 @@ function processCustomFilterAjaxRequests(customFilterCell) {
 				cont = false;
 			}
 		}
-		OrangeLeapService.getOrangeLeapDataAsSelectOptions(requestType, criteriaArray, function(options) { $(select).find('option').remove(); $(select).append(options); });
+		OrangeLeapService.getOrangeLeapDataAsSelectOptions(requestType, criteriaArray, function(options) { jQuery(select).find('option').remove(); jQuery(select).append(options); });
 	});
 }
 
 function cloneFilterRow(filterSelectId, selectedFiltersId) {
-	var filterSelect = $(filterSelectId);
+	var filterSelect = jQuery(filterSelectId);
 	var filterValue = filterSelect.find("option:selected").val();
 	var filterTable;
 	if (filterValue == 1) {
 		// Add Standard Filter
-		filterTable = $("#report_standard_filters").clone(true);
+		filterTable = jQuery("#report_standard_filters").clone(true);
 		addNewFilterRow(filterTable, selectedFiltersId, 1, '#report_filters_add', true);
 	}
 	else if (filterValue == 2) {
 		// Add Custom Filter
-		filterTable = $("#report_custom_filters").clone(true);
+		filterTable = jQuery("#report_custom_filters").clone(true);
 		addNewFilterRow(filterTable, selectedFiltersId, 2, '#report_filters_add', true);
 	}
 	else if (filterValue == 3) {
 		// Add Group
-		filterTable = $("#report_filter_group_begin").clone(true);
+		filterTable = jQuery("#report_filter_group_begin").clone(true);
 		addNewFilterRow(filterTable, selectedFiltersId, 3, '#report_filters_add', true);
 		filterTable.parent().parent().find("table").attr('bgcolor','#C0C0C0');
-		filterTable = $("#report_filter_group_end").clone(true);
+		filterTable = jQuery("#report_filter_group_end").clone(true);
 		addNewFilterRow(filterTable, selectedFiltersId, 4, '#report_filters_add', true);
 		filterTable.parent().parent().find("table").attr('bgcolor','#C0C0C0');
 	}
@@ -156,51 +156,51 @@ function cloneFilterRow(filterSelectId, selectedFiltersId) {
 }
 
 function insertFilterRow(filterRowSelector) {
-	var filterRow = $(filterRowSelector);
+	var filterRow = jQuery(filterRowSelector);
 	var filterType =  filterRow.find('[objectname$=filterType]').val();
 	var filterTable;
 	if (filterType == 1) {
 		// Add Standard Filter
-		filterTable = $("#report_standard_filters").clone(true);
+		filterTable = jQuery("#report_standard_filters").clone(true);
 
 		//
 		// because selected options don't clone we need to walk through the select on the old row
 		// and select them properly on the new row...
-		selectedOperator = $('select',filterRow).each(function() {
-			var select = $(this);
-			$('option:selected',$(this)).each(function() {
-				$("select[objectname=" + select.attr('objectname') + "]",filterTable).val($(this).val());
+		selectedOperator = jQuery('select',filterRow).each(function() {
+			var select = jQuery(this);
+			jQuery('option:selected',jQuery(this)).each(function() {
+				jQuery("select[objectname=" + select.attr('objectname') + "]",filterTable).val(jQuery(this).val());
 			});
 		});
 
-		inputOperator = $('input',filterRow).each(function() {
-			var input = $(this);
-			//$('option:selected',$(this)).each(function() {
-				$("input[objectname=" + input.attr('objectname') + "]",filterTable).val($(this).val());
-				$("input[objectname=" + input.attr('objectname') + "]",filterTable).attr('checked', $(this).attr('checked'));
+		inputOperator = jQuery('input',filterRow).each(function() {
+			var input = jQuery(this);
+			//jQuery('option:selected',jQuery(this)).each(function() {
+				jQuery("input[objectname=" + input.attr('objectname') + "]",filterTable).val(jQuery(this).val());
+				jQuery("input[objectname=" + input.attr('objectname') + "]",filterTable).attr('checked', jQuery(this).attr('checked'));
 		});
 
 		addNewFilterRow(filterTable, '#report_filters_add', 1, filterRow, false);
 	}
 	else if (filterType == 2) {
 		// Add Custom Filter
-		filterTable = $("#report_custom_filters").clone(true);
+		filterTable = jQuery("#report_custom_filters").clone(true);
 		addNewFilterRow(filterTable, '#report_filters_add', 2, filterRow, false);
 	}
 	else if (filterType == 3) {
 		// Add Group
-		filterTable = $("#report_filter_group_end").clone(true);
+		filterTable = jQuery("#report_filter_group_end").clone(true);
 		addNewFilterRow(filterTable, '#report_filters_add', 4, filterRow, false);
 		filterTable.parent().parent().find("table").attr('bgcolor','#C0C0C0');
-		filterTable = $("#report_filter_group_begin").clone(true);
+		filterTable = jQuery("#report_filter_group_begin").clone(true);
 		addNewFilterRow(filterTable, '#report_filters_add', 3, filterRow, false);
 		filterTable.parent().parent().find("table").attr('bgcolor','#C0C0C0');
 	}
 }
 
 function addNewFilterRow(filterTable, selectedFiltersId, filterType, appendToSelector, append) {
-	var appendTo = $(appendToSelector);
-	var selectedFilters = $(selectedFiltersId);
+	var appendTo = jQuery(appendToSelector);
+	var selectedFilters = jQuery(selectedFiltersId);
 	if (filterTable != null) {
 		var i = parseInt(selectedFilters.attr('index'));
 		var j = i + 1;
@@ -209,22 +209,22 @@ function addNewFilterRow(filterTable, selectedFiltersId, filterType, appendToSel
 		filterTable.attr('id', filterTable.attr('id') + j);
 		filterTable.removeClass("focused highlight");
 
-		var row = $('<tr />');
+		var row = jQuery('<tr />');
 		row.attr('index', j);
-		var cell = $('<td />');
-		var operatorOptions = $('#report_filters_operator').clone();
+		var cell = jQuery('<td />');
+		var operatorOptions = jQuery('#report_filters_operator').clone();
 		operatorOptions.attr('id', operatorOptions.attr('id') + j);
 		operatorOptions.fadeIn("fast");
 		cell.append(operatorOptions);
 		row.append(cell);
 
-		cell = $('<td />');
+		cell = jQuery('<td />');
 		filterTable.fadeIn("fast")
 		cell.append(filterTable);
 		row.append(cell);
 
-		cell = $('<td />');
-		operatorOptions = $('#report_filters_action').clone();
+		cell = jQuery('<td />');
+		operatorOptions = jQuery('#report_filters_action').clone();
 		operatorOptions.attr('id', operatorOptions.attr('id') + j);
 		operatorOptions.fadeIn("fast");
 		cell.append(operatorOptions);
@@ -237,7 +237,7 @@ function addNewFilterRow(filterTable, selectedFiltersId, filterType, appendToSel
 		row.fadeIn("fast")
 		if (filterType != 4) {
 			row.find(".deleteButton").click(function(){
-					deleteFilterRow($(this).parent().parent().parent().parent().parent().parent());
+					deleteFilterRow(jQuery(this).parent().parent().parent().parent().parent().parent());
 			});
 		} else {
 			row.find('.deleteButton').attr("style", "cursor: auto;");
@@ -246,13 +246,13 @@ function addNewFilterRow(filterTable, selectedFiltersId, filterType, appendToSel
 			row.find('.addButton').attr('src', 'images/icons/blankSpace.png');
 		}
 		row.find(".moveUpButton").click(function(){
-			moveFilterRow($(this).parent().parent().parent().parent().parent().parent(), -1);
+			moveFilterRow(jQuery(this).parent().parent().parent().parent().parent().parent(), -1);
 		}).show();
 		row.find(".moveDownButton").click(function(){
-			moveFilterRow($(this).parent().parent().parent().parent().parent().parent(), 1);
+			moveFilterRow(jQuery(this).parent().parent().parent().parent().parent().parent(), 1);
 		}).show();
 		row.find(".addButton").click(function(){
-			insertFilterRow($(this).parent().parent().parent().parent().parent().parent());
+			insertFilterRow(jQuery(this).parent().parent().parent().parent().parent().parent());
 		});
 	}
 	cleanUpFilterTable(selectedFilters);
@@ -263,11 +263,11 @@ function deleteFilterRow(filterRow) {
 
 	if (filterType == "3") {
 		// Begin Group - delete the end group
-		var filterTable = $(filterRow).parent().parent();
+		var filterTable = jQuery(filterRow).parent().parent();
 		var foundRow = false;
 		var groupCount = 0;
 		filterTable.find("tr[index!=-1]").each(function() {
-			var row = $(this);
+			var row = jQuery(this);
 			if (filterRow.attr('id') == row.attr('id')) {
 				foundRow = true;
 			}
@@ -277,7 +277,7 @@ function deleteFilterRow(filterRow) {
 				groupCount--;
 			if (foundRow && row.find('input:hidden[name*=filterType]').val() == 4 && groupCount == 0) {
 				row.fadeOut("fast",function(){
-					$(this).remove();
+					jQuery(this).remove();
 					cleanUpFilterTable('#report_filters_add');
 				});
 				return false;
@@ -285,20 +285,20 @@ function deleteFilterRow(filterRow) {
 	   	});
 	}
 	filterRow.fadeOut("fast",function(){
-		$(this).remove();
+		jQuery(this).remove();
 		cleanUpFilterTable('#report_filters_add');
 	});
 }
 
 function moveFilterRow(filterRow, moveBy) {
-	var filterRow = $(filterRow);
+	var filterRow = jQuery(filterRow);
 	var index = parseInt(filterRow.attr('index'));
 	var newIndex = index + moveBy;
-	var filterTable = $(filterRow).parent().parent();
+	var filterTable = jQuery(filterRow).parent().parent();
 
 	if (newIndex >= 0) {
 		filterTable.find("tr[index!=-1]").each(function() {
-			var row = $(this);
+			var row = jQuery(this);
 			if (parseInt(row.attr('index')) == newIndex) {
 				row.attr('index', index);
 				return false;
@@ -313,12 +313,12 @@ function moveFilterRow(filterRow, moveBy) {
 }
 
 function sortFilterTable(filterTableSelector) {
-	var filterTable = $(filterTableSelector);
+	var filterTable = jQuery(filterTableSelector);
 	var rows = filterTable.find('tr[index!=-1]').get();
 
     rows.sort(function(a, b) {
-      var keyA = parseInt($(a).attr('index'));
-      var keyB = parseInt($(b).attr('index'));
+      var keyA = parseInt(jQuery(a).attr('index'));
+      var keyB = parseInt(jQuery(b).attr('index'));
       if (keyA < keyB) return -1;
       if (keyA > keyB) return 1;
       return 0;
@@ -330,14 +330,14 @@ function sortFilterTable(filterTableSelector) {
 }
 
 function cleanUpFilterTable(filterTableSelector) {
-	var filterTable = $(filterTableSelector);
-	var reportIsSegmentation = $('#useReportAsSegmentation').attr('checked');
+	var filterTable = jQuery(filterTableSelector);
+	var reportIsSegmentation = jQuery('#useReportAsSegmentation').attr('checked');
 	var index = 0;
 	var groupCount = 0;
 	var beginGroup = false;
 	var firstRow = true;
 	filterTable.find('tr[index!=-1]').each(function() {
-		var filterTableRow = $(this);
+		var filterTableRow = jQuery(this);
 		if (beginGroup || firstRow) {
 			filterTableRow.find('select[objectname$=operator]').attr("disabled", true);
 			if (beginGroup)
@@ -369,7 +369,7 @@ function cleanUpFilterTable(filterTableSelector) {
 }
 
 function applyMasks(filterTableRowSelector) {
-	var filterRow = $(filterTableRowSelector);
+	var filterRow = jQuery(filterTableRowSelector);
 	var fieldtype = filterRow.find('select[objectname$=fieldId]').find('option:selected').attr('fieldtype');
 	filterRow.find('input[objectname$=criteria]').attr('fieldtype', fieldtype);
 	filterRow.find('input').unmask();
@@ -380,7 +380,7 @@ function applyMasks(filterTableRowSelector) {
 	Date.format = 'mm/dd/yyyy';
 	// do not process custom filter rows
 	filterRow.find('input').datepicker('destroy');
-	filterRow.find('input[fieldtype=DATE]').datepicker({showOn: 'button', buttonImage: 'images/icons/calendar.png', buttonImageOnly: true, onClose : function(dateText, inst) {$(this).valid();}});
+	filterRow.find('input[fieldtype=DATE]').datepicker({showOn: 'button', buttonImage: 'images/icons/calendar.png', buttonImageOnly: true, onClose : function(dateText, inst) {jQuery(this).valid();}});
 
 	var criteria = filterRow.find("[objectname$=reportStandardFilter.criteria]");
 	criteria.removeAttr('class');
@@ -409,10 +409,10 @@ function replicateString(string, number) {
 }
 
 function cleanUpFilterTableProcessRow(filterRow, index) {
-	var row = $(filterRow);
+	var row = jQuery(filterRow);
 	var findExp = new RegExp("\\[INDEXREPLACEMENT\\]","gi");
 	row.find("input[objectname]").each(function(){
-		var field = $(this);
+		var field = jQuery(this);
 		var nameString = field.attr('objectname').replace(findExp, "["+index+"]");
 		field.attr('name',nameString);
 		var idString = field.attr('objectname').replace(findExp, "["+index+"]");
@@ -420,7 +420,7 @@ function cleanUpFilterTableProcessRow(filterRow, index) {
 	});
 
 	row.find("select[objectname!=]").each(function(){
-		var field = $(this);
+		var field = jQuery(this);
 		if (field.attr('objectname') != null) {
 			var nameString = field.attr('objectname').replace(findExp, "["+index+"]");
 			field.attr('name',nameString);
@@ -432,11 +432,11 @@ function cleanUpFilterTableProcessRow(filterRow, index) {
 
 function filterCriteria(fieldSelectId, reportIsSegmentation) {
 	if (reportIsSegmentation == null) {
-		reportIsSegmentation = $('#useReportAsSegmentation').attr('checked');
+		reportIsSegmentation = jQuery('#useReportAsSegmentation').attr('checked');
 	}
- 	var fieldSelect = $(fieldSelectId);
+ 	var fieldSelect = jQuery(fieldSelectId);
 	var filterRow = fieldSelect.parent().parent();
-	var baseComparison = $('#baseComparisonSelect');
+	var baseComparison = jQuery('#baseComparisonSelect');
 	var comparison = filterRow.find('select[objectname*=comparison]');
 	var comparisonValue = comparison.val();
 	comparison.empty();
@@ -455,7 +455,7 @@ function filterCriteria(fieldSelectId, reportIsSegmentation) {
 }
 
 function displayPromptForCriteriaOptions(comparisonSelectId, reportIsSegmentation) {
-	var comparison = $(comparisonSelectId);
+	var comparison = jQuery(comparisonSelectId);
 	var filterRow = comparison.parent().parent();
 	var promptForCriteria = filterRow.find("[objectname$=promptForCriteria]");
 	if (reportIsSegmentation) {
@@ -485,8 +485,8 @@ function displayPromptForCriteriaOptions(comparisonSelectId, reportIsSegmentatio
 }
 
 function updateRowCountInput(rowCountSelector) {
-	var rowCount = $(rowCountSelector).find('option:selected').val();
-	var rowCountInput = $('#rowCount');
+	var rowCount = jQuery(rowCountSelector).find('option:selected').val();
+	var rowCountInput = jQuery('#rowCount');
 	rowCountInput.val(rowCount);
 	if (rowCount == '') {
 		rowCountInput.removeAttr('style');
@@ -498,17 +498,17 @@ function updateRowCountInput(rowCountSelector) {
 }
 
 function showSqlQueryClick() {
-	var targetOffset = $('#showSqlQuerySpan').offset().top;
+	var targetOffset = jQuery('#showSqlQuerySpan').offset().top;
 	scrollTo(0,targetOffset);
-	$('#showSqlQuery').attr('checked', 'true');
+	jQuery('#showSqlQuery').attr('checked', 'true');
 	triggerClick(document.getElementById('reportCriteriaHiddenInput'));
 }
 
 function toggleUseReportAsSegmentation(useReportAsSegmentation) {
-	if ($('#useReportAsSegmentation').attr('checked')) {
-		$('#segmentationTypeDiv').show();
+	if (jQuery('#useReportAsSegmentation').attr('checked')) {
+		jQuery('#segmentationTypeDiv').show();
 	} else {
-		$('#segmentationTypeDiv').hide();
+		jQuery('#segmentationTypeDiv').hide();
 	}
 	cleanUpFilterTable('#report_filters_add');
 }

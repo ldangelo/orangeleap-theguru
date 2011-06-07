@@ -89,7 +89,36 @@ public class ReportField implements java.io.Serializable,
 	@Column(name = "TOOLTIP")
 	private String   toolTip;
 	
+	@Column(name = "PICKLIST_NAME_ID")
+	private String picklistNameId;
+	
+	@Column(name = "PICKLIST_ITEM_NAME")
+	private String picklistItemName;
 
+	@Column(name = "JOIN_ID")
+	private long joinId;
+
+	@Column(name = "SOURCE_COLUMN_NAME")
+	private String sourceColumnName;
+
+	@Column(name = "CUSTOM_FIELD_ENTITY_TYPE")
+	private String customFieldEntityType;
+
+	@Column(name = "CUSTOM_FIELD_FIELD_NAME")
+	private String customFieldFieldName;
+
+	@Column(name = "CONSTITUENT_JOIN_FIELD")
+	private String constituentJoinField;
+
+	@Column(name = "CUSTOM_FIELD_ENTITY_ID")
+	private String customFieldEntityId;
+
+	@Column(name = "DYNAMIC_PRIMARY_KEYS")
+	private String dynamicPrimaryKeys;
+
+	@Column(name = "PICKLIST_CUSTOM_FIELD")
+	private Boolean picklistCustomField;
+	
 	public Boolean getPerformSummary() {
 		return performSummary;
 	}
@@ -293,5 +322,85 @@ public class ReportField implements java.io.Serializable,
 
 	public void setToolTip(String toolTip) {
 		this.toolTip = toolTip;
+	}
+
+	public void setPicklistNameId(String picklistNameId) {
+		this.picklistNameId = picklistNameId;
+	}
+
+	public String getPicklistNameId() {
+		return picklistNameId;
+	}
+
+	public void setPicklistItemName(String picklistItemName) {
+		this.picklistItemName = picklistItemName;
+	}
+
+	public String getPicklistItemName() {
+		return picklistItemName;
+	}
+
+	public void setJoinId(long joinId) {
+		this.joinId = joinId;
+	}
+
+	public long getJoinId() {
+		return joinId;
+	}
+
+	public void setSourceColumnName(String sourceColumnName) {
+		this.sourceColumnName = sourceColumnName;
+	}
+
+	public String getSourceColumnName() {
+		return sourceColumnName;
+	}
+
+	public void setCustomFieldEntityType(String customFieldEntityType) {
+		this.customFieldEntityType = customFieldEntityType;
+	}
+
+	public String getCustomFieldEntityType() {
+		return customFieldEntityType;
+	}
+
+	public void setCustomFieldFieldName(String customFieldFieldName) {
+		this.customFieldFieldName = customFieldFieldName;
+	}
+
+	public String getCustomFieldFieldName() {
+		return customFieldFieldName;
+	}
+
+	public void setConstituentJoinField(String constituentJoinField) {
+		this.constituentJoinField = constituentJoinField;
+	}
+
+	public String getConstituentJoinField() {
+		return constituentJoinField;
+	}
+
+	public void setCustomFieldEntityId(String customFieldEntityId) {
+		this.customFieldEntityId = customFieldEntityId;
+	}
+
+	public String getCustomFieldEntityId() {
+		return customFieldEntityId;
+	}
+
+	public void setDynamicPrimaryKeys(String dynamicPrimaryKeys) {
+		this.dynamicPrimaryKeys = dynamicPrimaryKeys;
+	}
+
+	public String getDynamicPrimaryKeys() {
+		return dynamicPrimaryKeys;
+	}
+
+	public void setPicklistCustomField(Boolean picklistCustomField) {
+		this.picklistCustomField = picklistCustomField;
+	}
+
+	public Boolean getPicklistCustomField() {
+		return picklistCustomField;
 	}
 }

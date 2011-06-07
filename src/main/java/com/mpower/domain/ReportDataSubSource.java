@@ -72,6 +72,9 @@ public class ReportDataSubSource implements java.io.Serializable,
 	@Column(name = " REPORTDATASUBSOURCE_REPORTSEGMENTATIONTYPE_ID")
 	private List<ReportSegmentationType> reportSegmentationTypes;
 
+	@Column(name = "ALLOW_DYNAMIC_SQL_GENERATION")
+	private Boolean allowDynamicSqlGeneration;
+	
 	public ReportDataSubSource(ReportDataSubSource reportDataSubSource) {
 		displayName      = reportDataSubSource.displayName;
 		viewName         = reportDataSubSource.viewName;
@@ -179,5 +182,13 @@ public class ReportDataSubSource implements java.io.Serializable,
 
 	public String getSegmentationResultsDatasourceName() {
 		return segmentationResultsDatasourceName;
+	}
+
+	public void setAllowDynamicSqlGeneration(Boolean allowDynamicSqlGeneration) {
+		this.allowDynamicSqlGeneration = allowDynamicSqlGeneration;
+	}
+
+	public Boolean getAllowDynamicSqlGeneration() {
+		return allowDynamicSqlGeneration;
 	}
 }
