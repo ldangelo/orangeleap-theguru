@@ -492,10 +492,14 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		    	ReportQueryGenerator reportQueryGenerator = new ReportQueryGenerator(wiz, reportFieldService, reportCustomFilterDefinitionService, applicationContext,
 		    			theGuruViewService, theGuruViewJoinService);
 				refData.put("showSqlQuery", wiz.getShowSqlQuery());
-				String query = reportQueryGenerator.getQueryString();
-				refData.put("sqlQuery", query);
-				if (wiz.getDataSubSource().getDatabaseType().equals(ReportDatabaseType.MYSQL) && wiz.getReportSelectedFields().size() > 0)
-					refData.put("queryCost", reportQueryCostService.getReportQueryCostByQuery(query, wiz.getDataSubSource().getJasperDatasourceName(), wiz.getUsername(), wiz.getPassword()));
+				try {
+					String query = reportQueryGenerator.getQueryString();
+					refData.put("sqlQuery", query);
+					if (wiz.getDataSubSource().getDatabaseType().equals(ReportDatabaseType.MYSQL) && wiz.getReportSelectedFields().size() > 0)
+						refData.put("queryCost", reportQueryCostService.getReportQueryCostByQuery(query, wiz.getDataSubSource().getJasperDatasourceName(), wiz.getUsername(), wiz.getPassword()));					
+				} catch (Exception exception) {
+					refData.put("sqlQuery", "An exception occurred while attempting to build the SQL statement." + System.getProperty("line.separator") + exception.getMessage());
+				}
 				wiz.setShowSqlQuery(false);
 			}
 
