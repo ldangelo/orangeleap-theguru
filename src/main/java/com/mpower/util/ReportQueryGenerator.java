@@ -756,18 +756,23 @@ public class ReportQueryGenerator {
 				break;
 			case 41: // Last 7
 				whereClause += "CAST(" + columnName +" AS " + sqlDateType + ") " +  " > " + getSqlCriteriaDaysFromCurrentDate(-7);
+				whereClause += " AND CAST(" + columnName +" AS " + sqlDateType + ") " +  " <= " + getSqlCriteriaDaysFromCurrentDate(0);
 				break;
 			case 42: // Last 30
 				whereClause += "CAST(" + columnName +" AS " + sqlDateType + ") " +  " > " + getSqlCriteriaDaysFromCurrentDate(-30);
+				whereClause += " AND CAST(" + columnName +" AS " + sqlDateType + ") " +  " <= " + getSqlCriteriaDaysFromCurrentDate(0);
 				break;
 			case 43: // Last 60
 				whereClause += "CAST(" + columnName +" AS " + sqlDateType + ") " +  " > " + getSqlCriteriaDaysFromCurrentDate(-60);
+				whereClause += " AND CAST(" + columnName +" AS " + sqlDateType + ") " +  " <= " + getSqlCriteriaDaysFromCurrentDate(0);
 				break;
 			case 44: // Last 90
 				whereClause += "CAST(" + columnName +" AS " + sqlDateType + ") " +  " > " + getSqlCriteriaDaysFromCurrentDate(-90);
+				whereClause += " AND CAST(" + columnName +" AS " + sqlDateType + ") " +  " <= " + getSqlCriteriaDaysFromCurrentDate(0);
 				break;
 			case 45: // Last 120
 				whereClause += "CAST(" + columnName +" AS " + sqlDateType + ") " +  " > " + getSqlCriteriaDaysFromCurrentDate(-120);
+				whereClause += " AND CAST(" + columnName +" AS " + sqlDateType + ") " +  " <= " + getSqlCriteriaDaysFromCurrentDate(0);
 				break;
 		}
 		whereClause += ") ";
