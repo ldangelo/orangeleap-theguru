@@ -39,6 +39,7 @@
 		<port>3306</port>
 		<host>localhost</host>
 		<encryptedPwd>72AD91424DDA0085179A17174040A206</encryptedPwd>
+		<mysqldirectory>/usr/bin</mysqldirectory>
 	</properties>
 
 	<build>
@@ -228,7 +229,7 @@
                         <argument>-sqlmaintenancescriptdirectory</argument>
                         <argument>${basedir}/src/main/resources/db/prod/domain/maintenanceScripts/orangeLeap</argument>
                         <argument>-mysqldirectory</argument>
-                        <argument>${basedir}/src/main/resources/db/prod/domain/updateScripts/orangeLeap</argument>
+                        <argument>${mysqldirectory}</argument>
                     </arguments>
                 </configuration>
                 <dependencies>
