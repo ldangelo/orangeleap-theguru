@@ -39,11 +39,11 @@ public class DatePeriodList implements ReportCustomFilterDefinitionLookupService
 		datePeriods.add(new DatePeriod("Current and Previous Calendar Week", "AND (( ( WEEK(DONATION_DATE) = WEEK(DATE_ADD(CURDATE(), INTERVAL -1 WEEK)) AND YEAR(DONATION_DATE) = YEAR(DATE_ADD(CURDATE(), INTERVAL -1 WEEK)) ) OR ( WEEK(DONATION_DATE) = WEEK(DATE_ADD(CURDATE(), INTERVAL 0 WEEK)) AND YEAR(DONATION_DATE) = YEAR(DATE_ADD(CURDATE(), INTERVAL 0 WEEK)) ) ))"));
 		datePeriods.add(new DatePeriod("Current Calendar Day", "AND (CAST(DONATION_DATE AS DATE) = DATE_ADD(CURDATE(),INTERVAL 0 DAY))"));
 		datePeriods.add(new DatePeriod("Previous Calendar Day", "AND (CAST(DONATION_DATE AS DATE) = DATE_ADD(CURDATE(),INTERVAL -1 DAY))"));
-		datePeriods.add(new DatePeriod("Last 7 Calendar Days", "AND (CAST(DONATION_DATE AS DATE) > DATE_ADD(CURDATE(),INTERVAL -7 DAY))"));
-		datePeriods.add(new DatePeriod("Last 30 Calendar Days", "AND (CAST(DONATION_DATE AS DATE) > DATE_ADD(CURDATE(),INTERVAL -30 DAY))"));
-		datePeriods.add(new DatePeriod("Last 60 Calendar Days", "AND (CAST(DONATION_DATE AS DATE) > DATE_ADD(CURDATE(),INTERVAL -60 DAY))"));
-		datePeriods.add(new DatePeriod("Last 90 Calendar Days", "AND (CAST(DONATION_DATE AS DATE) > DATE_ADD(CURDATE(),INTERVAL -90 DAY))"));
-		datePeriods.add(new DatePeriod("Last 120 Calendar Days", "AND (CAST(DONATION_DATE AS DATE) > DATE_ADD(CURDATE(),INTERVAL -120 DAY))"));	
+		datePeriods.add(new DatePeriod("Last 7 Calendar Days", "AND (CAST(DONATION_DATE AS DATE) > DATE_ADD(CURDATE(),INTERVAL -7 DAY) AND CAST(DONATION_DATE AS DATE) <= DATE_ADD(CURDATE(),INTERVAL 0 DAY))"));
+		datePeriods.add(new DatePeriod("Last 30 Calendar Days", "AND (CAST(DONATION_DATE AS DATE) > DATE_ADD(CURDATE(),INTERVAL -30 DAY)) AND CAST(DONATION_DATE AS DATE) <= DATE_ADD(CURDATE(),INTERVAL 0 DAY))"));
+		datePeriods.add(new DatePeriod("Last 60 Calendar Days", "AND (CAST(DONATION_DATE AS DATE) > DATE_ADD(CURDATE(),INTERVAL -60 DAY)) AND CAST(DONATION_DATE AS DATE) <= DATE_ADD(CURDATE(),INTERVAL 0 DAY))"));
+		datePeriods.add(new DatePeriod("Last 90 Calendar Days", "AND (CAST(DONATION_DATE AS DATE) > DATE_ADD(CURDATE(),INTERVAL -90 DAY)) AND CAST(DONATION_DATE AS DATE) <= DATE_ADD(CURDATE(),INTERVAL 0 DAY))"));
+		datePeriods.add(new DatePeriod("Last 120 Calendar Days", "AND (CAST(DONATION_DATE AS DATE) > DATE_ADD(CURDATE(),INTERVAL -120 DAY)) AND CAST(DONATION_DATE AS DATE) <= DATE_ADD(CURDATE(),INTERVAL 0 DAY))"));	
 		
 		for (DatePeriod datePeriod : datePeriods) {
 			result += "<option value=\"" + datePeriod.criteria + "\"";
