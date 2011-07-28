@@ -127,7 +127,6 @@ BEGIN
 		'WHERE CUSTOM_TABLE_FIELD_DATATYPE NOT IN (''section'', ''entity-reference'')', VAR_NEW_LINE,
 		'AND CUSTOM_TABLE_FIELD_ACTIVE = 1', VAR_NEW_LINE,
 		'ORDER BY CUSTOM_TABLE_FIELD_ORDER;');
-    select @execString;
 	PREPARE statement FROM @execString;
 	EXECUTE statement;
 	DEALLOCATE PREPARE statement;
