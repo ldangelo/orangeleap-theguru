@@ -70,6 +70,7 @@ INSERT INTO `REPORTWIZARD_REPORTSELECTEDFIELD` (`REPORTWIZARD_REPORTWIZARD_ID`,`
 
 SET @PARENT_FOLDER_ID = (SELECT id FROM JIResourceFolder WHERE uri = '/Reports/Default/Segmentations');
 SET @DATASOURCE_ID = (SELECT id FROM JIResource WHERE name = 'ReportWizardJdbcDSSegmentationResults');
+SET @OWNER_ID = (SELECT id FROM JIUser WHERE username = CONCAT('jasperadmin@', REPLACE(DATABASE(), 'theguru', '')));
 
 
 INSERT INTO `JIResourceFolder` (`version`,`uri`,`hidden`,`name`,`label`,`description`,`parent_folder`,`creation_date`) VALUES 
@@ -115,7 +116,7 @@ SET @REPORTJOBTRIGGER_ID = LAST_INSERT_ID();
 
 
 INSERT INTO `JIReportJob` (`version`,`label`,`description`,`report_unit_uri`,`job_trigger`,`base_output_name`,`output_locale`,`content_destination`,`mail_notification`,`owner`) VALUES 
-(0,'Constituent Segmentation For Rollups','', CONCAT('/Reports/Default/Segmentations/GURUSEGMENTATION_', CAST(@REPORTWIZARD_ID AS CHAR(20))), @REPORTJOBTRIGGER_ID,'ConstituentSegmentationForRollups','', @REPORTDESTINATION_ID, NULL,18);
+(0,'Constituent Segmentation For Rollups','', CONCAT('/Reports/Default/Segmentations/GURUSEGMENTATION_', CAST(@REPORTWIZARD_ID AS CHAR(20))), @REPORTJOBTRIGGER_ID,'ConstituentSegmentationForRollups','', @REPORTDESTINATION_ID, NULL, @OWNER_ID);
 
 SET @REPORTJOB_ID = LAST_INSERT_ID();
 
