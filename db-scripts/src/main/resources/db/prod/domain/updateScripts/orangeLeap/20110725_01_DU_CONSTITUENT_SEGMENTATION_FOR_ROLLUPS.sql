@@ -68,7 +68,7 @@ INSERT INTO `REPORTWIZARD_REPORTSELECTEDFIELD` (`REPORTWIZARD_REPORTWIZARD_ID`,`
 (@REPORTWIZARD_ID, @REPORTSELECTEDFIELD_ID, @REPORTSELECTEDFIELD_ID);
 
 
-SET @PARENT_FOLDER_ID = (SELECT id FROM JIResourceFolder WHERE uri = '/Reports/Default/Segmentations');
+SET @PARENT_FOLDER_ID = (SELECT IFNULL((SELECT id FROM JIResourceFolder WHERE uri = '/Reports/Default/Segmentations'), (SELECT id FROM JIResourceFolder WHERE uri = '/Reports/Default')));
 SET @DATASOURCE_ID = (SELECT id FROM JIResource WHERE name = 'ReportWizardJdbcDSSegmentationResults');
 SET @OWNER_ID = (SELECT id FROM JIUser WHERE username IN (CONCAT('jasperadmin@', REPLACE(DATABASE(), 'theguru', '')), 'jasperadmin@company1')
 ORDER BY CASE WHEN username = 'jasperadmin@company1' THEN 2 ELSE 1 END LIMIT 1);
