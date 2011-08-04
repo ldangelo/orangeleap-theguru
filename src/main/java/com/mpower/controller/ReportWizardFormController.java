@@ -707,14 +707,6 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 		if (wiz.getReportType().compareToIgnoreCase("matrix") == 0)
 			reportXMLModifier.removeCrossTabDataSubset(tempFile.getPath());
 
-	    // add the summary info/totals to the report - DJ only allows one per column and we need to allow multiple so
-		// 		we are altering the XML directly to add the summary calculations to the jasper report,
-	    //		this also handles adding the calculations to the groups created by DJ.
-		if (!wiz.getUseReportAsSegmentation() && wiz.getReportType().compareToIgnoreCase("matrix") != 0 && wiz.HasSummaryFields() == true){
-			reportXMLModifier.AddGroupSummaryInfo(tempFile.getPath());
-			reportXMLModifier.AddReportSummaryInfo(tempFile.getPath());
-		}
-
 		if (!wiz.getUseReportAsSegmentation()) {
 			// chart modifications
 			List<ReportChartSettings> rptChartSettings = wiz.getReportChartSettings();
@@ -732,6 +724,14 @@ public class ReportWizardFormController extends AbstractWizardFormController {
 					}
 		    	}
 			}
+		}
+
+	    // add the summary info/totals to the report - DJ only allows one per column and we need to allow multiple so
+		// 		we are altering the XML directly to add the summary calculations to the jasper report,
+	    //		this also handles adding the calculations to the groups created by DJ.
+		if (!wiz.getUseReportAsSegmentation() && wiz.getReportType().compareToIgnoreCase("matrix") != 0 && wiz.HasSummaryFields() == true){
+			reportXMLModifier.AddGroupSummaryInfo(tempFile.getPath());
+			reportXMLModifier.AddReportSummaryInfo(tempFile.getPath());
 		}
 		
 		String reportComment = wiz.getDataSubSource().getDisplayName() + " Custom Report";
