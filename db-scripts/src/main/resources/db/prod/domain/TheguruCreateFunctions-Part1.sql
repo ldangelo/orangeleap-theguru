@@ -97,13 +97,6 @@ DROP PROCEDURE IF EXISTS `NUMBERBUILDER`;
 
 
 --
--- Definition of procedure `DELETE_REPORTWIZARD`
---
-
-DROP PROCEDURE IF EXISTS `DELETE_REPORTWIZARD`;
-
-
---
 -- Definition of procedure `IS_SEGMENTATION_IN_USE`
 --
 
