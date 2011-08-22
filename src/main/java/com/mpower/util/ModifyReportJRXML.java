@@ -515,7 +515,8 @@ public class ModifyReportJRXML {
 		    			x = fieldProperties.get(fLabel.getDisplayName());
 		    			width = fieldWidth.get(fLabel.getDisplayName());
 		    			String groupColumn = resetGroup.substring(resetGroup.indexOf("-") + 1);
-		    			if (fLabel.getDisplayName().compareToIgnoreCase(groupColumn) == 0){
+		    			groupColumn = groupColumn.substring(0, groupColumn.lastIndexOf("_"));
+		    			if (fLabel.getColumnName().compareToIgnoreCase(groupColumn) == 0){
 		    				frame.appendChild(buildSummaryLabel(null, document, x, y, totalWidth - x, rowHeight, true, fLabel, columnIndex));
 		    				frame.appendChild(addLine(document, 1, y+rowHeight+1, totalWidth));
 			    			y += rowHeight*2+2;
