@@ -71,7 +71,7 @@
 		class="org.springframework.ws.soap.server.endpoint.interceptor.PayloadValidatingInterceptor">
 		<property name="schema" value="/WEB-INF/theguru.xsd" />
 		<property name="validateRequest" value="true" />
-		<property name="validateResponse" value="true" />
+		<property name="validateResponse" value="false" />
 	</bean>
 
 	<bean
